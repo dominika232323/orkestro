@@ -73,7 +73,22 @@ Aplikacja jest stroną internetową, której liderzy grup muzycznych (kierownicy
 
 \section{Metodologia wytwarzania}
 
-TODO Organizacja pracy w projekcie.
+Kompozycja naszego zespołu (biorąc pod uwagę naturalne predyspozycje członków wg klasyfikacji Belbina) ma następujący kształt:
+\begin{itemize}
+    \item role, które spełnia odpowiednia liczba osób: team worker, specialist, finisher, implementer
+    \item role, które spełnia nadmiar osób: evaluator, shaper
+    \item role, których nie spełnia nikt w zepsole: resource investigator, coordinator, plant
+\end{itemize}
+Z tych danych wynika, że utrudnione jest zaplanowanie projektu (wspólna wersja wizji, koncepcja implementacji, wykorzystywane narzędzia) i koordynacja pracy, ale nie ma przeszkód w kwestii implementacji. Problem zaplanowania projektu został rozwiązany w taki sposób, że jeden z shaperów zajął się sformułowaniem kompletnej wizji projektu, a pozostali członkowie zespołu na bieżąco oceniali przedstawiane elementy i poddawali pod dyskusję zmiany, które chcieliby wprowadzić. W kwestii znajdowania zewnętrznych zasobów jesteśmy zmuszeni zdać się na zdolności, które posiadamy i godzimy się z prawdopodobieństwem przeoczenia niektórych możliwości. Sposób organizacji pracy zostanie opisany w pozostałej części rozdziału.
+
+Projekt będzie wykonywany miejscami podejściem kaskadowym, a miejscami iteracyjnym. Ze względu na specyfikę przedmiotu przed przystąpieniem do implementacji jesteśmy zobowiązani do wytworzenia i przekazania do zatwierdzenia dokumentacji, która ma dogłębnie opisać zakres projektu i dużą część koncepcji na jego wykonanie. Po wykonaniu pracy również przedstawiamy dokumentację uzupełnioną o kolejne elementy. Tryb pracy przy implementacji projektu nie jest narzucony, ale pożądane jest dodawanie kodu kolejno do poszczególnych funkcji. W tych uwarunkowaniach najlepiej jest wykonać początkowe i końcowe etapy projektu kaskadowo, a w etapach projektowania (częściowo), implementacji i testowania po utworzeniu pewnej podstawy będziemy w stanie dodawać kolejne funkcje serwisu w oddzielnych iteracjach.
+
+Możliwości zastosowania różnych metodyk w pracy nad projektem są ograniczone realiami studiowania - członkowie zespołu są zaangażowani w wiele projektów naraz i mogą mieć dodatkowe obowiązki, przez co nie można zakładać systematycznej pracy całego zespołu. Bardziej realistycznym scenariuszem jest to, że w nieokreślonych momentach dana osoba będzie miała możliwość i motywację, by dodać do projektu duży segment funkcjonalności. W organizacji pracy zdecydowaliśmy się inspirować metodyką Scrum i zastosować jej użyteczne dla nas koncepcje w naszych warunkach:
+\begin{itemize}
+    \item utrzymywany jest niepełny wewnętrzny "backlog produktu" w postaci możliwie zdekomponowanych funkcji lub zmian, które można niezależnie od siebie dodać do projektu w danym stanie
+    \item gdy poszczególne osoby mają możliwość pracować nad projektem, rozpoczynają "sprinty", zobowiązując się wykonać wybrane pozycje z backlogu w najbliższym czasie ("backlog sprintu") i funkcjonując jak jednoosobowy zespół; komunikacja z grupą odbywa się na bieżąco (np. informowanie o problemach lub wykonaniu funkcji) zamiast organizowania spotkań jak w prawdziwym Scrumie
+    \item w spotkaniach z interesariuszami przedstawiamy "incrementy" - funkcje zrealizowane od ostatniego spotkania.
+\end{itemize}
 
 \section{Analiza wymagań}
 
@@ -81,7 +96,7 @@ Słownik pojęć:
 \begin{itemize}
     \item kierownik (grupy muzycznej) - osoba zarządzająca grupą, dodająca wydarzenia, itd.
     \item moderator - członek grupy o uprawnieniach muzyka, który ma dodatkowo możliwość wysyłania wiadomości
-    \item muzyk - członek grupy muzycznej niebędący kierownikiem, jest w stanie tylko dołączać do grup i odczytywać informacje
+    \item muzyk - członek grupy muzycznej bez żadnych dodatkowych uprawnień, jest w stanie tylko dołączać do grup i odczytywać informacje
     \item użytkownik - aktor zbiorczy dla kierownika, moderatora i muzyka.
 \end{itemize}
 
@@ -260,7 +275,7 @@ Przypadek specjalizujący PB3.
 Aktorzy: kierownik.
 \begin{enumerate}
     \item Jak w przypadku generalizującym PB3 – kroki 1. i 2.
-    \item Kierownik wybiera utwór i dodaje dotyczący go plik. Wybiera, kto ma mieć dostęp do pliku (cała (pod)grupa czy jeden podany użytkownik i kierownicy). Plik może zostać oznaczony nazwą instrumentu muzycznego.
+    \item Kierownik wybiera utwór i dodaje dotyczący go plik. Wybiera, kto ma mieć dostęp do pliku. Plik może zostać oznaczony nazwą instrumentu muzycznego.
     \item System zapamiętuje nowe dane.
 \end{enumerate}
 
@@ -534,7 +549,7 @@ Aktorzy: kierownik.
     \item System wyświetla informacje o utworze i listę plików.
     \item Kierownik wybiera opcję dodania nowego pliku.
     \item System wyświetla formularz do dodania nowego pliku.
-    \item Kierownik wgrywa plik, może też podać instrument, którego dotyczy. Wybiera, kto ma mieć dostęp do pliku (cała (pod)grupa czy jeden podany użytkownik i kierownicy)
+    \item Kierownik wgrywa plik, może też podać instrument, którego dotyczy. Wybiera, którzy członkowie (pod)grupy mają mieć dostęp do pliku.
     \item System dodaje plik i odsyła do informacji o utworze.
 \end{enumerate}
 
@@ -653,7 +668,7 @@ Wspiera procedurę PB18 - Integracja kalendarza wydarzeń z Google Calendar. Spe
 Aktorzy: użytkownik.
 \begin{enumerate}
     \item Jak w funkcji generalizującej FU21 – kroki 1. i 2.
-    \item Użytkownik podaje dane do Google Calendar i zaznacza, że chce włączyć synchronizację.
+    \item Użytkownik podaje dane do Google Calendar.
     \item System będzie wstawiał terminy nowo tworzonych przez kierownika wydarzeń do kalendarza.
 \end{enumerate}
 
@@ -701,17 +716,38 @@ Wszystkie maszyny wirtualne pracują na Ubuntu Server 24.04. Użytkownik do poł
 
 \subsection{Model logiczny danych}
 
-TODO [diagramy]
+Model koncepcyjny danych:
+\begin{figure} [H]
+    \centering
+    \includegraphics[width=0.95\linewidth]{images/er2.png}
+\end{figure}
+Model logiczny danych:
+\begin{figure} [H]
+    \centering
+    \includegraphics[width=0.95\linewidth]{images/logical2.png}
+\end{figure}
+Rekordy w tabelach łączących (user\_instruments, file\_allowed\_members, member, message\_recipients, invitations, event\_attendees, event\_tracks) są kaskadowo usuwane przy usunięciu rekordu, do którego odwołuje się którykolwiek klucz obcy. Usunięcie utworu powoduje usunięcie podpiętych pod niego plików. Usunięcie grupy powoduje usunięcie podpiętych pod nią wiadomości, wydarzeń i utworów.
+
+Wymaganiem projektu jest wydajność i skalowalność serwisu. Ponieważ ma być zaprojektowany jak dla setek jednoczesnych użytkowników, przydatne będzie zaindeksowanie tabel tak, by ułatwić wyszukiwanie danych. Wszystkie indeksy są typu mieszającego - większość danych jest w drzewiasty sposób podpięta do pewnej grupy lub użytkownika i wyszukiwanie będzie miało postać znalezienia rekordów z konkretną wartością klucza obcego. Nałożone indeksy:
+\begin{itemize}
+    \item w tabeli users: na kolumnie google\_user\_id (uzyskiwany przy autoryzacji Googla, przyspiesza uzyskanie user\_id)
+    \item w tabelach user\_instruments, members, invitations, message\_recipients, event\_attendees - na kolumnie user\_id (do znajdowania danych z perspektywy użytkownika, poprzez members znajduje istotne group\_id)
+    \item w tabelach groups, members, messages, events, tracks: na kolumnie group\_id (do znajdowania danych z perspektywy grupy)
+    \item w tabeli event\_tracks: na kolumnie event\_id (do znajdowania utworów wykonywanych na danym wydarzeniu)
+    \item w tabeli files: na kolumnie track\_id (do znajdowania plików dla danego utworu)
+    \item w tabeli instruments: na kolumnie instrument\_id
+    \item w tabeli file\_allowed\_members - na kolumnie file\_id
+\end{itemize}
 
 \subsection{Przetwarzanie i przechowywanie danych}
 
-TODO [opis planowanego sposobu implementacji: jaka baza danych lub inne oprogramowanie, jak będzie realizowany dostęp do danych (użyte API itp.), czy planowane jest programowanie w b.d. (wyzwalacze, mechanizmy optymalizacji zapytań, itp.)]
+Wybraliśmy relacyjną bazę danych PostgreSQL, z którą warstwa przetwarzania danych w Django będzie się łączyć poprzez adapter psycopg. Nie przewidujemy programowania w bazie danych (optymalizacja zapytań, triggery, procedury składowane).
 
 \section{Specyfikacja analityczna i projektowa}
 
-TODO
+Repozytorium projektu: \href{https://gitlab-stud.elka.pw.edu.pl/zgromadzeni/orkestro}{https://gitlab-stud.elka.pw.edu.pl/zgromadzeni/orkestro}
 
-Obowiązkowo odnośnik do repozytorium kodu (jedno repozytorium na projekt, jeżeli więcej proszę uzasadnić)
+TODO
 
 Obowiązkowo określenie metod realizacji: języki programowania, frameworki, środowisko programowania/ uruchamiania/ wdrażania, środowisko ciągłej integracji]
 
