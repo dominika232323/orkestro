@@ -28,9 +28,9 @@
    
     % \vspace{3cm}
    
-    \Huge\textbf{ORKESTRO - APLIKACJA DO ZARZĄDZANIA\\
-    ZESPOŁAMI MUZYCZNYMI\\
-    I ORKIESTRAMI}
+    \Huge\textbf{ORKESTRO}
+    
+    \LARGE\textbf{APLIKACJA DO ZARZĄDZANIA ZESPOŁAMI MUZYCZNYMI I ORKIESTRAMI}
    
     \vspace{1cm}
    
@@ -38,7 +38,7 @@
     \vspace{0.5cm}
     \textbf{WERSJA 1}\\
     \vspace{0.5cm}
-    02.11.2024\\
+    04.11.2024\\
     Semestr 24Z
    
     \vfill
@@ -58,6 +58,8 @@
 \end{titlepage}
 
 \tableofcontents
+\vspace{10pt}
+\listoffigures
 
 \newpage
 
@@ -102,65 +104,92 @@ Słownik pojęć:
 
 \subsection{Wymagania użytkownika i biznesowe}
 
+Dla uproszczenia treści wymagań możliwości użytkowników domyślnie odnoszą się do grup, których są członkami (zgodnie z wymaganiem ochrony danych)
+
 Wymagania biznesowe:
-\begin{itemize}
-    \item Orkiestra potrzebuje aplikacji organizacyjnej, aby umieścić komunikację i zarządzanie zespołami muzycznymi w jednym miejscu
-\end{itemize}
+\begin{enumerate}
+    \item Orkiestra potrzebuje aplikacji organizacyjnej, aby umieścić komunikację i zarządzanie zespołami muzycznymi w jednym miejscu.
+\end{enumerate}
 
 \vspace{10pt}
 
 Wymagania użytkownika:
-\begin{itemize}
-    \item Kierownik będzie mógł tworzyć grupy użytkowników
-    \item W każdej grupie/podgrupie kierownik będzie mógł tworzyć podgrupy, np. na różne głosy w orkiestrze
-    \item Dla każdej grupy/podgrupy kierownik będzie mógł udostępniać nuty do utworów tak, żeby nikt niepowołany nie miał do nich dostępu
-    \item Dla każdej grupy/podgrupy kierownik będzie mógł definiować próby/koncerty wraz z ich terminem, lokalizacją, repertuarem oraz dodatkowymi informacjami, np. o wymaganym stroju
-    \item Gdy kierownik zdefiniuje nowe wydarzenie, użytkownik powinien otrzymać powiadomienie
-    \item Kierownik będzie mógł wysyłać ogłoszenia do wybranych grup/podgrup
-    \item Kierownik będzie mógł łatwo zarządzać grupami w aplikacji webowej
-    \item Użytkownik będzie mógł przeglądać swoje grupy/podgrupy wraz z planem zdefiniowanych wydarzeń, tablicą ogłoszeń i udostępnionymi plikami
-    \item Użytkownik będzie mógł logować się swoim kontem Google
-\end{itemize}
+\begin{enumerate}
+	\item Kierownik będzie mógł tworzyć (pod)grupy użytkowników.
+	\item Kierownik będzie mógł zarządzać członkami (pod)grupy.
+	\item Kierownik będzie mógł planować wydarzenia dotyczące (pod)grupy (w szczególności próby i koncerty) z listą uczestników i repertuarem.
+	\item Kierownik będzie mógł definiować utwory wykonywane przez grupę.
+	\item Kierownik będzie mógł udostępniać dla poszczególnych muzyków pliki dotyczące utworu (w szczególności nuty i nagrania) z oznaczeniem instrumentu.
+	\item Kierownik będzie mógł wysyłać wiadomości do podzbioru członków (pod)grupy z opcją wysłania kopii na e-mail.
+	\item Kierownik będzie mógł edytować dane w (pod)grupie.
+	\item Kierownik będzie mógł usuwać dane w (pod)grupie (w szczególności całość (pod)grupy).
+	\item Moderator będzie mógł wysyłać wiadomości do podzbioru członków (pod)grupy z opcją wysłania kopii na e-mail.
+	\item Użytkownik będzie mógł dołączać do (pod)grup, do których został zaproszony.
+	\item Użytkownik będzie mógł przeglądać plan wydarzeń dla jednej i wszystkich (pod)grup.
+	\item Użytkownik będzie mógł decydować o synchronizacji kalendarza wydarzeń ze swoim Google Calendar.
+	\item Użytkownik będzie mógł przeglądać wiadomości wysłane do niego w jednej i wszystkich (pod)grupach.
+	\item Użytkownik będzie mógł przeglądać utwory wykonywane w (pod)grupie z opcją wyszukiwania.
+	\item Użytkownik będzie mógł przeglądać listę plików dodanych dla utworu z opcją pobierania tych, do których ma dostęp oraz wyszukiwania.
+	\item Użytkownik będzie mógł łatwo dostać się do udostępnionych mu plików dotyczących wydarzenia.
+	\item Użytkownik będzie mógł potwierdzać swoją tożsamość za pomocą konta Google.
+	\item Użytkownik będzie mógł korzystać z serwisu w wielu językach.
+	\item Użytkownik będzie mógł komfortowo korzystać z serwisu przy dużym obciążeniu.
+	\item Użytkownik będzie mógł korzystać z serwisu przy użyciu różnych urządzeń i oprogramowania.
+	\item Użytkownik będzie mógł bezpiecznie przechowywać dane w serwisie.
+\end{enumerate}
 
 \vspace{10pt}
 
 Wymagania systemowe:
-\begin{itemize}
-    \item Aplikacja pozwoli tworzyć grupy i podgrupy
-    \item Aplikacja pozwoli zapraszać użytkowników do grup/podgrup
-    \item Aplikacja pozwoli wysyłać ogłoszenia do całej grupy, do podgrupy, do wybranych członków
-    \item Aplikacja pozwoli wysyłać ogłoszenia także poprzez e-mail
-    \item Aplikacja pozwoli przechowywać pliki z nutami wraz z tytułem i opisem
-    \item Aplikacja pozwoli przypisać pliki z nutami do instrumentu/instrumentów
-    \item Aplikacja pozwoli planować koncerty i próby (tytuł, opis, repertuar, czas, miejsce, wybór całej grupy/podgrupy lub poszczególnych osób)
-    \item Aplikacja będzie wyświetlać plan prób
-    \item Aplikacja będzie wyświetlać plan koncertów
-    \item Aplikacja będzie wyświetlać kalendarz wydarzeń
-    \item Kalendarz wydarzeń aplikacji będzie zintegrowany z Google Calendar (low priority)
-    \item Aplikacja pozwoli przeglądać repertuar i pobierać nuty
-    \item Aplikacja pozwoli przeszukiwać repertuar wg różnych kryteriów: nazwa utworu, koncert, do którego utwór jest przypisany, rodzaj instrumentu (medium priority)
-    \item Aplikacja będzie działać na systemach Windows, Linux, Android
-    \item Aplikacja będzie dostosowana do urządzeń mobilnych
-    \item Aplikacja będzie pozwalała na wybór języka interfejsu (polski, angielski)
-    \item Aplikacja da możliwość zalogowania się wyłącznie kontem Google
-\end{itemize}
+\begin{enumerate}
+	\item System pozwoli tworzyć grupy użytkowników (z nazwą i opisem).
+	\item System pozwoli tworzyć podgrupy (pod)grupy (z nazwą i opisem).
+	\item System pozwoli zapraszać użytkowników do (pod)grupy.
+	\item System pozwoli ustalać uprawnienia członków (pod)grupy.
+	\item System pozwoli definiować wydarzenia dotyczące (pod)grupy, w szczególności próby i koncerty (z nazwą, opisem, datą i miejscem).
+	\item System pozwoli ustalać listę uczestników wydarzenia.
+	\item System pozwoli definiować utwory wykonywane przez (pod)grupę (z nazwą i opisem).
+	\item System pozwoli przypisywać utwory do wydarzenia, na którym będą wykonywane.
+	\item System pozwoli dodawać pliki dotyczące utworu.
+	\item System pozwoli oznaczać plik nazwą instrumentu, którego dotyczy.
+	\item System pozwoli definiować, jacy użytkownicy mają dostęp do pliku.
+	\item System pozwoli wysyłać wiadomości do podzbioru członków (pod)grupy.
+	\item System pozwoli wysyłać na skrzynki e-mailowe adresatów kopię tworzonej wiadomości.
+	\item System pozwoli edytować dane w (pod)grupie.
+	\item System pozwoli usuwać dane w (pod)grupie (w szczególności całość (pod)grupy).
+	\item System pozwoli dołączać do (pod)grup na podstawie otrzymywanych zaproszeń.
+	\item System pozwoli przeglądać wydarzenia zdefiniowane dla (pod)grupy.
+	\item System pozwoli przeglądać kalendarz wydarzeń ze wszystkich (pod)grup danego użytkownika.
+	\item System pozwoli synchronizować kalendarz wydarzeń z Google Calendar.
+	\item System pozwoli przeglądać wiadomości wysłane do danego użytkownika w (pod)grupie.
+	\item System pozwoli przeglądać listę wiadomości, które dany użytkownik otrzymał ze wszystkich (pod)grup.
+	\item System pozwoli przeglądać utwory wykonywane w (pod)grupie.
+	\item System pozwoli wyszukiwać utwory z listy w (pod)grupie (po nazwie, podpiętym koncercie, wykorzystywanym instrumencie).
+	\item System pozwoli przeglądać listę plików dodanych dla utworu.
+	\item System pozwoli wyszukiwać pliki z listy utworu (po nazwie, wykorzystywanym instrumencie).
+	\item System pozwoli pobierać pliki, które zostały udostępnione dla danego użytkownika.
+	\item System pozwoli zbiorczo przeglądać udostępnione dla danego użytkownika pliki z utworów dotyczących wydarzenia.
+	\item System pozwoli logować się kontem Google.
+	\item System pozwoli wybrać język korzystania z serwisu (w szczególności polski i angielski).
+	\item System będzie skonstruowany w sposób wspierający dodawanie zasobów sprzętowych, tak by możliwe było jego płynne działanie przy 1000 jednoczesnych użytkowników.
+	\item System będzie udokumentowany, w szczególności w kwestiach wdrożenia oraz dodawania zasobów sprzętowych.
+	\item System będzie oferował interfejs graficzny zoptymalizowany dla urządzeń mobilnych.
+	\item System będzie oferował interfejs graficzny zoptymalizowany dla komputerów PC.
+	\item System będzie dostępny na urządzeniach z systemami Windows, Android, Linux i iOS.
+	\item System będzie dostępny poprzez przeglądarki Chrome, Safari, Firefox, Edge i Opera.
+	\item System będzie weryfikował tożsamość użytkownika, jego członkostwo w grupie i jego uprawnienia przed wykonaniem operacji na danych.
+	\item System będzie funkcjonował zgodnie z przepisami RODO.
+	\item System będzie tworzył szyfrowane połączenia z użytkownikami.
+	\item System będzie wyposażony w zabezpieczenia przed włamaniami.
+\end{enumerate}
 
 \subsection{Wymagania funkcjonalne i niefunkcjonalne}
 
-Wymagania funkcjonalne:
-\begin{itemize}
-    \item TODO
-\end{itemize}
-
-\vspace{10pt}
-
-Wymagania niefunkcjonalne:
-\begin{itemize}
-    \item System powinien móc na początku obsłużyć setki użytkowników
-    \item Pliki z nutami powinny być dostępne od ręki
-    \item Czas od zamieszczenia nowego ogłoszenia/zdefiniowania nowego wydarzenia do otrzymania przez użytkownika powiadomienia nie powinien przekroczyć minuty
-    \item Dostęp do plików powinien być zabezpieczony
-\end{itemize}
+\begin{figure} [H]
+    \centering
+    \includegraphics[width=0.95\linewidth]{images/wymagania.png}
+    \caption{Diagram powiązań wymagań z podziałem na wymagania funkcjonalne i niefunkcjonalne}
+\end{figure}
 
 \subsection{Przypadki użycia}
 
@@ -688,7 +717,7 @@ Aktorzy: użytkownik.
 
 \begin{figure} [H]
     \centering
-    TODO Należy wkleić wycinek ekranu pokazujący korespondencję z Mentorem i Właścicielem tematu
+    \textcolor{red}{TODO} Należy wkleić wycinek ekranu pokazujący korespondencję z Mentorem i Właścicielem tematu
     %\includegraphics[width=0.95\linewidth]{sth.jpg}
 \end{figure}
 
@@ -696,11 +725,12 @@ Aktorzy: użytkownik.
 
 Rozwiązanie jest oparte o architekturę trójwarstwową - użytkownik łączy się poprzez sieć z serwerem NGINX udostępniającym stronę internetową w React.js. Gdy na stronie zostanie wykonana akcja wymagająca wysłania zapytania, ten sam serwer przekazuje je poprzez reverse proxy i load balancer do REST API obsługiwanego przez Django. Komponenty backendowe mogą wykonywać operacje CRUD na bazie danych w PostgreSQL (która może być rozbita na serwery master i slave).
 
-Jednymi z wymagań dotyczących systemu są skalowalność i wydajność przy setkach użytkowników. Konieczna jest więc architektura wspierająca zwiększanie mocy obliczeniowej wraz z rosnącym ruchem w aplikacji – obsługa zapytań odbywa się na wielu maszynach wirtualnych, a ruch jest rozdzielany za pomocą load balancerów. Zdecydowaliśmy się na skorzystanie z usług chmurowych Azure do utworzenia maszyn wirtualnych, na których będą wdrażane poszczególne komponenty. Postać ogólna architektury:
+Jednymi z wymagań dotyczących systemu są skalowalność i wydajność przy setkach użytkowników. Konieczna jest więc architektura wspierająca zwiększanie mocy obliczeniowej wraz z rosnącym ruchem w aplikacji – obsługa zapytań odbywa się na wielu maszynach wirtualnych, a ruch jest rozdzielany za pomocą load balancerów. Zdecydowaliśmy się na skorzystanie z usług chmurowych Azure do utworzenia maszyn wirtualnych, na których będą wdrażane poszczególne komponenty:
 
 \begin{figure} [H]
     \centering
     \includegraphics[width=0.95\linewidth]{images/definicja_architektury_1.png}
+    \caption{Diagram architektury systemu w postaci ogólnej}
 \end{figure}
 
 Wszystkie maszyny wirtualne pracują na Ubuntu Server 24.04. Użytkownik do połączenia z serwisem używa dowolnego urządzenia obsługującego rozsądnie aktualną i znaną przeglądarkę internetową. Możliwe jest dodawanie i usuwanie maszyn odpowiedzialnych za REST API i replikację bazy danych.
@@ -710,22 +740,25 @@ Wszystkie maszyny wirtualne pracują na Ubuntu Server 24.04. Użytkownik do poł
 \begin{figure} [H]
     \centering
     \includegraphics[width=0.95\linewidth]{images/definicja_architektury_2.png}
+    \caption{Diagram architektury systemu w maksymalnie uproszczonej postaci}
 \end{figure}
 
 \section{Dane trwałe}
 
 \subsection{Model logiczny danych}
 
-Model koncepcyjny danych:
 \begin{figure} [H]
     \centering
     \includegraphics[width=0.95\linewidth]{images/er2.png}
+    \caption{Model koncepcyjny danych}
 \end{figure}
-Model logiczny danych:
+
 \begin{figure} [H]
     \centering
     \includegraphics[width=0.95\linewidth]{images/logical2.png}
+    \caption{Model logiczny danych}
 \end{figure}
+
 Rekordy w tabelach łączących (user\_instruments, file\_allowed\_members, member, message\_recipients, invitations, event\_attendees, event\_tracks) są kaskadowo usuwane przy usunięciu rekordu, do którego odwołuje się którykolwiek klucz obcy. Usunięcie utworu powoduje usunięcie podpiętych pod niego plików. Usunięcie grupy powoduje usunięcie podpiętych pod nią wiadomości, wydarzeń i utworów.
 
 Wymaganiem projektu jest wydajność i skalowalność serwisu. Ponieważ ma być zaprojektowany jak dla setek jednoczesnych użytkowników, przydatne będzie zaindeksowanie tabel tak, by ułatwić wyszukiwanie danych. Wszystkie indeksy są typu mieszającego - większość danych jest w drzewiasty sposób podpięta do pewnej grupy lub użytkownika i wyszukiwanie będzie miało postać znalezienia rekordów z konkretną wartością klucza obcego. Nałożone indeksy:
@@ -747,7 +780,7 @@ Wybraliśmy relacyjną bazę danych PostgreSQL, z którą warstwa przetwarzania 
 
 Repozytorium projektu: \href{https://gitlab-stud.elka.pw.edu.pl/zgromadzeni/orkestro}{https://gitlab-stud.elka.pw.edu.pl/zgromadzeni/orkestro}
 
-TODO
+\textcolor{red}{TODO}
 
 Obowiązkowo określenie metod realizacji: języki programowania, frameworki, środowisko programowania/ uruchamiania/ wdrażania, środowisko ciągłej integracji]
 
@@ -761,20 +794,21 @@ Obowiązkowo statystyki: liczba plików, linie kodu, liczba testów jednostkowyc
 
 \section{Projekt standardu interfejsu użytkownika}
 
-TODO
+\textcolor{red}{TODO}
 
 [wykorzystanie narzędzi do modelowania oraz tworzenia makiet warstwy prezentacyjnej (np. storyboards, wireframes, wireflows, mockups, prototypes etc)]
 
-[wersja 0 xd]
+[wersja 0]
 
 \begin{figure} [H]
     \centering
     \includegraphics[width=0.95\linewidth]{images/ui_ver_0.jpg}
+    \caption{Projekt interfejsu użytkownika}
 \end{figure}
 
 \section{Specyfikacja testów}
 
-TODO
+\textcolor{red}{TODO}
 
 [standardy obsługi błędów i sytuacji wyjątkowych
 
@@ -784,19 +818,19 @@ miary jakości testów]
 
 \section{Wirtualizacja/konteneryzacja}
 
-TODO
+System zostanie wdrożony na maszynach wirtualnych zapewnionych przez Azure. Nie przewidujemy konteneryzacji.
 
 \section{Bezpieczeństwo}
 
-TODO
+\textcolor{red}{TODO}
 
 \section{Podręcznik użytkownika}
 
-TODO [instrukcja użycia funkcjonalności systemu]
+\textcolor{red}{TODO} [instrukcja użycia funkcjonalności systemu]
 
 \section{Podręcznik administratora}
 
-TODO
+\textcolor{red}{TODO}
 
 [- instrukcja budowy systemu z kodu źródłowego
 
@@ -812,7 +846,7 @@ TODO
 
 \section{Podsumowanie}
 
-TODO
+\textcolor{red}{TODO}
 
 [Krytyczna analiza osiągniętych wyników, mocne i słabe strony
 
@@ -820,7 +854,7 @@ Możliwe kierunki rozwoju]
 
 \section{Bibliografia}
 
-TODO [Wykaz materiałów źródłowych, opis zgodny ze standardem sporządzania opisów bibliograficznych - \url{https://bg.pw.edu.pl/index.php/przypisy-i-bibliografia}]
+\textcolor{red}{TODO} [Wykaz materiałów źródłowych, opis zgodny ze standardem sporządzania opisów bibliograficznych - \url{https://bg.pw.edu.pl/index.php/przypisy-i-bibliografia}]
 
 \section*{Zatwierdzam dokumentację}
 
