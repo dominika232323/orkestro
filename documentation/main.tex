@@ -3,7 +3,7 @@
 \usepackage{a4wide}
 \usepackage{polski}
 
-\usepackage[left=2cm,right=2cm,top=2cm,bottom=3cm]{geometry}
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2.5cm]{geometry}
 
 \usepackage[utf8]{inputenc}
 
@@ -27,35 +27,35 @@
 \begin{titlepage}
     \centering
     \includegraphics[width=\textwidth]{images/header.png}
-   
-    % \vspace{3cm}
-   
+
+    \vspace{1.5cm}
+
     \Huge\textbf{ORKESTRO}
-    
+
     \LARGE\textbf{APLIKACJA DO ZARZĄDZANIA ZESPOŁAMI MUZYCZNYMI I ORKIESTRAMI}
-   
-    \vspace{1cm}
-   
-    \Large Dokumentacja projektowa PZSP2\\
+
+    \vspace{1.5cm}
+
+    \Large \textbf{Dokumentacja projektowa PZSP2} \\
     \vspace{0.5cm}
-    \textbf{WERSJA 1}\\
+    WERSJA 1 \\
     \vspace{0.5cm}
-    05.11.2024\\
+    08.11.2024 \\
     Semestr 24Z
-   
+
     \vfill
-   
+
     \Large
     Zespół nr 1: \\
     Dominika Boguszewska \\
     Kacper Kowalczyk \\
     Michał Machnikowski \\
     Andrzej Pultyn
-   
+
     \vspace{2cm}
-   
+
     \large Mentor zespołu: Klara Borowa
-   
+
     \large Właściciel tematu: Katarzyna Nałęcz-Charkiewicz
 \end{titlepage}
 
@@ -81,27 +81,27 @@ Kompozycja naszego zespołu (biorąc pod uwagę naturalne predyspozycje członk�
 \begin{itemize}
     \item role, które spełnia odpowiednia liczba osób: team worker, specialist, finisher, implementer
     \item role, które spełnia nadmiar osób: evaluator, shaper
-    \item role, których nie spełnia nikt w zepsole: resource investigator, coordinator, plant
+    \item role, których nie spełnia nikt w zespole: resource investigator, coordinator, plant
 \end{itemize}
 Z tych danych wynika, że utrudnione jest zaplanowanie projektu (wspólna wersja wizji, koncepcja implementacji, wykorzystywane narzędzia) i koordynacja pracy, ale nie ma przeszkód w kwestii implementacji. Problem zaplanowania projektu został rozwiązany w taki sposób, że jeden z shaperów zajął się sformułowaniem kompletnej wizji projektu, a pozostali członkowie zespołu na bieżąco oceniali przedstawiane elementy i poddawali pod dyskusję zmiany, które chcieliby wprowadzić. W kwestii znajdowania zewnętrznych zasobów jesteśmy zmuszeni zdać się na zdolności, które posiadamy i godzimy się z prawdopodobieństwem przeoczenia niektórych możliwości. Sposób organizacji pracy zostanie opisany w pozostałej części rozdziału.
 
 Projekt będzie wykonywany miejscami podejściem kaskadowym, a miejscami iteracyjnym. Ze względu na specyfikę przedmiotu przed przystąpieniem do implementacji jesteśmy zobowiązani do wytworzenia i przekazania do zatwierdzenia dokumentacji, która ma dogłębnie opisać zakres projektu i dużą część koncepcji na jego wykonanie. Po wykonaniu pracy również przedstawiamy dokumentację uzupełnioną o kolejne elementy. Tryb pracy przy implementacji projektu nie jest narzucony, ale pożądane jest dodawanie kodu kolejno do poszczególnych funkcji. W tych uwarunkowaniach najlepiej jest wykonać początkowe i końcowe etapy projektu kaskadowo, a w etapach projektowania (częściowo), implementacji i testowania po utworzeniu pewnej podstawy będziemy w stanie dodawać kolejne funkcje serwisu w oddzielnych iteracjach.
 
-Możliwości zastosowania różnych metodyk w pracy nad projektem są ograniczone realiami studiowania - członkowie zespołu są zaangażowani w wiele projektów naraz i mogą mieć dodatkowe obowiązki, przez co nie można zakładać systematycznej pracy całego zespołu. Bardziej realistycznym scenariuszem jest to, że w nieokreślonych momentach dana osoba będzie miała możliwość i motywację, by dodać do projektu duży segment funkcjonalności. W organizacji pracy zdecydowaliśmy się inspirować metodyką Scrum i zastosować jej użyteczne dla nas koncepcje w naszych warunkach:
+Możliwości zastosowania różnych metodyk w pracy nad projektem są ograniczone realiami studiowania – członkowie zespołu są zaangażowani w wiele projektów naraz i mogą mieć dodatkowe obowiązki, przez co nie można zakładać systematycznej pracy całego zespołu. Bardziej realistycznym scenariuszem jest to, że w nieokreślonych momentach dana osoba będzie miała możliwość i motywację, by dodać do projektu duży segment funkcjonalności. W organizacji pracy zdecydowaliśmy się inspirować metodyką Scrum i zastosować jej użyteczne dla nas koncepcje w naszych warunkach:
 \begin{itemize}
-    \item utrzymywany jest niepełny wewnętrzny "backlog produktu" w postaci możliwie zdekomponowanych funkcji lub zmian, które można niezależnie od siebie dodać do projektu w danym stanie
-    \item gdy poszczególne osoby mają możliwość pracować nad projektem, rozpoczynają "sprinty", zobowiązując się wykonać wybrane pozycje z backlogu w najbliższym czasie ("backlog sprintu") i funkcjonując jak jednoosobowy zespół; komunikacja z grupą odbywa się na bieżąco (np. informowanie o problemach lub wykonaniu funkcji) zamiast organizowania spotkań jak w prawdziwym Scrumie
-    \item w spotkaniach z interesariuszami przedstawiamy "incrementy" - funkcje zrealizowane od ostatniego spotkania.
+    \item utrzymywany jest niepełny wewnętrzny „backlog produktu” w postaci możliwie zdekomponowanych funkcji lub zmian, które można niezależnie od siebie dodać do projektu w danym stanie
+    \item gdy poszczególne osoby mają możliwość pracować nad projektem, rozpoczynają „sprinty”, zobowiązując się wykonać wybrane pozycje z backlogu w najbliższym czasie („backlog sprintu”) i funkcjonując jak jednoosobowy zespół; komunikacja z grupą odbywa się na bieżąco (np. informowanie o problemach lub wykonaniu funkcji) zamiast organizowania spotkań jak w prawdziwym Scrumie
+    \item w spotkaniach z interesariuszami przedstawiamy „incrementy” – funkcje zrealizowane od ostatniego spotkania.
 \end{itemize}
 
 \section{Analiza wymagań}
 
 Słownik pojęć:
 \begin{itemize}
-    \item kierownik (grupy muzycznej) - osoba zarządzająca grupą, dodająca wydarzenia, itd.
-    \item moderator - członek grupy o uprawnieniach muzyka, który ma dodatkowo możliwość wysyłania wiadomości
-    \item muzyk - członek grupy muzycznej bez żadnych dodatkowych uprawnień, jest w stanie tylko dołączać do grup i odczytywać informacje
-    \item użytkownik - aktor zbiorczy dla kierownika, moderatora i muzyka.
+    \item kierownik (grupy muzycznej) – osoba zarządzająca grupą, dodająca wydarzenia, itd.
+    \item moderator – członek grupy o uprawnieniach muzyka, który ma dodatkowo możliwość wysyłania wiadomości
+    \item muzyk – członek grupy muzycznej bez żadnych dodatkowych uprawnień, jest w stanie tylko dołączać do grup i odczytywać informacje
+    \item użytkownik – aktor zbiorczy dla kierownika, moderatora i muzyka.
 \end{itemize}
 
 \subsection{Wymagania użytkownika i biznesowe}
@@ -173,13 +173,13 @@ Wymagania systemowe:
 	\item System pozwoli zbiorczo przeglądać udostępnione dla danego użytkownika pliki z utworów dotyczących wydarzenia.
 	\item System pozwoli logować się kontem Google.
 	\item System pozwoli wybrać język korzystania z serwisu (w szczególności polski i angielski).
-	\item System będzie skonstruowany w sposób wspierający dodawanie zasobów sprzętowych, tak by możliwe było jego płynne działanie przy 1000 jednoczesnych użytkowników.
+	\item System będzie zaprojektowany w sposób umożliwiający dodawanie zasobów sprzętowych, tak by możliwe było jego płynne działanie przy 1000 jednoczesnych użytkowników.
 	\item System będzie udokumentowany, w szczególności w kwestiach wdrożenia oraz dodawania zasobów sprzętowych.
 	\item System będzie oferował interfejs graficzny zoptymalizowany dla urządzeń mobilnych.
 	\item System będzie oferował interfejs graficzny zoptymalizowany dla komputerów PC.
 	\item System będzie dostępny na urządzeniach z systemami Windows, Android, Linux i iOS.
 	\item System będzie dostępny poprzez przeglądarki Chrome, Safari, Firefox, Edge i Opera.
-	\item System będzie weryfikował tożsamość użytkownika, jego członkostwo w grupie i jego uprawnienia przed wykonaniem operacji na danych.
+	\item System będzie weryfikował tożsamość użytkownika i jego uprawnienia przed wykonaniem operacji na danych.
 	\item System będzie funkcjonował zgodnie z przepisami RODO.
 	\item System będzie tworzył szyfrowane połączenia z użytkownikami.
 	\item System będzie wyposażony w zabezpieczenia przed włamaniami.
@@ -259,9 +259,9 @@ Scenariusz główny:
     \item System usuwa zaproszenie i dodaje użytkownika do (pod)grupy.
 \end{enumerate}
 
-Scenariusz alternatywny - użytkownik odrzuca zaproszenie:
+Scenariusz alternatywny – użytkownik odrzuca zaproszenie:
 \begin{enumerate}
-    \item Jak w scenariuszu głównym - kroki 1. i 2.
+    \item Jak w scenariuszu głównym – kroki 1. i 2.
     \item Użytkownik odrzuca zaproszenie.
     \item System usuwa zaproszenie bez dodawania użytkownika do (pod)grupy.
 \end{enumerate}
@@ -327,7 +327,7 @@ Przypadek specjalizujący PB3. Korzysta z PB10.
 
 Aktorzy: kierownik.
 \begin{enumerate}
-    \item Kierownik przegląda konto (PB10), by znaleźć obiekt - (pod)grupę, próbę, koncert, utwór, uprawnienia użytkownika – i zmienia dla niego dane.
+    \item Kierownik przegląda konto (PB10), by znaleźć obiekt – (pod)grupę, próbę, koncert, utwór, uprawnienia użytkownika – i zmienia dla niego dane.
     \item System zapamiętuje wprowadzone zmiany.
 \end{enumerate}
 
@@ -337,7 +337,7 @@ Przypadek specjalizujący PB3. Korzysta z PB10.
 
 Aktorzy: kierownik.
 \begin{enumerate}
-    \item Kierownik przegląda konto (PB10), by znaleźć obiekt - utwór, koncert, próbę, plik, członkostwo użytkownika, całość (pod)grupy – i go usuwa.
+    \item Kierownik przegląda konto (PB10), by znaleźć obiekt – utwór, koncert, próbę, plik, członkostwo użytkownika, całość (pod)grupy – i go usuwa.
     \item System prosi o potwierdzenie wykonywanej akcji. Jeżeli zostanie anulowana – koniec scenariusza.
     \item System usuwa obiekt. Jeżeli usunięto (pod)grupę, usuwa się jej wszystkie powiadomienia, utwory, zaplanowane koncerty i próby. Jeżeli usunięto utwór, usuwa się wszystkie udostępnione do niego pliki.
 \end{enumerate}
@@ -511,7 +511,7 @@ Aktorzy: kierownik.
 
 \subsubsection{FU8. Odpowiedź użytkownika na zaproszenie do grupy lub podgrupy}
 
-Wspiera procedurę PB5 - Odpowiedź użytkownika na zaproszenie do grupy lub podgrupy. Korzysta z FU1.
+Wspiera procedurę PB5 – Odpowiedź użytkownika na zaproszenie do grupy lub podgrupy. Korzysta z FU1.
 
 Aktorzy: użytkownik.
 
@@ -523,9 +523,9 @@ Scenariusz główny:
     \item System usuwa zaproszenie i dodaje użytkownika do (pod)grupy.
 \end{enumerate}
 
-Scenariusz alternatywny - muzyk odrzuca zaproszenie:
+Scenariusz alternatywny – muzyk odrzuca zaproszenie:
 \begin{enumerate}
-    \item Jak w scenariuszu głównym - kroki 1. i 2.
+    \item Jak w scenariuszu głównym – kroki 1. i 2.
     \item Użytkownik odrzuca zaproszenie.
     \item System usuwa zaproszenie bez dodawania użytkownika do (pod)grupy.
 \end{enumerate}
@@ -558,7 +558,7 @@ Aktorzy: kierownik.
 
 \subsubsection{FU11. Dodanie utworu dla grupy lub podgrupy}
 
-Wspiera procedurę PB8 - Dodanie utworu dla grupy lub podgrupy. Funkcja specjalizująca FU6.
+Wspiera procedurę PB8 – Dodanie utworu dla grupy lub podgrupy. Funkcja specjalizująca FU6.
 
 Aktorzy: kierownik.
 \begin{enumerate}
@@ -571,7 +571,7 @@ Aktorzy: kierownik.
 
 \subsubsection{FU12. Dodanie pliku dotyczącego utworu}
 
-Wspiera procedurę PB9 - Dodanie pliku dotyczącego utworu. Funkcja specjalizująca FU6.
+Wspiera procedurę PB9 – Dodanie pliku dotyczącego utworu. Funkcja specjalizująca FU6.
 
 Aktorzy: kierownik.
 \begin{enumerate}
@@ -586,7 +586,7 @@ Aktorzy: kierownik.
 
 \subsubsection{FU13. Przeglądanie konta}
 
-Wspiera procedurę PB10 - Przeglądanie konta. Funkcja generalizująca FU16-20. Korzysta z FU1 i FU3.
+Wspiera procedurę PB10 – Przeglądanie konta. Funkcja generalizująca FU16-20. Korzysta z FU1 i FU3.
 
 Aktorzy: użytkownik.
 \begin{enumerate}
@@ -597,7 +597,7 @@ Aktorzy: użytkownik.
 
 \subsubsection{FU14. Modyfikacja danych}
 
-Wspiera procedurę PB11 - Modyfikacja danych. Funkcja specjalizująca FU6. Korzysta z FU13.
+Wspiera procedurę PB11 – Modyfikacja danych. Funkcja specjalizująca FU6. Korzysta z FU13.
 
 Aktorzy: kierownik.
 \begin{enumerate}
@@ -610,7 +610,7 @@ Aktorzy: kierownik.
 
 \subsubsection{FU15. Usunięcie obiektu}
 
-Wspiera procedurę PB12 - Usunięcie obiektu. Funkcja specjalizująca FU6. Korzysta z FU13.
+Wspiera procedurę PB12 – Usunięcie obiektu. Funkcja specjalizująca FU6. Korzysta z FU13.
 
 Aktorzy: kierownik.
 \begin{enumerate}
@@ -623,7 +623,7 @@ Aktorzy: kierownik.
 
 \subsubsection{FU16. Przeglądanie kalendarza wydarzeń}
 
-Wspiera procedurę PB13 - Przeglądanie kalendarza wydarzeń. Funkcja specjalizująca FU13.
+Wspiera procedurę PB13 – Przeglądanie kalendarza wydarzeń. Funkcja specjalizująca FU13.
 
 Aktorzy: użytkownik.
 \begin{enumerate}
@@ -634,7 +634,7 @@ Aktorzy: użytkownik.
 
 \subsubsection{FU17. Przeglądanie powiadomień}
 
-Wspiera procedurę PB14 - Przeglądanie powiadomień. Funkcja specjalizująca FU13.
+Wspiera procedurę PB14 – Przeglądanie powiadomień. Funkcja specjalizująca FU13.
 
 Aktorzy: użytkownik.
 \begin{enumerate}
@@ -645,7 +645,7 @@ Aktorzy: użytkownik.
 
 \subsubsection{FU18. Przeglądanie powiadomień wysłanych z konkretnej grupy lub podgrupy}
 
-Wspiera procedurę PB14 - Przeglądanie powiadomień. Funkcja specjalizująca FU13.
+Wspiera procedurę PB14 – Przeglądanie powiadomień. Funkcja specjalizująca FU13.
 
 Aktorzy: użytkownik.
 \begin{enumerate}
@@ -658,7 +658,7 @@ Aktorzy: użytkownik.
 
 \subsubsection{FU19. Przeglądanie repertuaru grupy}
 
-Wspiera procedurę PB15 - Przeglądanie repertuaru grupy. Funkcja specjalizująca FU13.
+Wspiera procedurę PB15 – Przeglądanie repertuaru grupy. Funkcja specjalizująca FU13.
 
 Aktorzy: użytkownik.
 \begin{enumerate}
@@ -671,7 +671,7 @@ Aktorzy: użytkownik.
 
 \subsubsection{FU20. Przeglądanie planu prób i koncertów grupy}
 
-Wspiera procedurę PB16 - Przeglądanie planu prób i koncertów grupy. Funkcja specjalizująca FU13.
+Wspiera procedurę PB16 – Przeglądanie planu prób i koncertów grupy. Funkcja specjalizująca FU13.
 
 Aktorzy: użytkownik.
 \begin{enumerate}
@@ -682,7 +682,7 @@ Aktorzy: użytkownik.
 
 \subsubsection{FU21. Zmiana ustawień konta}
 
-Wspiera procedurę PB17 - Zmiana ustawień konta. Korzysta z FU1. Przypadek generalizujący dla FU20.
+Wspiera procedurę PB17 – Zmiana ustawień konta. Korzysta z FU1. Przypadek generalizujący dla FU20.
 
 Aktorzy: użytkownik.
 \begin{enumerate}
@@ -694,7 +694,7 @@ Aktorzy: użytkownik.
 
 \subsubsection{FU22. Integracja kalendarza wydarzeń z Google Calendar}
 
-Wspiera procedurę PB18 - Integracja kalendarza wydarzeń z Google Calendar. Specjalizuje FU21.
+Wspiera procedurę PB18 – Integracja kalendarza wydarzeń z Google Calendar. Specjalizuje FU21.
 
 Aktorzy: użytkownik.
 \begin{enumerate}
@@ -705,7 +705,7 @@ Aktorzy: użytkownik.
 
 \subsubsection{FU23. Zmiana języka, w którym wyświetlany jest serwis}
 
-Wspiera procedurę PB19 - Zmiana języka, w którym wyświetlany jest serwis.
+Wspiera procedurę PB19 – Zmiana języka, w którym wyświetlany jest serwis.
 
 Aktorzy: użytkownik.
 \begin{enumerate}
@@ -725,7 +725,7 @@ Aktorzy: użytkownik.
 
 \section{Definicja architektury}
 
-Rozwiązanie jest oparte o architekturę trójwarstwową - użytkownik łączy się poprzez sieć z serwerem NGINX udostępniającym stronę internetową w React.js. Gdy na stronie zostanie wykonana akcja wymagająca wysłania zapytania, ten sam serwer przekazuje je poprzez reverse proxy i load balancer do REST API obsługiwanego przez Django. Komponenty backendowe mogą wykonywać operacje CRUD na bazie danych w PostgreSQL (która może być rozbita na serwery master i slave).
+Rozwiązanie jest oparte o architekturę trójwarstwową – użytkownik łączy się poprzez sieć z serwerem NGINX udostępniającym pliki statyczne aplikacji webowej w React.js. Gdy użytkownik wykona akcję wymagająca wysłania zapytania, ten sam serwer przekazuje przychodzące zapytanie poprzez reverse proxy i load balancer do REST API obsługiwanego przez Django. Komponenty backendowe mogą wykonywać operacje CRUD na bazie danych w PostgreSQL (która może być rozbita na serwery master i slave).
 
 Jednymi z wymagań dotyczących systemu są skalowalność i wydajność przy setkach użytkowników. Konieczna jest więc architektura wspierająca zwiększanie mocy obliczeniowej wraz z rosnącym ruchem w aplikacji – obsługa zapytań odbywa się na wielu maszynach wirtualnych, a ruch jest rozdzielany za pomocą load balancerów. Zdecydowaliśmy się na skorzystanie z usług chmurowych Azure do utworzenia maszyn wirtualnych, na których będą wdrażane poszczególne komponenty:
 
@@ -742,7 +742,7 @@ Wszystkie maszyny wirtualne pracują na Ubuntu Server 24.04. Użytkownik do poł
 \begin{figure} [H]
     \centering
     \includegraphics[width=0.95\linewidth]{images/definicja_architektury_2.png}
-    \caption{Diagram architektury systemu w maksymalnie uproszczonej postaci}
+    \caption{Diagram architektury systemu w uproszczonej postaci}
 \end{figure}
 
 \section{Dane trwałe}
@@ -763,15 +763,15 @@ Wszystkie maszyny wirtualne pracują na Ubuntu Server 24.04. Użytkownik do poł
 
 Rekordy w tabelach łączących (\texttt{user\_instruments}, \texttt{file\_allowed\_members}, \texttt{member}, \texttt{message\_recipients}, \texttt{invitations}, \texttt{event\_attendees}, \texttt{event\_tracks}) są kaskadowo usuwane przy usunięciu rekordu, do którego odwołuje się którykolwiek klucz obcy. Usunięcie utworu powoduje usunięcie podpiętych pod niego plików. Usunięcie grupy powoduje usunięcie podpiętych pod nią wiadomości, wydarzeń i utworów.
 
-Wymaganiem projektu jest wydajność i skalowalność serwisu. Ponieważ ma być zaprojektowany jak dla setek jednoczesnych użytkowników, przydatne będzie zaindeksowanie tabel tak, by ułatwić wyszukiwanie danych. Wszystkie indeksy są typu mieszającego - większość danych jest w drzewiasty sposób podpięta do pewnej grupy lub użytkownika i wyszukiwanie będzie miało postać znalezienia rekordów z konkretną wartością klucza obcego. Nałożone indeksy:
+Wymaganiem projektu jest wydajność i skalowalność serwisu. Ponieważ ma być zaprojektowany jak dla setek jednoczesnych użytkowników, przydatne będzie zaindeksowanie tabel tak, by ułatwić wyszukiwanie danych. Wszystkie indeksy są typu mieszającego – większość danych jest w drzewiasty sposób podpięta do pewnej grupy lub użytkownika i wyszukiwanie będzie miało postać znalezienia rekordów z konkretną wartością klucza obcego. Nałożone indeksy:
 \begin{itemize}
-    \item w tabeli \texttt{users}: na kolumnie \texttt{google\_user\_id} (uzyskiwany przy autoryzacji Googla, przyspiesza uzyskanie \texttt{user\_id})
-    \item w tabelach \texttt{user\_instruments}, \texttt{members}, \texttt{invitations}, \texttt{message\_recipients}, \texttt{event\_attendees} - na kolumnie \texttt{user\_id} (do znajdowania danych z perspektywy użytkownika, poprzez \texttt{members} znajduje istotne \texttt{group\_id})
+    \item w tabeli \texttt{users}: na kolumnie \texttt{google\_user\_id} (uzyskiwany przy autoryzacji Google, przyspiesza uzyskanie \texttt{user\_id})
+    \item w tabelach \texttt{user\_instruments}, \texttt{members}, \texttt{invitations}, \texttt{message\_recipients}, \texttt{event\_attendees} – na kolumnie \texttt{user\_id} (do znajdowania danych z perspektywy użytkownika, poprzez \texttt{members} znajduje istotne \texttt{group\_id})
     \item w tabelach \texttt{groups}, \texttt{members}, \texttt{messages}, \texttt{events}, \texttt{tracks}: na kolumnie \texttt{group\_id} (do znajdowania danych z perspektywy grupy)
     \item w tabeli \texttt{event\_tracks}: na kolumnie \texttt{event\_id} (do znajdowania utworów wykonywanych na danym wydarzeniu)
     \item w tabeli \texttt{files}: na kolumnie \texttt{track\_id} (do znajdowania plików dla danego utworu)
     \item w tabeli \texttt{instruments}: na kolumnie \texttt{instrument\_id}
-    \item w tabeli \texttt{file\_allowed\_members} - na kolumnie \texttt{file\_id}
+    \item w tabeli \texttt{file\_allowed\_members} – na kolumnie \texttt{file\_id}
 \end{itemize}
 
 \subsection{Przetwarzanie i przechowywanie danych}
@@ -803,7 +803,7 @@ Obowiązkowo statystyki: liczba plików, linie kodu, liczba testów jednostkowyc
 \begin{figure} [H]
     \centering
     \includegraphics[width=0.95\linewidth]{images/ui_ver_0.jpg}
-    \caption{Projekt interfejsu użytkownika [wersja 0]} 
+    \caption{Projekt interfejsu użytkownika [wersja 0]}
 \end{figure}
 
 \section{Specyfikacja testów}
@@ -856,7 +856,7 @@ Możliwe kierunki rozwoju]
 
 \section{Bibliografia}
 
-\textcolor{red}{TODO} [Wykaz materiałów źródłowych, opis zgodny ze standardem sporządzania opisów bibliograficznych - \url{https://bg.pw.edu.pl/index.php/przypisy-i-bibliografia}]
+\textcolor{red}{TODO} [Wykaz materiałów źródłowych, opis zgodny ze standardem sporządzania opisów bibliograficznych – \url{https://bg.pw.edu.pl/index.php/przypisy-i-bibliografia}]
 
 \section*{Zatwierdzam dokumentację}
 
