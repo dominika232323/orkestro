@@ -759,22 +759,22 @@ Wszystkie maszyny wirtualne pracują na Ubuntu Server 24.04. Użytkownik do poł
     \caption{Model logiczny danych}
 \end{figure}
 
-Rekordy w tabelach łączących (user\_instruments, file\_allowed\_members, member, message\_recipients, invitations, event\_attendees, event\_tracks) są kaskadowo usuwane przy usunięciu rekordu, do którego odwołuje się którykolwiek klucz obcy. Usunięcie utworu powoduje usunięcie podpiętych pod niego plików. Usunięcie grupy powoduje usunięcie podpiętych pod nią wiadomości, wydarzeń i utworów.
+Rekordy w tabelach łączących (\texttt{user\_instruments}, \texttt{file\_allowed\_members}, \texttt{member}, \texttt{message\_recipients}, \texttt{invitations}, \texttt{event\_attendees}, \texttt{event\_tracks}) są kaskadowo usuwane przy usunięciu rekordu, do którego odwołuje się którykolwiek klucz obcy. Usunięcie utworu powoduje usunięcie podpiętych pod niego plików. Usunięcie grupy powoduje usunięcie podpiętych pod nią wiadomości, wydarzeń i utworów.
 
 Wymaganiem projektu jest wydajność i skalowalność serwisu. Ponieważ ma być zaprojektowany jak dla setek jednoczesnych użytkowników, przydatne będzie zaindeksowanie tabel tak, by ułatwić wyszukiwanie danych. Wszystkie indeksy są typu mieszającego - większość danych jest w drzewiasty sposób podpięta do pewnej grupy lub użytkownika i wyszukiwanie będzie miało postać znalezienia rekordów z konkretną wartością klucza obcego. Nałożone indeksy:
 \begin{itemize}
-    \item w tabeli users: na kolumnie google\_user\_id (uzyskiwany przy autoryzacji Googla, przyspiesza uzyskanie user\_id)
-    \item w tabelach user\_instruments, members, invitations, message\_recipients, event\_attendees - na kolumnie user\_id (do znajdowania danych z perspektywy użytkownika, poprzez members znajduje istotne group\_id)
-    \item w tabelach groups, members, messages, events, tracks: na kolumnie group\_id (do znajdowania danych z perspektywy grupy)
-    \item w tabeli event\_tracks: na kolumnie event\_id (do znajdowania utworów wykonywanych na danym wydarzeniu)
-    \item w tabeli files: na kolumnie track\_id (do znajdowania plików dla danego utworu)
-    \item w tabeli instruments: na kolumnie instrument\_id
-    \item w tabeli file\_allowed\_members - na kolumnie file\_id
+    \item w tabeli \texttt{users}: na kolumnie \texttt{google\_user\_id} (uzyskiwany przy autoryzacji Googla, przyspiesza uzyskanie \texttt{user\_id})
+    \item w tabelach \texttt{user\_instruments}, \texttt{members}, \texttt{invitations}, \texttt{message\_recipients}, \texttt{event\_attendees} - na kolumnie \texttt{user\_id} (do znajdowania danych z perspektywy użytkownika, poprzez \texttt{members} znajduje istotne \texttt{group\_id})
+    \item w tabelach \texttt{groups}, \texttt{members}, \texttt{messages}, \texttt{events}, \texttt{tracks}: na kolumnie \texttt{group\_id} (do znajdowania danych z perspektywy grupy)
+    \item w tabeli \texttt{event\_tracks}: na kolumnie \texttt{event\_id} (do znajdowania utworów wykonywanych na danym wydarzeniu)
+    \item w tabeli \texttt{files}: na kolumnie \texttt{track\_id} (do znajdowania plików dla danego utworu)
+    \item w tabeli \texttt{instruments}: na kolumnie \texttt{instrument\_id}
+    \item w tabeli \texttt{file\_allowed\_members} - na kolumnie \texttt{file\_id}
 \end{itemize}
 
 \subsection{Przetwarzanie i przechowywanie danych}
 
-Wybraliśmy relacyjną bazę danych PostgreSQL, z którą warstwa przetwarzania danych w Django będzie się łączyć poprzez adapter psycopg. Nie przewidujemy programowania w bazie danych (optymalizacja zapytań, triggery, procedury składowane).
+Wybraliśmy relacyjną bazę danych PostgreSQL, z którą warstwa przetwarzania danych w Django będzie się łączyć poprzez adapter \texttt{psycopg}. Nie przewidujemy programowania w bazie danych (optymalizacja zapytań, triggery, procedury składowane).
 
 \section{Specyfikacja analityczna i projektowa}
 
