@@ -38,9 +38,9 @@
 
     \Large \textbf{Dokumentacja projektowa PZSP2} \\
     \vspace{0.5cm}
-    WERSJA 1 \\
+    WERSJA 2 \\
     \vspace{0.5cm}
-    08.11.2024 \\
+    14.11.2024 \\
     Semestr 24Z
 
     \vfill
@@ -100,7 +100,7 @@ Słownik pojęć:
 \begin{itemize}
     \item kierownik (grupy muzycznej) – osoba zarządzająca grupą, dodająca wydarzenia, itd.
     \item moderator – członek grupy o uprawnieniach muzyka, który ma dodatkowo możliwość wysyłania wiadomości
-    \item muzyk – członek grupy muzycznej bez żadnych dodatkowych uprawnień, jest w stanie tylko dołączać do grup i odczytywać informacje
+    \item muzyk – członek grupy muzycznej bez żadnych dodatkowych uprawnień, jest w stanie tylko dołączać do grup, odczytywać informacje oraz pobierać zasoby (nuty, nagrania)
     \item użytkownik – aktor zbiorczy dla kierownika, moderatora i muzyka.
 \end{itemize}
 
@@ -134,9 +134,9 @@ Wymagania użytkownika:
 	\item Użytkownik będzie mógł przeglądać listę plików dodanych dla utworu z opcją pobierania tych, do których ma dostęp oraz wyszukiwania.
 	\item Użytkownik będzie mógł łatwo dostać się do udostępnionych mu plików dotyczących wydarzenia.
 	\item Użytkownik będzie mógł potwierdzać swoją tożsamość za pomocą konta Google.
-	\item Użytkownik będzie mógł korzystać z serwisu w wielu językach.
+	\item Użytkownik będzie mógł korzystać z serwisu w językach polskim oraz angielskim, z możliwością przyszłego rozszerzenia dostępności o inne języki.
 	\item Użytkownik będzie mógł komfortowo korzystać z serwisu przy dużym obciążeniu.
-	\item Użytkownik będzie mógł korzystać z serwisu przy użyciu różnych urządzeń i oprogramowania.
+	\item Użytkownik będzie mógł korzystać z serwisu przy użyciu różnych urządzeń i oprogramowania (uszczegółowione w wymaganiach S32-S35).
 	\item Użytkownik będzie mógł bezpiecznie przechowywać dane w serwisie.
 \end{enumerate}
 
@@ -153,7 +153,7 @@ Wymagania systemowe:
 	\item System pozwoli definiować utwory wykonywane przez (pod)grupę (z nazwą i opisem).
 	\item System pozwoli przypisywać utwory do wydarzenia, na którym będą wykonywane.
 	\item System pozwoli dodawać pliki dotyczące utworu.
-	\item System pozwoli oznaczać plik nazwą instrumentu, którego dotyczy.
+	\item System pozwoli oznaczać plik nazwami instrumentów i głosów, których dotyczy.
 	\item System pozwoli definiować, jacy użytkownicy mają dostęp do pliku.
 	\item System pozwoli wysyłać wiadomości do podzbioru członków (pod)grupy.
 	\item System pozwoli wysyłać na skrzynki e-mailowe adresatów kopię tworzonej wiadomości.
@@ -168,12 +168,12 @@ Wymagania systemowe:
 	\item System pozwoli przeglądać utwory wykonywane w (pod)grupie.
 	\item System pozwoli wyszukiwać utwory z listy w (pod)grupie (po nazwie, podpiętym koncercie, wykorzystywanym instrumencie).
 	\item System pozwoli przeglądać listę plików dodanych dla utworu.
-	\item System pozwoli wyszukiwać pliki z listy utworu (po nazwie, wykorzystywanym instrumencie).
+	\item System pozwoli wyszukiwać pliki spośród tych udostępnionych dla konkretnego utworu (po nazwie, wykorzystywanym instrumencie).
 	\item System pozwoli pobierać pliki, które zostały udostępnione dla danego użytkownika.
 	\item System pozwoli zbiorczo przeglądać udostępnione dla danego użytkownika pliki z utworów dotyczących wydarzenia.
 	\item System pozwoli logować się kontem Google.
 	\item System pozwoli wybrać język korzystania z serwisu (w szczególności polski i angielski).
-	\item System będzie zaprojektowany w sposób umożliwiający dodawanie zasobów sprzętowych, tak by możliwe było jego płynne działanie przy 1000 jednoczesnych użytkowników.
+	\item System będzie zaprojektowany w sposób umożliwiający dodawanie zasobów sprzętowych, tak by możliwe było jego płynne działanie przy 1000 jednoczesnych użytkowników oraz 10 jednoczesnych, niezależnych grup.
 	\item System będzie udokumentowany, w szczególności w kwestiach wdrożenia oraz dodawania zasobów sprzętowych.
 	\item System będzie oferował interfejs graficzny zoptymalizowany dla urządzeń mobilnych.
 	\item System będzie oferował interfejs graficzny zoptymalizowany dla komputerów PC.
@@ -306,7 +306,7 @@ Przypadek specjalizujący PB3.
 Aktorzy: kierownik.
 \begin{enumerate}
     \item Jak w przypadku generalizującym PB3 – kroki 1. i 2.
-    \item Kierownik wybiera utwór i dodaje dotyczący go plik. Wybiera, kto ma mieć dostęp do pliku. Plik może zostać oznaczony nazwą instrumentu muzycznego.
+    \item Kierownik wybiera utwór i dodaje dotyczący go plik. Wybiera, kto ma mieć dostęp do pliku. Plik może zostać oznaczony nazwami instrumentów muzycznych oraz głosów.
     \item System zapamiętuje nowe dane.
 \end{enumerate}
 
@@ -565,7 +565,7 @@ Aktorzy: kierownik.
     \item Jak w funkcji generalizującej FU6 – kroki 1. i 2.
     \item Kierownik przechodzi do zakładki z utworami i wybiera opcję dodania nowego utworu.
     \item System wyświetla formularz do dodania utworu.
-    \item Kierownik wpisuje tytuł i opis utworu oraz zaznacza z listy koncerty, z którymi związany jest utwór.
+    \item Kierownik wpisuje tytuł i opis utworu. Może zaznaczyć z listy koncerty, z którymi związany jest utwór.
     \item System dodaje utwór i odsyła do zakładki z utworami.
 \end{enumerate}
 
@@ -580,7 +580,7 @@ Aktorzy: kierownik.
     \item System wyświetla informacje o utworze i listę plików.
     \item Kierownik wybiera opcję dodania nowego pliku.
     \item System wyświetla formularz do dodania nowego pliku.
-    \item Kierownik wgrywa plik, może też podać instrument, którego dotyczy. Wybiera, którzy członkowie (pod)grupy mają mieć dostęp do pliku.
+    \item Kierownik wgrywa plik, może też podać instrumenty, którego dotyczy. Wybiera, którzy członkowie (pod)grupy mają mieć dostęp do pliku.
     \item System dodaje plik i odsyła do informacji o utworze.
 \end{enumerate}
 
@@ -666,7 +666,7 @@ Aktorzy: użytkownik.
     \item System wyświetla panel (pod)grupy.
     \item Użytkownik przechodzi do zakładki z utworami (pod)grupy. Może wpisać w paski wyszukiwania nazwę utworu, wykorzystywanego instrumentu lub koncertu, na którym ma być wykonywany.
     \item System wyświetla wszystkie lub przefiltrowane utwory.
-    \item Użytkownik przegląda utwory. Może wybrać utwór, by system wyświetlił informacje o nim i listę podpiętych pod niego plików.
+    \item Użytkownik przegląda utwory. Może wybrać utwór, by system wyświetlił informacje o nim i listę podpiętych pod niego plików, do których użytkownik ma zdefiniowany dostęp.
 \end{enumerate}
 
 \subsubsection{FU20. Przeglądanie planu prób i koncertów grupy}
@@ -725,7 +725,7 @@ Aktorzy: użytkownik.
 
 \section{Definicja architektury}
 
-Rozwiązanie jest oparte o architekturę trójwarstwową – użytkownik łączy się poprzez sieć z serwerem NGINX udostępniającym pliki statyczne aplikacji webowej w React.js. Gdy użytkownik wykona akcję wymagająca wysłania zapytania, ten sam serwer przekazuje przychodzące zapytanie poprzez reverse proxy i load balancer do REST API obsługiwanego przez Django. Komponenty backendowe mogą wykonywać operacje CRUD na bazie danych w PostgreSQL (która może być rozbita na serwery master i slave).
+Rozwiązanie jest oparte o architekturę trójwarstwową – użytkownik łączy się poprzez sieć z serwerem NGINX udostępniającym pliki statyczne aplikacji webowej w React.js. Gdy użytkownik wykona akcję wymagająca wysłania zapytania, ten sam serwer przekazuje przychodzące zapytanie poprzez reverse proxy i load balancer do REST API obsługiwanego przez Django. Komponenty backendowe mogą wykonywać operacje CRUD na bazie danych w PostgreSQL (która może być rozdzielona na serwery master i slave).
 
 Jednymi z wymagań dotyczących systemu są skalowalność i wydajność przy setkach użytkowników. Konieczna jest więc architektura wspierająca zwiększanie mocy obliczeniowej wraz z rosnącym ruchem w aplikacji – obsługa zapytań odbywa się na wielu maszynach wirtualnych, a ruch jest rozdzielany za pomocą load balancerów. Zdecydowaliśmy się na skorzystanie z usług chmurowych Azure do utworzenia maszyn wirtualnych, na których będą wdrażane poszczególne komponenty:
 
@@ -737,7 +737,7 @@ Jednymi z wymagań dotyczących systemu są skalowalność i wydajność przy se
 
 Wszystkie maszyny wirtualne pracują na Ubuntu Server 24.04. Użytkownik do połączenia z serwisem używa dowolnego urządzenia obsługującego rozsądnie aktualną i znaną przeglądarkę internetową. Możliwe jest dodawanie i usuwanie maszyn odpowiedzialnych za REST API i replikację bazy danych.
 
-Życzeniem klienta była możliwość minimalizacji kosztów utrzymania serwisu uruchomionego dla niewielkiej liczby użytkowników. Sposób połączenia komponentów umożliwia więc w szczególności uruchomienie wszystkich potrzebnych procesów na jednej maszynie wirtualnej:
+Koszt pracy jednej, najtańszej dostępnej maszyny to około 210 zł miesięcznie, ale korzystając z Azure Spot można go obniżyć do około 29 zł miesięcznie w zamian za niedostępność maszyny przez około 5\% czasu. Korzystanie z publicznego adresu IP jest na ten moment darmowe, ale od października 2025 r. będzie kosztować około 14 zł miesięcznie. Do testowych wdrożeń korzystamy z kont studenckich, na których mamy dostęp do darmowych środków. Życzeniem klienta była możliwość minimalizacji kosztów utrzymania serwisu uruchomionego dla niewielkiej liczby użytkowników. Sposób połączenia komponentów umożliwia więc w szczególności uruchomienie wszystkich potrzebnych procesów na jednej maszynie wirtualnej:
 
 \begin{figure} [H]
     \centering
@@ -751,27 +751,28 @@ Wszystkie maszyny wirtualne pracują na Ubuntu Server 24.04. Użytkownik do poł
 
 \begin{figure} [H]
     \centering
-    \includegraphics[width=0.95\linewidth]{images/er2.png}
+    \includegraphics[width=0.95\linewidth]{images/er3.png}
     \caption{Model koncepcyjny danych}
 \end{figure}
 
 \begin{figure} [H]
     \centering
-    \includegraphics[width=0.95\linewidth]{images/logical2.png}
+    \includegraphics[width=0.95\linewidth]{images/logical3.png}
     \caption{Model logiczny danych}
 \end{figure}
 
-Rekordy w tabelach łączących (\texttt{user\_instruments}, \texttt{file\_allowed\_members}, \texttt{member}, \texttt{message\_recipients}, \texttt{invitations}, \texttt{event\_attendees}, \texttt{event\_tracks}) są kaskadowo usuwane przy usunięciu rekordu, do którego odwołuje się którykolwiek klucz obcy. Usunięcie utworu powoduje usunięcie podpiętych pod niego plików. Usunięcie grupy powoduje usunięcie podpiętych pod nią wiadomości, wydarzeń i utworów.
+Rekordy w tabelach łączących (\texttt{user\_instruments}, \texttt{file\_allowed\_members}, \texttt{file\_instruments}, \texttt{members}, \texttt{message\_recipients}, \texttt{invitations}, \texttt{event\_attendees}, \texttt{event\_tracks}) są kaskadowo usuwane przy usunięciu rekordu, do którego odwołuje się którykolwiek klucz obcy. Usunięcie utworu powoduje usunięcie podpiętych pod niego plików. Usunięcie grupy powoduje usunięcie podpiętych pod nią wiadomości, wydarzeń i utworów.
 
 Wymaganiem projektu jest wydajność i skalowalność serwisu. Ponieważ ma być zaprojektowany jak dla setek jednoczesnych użytkowników, przydatne będzie zaindeksowanie tabel tak, by ułatwić wyszukiwanie danych. Wszystkie indeksy są typu mieszającego – większość danych jest w drzewiasty sposób podpięta do pewnej grupy lub użytkownika i wyszukiwanie będzie miało postać znalezienia rekordów z konkretną wartością klucza obcego. Nałożone indeksy:
 \begin{itemize}
-    \item w tabeli \texttt{users}: na kolumnie \texttt{google\_user\_id} (uzyskiwany przy autoryzacji Google, przyspiesza uzyskanie \texttt{user\_id})
+    \item w tabeli \texttt{users} – na kolumnie \texttt{google\_user\_id} (uzyskiwany przy autoryzacji Google, przyspiesza uzyskanie \texttt{user\_id})
     \item w tabelach \texttt{user\_instruments}, \texttt{members}, \texttt{invitations}, \texttt{message\_recipients}, \texttt{event\_attendees} – na kolumnie \texttt{user\_id} (do znajdowania danych z perspektywy użytkownika, poprzez \texttt{members} znajduje istotne \texttt{group\_id})
-    \item w tabelach \texttt{groups}, \texttt{members}, \texttt{messages}, \texttt{events}, \texttt{tracks}: na kolumnie \texttt{group\_id} (do znajdowania danych z perspektywy grupy)
-    \item w tabeli \texttt{event\_tracks}: na kolumnie \texttt{event\_id} (do znajdowania utworów wykonywanych na danym wydarzeniu)
-    \item w tabeli \texttt{files}: na kolumnie \texttt{track\_id} (do znajdowania plików dla danego utworu)
-    \item w tabeli \texttt{instruments}: na kolumnie \texttt{instrument\_id}
+    \item w tabelach \texttt{groups}, \texttt{members}, \texttt{messages}, \texttt{events}, \texttt{tracks} – na kolumnie \texttt{group\_id} (do znajdowania danych z perspektywy grupy)
+    \item w tabeli \texttt{event\_tracks} – na kolumnie \texttt{event\_id} (do znajdowania utworów wykonywanych na danym wydarzeniu)
+    \item w tabeli \texttt{files} – na kolumnie \texttt{track\_id} (do znajdowania plików dla danego utworu)
+    \item w tabeli \texttt{instruments} – na kolumnie \texttt{instrument\_id}
     \item w tabeli \texttt{file\_allowed\_members} – na kolumnie \texttt{file\_id}
+    \item w tabeli \texttt{file\_instruments} – na kolumnie \texttt{file\_id}
 \end{itemize}
 
 \subsection{Przetwarzanie i przechowywanie danych}
