@@ -719,8 +719,8 @@ Aktorzy: użytkownik.
 
 \begin{figure} [H]
     \centering
-    \textcolor{red}{TODO} Należy wkleić wycinek ekranu pokazujący korespondencję z Mentorem i Właścicielem tematu
-    %\includegraphics[width=0.95\linewidth]{sth.jpg}
+    \includegraphics[width=0.95\linewidth]{images/potwierdzenie.png}
+    \caption{Wiadomości potwierdzające wymagania}
 \end{figure}
 
 \section{Definicja architektury}
@@ -731,7 +731,7 @@ Jednymi z wymagań dotyczących systemu są skalowalność i wydajność przy se
 
 \begin{figure} [H]
     \centering
-    \includegraphics[width=0.95\linewidth]{images/definicja_architektury_1.png}
+    \includegraphics[width=0.95\linewidth]{images/arch.png}
     \caption{Diagram architektury systemu w postaci ogólnej}
 \end{figure}
 
@@ -741,7 +741,7 @@ Koszt pracy jednej, najtańszej dostępnej maszyny to około 210 zł miesięczni
 
 \begin{figure} [H]
     \centering
-    \includegraphics[width=0.95\linewidth]{images/definicja_architektury_2.png}
+    \includegraphics[width=0.95\linewidth]{images/arch_min.png}
     \caption{Diagram architektury systemu w uproszczonej postaci}
 \end{figure}
 
@@ -797,14 +797,30 @@ Obowiązkowo statystyki: liczba plików, linie kodu, liczba testów jednostkowyc
 
 \section{Projekt standardu interfejsu użytkownika}
 
-\textcolor{red}{TODO}
+User stories:
+\begin{itemize}
+	\item Jako kierownik chcę tworzyć (pod)grupy użytkowników, aby nimi zarządzać.
+	\item Jako kierownik chcę planować wydarzenia dotyczące (pod)grupy, aby informować użytkowników o nadchodzących próbach czy koncertach.
+	\item Jako kierownik chcę definiować utwory wykonywane przez (pod)grupę, aby informować użytkowników o obecnym repertuarze.
+	\item Jako kierownik chcę dodawać pliki dotyczące utworów, aby przekazywać użytkownikom nuty czy nagrania.
+	\item Jako kierownik chcę wysyłać wiadomości do użytkowników, aby przekazywać im ważne informacje lub o nich przypominać.
+	\item Jako kierownik chcę przekierowywać wiadomości na e-mail, aby dało się je odbierać bez logowania się do serwisu.
+	\item Jako moderator chcę wysyłać wiadomości do użytkowników, aby przekazywać im ważne informacje lub o nich przypominać.
+	\item Jako moderator chcę przekierowywać wiadomości na e-mail, aby dało się je odbierać bez logowania się do serwisu.
+	\item Jako użytkownik chcę dołączać do (pod)grup, aby otrzymywać informacje o ich działalności.
+	\item Jako użytkownik chcę przeglądać terminy wydarzeń, aby móc zaplanować najbliższe dni.
+	\item Jako użytkownik chcę synchronizować kalendarz serwisu z Google Calendar, aby mieć w jednym miejscu terminarz zajęć z różnych źródeł.
+	\item Jako użytkownik chcę przeglądać wiadomości, aby odbierać informacje przekazywane przez kierowników i moderatorów.
+	\item Jako użytkownik chcę przeglądać utwory wykonywane w (pod)grupie, aby dostać się do dotyczących ich informacji czy plików.
+	\item Jako użytkownik chcę przeglądać listę plików dodanych dla utworu, aby je pobierać.
+	\item Jako użytkownik chcę szybko uzyskiwać dostęp do plików dotyczących wydarzenia, aby kilkoma kliknięciami pobrać nuty, o których zapomniałem przed próbą czy koncertem.
+\end{itemize}
 
-[wykorzystanie narzędzi do modelowania oraz tworzenia makiet warstwy prezentacyjnej (np. storyboards, wireframes, wireflows, mockups, prototypes etc)]
-
+Projekt interfejsu użytkownika:
 \begin{figure} [H]
     \centering
-    \includegraphics[width=0.95\linewidth]{images/ui_ver_0.jpg}
-    \caption{Projekt interfejsu użytkownika [wersja 0]}
+    \includegraphics[width=0.95\linewidth]{images/makieta.png}
+    \caption{Makiety najważniejszych ekranów aplikacji}
 \end{figure}
 
 \section{Specyfikacja testów}
@@ -819,9 +835,7 @@ miary jakości testów]
 
 \section{Wirtualizacja/konteneryzacja}
 
-System zostanie wdrożony na maszynach wirtualnych zapewnionych przez Azure.
-
-\textcolor{red}{TODO} konteneryzacja
+System zostanie wdrożony na maszynach wirtualnych zapewnionych przez Azure. Korzystamy z Dockera do tworzenia i uruchamiania kontenerów z komponentami systemu.
 
 \section{Bezpieczeństwo}
 
