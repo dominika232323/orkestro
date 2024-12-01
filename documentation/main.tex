@@ -38,9 +38,9 @@
 
     \Large \textbf{Dokumentacja projektowa PZSP2} \\
     \vspace{0.5cm}
-    WERSJA 2 \\
+    WERSJA 3 \\
     \vspace{0.5cm}
-    14.11.2024 \\
+    1.12.2024 \\
     Semestr 24Z
 
     \vfill
@@ -733,6 +733,14 @@ Jednymi z wymagań dotyczących systemu są skalowalność i wydajność przy se
     \centering
     \includegraphics[width=0.95\linewidth]{images/arch.png}
     \caption{Diagram architektury systemu w postaci ogólnej}
+\end{figure}
+
+Każda maszyna z REST API może obsługiwać wszystkie zapytania - celem korzystania z wielu maszyn jest możliwość przetworzenia większej liczby zapytań naraz. Moduły REST API dostępne dla użytkownika:
+
+\begin{figure} [H]
+    \centering
+    \includegraphics[width=0.95\linewidth]{images/rest.png}
+    \caption{Podział zapytań do REST API na moduły}
 \end{figure}
 
 Wszystkie maszyny wirtualne pracują na Ubuntu Server 24.04. Użytkownik do połączenia z serwisem używa dowolnego urządzenia obsługującego rozsądnie aktualną i znaną przeglądarkę internetową. Możliwe jest dodawanie i usuwanie maszyn odpowiedzialnych za REST API i replikację bazy danych.
