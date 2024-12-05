@@ -2,16 +2,24 @@
 ## Cel projektu
 Celem projektu jest stworzenie aplikacji ułatwiającej kierownikom grup muzycznych zarządzanie swoimi zespołami, przekazywanie muzykom informacji dotyczących funkcjonowania grupy oraz bezpieczną dystrybucję nut i innych wykorzystywanych plików.
 
+## Zmienne środowiskowe
+Przykładowy plik `.env` w katalogu głównym projektu:
+
+```sh
+POSTGRES_USER=myuser
+POSTGRES_PASSWORD=[password]
+POSTGRES_DB=orkestrodb
+DJANGO_DB_HOST=localhost
+DJANGO_DB_PORT=5432
+DJANGO_KEY=[key]
+DJANGO_DEBUG=0
+```
+
+
 ## Baza danych PostgreSQL (`database/`)
 ```sh
 docker compose up
 ```
-
-Baza dostępna jest dostępna na porcie 5432
-
-Użytkownik: `myuser`
-
-Hasło: `mysecretpassword`
 
 ## Django backend (`backend/`)
 ### Instalacja zależności
