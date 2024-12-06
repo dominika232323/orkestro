@@ -1,7 +1,7 @@
 version: "3.3"
 
 services:
-  database:
+  orkestro-db:
     image: "postgres:17-alpine"
     container_name: orkestro-db
     env_file:
