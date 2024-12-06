@@ -35,6 +35,10 @@ DEBUG = True if os.getenv("DJANGO_DEBUG", "0") == "1" else False
 
 ALLOWED_HOSTS = []
 
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+]
+
 
 # Application definition
 
@@ -49,6 +53,7 @@ INSTALLED_APPS = [
 
     # Third-party
     "rest_framework",
+    "corsheaders",
 
     # Own
     "api",
@@ -57,6 +62,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
