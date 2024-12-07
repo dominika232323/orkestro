@@ -1,3 +1,5 @@
 .idea/
 .vscode/
 .env
+database/master/data
+database/slave/data
