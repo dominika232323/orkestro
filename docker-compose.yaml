@@ -1,26 +1,36 @@
-version: "3.3"
-
 services:
-  orkestro-db-master:
+  db-master:
     build:
       context: ./database/master
-    container_name: orkestro-db-master
+    container_name: db-master
     env_file:
-      - ./.env/db.env
+      - ./.env/db-master.env
     ports:
       - "5432:5432"
     volumes:
-      - "./databse/master:/var/lib/postgresql/data"
+      - "master_data:/var/lib/postgresql/data"
+    networks:
+      - pgnet
 
-  orkestro-db-slave:
+  db-slave:
     build:
       context: ./database/slave
-    container_name: orkestro-db-slave
+    container_name: db-slave
     env_file:
-      - ./.env/db.env
+      - ./.env/db-slave.env
     ports:
       - "5433:5432"
     volumes:
-      - "./databse/slave:/var/lib/postgresql/data"
+      - "slave_data:/var/lib/postgresql/data"
     depends_on:
-      - orkestro-db-master
+      - db-master
+    networks:
+      - pgnet
+
+volumes:
+  master_data:
+  slave_data:
+
+networks:
+  pgnet:
+    driver: bridge
