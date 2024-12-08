@@ -9,8 +9,6 @@ services:
       - "5432:5432"
     volumes:
       - "master_data:/var/lib/postgresql/data"
-    networks:
-      - pgnet
 
   db-slave:
     build:
@@ -24,13 +22,7 @@ services:
       - "slave_data:/var/lib/postgresql/data"
     depends_on:
       - db-master
-    networks:
-      - pgnet
 
 volumes:
   master_data:
   slave_data:
-
-networks:
-  pgnet:
-    driver: bridge

@@ -8,8 +8,5 @@ until pg_isready -h "$REPLICATE_FROM" -U "$REP_USER" > /dev/null 2>&1; do
     sleep 2
 done
 
-echo "$REP_PASS"
-
-export PGPASSWORD=$REP_PASS
-pg_basebackup -h $REPLICATE_FROM -D $PGDATA -U $REP_USER -Fp -Xs -P -R
+pg_basebackup -h $REPLICATE_FROM -D /var/lib/postgresql/data -U $REP_USER -Fp -Xs -P -R
 
