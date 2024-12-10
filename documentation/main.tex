@@ -9,13 +9,24 @@
 
 \usepackage{amsmath}
 \usepackage{graphicx}
+\usepackage{xcolor}
 
 \usepackage{float}
 \usepackage{relsize}
 \usepackage{subcaption}
 \usepackage{tabularx}
 
-\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+% sans-serif font
+\renewcommand{\familydefault}{\sfdefault}
+
+% headers color
+\usepackage{sectsty}
+\definecolor{lightblue}{HTML}{0040d4}
+\sectionfont{\color{lightblue}}
+\subsectionfont{\color{lightblue}}
+\subsubsectionfont{\color{lightblue}}
+
+\usepackage[colorlinks=true, allcolors=lightblue]{hyperref}
 
 \usepackage[skip=10pt plus1pt, indent=0pt]{parskip}
 \usepackage{indentfirst}
@@ -40,7 +51,7 @@
     \vspace{0.5cm}
     WERSJA 3 \\
     \vspace{0.5cm}
-    1.12.2024 \\
+    10.12.2024 \\
     Semestr 24Z
 
     \vfill
