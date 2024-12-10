@@ -1,15 +1,9 @@
-import { useTranslation } from "react-i18next";
-import React from "react";
+import LanguageProps from "../interfaces/LanguageProps";
 
-export default function LoginPage() {
-  const { t: translationObject, i18n } = useTranslation();
-
-  const handleLanguageChange = (
-    event: React.ChangeEvent<HTMLSelectElement>
-  ) => {
-    i18n.changeLanguage(event.target.value);
-  };
-
+export default function LoginPage({
+  handleLanguageChange,
+  translationObject,
+}: LanguageProps) {
   return (
     <>
       <h1>Orkestro</h1>

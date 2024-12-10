@@ -1,15 +1,10 @@
 import TopBar from "../components/TopBar";
-import { useTranslation } from "react-i18next";
+import LanguageProps from "../interfaces/LanguageProps";
 
-export default function MainPage() {
-  const { t: translationObject, i18n } = useTranslation();
-
-  const handleLanguageChange = (
-    event: React.ChangeEvent<HTMLSelectElement>
-  ) => {
-    i18n.changeLanguage(event.target.value);
-  };
-
+export default function MainPage({
+  handleLanguageChange,
+  translationObject,
+}: LanguageProps) {
   return (
     <>
       <TopBar

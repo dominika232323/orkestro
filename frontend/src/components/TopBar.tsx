@@ -1,6 +1,9 @@
-import React from "react";
+import LanguageProps from "../interfaces/LanguageProps";
 
-export default function TopBar({ handleLanguageChange, translationObject }) {
+export default function TopBar({
+  handleLanguageChange,
+  translationObject,
+}: LanguageProps) {
   return (
     <div className="flex items-center justify-between bg-gray-100 p-4 shadow-md">
       {/* Left Section - Icons */}
