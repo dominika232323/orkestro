@@ -3,5 +3,9 @@
     "events": "Wydarzenia",
     "music-files": "Utwory",
     "group": "Grupa"
+  },
+  "login-page": {
+    "description": "Zarządzaj zespołami muzycznymi, wysyłaj wiadomości i dziel się plikami w jednym miejscu.",
+    "login": "Zaloguj się"
   }
 }

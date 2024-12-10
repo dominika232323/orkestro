@@ -3,5 +3,9 @@
     "events": "Events",
     "music-files": "Music files",
     "group": "Group"
+  },
+  "login-page": {
+    "description": "Manage music groups, send messages and share files in one place.",
+    "login": "Login"
   }
 }

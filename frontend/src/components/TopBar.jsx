@@ -1,10 +1,6 @@
 import React from "react";
 
-export default function TopBar({ changeLanguage, translationObject }) {
-  const handleLanguageChange = (event) => {
-    changeLanguage(event.target.value);
-  };
-
+export default function TopBar({ handleLanguageChange, translationObject }) {
   return (
     <div className="flex items-center justify-between bg-gray-100 p-4 shadow-md">
       {/* Left Section - Icons */}
