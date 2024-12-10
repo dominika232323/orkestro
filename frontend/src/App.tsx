@@ -1,49 +1,21 @@
-import React, {useEffect, useState} from "react";
-
-
-interface HelloMessage {
-    text: string;
-}
+import TopBar from "./components/TopBar";
+import { useTranslation } from "react-i18next";
 
 function App() {
-    const [message, setMessage] = useState<HelloMessage | null>(null);
-    const [error, setError] = useState<string | null>(null);
+  const { t: translationObject, i18n } = useTranslation();
 
-    useEffect(() => {
-        const fetchMessage = async () => {
-            try {
-                const response = await fetch("http://localhost:8000/api/hello/");
-                if (!response.ok) {
-                    throw new Error(`HTTP error ${response.status}`);
-                }
-                const result: HelloMessage = await response.json();
-                setMessage(result);
-                console.log("Message:", message);
-            } catch (error) {
-                setError(`${error}`);
-                console.error("Failed to fetch data", error);
-            }
-        };
+  const changeLanguage = (lang: string) => {
+    i18n.changeLanguage(lang);
+  };
 
-        fetchMessage();
-    }, []);
-
-    return (
-        <div>
-            <div className="flex flex-col items-center justify-center h-screen bg-blue-500">
-                <h1 className="text-4xl font-bold text-white mb-8">API response:</h1>
-
-                {error ?
-                    <p className="text-3xl font-bold text-white">{error}</p>
-                    :
-                    message ?
-                        <p className="text-3xl font-bold text-white">{message.text}</p>
-                        :
-                        <p className="text-3xl font-bold text-white">Loading...</p>
-                }
-            </div>
-        </div>
-    );
+  return (
+    <>
+      <TopBar
+        changeLanguage={changeLanguage}
+        translationObject={translationObject}
+      />
+    </>
+  );
 }
 
 export default App;
