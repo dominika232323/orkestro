@@ -1,27 +1,55 @@
 import { useLanguage } from "../LanguageContext";
+import Notification from "./Notification";
 
 export default function Notifications() {
   const { t } = useLanguage();
   const notifications = [
     {
-      id: 1,
+      id: "1",
       group: "Group 1",
       from: "Jan Kowalski",
+      date: "28-10-2024",
+      hour: "13:36",
       message:
         "Dzień dobry,\n 7.11 odbędzie się koncert.\nZ poważaniem, Jan Kowalski",
     },
     {
-      id: 1,
-      group: "Grupa",
-      from: "Jan Kowalski",
+      id: "2",
+      group: "Grupa 2",
+      from: "Piotr Nowak",
+      date: "31-10-2024",
+      hour: "21:36",
       message:
-        "Dzień dobry,\n 7.11 odbędzie się koncert.\nZ poważaniem, Jan Kowalski",
+        "Dzień dobry,\n 5.11 odbędzie się próba do koncertu. Przypominam o instrumentach i o wydrukowaniu nut.\n Z wyrazami szacunku, Piotr Nowak",
     },
   ];
+  //   const notifications: {
+  //     id: string;
+  //     group: string;
+  //     from: string;
+  //     message: string;
+  //   }[] = [];
   return (
     <div className="bg-gray-200 p-6 rounded-lg shadow-md max-w-4xl mx-auto mt-8">
-      <h1 className="text-2xl font-bold text-center mb-4">{t("title")}</h1>
-      <ul className="space-y-4">{}</ul>
+      <h1 className="text-2xl font-bold text-center mb-4">
+        {t("notifications.title")}
+      </h1>
+      {notifications.length > 0 ? (
+        <ul className="space-y-4">
+          {notifications.map((notification) => (
+            <Notification
+              id={notification.id}
+              group={notification.group}
+              from={notification.from}
+              message={notification.message}
+              date={notification.date}
+              hour={notification.hour}
+            />
+          ))}
+        </ul>
+      ) : (
+        <p>{t("notifications.no-notifications")}</p>
+      )}
     </div>
   );
 }

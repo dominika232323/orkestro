@@ -21,6 +21,14 @@
     "manage": "Manage"
   },
   "notifications": {
-    "title": "Notifications"
+    "title": "Notifications",
+    "no-notifications": "No notifications"
+  },
+  "notification": {
+    "from": "From",
+    "group": "Group",
+    "message": "Message",
+    "date": "Date",
+    "hour": "Time"
   }
 }

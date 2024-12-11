@@ -3,30 +3,25 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
 import MainPage from "./pages/MainPage";
 
-import { useTranslation } from "react-i18next";
 import { LanguageProvider } from "./LanguageContext";
 
 function App() {
   const router = createBrowserRouter([
     {
       path: "/",
-      element: (
-        <LanguageProvider>
-          <LoginPage />
-        </LanguageProvider>
-      ),
+      element: <LoginPage />,
     },
     {
       path: "/main-page",
-      element: (
-        <LanguageProvider>
-          <MainPage />
-        </LanguageProvider>
-      ),
+      element: <MainPage />,
     },
   ]);
 
-  return <RouterProvider router={router} />;
+  return (
+    <LanguageProvider>
+      <RouterProvider router={router} />
+    </LanguageProvider>
+  );
 }
 
 export default App;

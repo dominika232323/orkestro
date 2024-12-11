@@ -1,5 +1,5 @@
 import React, { createContext, useContext } from "react";
-import i18n, { TFunction } from "i18next";
+import { TFunction } from "i18next";
 import { useTranslation } from "react-i18next";
 
 interface LanguageContextProps {

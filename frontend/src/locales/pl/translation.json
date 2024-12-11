@@ -21,6 +21,14 @@
     "manage": "Zarządzaj"
   },
   "notifications": {
-    "title": "Powiadomienia"
+    "title": "Powiadomienia",
+    "no-notifications": "Brak powiadomień"
+  },
+  "notification": {
+    "from": "Od",
+    "group": "Grupa",
+    "message": "Wiadomość",
+    "date": "Data",
+    "hour": "Godzina"
   }
 }
