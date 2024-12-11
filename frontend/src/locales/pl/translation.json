@@ -2,7 +2,8 @@
   "top-bar": {
     "events": "Wydarzenia",
     "music-files": "Utwory",
-    "group": "Grupa"
+    "group": "Grupa",
+    "calendar": "Kalendarz"
   },
   "login-page": {
     "description": "Zarządzaj zespołami muzycznymi, wysyłaj wiadomości i dziel się plikami w jednym miejscu.",

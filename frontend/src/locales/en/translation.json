@@ -2,7 +2,8 @@
   "top-bar": {
     "events": "Events",
     "music-files": "Music files",
-    "group": "Group"
+    "group": "Group",
+    "calendar": "Calendar"
   },
   "login-page": {
     "description": "Manage music groups, send messages and share files in one place.",

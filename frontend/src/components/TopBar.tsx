@@ -1,30 +1,56 @@
 import LanguageProps from "../interfaces/LanguageProps";
 
+interface TopBarProps extends LanguageProps {
+  handleChangePage: (newPage: string) => void;
+}
+
 export default function TopBar({
   handleLanguageChange,
+  handleChangePage,
   translationObject,
-}: LanguageProps) {
+}: TopBarProps) {
   return (
     <div className="flex items-center justify-between bg-gray-100 p-4 shadow-md">
       {/* Left Section - Icons */}
       <div className="flex items-center space-x-4">
-        <div className="w-8 h-8 bg-gray-300 hover:bg-gray-400 rounded-full flex items-center justify-center">
+        <div
+          className="w-8 h-8 bg-gray-300 hover:bg-gray-400 rounded-full flex items-center justify-center"
+          onClick={() => handleChangePage("user")}
+        >
           <i className="fas fa-user"></i>
         </div>
-        <div className="w-8 h-8 bg-gray-300 hover:bg-gray-400 rounded-full flex items-center justify-center">
+        <div
+          className="w-8 h-8 bg-gray-300 hover:bg-gray-400 rounded-full flex items-center justify-center"
+          onClick={() => handleChangePage("notifications")}
+        >
           <i className="fas fa-bell"></i>
+        </div>
+        <div
+          className="w-8 h-8 bg-gray-300 hover:bg-gray-400 rounded-full flex items-center justify-center"
+          onClick={() => handleChangePage("calendar")}
+        >
+          <i className="fas fa-calendar"></i>
         </div>
       </div>
 
       {/* Center Section - Navigation */}
       <div className="flex items-center space-x-6 text-sm">
-        <button className="hover:text-gray-700 font-medium">
+        <button
+          className="hover:text-gray-700 font-medium"
+          onClick={() => handleChangePage("events")}
+        >
           {translationObject("top-bar.events")}
         </button>
-        <button className="hover:text-gray-700 font-medium">
+        <button
+          className="hover:text-gray-700 font-medium"
+          onClick={() => handleChangePage("music-files")}
+        >
           {translationObject("top-bar.music-files")}
         </button>
-        <button className="hover:text-gray-700 font-medium">
+        <button
+          className="hover:text-gray-700 font-medium"
+          onClick={() => handleChangePage("group")}
+        >
           {translationObject("top-bar.group")}
         </button>
       </div>
@@ -40,10 +66,16 @@ export default function TopBar({
             <option value="en">🇬🇧 English</option>
           </select>
         </div>
-        <button className="bg-gray-300 p-2 rounded-full hover:bg-gray-400">
+        <button
+          className="bg-gray-300 p-2 rounded-full hover:bg-gray-400"
+          onClick={() => handleChangePage("settings")}
+        >
           <i className="fas fa-cog"></i>
         </button>
-        <button className="bg-gray-300 p-2 rounded-full hover:bg-gray-400">
+        <button
+          className="bg-gray-300 p-2 rounded-full hover:bg-gray-400"
+          onClick={() => handleChangePage("key")}
+        >
           <i className="fas fa-key"></i>
         </button>
       </div>
