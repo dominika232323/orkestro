@@ -7,6 +7,20 @@
   },
   "login-page": {
     "description": "Zarządzaj zespołami muzycznymi, wysyłaj wiadomości i dziel się plikami w jednym miejscu.",
-    "login": "Zaloguj się"
+    "login": "Zaloguj się",
+    "select-language": "Wybierz język:"
+  },
+  "invitations": {
+    "title": "Zaproszenia",
+    "no-invitations": "Brak zaproszeń"
+  },
+  "groups": {
+    "title": "Grupy"
+  },
+  "group": {
+    "manage": "Zarządzaj"
+  },
+  "notifications": {
+    "title": "Powiadomienia"
   }
 }

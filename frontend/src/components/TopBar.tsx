@@ -1,14 +1,11 @@
-import LanguageProps from "../interfaces/LanguageProps";
+import { useLanguage } from "../LanguageContext";
 
-interface TopBarProps extends LanguageProps {
+interface TopBarProps {
   handleChangePage: (newPage: string) => void;
 }
 
-export default function TopBar({
-  handleLanguageChange,
-  handleChangePage,
-  translationObject,
-}: TopBarProps) {
+export default function TopBar({ handleChangePage }: TopBarProps) {
+  const { t, changeLanguage, currentLanguage } = useLanguage();
   return (
     <div className="flex items-center justify-between bg-gray-100 p-4 shadow-md">
       {/* Left Section - Icons */}
@@ -39,19 +36,19 @@ export default function TopBar({
           className="hover:text-gray-700 font-medium"
           onClick={() => handleChangePage("events")}
         >
-          {translationObject("top-bar.events")}
+          {t("top-bar.events")}
         </button>
         <button
           className="hover:text-gray-700 font-medium"
           onClick={() => handleChangePage("music-files")}
         >
-          {translationObject("top-bar.music-files")}
+          {t("top-bar.music-files")}
         </button>
         <button
           className="hover:text-gray-700 font-medium"
           onClick={() => handleChangePage("group")}
         >
-          {translationObject("top-bar.group")}
+          {t("top-bar.group")}
         </button>
       </div>
 
@@ -60,7 +57,8 @@ export default function TopBar({
         <div className="relative">
           <select
             className="bg-white border border-gray-300 rounded-md text-sm p-1"
-            onChange={handleLanguageChange}
+            onChange={(e) => changeLanguage(e.target.value)}
+            value={currentLanguage}
           >
             <option value="pl">🇵🇱 Polski</option>
             <option value="en">🇬🇧 English</option>

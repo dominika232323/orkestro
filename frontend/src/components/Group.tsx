@@ -1,3 +1,5 @@
+import { useLanguage } from "../LanguageContext";
+
 interface IGroup {
   id: string;
   name: string;
@@ -5,6 +7,7 @@ interface IGroup {
 }
 
 export default function Group({ id, name, subGroups }: IGroup) {
+  const { t } = useLanguage();
   return (
     <li className="bg-white p-4 rounded-lg shadow mb-2">
       <div className="flex justify-between items-center">
@@ -13,7 +16,7 @@ export default function Group({ id, name, subGroups }: IGroup) {
           className="text-sm text-blue-500 hover:text-blue-700"
           title={`Manage ${name}`}
         >
-          Manage
+          {t("group.manage")}
         </button>
       </div>
       {subGroups && subGroups.length > 0 && (

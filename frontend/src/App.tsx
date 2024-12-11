@@ -1,35 +1,27 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+
 import LoginPage from "./pages/LoginPage";
 import MainPage from "./pages/MainPage";
 
 import { useTranslation } from "react-i18next";
+import { LanguageProvider } from "./LanguageContext";
 
 function App() {
-  const { t: translationObject, i18n } = useTranslation();
-
-  const handleLanguageChange = (
-    event: React.ChangeEvent<HTMLSelectElement>
-  ) => {
-    i18n.changeLanguage(event.target.value);
-  };
-
   const router = createBrowserRouter([
     {
       path: "/",
       element: (
-        <LoginPage
-          handleLanguageChange={handleLanguageChange}
-          translationObject={translationObject}
-        />
+        <LanguageProvider>
+          <LoginPage />
+        </LanguageProvider>
       ),
     },
     {
       path: "/main-page",
       element: (
-        <MainPage
-          handleLanguageChange={handleLanguageChange}
-          translationObject={translationObject}
-        />
+        <LanguageProvider>
+          <MainPage />
+        </LanguageProvider>
       ),
     },
   ]);

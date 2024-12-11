@@ -1,6 +1,8 @@
+import { useLanguage } from "../LanguageContext";
 import Group from "./Group";
 
 export default function Groups() {
+  const { t } = useLanguage();
   const groups = [
     {
       id: "1",
@@ -30,7 +32,9 @@ export default function Groups() {
 
   return (
     <div className="bg-gray-200 p-6 rounded-lg shadow-md max-w-4xl mx-auto mt-8">
-      <h1 className="text-2xl font-bold text-center mb-4">Groups</h1>
+      <h1 className="text-2xl font-bold text-center mb-4">
+        {t("groups.title")}
+      </h1>
       <ul className="space-y-4">
         {groups.map((group) => (
           <Group

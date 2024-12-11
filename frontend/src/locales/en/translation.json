@@ -7,6 +7,20 @@
   },
   "login-page": {
     "description": "Manage music groups, send messages and share files in one place.",
-    "login": "Login"
+    "login": "Login",
+    "select-language": "Select language:"
+  },
+  "invitations": {
+    "title": "User Invitations",
+    "no-invitations": "No active invitations"
+  },
+  "groups": {
+    "title": "Groups"
+  },
+  "group": {
+    "manage": "Manage"
+  },
+  "notifications": {
+    "title": "Notifications"
   }
 }
