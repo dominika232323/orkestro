@@ -1,3 +1,4 @@
+import Groups from "../components/Groups";
 import Invitations from "../components/Invitations";
 import TopBar from "../components/TopBar";
 import LanguageProps from "../interfaces/LanguageProps";
@@ -21,10 +22,13 @@ export default function MainPage({
         translationObject={translationObject}
       />
       {page === "user" && (
-        <Invitations
-          handleLanguageChange={handleLanguageChange}
-          translationObject={translationObject}
-        />
+        <div className="space-y-8">
+          <Invitations
+            handleLanguageChange={handleLanguageChange}
+            translationObject={translationObject}
+          />
+          <Groups />
+        </div>
       )}
     </>
   );
