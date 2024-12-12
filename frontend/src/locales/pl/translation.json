@@ -3,7 +3,11 @@
     "events": "Wydarzenia",
     "music-files": "Utwory",
     "group": "Grupa",
-    "calendar": "Kalendarz"
+    "calendar": "Kalendarz",
+    "groups": "Grupy",
+    "messages": "Wiadomości",
+    "settings": "Ustawienia",
+    "logout": "Wyloguj"
   },
   "login-page": {
     "description": "Zarządzaj zespołami muzycznymi, wysyłaj wiadomości i dziel się plikami w jednym miejscu.",
@@ -39,5 +43,8 @@
     "google-calendar": "Kalendarz Google",
     "add-instrument": "Dodaj instrument",
     "save": "Zapisz"
+  },
+  "calendar": {
+    "title": "Kalendarz"
   }
 }

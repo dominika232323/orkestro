@@ -3,7 +3,11 @@
     "events": "Events",
     "music-files": "Music files",
     "group": "Group",
-    "calendar": "Calendar"
+    "calendar": "Calendar",
+    "groups": "Groups",
+    "messages": "Messages",
+    "settings": "Settings",
+    "logout": "Logout"
   },
   "login-page": {
     "description": "Manage music groups, send messages and share files in one place.",
@@ -39,5 +43,8 @@
     "google-calendar": "Google Calendar",
     "add-instrument": "Add instrument",
     "save": "Save"
+  },
+  "calendar": {
+    "title": "Calendar"
   }
 }

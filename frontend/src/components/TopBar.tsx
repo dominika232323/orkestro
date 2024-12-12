@@ -1,5 +1,5 @@
 import { useLanguage } from "../LanguageContext";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Link } from "react-router-dom";
 import {
   faCalendarDays,
   faCog,
@@ -7,35 +7,44 @@ import {
   faMessage,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
+import HoverText from "./HoverText";
+import TopBarIcon from "./TopBarIcon";
 
 interface TopBarProps {
   handleChangePage: (newPage: string) => void;
+  handleLogOut: () => void;
 }
 
-export default function TopBar({ handleChangePage }: TopBarProps) {
+export default function TopBar({
+  handleChangePage,
+  handleLogOut,
+}: TopBarProps) {
   const { t, changeLanguage, currentLanguage } = useLanguage();
   return (
     <div className="flex items-center justify-between bg-gray-100 p-4 shadow-md">
       {/* Left Section - Icons */}
       <div className="flex items-center space-x-4">
-        <div
-          className="w-8 h-8 bg-gray-300 hover:bg-gray-400 rounded-full flex items-center justify-center"
-          onClick={() => handleChangePage("user")}
-        >
-          <FontAwesomeIcon icon={faUser} />
-        </div>
-        <div
-          className="w-8 h-8 bg-gray-300 hover:bg-gray-400 rounded-full flex items-center justify-center"
-          onClick={() => handleChangePage("messages")}
-        >
-          <FontAwesomeIcon icon={faMessage} />
-        </div>
-        <div
-          className="w-8 h-8 bg-gray-300 hover:bg-gray-400 rounded-full flex items-center justify-center"
-          onClick={() => handleChangePage("calendar")}
-        >
-          <FontAwesomeIcon icon={faCalendarDays} />
-        </div>
+        <HoverText textToShow={t("top-bar.groups")}>
+          <TopBarIcon
+            handleChangePage={handleChangePage}
+            pageName="groups"
+            iconObject={faUser}
+          />
+        </HoverText>
+        <HoverText textToShow={t("top-bar.messages")}>
+          <TopBarIcon
+            handleChangePage={handleChangePage}
+            pageName="messages"
+            iconObject={faMessage}
+          />
+        </HoverText>
+        <HoverText textToShow={t("top-bar.calendar")}>
+          <TopBarIcon
+            handleChangePage={handleChangePage}
+            pageName="calendar"
+            iconObject={faCalendarDays}
+          />
+        </HoverText>
       </div>
 
       {/* Center Section - Navigation */}
@@ -72,18 +81,22 @@ export default function TopBar({ handleChangePage }: TopBarProps) {
             <option value="en">🇬🇧 English</option>
           </select>
         </div>
-        <button
-          className="bg-gray-300 p-2 rounded-full hover:bg-gray-400"
-          onClick={() => handleChangePage("settings")}
-        >
-          <FontAwesomeIcon icon={faCog} />
-        </button>
-        <button
-          className="bg-gray-300 p-2 rounded-full hover:bg-gray-400"
-          onClick={() => handleChangePage("key")}
-        >
-          <FontAwesomeIcon icon={faKey} />
-        </button>
+        <HoverText textToShow={t("top-bar.settings")}>
+          <TopBarIcon
+            handleChangePage={handleChangePage}
+            pageName="settings"
+            iconObject={faCog}
+          />
+        </HoverText>
+        <Link to="/">
+          <HoverText textToShow={t("top-bar.logout")}>
+            <TopBarIcon
+              handleChangePage={() => {}}
+              pageName=""
+              iconObject={faKey}
+            />
+          </HoverText>
+        </Link>
       </div>
     </div>
   );
