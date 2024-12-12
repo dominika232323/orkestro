@@ -20,11 +20,11 @@
   "group": {
     "manage": "Zarządzaj"
   },
-  "notifications": {
-    "title": "Powiadomienia",
-    "no-notifications": "Brak powiadomień"
+  "messages": {
+    "title": "Wiadomości",
+    "no-messages": "Brak wiadomości"
   },
-  "notification": {
+  "message": {
     "from": "Od",
     "group": "Grupa",
     "message": "Wiadomość",

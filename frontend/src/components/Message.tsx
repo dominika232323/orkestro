@@ -1,6 +1,13 @@
+import {
+  faCalendarAlt,
+  faClock,
+  faUser,
+  faUsers,
+} from "@fortawesome/free-solid-svg-icons";
 import { useLanguage } from "../LanguageContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-interface INotification {
+interface IMessage {
   id: string;
   group: string;
   from: string;
@@ -9,14 +16,14 @@ interface INotification {
   hour: string;
 }
 
-export default function Notification({
+export default function Message({
   id,
   group,
   from,
   message,
   date,
   hour,
-}: INotification) {
+}: IMessage) {
   const { t } = useLanguage();
   return (
     <li
@@ -26,36 +33,34 @@ export default function Notification({
       <div className="mb-4">
         <p className="flex items-center text-gray-700 font-medium">
           <span className="mr-2 text-blue-500">
-            <i className="fas fa-user"></i>
+            <FontAwesomeIcon icon={faUser} />
           </span>
-          {t("notification.from")}:{" "}
+          {t("message.from")}:{" "}
           <span className="ml-1 font-semibold">{from}</span>
         </p>
         <p className="flex items-center text-gray-700 font-medium mt-2">
           <span className="mr-2 text-green-500">
-            <i className="fas fa-users"></i>
+            <FontAwesomeIcon icon={faUsers} />
           </span>
-          {t("notification.group")}:{" "}
+          {t("message.group")}:{" "}
           <span className="ml-1 font-semibold">{group}</span>
         </p>
         <p className="flex items-center text-gray-700 font-medium mt-2">
           <span className="mr-2 text-gray-500">
-            <i className="fas fa-calendar-alt"></i>
+            <FontAwesomeIcon icon={faCalendarAlt} />
           </span>
-          {t("notification.date")}:{" "}
+          {t("message.date")}:{" "}
           <span className="ml-1 font-semibold">{date}</span>
         </p>
         <p className="flex items-center text-gray-700 font-medium mt-2">
           <span className="mr-2 text-gray-500">
-            <i className="fas fa-clock"></i>
+            <FontAwesomeIcon icon={faClock} />
           </span>
-          {t("notification.hour")}:{" "}
+          {t("message.hour")}:{" "}
           <span className="ml-1 font-semibold">{hour}</span>
         </p>
       </div>
-      <p className="text-gray-700 font-medium mb-2">
-        {t("notification.message")}:
-      </p>
+      <p className="text-gray-700 font-medium mb-2">{t("message.message")}:</p>
       <p className="text-gray-600 leading-relaxed">{message}</p>
     </li>
   );

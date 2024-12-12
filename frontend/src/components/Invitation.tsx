@@ -1,3 +1,6 @@
+import { faCheck, faTimes } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 interface IInvitation {
   text: string;
 }
@@ -11,13 +14,13 @@ export default function Invitation({ text }: IInvitation) {
           className="w-10 h-10 bg-green-500 hover:bg-green-600 text-white rounded-full flex items-center justify-center transition-colors"
           title="Accept"
         >
-          <i className="fas fa-thumbs-up"></i>
+          <FontAwesomeIcon icon={faCheck} />
         </button>
         <button
           className="w-10 h-10 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center transition-colors"
           title="Reject"
         >
-          <i className="fas fa-thumbs-down"></i>
+          <FontAwesomeIcon icon={faTimes} />
         </button>
       </div>
     </li>

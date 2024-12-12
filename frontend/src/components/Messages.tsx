@@ -1,9 +1,9 @@
 import { useLanguage } from "../LanguageContext";
-import Notification from "./Notification";
+import Message from "./Message";
 
-export default function Notifications() {
+export default function Messages() {
   const { t } = useLanguage();
-  const notifications = [
+  const messages = [
     {
       id: "1",
       group: "Group 1",
@@ -23,7 +23,7 @@ export default function Notifications() {
         "Dzień dobry,\n 5.11 odbędzie się próba do koncertu. Przypominam o instrumentach i o wydrukowaniu nut.\n Z wyrazami szacunku, Piotr Nowak",
     },
   ];
-  //   const notifications: {
+  //   const messages: {
   //     id: string;
   //     group: string;
   //     from: string;
@@ -32,12 +32,12 @@ export default function Notifications() {
   return (
     <div className="bg-gray-200 p-6 rounded-lg shadow-md max-w-4xl mx-auto mt-8">
       <h1 className="text-2xl font-bold text-center mb-4">
-        {t("notifications.title")}
+        {t("messages.title")}
       </h1>
-      {notifications.length > 0 ? (
+      {messages.length > 0 ? (
         <ul className="space-y-4">
-          {notifications.map((notification) => (
-            <Notification
+          {messages.map((notification) => (
+            <Message
               id={notification.id}
               group={notification.group}
               from={notification.from}
@@ -48,7 +48,7 @@ export default function Notifications() {
           ))}
         </ul>
       ) : (
-        <p>{t("notifications.no-notifications")}</p>
+        <p>{t("messages.no-messages")}</p>
       )}
     </div>
   );

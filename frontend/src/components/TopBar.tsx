@@ -1,4 +1,12 @@
 import { useLanguage } from "../LanguageContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faCalendarDays,
+  faCog,
+  faKey,
+  faMessage,
+  faUser,
+} from "@fortawesome/free-solid-svg-icons";
 
 interface TopBarProps {
   handleChangePage: (newPage: string) => void;
@@ -14,19 +22,19 @@ export default function TopBar({ handleChangePage }: TopBarProps) {
           className="w-8 h-8 bg-gray-300 hover:bg-gray-400 rounded-full flex items-center justify-center"
           onClick={() => handleChangePage("user")}
         >
-          <i className="fas fa-user"></i>
+          <FontAwesomeIcon icon={faUser} />
         </div>
         <div
           className="w-8 h-8 bg-gray-300 hover:bg-gray-400 rounded-full flex items-center justify-center"
-          onClick={() => handleChangePage("notifications")}
+          onClick={() => handleChangePage("messages")}
         >
-          <i className="fas fa-bell"></i>
+          <FontAwesomeIcon icon={faMessage} />
         </div>
         <div
           className="w-8 h-8 bg-gray-300 hover:bg-gray-400 rounded-full flex items-center justify-center"
           onClick={() => handleChangePage("calendar")}
         >
-          <i className="fas fa-calendar"></i>
+          <FontAwesomeIcon icon={faCalendarDays} />
         </div>
       </div>
 
@@ -68,13 +76,13 @@ export default function TopBar({ handleChangePage }: TopBarProps) {
           className="bg-gray-300 p-2 rounded-full hover:bg-gray-400"
           onClick={() => handleChangePage("settings")}
         >
-          <i className="fas fa-cog"></i>
+          <FontAwesomeIcon icon={faCog} />
         </button>
         <button
           className="bg-gray-300 p-2 rounded-full hover:bg-gray-400"
           onClick={() => handleChangePage("key")}
         >
-          <i className="fas fa-key"></i>
+          <FontAwesomeIcon icon={faKey} />
         </button>
       </div>
     </div>

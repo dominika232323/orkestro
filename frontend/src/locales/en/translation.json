@@ -20,11 +20,11 @@
   "group": {
     "manage": "Manage"
   },
-  "notifications": {
-    "title": "Notifications",
-    "no-notifications": "No notifications"
+  "messages": {
+    "title": "Messages",
+    "no-messages": "No messages"
   },
-  "notification": {
+  "message": {
     "from": "From",
     "group": "Group",
     "message": "Message",
