@@ -6,7 +6,7 @@ class User(models.Model):
     user_id = models.AutoField(primary_key=True)
     user_name = models.CharField(max_length=50)
     user_surname = models.CharField(max_length=50)
-    user_email = models.CharField(max_length=100)
+    user_email = models.EmailField(max_length=100)
     google_user_id = models.CharField(max_length=255)
     google_calendar_id = models.CharField(max_length=1024, blank=True, null=True)
 
