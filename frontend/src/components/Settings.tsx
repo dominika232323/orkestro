@@ -1,0 +1,160 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useLanguage } from "../LanguageContext";
+import { faPlus, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { useState } from "react";
+
+export default function Settings() {
+  const { t } = useLanguage();
+  const [person, setPerson] = useState({
+    name: "Jan",
+    surname: "Kowalski",
+    email: "jan.kowalski@gmail.com",
+    googleCalendar: "Google Calendar",
+    instruments: ["Violin", "Flute", "Guitar"],
+  });
+  const [newInstrument, setNewInstrument] = useState("");
+
+  const handleSave = () => {
+    // Add save functionality (e.g., API call)
+    console.log("Saved:", person);
+  };
+
+  const handleAddInstrument = () => {
+    if (newInstrument.trim() !== "") {
+      setPerson((prev) => ({
+        ...prev,
+        instruments: [...prev.instruments, newInstrument],
+      }));
+      setNewInstrument("");
+    }
+  };
+
+  const handleRemoveInstrument = (instrumentToRemove: string) => {
+    setPerson((prev) => ({
+      ...prev,
+      instruments: prev.instruments.filter(
+        (instrument) => instrument !== instrumentToRemove
+      ),
+    }));
+  };
+
+  return (
+    <div className="bg-gray-200 p-6 rounded-lg shadow-md max-w-4xl mx-auto mt-8">
+      <h1 className="text-2xl font-bold text-center mb-4">
+        {t("settings.title")}
+      </h1>
+
+      {/* Name */}
+      <div className="mb-4">
+        <label className="block font-medium text-gray-700">
+          {t("settings.name")}
+        </label>
+        <input
+          type="text"
+          className="w-full p-2 border border-gray-300 rounded-lg"
+          value={person.name}
+          onChange={(e) =>
+            setPerson((prev) => ({ ...prev, name: e.target.value }))
+          }
+        />
+      </div>
+
+      {/* Surname */}
+      <div className="mb-4">
+        <label className="block font-medium text-gray-700">
+          {t("settings.surname")}
+        </label>
+        <input
+          type="text"
+          className="w-full p-2 border border-gray-300 rounded-lg"
+          value={person.surname}
+          onChange={(e) =>
+            setPerson((prev) => ({ ...prev, surname: e.target.value }))
+          }
+        />
+      </div>
+
+      {/* Email */}
+      <div className="mb-4">
+        <label className="block font-medium text-gray-700">
+          {t("settings.email")}
+        </label>
+        <input
+          type="text"
+          className="w-full p-2 border border-gray-300 rounded-lg"
+          value={person.email}
+          onChange={(e) =>
+            setPerson((prev) => ({ ...prev, email: e.target.value }))
+          }
+        />
+      </div>
+
+      {/* Google Calendar */}
+      <div className="mb-4">
+        <label className="block font-medium text-gray-700">
+          {t("settings.google-calendar")}
+        </label>
+        <input
+          type="text"
+          className="w-full p-2 border border-gray-300 rounded-lg"
+          value={person.googleCalendar}
+          onChange={(e) =>
+            setPerson((prev) => ({
+              ...prev,
+              googleCalendar: e.target.value,
+            }))
+          }
+        />
+      </div>
+
+      {/* Instruments */}
+      <div className="mb-4">
+        <label className="block font-medium text-gray-700">
+          {t("settings.add-instrument")}
+        </label>
+        <div className="flex gap-2">
+          <input
+            type="text"
+            className="flex-grow p-2 border border-gray-300 rounded-lg"
+            value={newInstrument}
+            onChange={(e) => setNewInstrument(e.target.value)}
+          />
+          <button
+            className="p-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
+            onClick={handleAddInstrument}
+          >
+            <FontAwesomeIcon icon={faPlus} />
+          </button>
+        </div>
+      </div>
+
+      {/* Instrument List */}
+      {person.instruments.length > 0 && (
+        <ul className="space-y-2 mb-4">
+          {person.instruments.map((instrument, index) => (
+            <li
+              key={index}
+              className="flex justify-between items-center p-2 bg-gray-300 border border-black rounded-lg"
+            >
+              <span>{instrument}</span>
+              <button
+                className="p-2 text-red-500 hover:text-red-600"
+                onClick={() => handleRemoveInstrument(instrument)}
+              >
+                <FontAwesomeIcon icon={faXmark} />
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      {/* Save Button */}
+      <button
+        className="w-full py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 font-medium"
+        onClick={handleSave}
+      >
+        {t("settings.save")}
+      </button>
+    </div>
+  );
+}

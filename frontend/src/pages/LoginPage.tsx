@@ -1,3 +1,4 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useLanguage } from "../LanguageContext";
 
 export default function LoginPage() {

@@ -30,5 +30,14 @@
     "message": "Message",
     "date": "Date",
     "hour": "Time"
+  },
+  "settings": {
+    "title": "Settings",
+    "name": "Name",
+    "surname": "Surname",
+    "email": "E-mail",
+    "google-calendar": "Google Calendar",
+    "add-instrument": "Add instrument",
+    "save": "Save"
   }
 }

@@ -30,5 +30,14 @@
     "message": "Wiadomość",
     "date": "Data",
     "hour": "Godzina"
+  },
+  "settings": {
+    "title": "Ustawienia",
+    "name": "Imię",
+    "surname": "Nazwisko",
+    "email": "E-mail",
+    "google-calendar": "Kalendarz Google",
+    "add-instrument": "Dodaj instrument",
+    "save": "Zapisz"
   }
 }
