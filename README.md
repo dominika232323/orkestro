@@ -17,8 +17,17 @@ DJANGO_DEBUG=0
 
 
 ## Baza danych PostgreSQL (`database/`)
+### Uruchomienie
 ```sh
 docker compose up
+```
+
+### Wypełnienie przykładowymi danymi
+```sh
+docker cp tables.sql orkestro-db:/
+docker cp data.sql orkestro-db:/
+docker exec -it orkestro-db psql -U myuser -d orkestrodb -f /tables.sql
+docker exec -it orkestro-db psql -U myuser -d orkestrodb -f /data.sql
 ```
 
 ## Django backend (`backend/`)
