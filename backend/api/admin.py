@@ -1,24 +1,8 @@
+from django.apps import apps
 from django.contrib import admin
-from api.models import *
 
 
-classes = [
-    User,
-    Group,
-    Event,
-    Track,
-    File,
-    Instrument,
-    Message,
-    EventAttendee,
-    EventTrack,
-    FileAllowedMember,
-    FileInstrument,
-    Invitation,
-    Member,
-    MessageRecipient,
-    UserInstrument,
-]
+api_models = apps.get_app_config("api").get_models()
 
-for model_class in classes:
-    admin.site.register(model_class)
+for model in api_models:
+    admin.site.register(model)
