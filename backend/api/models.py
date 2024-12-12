@@ -1,6 +1,7 @@
 from django.db import models
 # IDs in bridging tables like event_attendees are redundant and exist because Django can't handle compound primary keys
 
+
 class User(models.Model):
     user_id = models.AutoField(primary_key=True)
     user_name = models.CharField(max_length=50)
@@ -14,21 +15,21 @@ class User(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'users'
+        db_table = "users"
 
 
 class Group(models.Model):
     group_id = models.AutoField(primary_key=True)
     group_name = models.CharField(max_length=100)
     group_description = models.CharField(max_length=1000, blank=True, null=True)
-    super_group = models.ForeignKey('self', models.CASCADE, blank=True, null=True)
+    super_group = models.ForeignKey("self", models.CASCADE, blank=True, null=True)
 
     def __str__(self) -> str:
         return f"{self.group_name} ({self.group_id})"
 
     class Meta:
         managed = False
-        db_table = 'groups'
+        db_table = "groups"
 
 
 class Event(models.Model):
@@ -44,7 +45,7 @@ class Event(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'events'
+        db_table = "events"
 
 
 class Track(models.Model):
@@ -58,7 +59,7 @@ class Track(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'tracks'
+        db_table = "tracks"
 
 
 class File(models.Model):
@@ -72,7 +73,7 @@ class File(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'files'
+        db_table = "files"
 
 
 class Instrument(models.Model):
@@ -84,7 +85,7 @@ class Instrument(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'instruments'
+        db_table = "instruments"
 
 
 class Message(models.Model):
@@ -98,7 +99,7 @@ class Message(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'messages'
+        db_table = "messages"
 
 
 class EventAttendee(models.Model):
@@ -111,8 +112,8 @@ class EventAttendee(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'event_attendees'
-        unique_together = (('event', 'user'),)
+        db_table = "event_attendees"
+        unique_together = (("event", "user"),)
 
 
 class EventTrack(models.Model):
@@ -125,8 +126,8 @@ class EventTrack(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'event_tracks'
-        unique_together = (('track', 'event'),)
+        db_table = "event_tracks"
+        unique_together = (("track", "event"),)
 
 
 class FileAllowedMember(models.Model):
@@ -139,8 +140,8 @@ class FileAllowedMember(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'file_allowed_members'
-        unique_together = (('file', 'user'),)
+        db_table = "file_allowed_members"
+        unique_together = (("file", "user"),)
 
 
 class FileInstrument(models.Model):
@@ -153,8 +154,8 @@ class FileInstrument(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'file_instruments'
-        unique_together = (('file', 'instrument'),)
+        db_table = "file_instruments"
+        unique_together = (("file", "instrument"),)
 
 
 class Invitation(models.Model):
@@ -168,8 +169,8 @@ class Invitation(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'invitations'
-        unique_together = (('group', 'user'),)
+        db_table = "invitations"
+        unique_together = (("group", "user"),)
 
 
 class Member(models.Model):
@@ -183,8 +184,8 @@ class Member(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'members'
-        unique_together = (('group', 'user'),)
+        db_table = "members"
+        unique_together = (("group", "user"),)
 
 
 class MessageRecipient(models.Model):
@@ -197,8 +198,8 @@ class MessageRecipient(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'message_recipients'
-        unique_together = (('message', 'user'),)
+        db_table = "message_recipients"
+        unique_together = (("message", "user"),)
 
 
 class UserInstrument(models.Model):
@@ -211,5 +212,5 @@ class UserInstrument(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'user_instruments'
-        unique_together = (('instrument', 'user'),)
+        db_table = "user_instruments"
+        unique_together = (("instrument", "user"),)
