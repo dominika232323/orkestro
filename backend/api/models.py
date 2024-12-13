@@ -3,9 +3,9 @@ from django.db import models
 
 class User(models.Model):
     user_id = models.AutoField(primary_key=True)
-    user_name = models.CharField(max_length=50)
-    user_surname = models.CharField(max_length=50)
-    user_email = models.CharField(max_length=100)
+    name = models.CharField(max_length=50)
+    surname = models.CharField(max_length=50)
+    email = models.CharField(max_length=100)
     google_user_id = models.CharField(max_length=255)
     google_calendar_id = models.CharField(max_length=1024, blank=True, null=True)
 
@@ -16,9 +16,9 @@ class User(models.Model):
 
 class Group(models.Model):
     group_id = models.AutoField(primary_key=True)
-    group_name = models.CharField(max_length=100)
-    group_description = models.CharField(max_length=1000, blank=True, null=True)
-    super_group = models.ForeignKey('self', models.CASCADE, blank=True, null=True)
+    name = models.CharField(max_length=100)
+    description = models.CharField(max_length=1000, blank=True, null=True)
+    supergroup = models.ForeignKey('self', models.CASCADE, blank=True, null=True)
 
     class Meta:
         managed = False
@@ -28,8 +28,8 @@ class Group(models.Model):
 class Event(models.Model):
     event_id = models.AutoField(primary_key=True)
     group = models.ForeignKey(Group, models.CASCADE)
-    event_name = models.CharField(max_length=100)
-    event_description = models.CharField(max_length=1000, blank=True, null=True)
+    name = models.CharField(max_length=100)
+    description = models.CharField(max_length=1000, blank=True, null=True)
     date = models.DateTimeField()
     place = models.CharField(max_length=100)
 
@@ -52,8 +52,8 @@ class Track(models.Model):
 class File(models.Model):
     file_id = models.AutoField(primary_key=True)
     track = models.ForeignKey(Track, models.CASCADE)
-    file_name = models.CharField(max_length=100)
-    file_content = models.BinaryField()
+    name = models.CharField(max_length=100)
+    content = models.BinaryField()
 
     class Meta:
         managed = False
@@ -62,7 +62,7 @@ class File(models.Model):
 
 class Instrument(models.Model):
     instrument_id = models.AutoField(primary_key=True)
-    instrument_name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100)
 
     class Meta:
         managed = False
@@ -73,7 +73,9 @@ class Message(models.Model):
     message_id = models.AutoField(primary_key=True)
     user = models.ForeignKey(User, models.CASCADE)
     group = models.ForeignKey(Group, models.CASCADE)
+    title = models.CharField(max_length=100)
     content = models.CharField(max_length=2000)
+    date = models.DateTimeField()
 
     class Meta:
         managed = False
@@ -152,6 +154,7 @@ class MessageRecipient(models.Model):
     message_recipient_id = models.AutoField(primary_key=True)
     message = models.ForeignKey(Message, models.CASCADE)
     user = models.ForeignKey(User, models.CASCADE)
+    is_read = models.CharField(max_length=1)
 
     class Meta:
         managed = False

@@ -1,5 +1,3 @@
--- IDs in bridging tables like event_attendees are redundant and exist because Django can't handle compound primary keys
-
 CREATE TABLE event_attendees (
     event_attendee_id SERIAL NOT NULL,
     event_id          INTEGER NOT NULL,
@@ -19,12 +17,12 @@ ALTER TABLE event_tracks ADD CONSTRAINT event_tracks_pk PRIMARY KEY ( event_trac
 ALTER TABLE event_tracks ADD CONSTRAINT event_tracks_unique UNIQUE ( track_id, event_id );
 
 CREATE TABLE events (
-    event_id          SERIAL NOT NULL,
-    group_id          INTEGER NOT NULL,
-    event_name        VARCHAR(100) NOT NULL,
-    event_description VARCHAR(1000),
-    date              TIMESTAMP NOT NULL,
-    place             VARCHAR(100) NOT NULL
+    event_id    SERIAL NOT NULL,
+    group_id    INTEGER NOT NULL,
+    name        VARCHAR(100) NOT NULL,
+    description VARCHAR(1000),
+    date        TIMESTAMP NOT NULL,
+    place       VARCHAR(100) NOT NULL
 );
 
 ALTER TABLE events ADD CONSTRAINT events_pk PRIMARY KEY ( event_id );
@@ -48,26 +46,26 @@ ALTER TABLE file_instruments ADD CONSTRAINT file_instruments_pk PRIMARY KEY ( fi
 ALTER TABLE file_instruments ADD CONSTRAINT file_instruments_unique UNIQUE ( file_id, instrument_id );
 
 CREATE TABLE files (
-    file_id       SERIAL NOT NULL,
-    track_id      INTEGER NOT NULL,
-    file_name     VARCHAR(100) NOT NULL,
-    file_content  BYTEA NOT NULL
+    file_id  SERIAL NOT NULL,
+    track_id INTEGER NOT NULL,
+    name     VARCHAR(100) NOT NULL,
+    content  BYTEA NOT NULL
 );
 
 ALTER TABLE files ADD CONSTRAINT files_pk PRIMARY KEY ( file_id );
 
 CREATE TABLE groups (
-    group_id          SERIAL NOT NULL,
-    group_name        VARCHAR(100) NOT NULL,
-    group_description VARCHAR(1000),
-    super_group_id    INTEGER
+    group_id      SERIAL NOT NULL,
+    name          VARCHAR(100) NOT NULL,
+    description   VARCHAR(1000),
+    supergroup_id INTEGER
 );
 
 ALTER TABLE groups ADD CONSTRAINT groups_pk PRIMARY KEY ( group_id );
 
 CREATE TABLE instruments (
-    instrument_id   SERIAL NOT NULL,
-    instrument_name VARCHAR(100) NOT NULL
+    instrument_id SERIAL NOT NULL,
+    name          VARCHAR(100) NOT NULL
 );
 
 ALTER TABLE instruments ADD CONSTRAINT instruments_pk PRIMARY KEY ( instrument_id );
@@ -95,7 +93,8 @@ ALTER TABLE members ADD CONSTRAINT members_unique UNIQUE ( group_id, user_id );
 CREATE TABLE message_recipients (
     message_recipient_id SERIAL NOT NULL,
     message_id           INTEGER NOT NULL,
-    user_id              INTEGER NOT NULL
+    user_id              INTEGER NOT NULL,
+    is_read              CHAR(1) NOT NULL
 );
 
 ALTER TABLE message_recipients ADD CONSTRAINT message_recipients_pk PRIMARY KEY ( message_recipient_id );
@@ -105,7 +104,9 @@ CREATE TABLE messages (
     message_id SERIAL NOT NULL,
     user_id    INTEGER NOT NULL,
     group_id   INTEGER NOT NULL,
-    content    VARCHAR(2000) NOT NULL
+    title      VARCHAR(100) NOT NULL,
+    content    VARCHAR(2000) NOT NULL,
+    date       TIMESTAMP NOT NULL
 );
 
 ALTER TABLE messages ADD CONSTRAINT messages_pk PRIMARY KEY ( message_id );
@@ -130,9 +131,9 @@ ALTER TABLE user_instruments ADD CONSTRAINT user_instruments_unique UNIQUE ( ins
 
 CREATE TABLE users (
     user_id            SERIAL NOT NULL,
-    user_name          VARCHAR(50) NOT NULL,
-    user_surname       VARCHAR(50) NOT NULL,
-    user_email         VARCHAR(100) NOT NULL,
+    name               VARCHAR(50) NOT NULL,
+    surname            VARCHAR(50) NOT NULL,
+    email              VARCHAR(100) NOT NULL,
     google_user_id     VARCHAR(255) NOT NULL,
     google_calendar_id VARCHAR(1024)
 );
@@ -149,7 +150,7 @@ ALTER TABLE file_allowed_members ADD CONSTRAINT file_allowed_members_users_fk FO
 ALTER TABLE file_instruments ADD CONSTRAINT file_instruments_files_fk FOREIGN KEY ( file_id ) REFERENCES files ( file_id ) ON DELETE CASCADE;
 ALTER TABLE file_instruments ADD CONSTRAINT file_instruments_instruments_fk FOREIGN KEY ( instrument_id ) REFERENCES instruments ( instrument_id ) ON DELETE CASCADE;
 ALTER TABLE files ADD CONSTRAINT files_tracks_fk FOREIGN KEY ( track_id ) REFERENCES tracks ( track_id ) ON DELETE CASCADE;
-ALTER TABLE groups ADD CONSTRAINT groups_groups_fk FOREIGN KEY ( super_group_id ) REFERENCES groups ( group_id ) ON DELETE CASCADE;
+ALTER TABLE groups ADD CONSTRAINT groups_groups_fk FOREIGN KEY ( supergroup_id ) REFERENCES groups ( group_id ) ON DELETE CASCADE;
 ALTER TABLE invitations ADD CONSTRAINT invitations_groups_fk FOREIGN KEY ( group_id ) REFERENCES groups ( group_id ) ON DELETE CASCADE;
 ALTER TABLE invitations ADD CONSTRAINT invitations_users_fk FOREIGN KEY ( user_id ) REFERENCES users ( user_id ) ON DELETE CASCADE;
 ALTER TABLE members ADD CONSTRAINT members_groups_fk FOREIGN KEY ( group_id ) REFERENCES groups ( group_id ) ON DELETE CASCADE;
