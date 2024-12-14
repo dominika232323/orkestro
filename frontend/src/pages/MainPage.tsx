@@ -5,6 +5,7 @@ import Notifications from "../components/Messages";
 import Calendar from "../components/Calendar";
 import Settings from "../components/Settings";
 import Events from "../components/Events";
+import Files from "../components/Files";
 
 export default function MainPage() {
   const [page, changePage] = useState("groups");
@@ -17,6 +18,7 @@ export default function MainPage() {
       {page === "calendar" && <Calendar />}
       {page === "settings" && <Settings />}
       {page === "events" && <Events />}
+      {page === "files" && <Files />}
     </>
   );
 }

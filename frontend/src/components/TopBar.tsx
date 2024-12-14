@@ -57,9 +57,9 @@ export default function TopBar({
         </button>
         <button
           className="hover:text-gray-700 font-medium"
-          onClick={() => handleChangePage("music-files")}
+          onClick={() => handleChangePage("files")}
         >
-          {t("top-bar.music-files")}
+          {t("top-bar.files")}
         </button>
         <button
           className="hover:text-gray-700 font-medium"

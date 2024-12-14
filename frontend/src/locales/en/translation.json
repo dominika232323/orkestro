@@ -1,7 +1,7 @@
 {
   "top-bar": {
     "events": "Events",
-    "music-files": "Music files",
+    "files": "Files",
     "group": "Group",
     "calendar": "Calendar",
     "groups": "Groups",
@@ -53,6 +53,14 @@
     "date": "Date",
     "time": "Time",
     "description": "Description",
-    "address": "Address"
+    "address": "Address",
+    "no-events": "No events for selected group",
+    "add-event": "New event"
+  },
+  "files": {
+    "title": "Files",
+    "no-files": "No files for selected group",
+    "download": "Download",
+    "add-file": "New file"
   }
 }

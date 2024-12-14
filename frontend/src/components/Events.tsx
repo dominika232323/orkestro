@@ -7,6 +7,7 @@ import {
   faClock,
   faLocationDot,
   faPen,
+  faPlus,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
@@ -62,6 +63,11 @@ const groups: IGroup[] = [
       },
     ],
   },
+  {
+    id: "3",
+    name: "Group C",
+    events: [],
+  },
 ];
 
 export default function Events() {
@@ -80,6 +86,8 @@ export default function Events() {
     setCurrentGroupIndex((prev) => (prev + 1) % groups.length);
     setSelectedEvent(null); // Reset selected event
   };
+
+  const handleNewEvent = () => {};
 
   return (
     <div className="bg-gray-200 p-6 rounded-lg shadow-md max-w-4xl mx-auto mt-8">
@@ -104,16 +112,31 @@ export default function Events() {
 
       {/* List of Events */}
       <ul className="space-y-4">
-        {currentGroup.events.map((event) => (
-          <li
-            key={event.id}
-            className="bg-white p-4 rounded-lg shadow border border-gray-200 hover:shadow-lg cursor-pointer"
-            onClick={() => setSelectedEvent(event)}
-          >
-            <p className="font-bold">{event.name}</p>
-            <p className="text-gray-600">{event.date}</p>
+        {currentGroup.events.length > 0 ? (
+          currentGroup.events.map((event) => (
+            <li
+              key={event.id}
+              className="bg-white p-4 rounded-lg shadow border border-gray-200 hover:shadow-lg cursor-pointer"
+              onClick={() => setSelectedEvent(event)}
+            >
+              <p className="font-bold">{event.name}</p>
+              <p className="text-gray-600">{event.date}</p>
+            </li>
+          ))
+        ) : (
+          <li>
+            <p className="text-gray-600 text-center">{t("events.no-events")}</p>
           </li>
-        ))}
+        )}
+        <li>
+          <button
+            className="w-full py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 font-medium"
+            onClick={handleNewEvent}
+          >
+            <FontAwesomeIcon icon={faPlus} className="mr-2" />
+            {t("events.add-event")}
+          </button>
+        </li>
       </ul>
 
       {/* Event Details */}

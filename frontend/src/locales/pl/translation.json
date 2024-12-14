@@ -1,7 +1,7 @@
 {
   "top-bar": {
     "events": "Wydarzenia",
-    "music-files": "Utwory",
+    "files": "Pliki",
     "group": "Grupa",
     "calendar": "Kalendarz",
     "groups": "Grupy",
@@ -53,6 +53,14 @@
     "date": "Data",
     "time": "Godzina",
     "description": "Opis",
-    "address": "Adres"
+    "address": "Adres",
+    "no-events": "Brak wydarzeń dla wybranej grupy",
+    "add-event": "Nowe wydarzenie"
+  },
+  "files": {
+    "title": "Pliki",
+    "no-files": "Brak plików dla wybranej grupy",
+    "download": "Pobierz",
+    "add-file": "Nowy plik"
   }
 }
