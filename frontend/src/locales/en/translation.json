@@ -63,5 +63,18 @@
     "download": "Download",
     "add-file": "New file",
     "search-placeholder": "Search files..."
+  },
+  "group-panel": {
+    "title": "Manage Group",
+    "group-name": "Group name",
+    "group-description": "Description",
+    "save-changes": "Save changes",
+    "members": "Members",
+    "roles": {
+      "manager": "Manager",
+      "musician": "Musician",
+      "moderator": "Moderator"
+    },
+    "no-members": "No members"
   }
 }

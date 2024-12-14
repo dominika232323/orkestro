@@ -63,5 +63,18 @@
     "download": "Pobierz",
     "add-file": "Nowy plik",
     "search-placeholder": "Znajdź pliki..."
+  },
+  "group-panel": {
+    "title": "Zarządzaj grupą",
+    "group-name": "Nazwa grupy",
+    "group-description": "Opis grupy",
+    "save-changes": "Zapisz zmiany",
+    "members": "Członkowie",
+    "roles": {
+      "manager": "Kierownik",
+      "musician": "Muzyk",
+      "moderator": "Moderator"
+    },
+    "no-members": "Brak członków grupy"
   }
 }

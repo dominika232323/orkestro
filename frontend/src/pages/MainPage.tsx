@@ -6,6 +6,7 @@ import Calendar from "../components/Calendar";
 import Settings from "../components/Settings";
 import Events from "../components/Events";
 import Files from "../components/Files";
+import GroupPanel from "../components/GroupPanel";
 
 export default function MainPage() {
   const [page, changePage] = useState("groups");
@@ -19,6 +20,7 @@ export default function MainPage() {
       {page === "settings" && <Settings />}
       {page === "events" && <Events />}
       {page === "files" && <Files />}
+      {page === "group" && <GroupPanel />}
     </>
   );
 }
