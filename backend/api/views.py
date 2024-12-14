@@ -29,15 +29,15 @@ class GoogleLoginView(APIView):
             )
 
             email = idinfo.get("email")
-            user_name = idinfo.get("given_name")
-            user_surname = idinfo.get("family_name", "")
+            name = idinfo.get("given_name")
+            surname = idinfo.get("family_name", "")
             google_user_id = idinfo.get("sub")
 
             user, created = User.objects.get_or_create(
                 email = email,
                 defaults = {
-                    "user_name": user_name,
-                    "user_surname": user_surname,
+                    "name": name,
+                    "surname": surname,
                     "google_user_id": google_user_id,
                     "is_active": True,
                 }
@@ -50,10 +50,10 @@ class GoogleLoginView(APIView):
                 )
 
             if not created:
-                if not user.user_name:
-                    user.user_name = user_name
-                if not user.user_surname:
-                    user.user_surname = user_surname
+                if not user.name:
+                    user.name = name
+                if not user.surname:
+                    user.surname = surname
                 if not user.google_user_id:
                     user.google_user_id = google_user_id
             user.last_login = timezone.now()

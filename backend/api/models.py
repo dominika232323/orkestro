@@ -1,7 +1,4 @@
-from django.contrib.auth.models import (
-    AbstractBaseUser,
-    BaseUserManager,
-)
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.db import models
 from django.utils import timezone
 
@@ -34,10 +31,11 @@ class UserManager(BaseUserManager):
 class User(AbstractBaseUser):
     user_id = models.AutoField(primary_key=True)
     email = models.EmailField(max_length=100, unique=True)
-    user_name = models.CharField(max_length=50)
-    user_surname = models.CharField(max_length=50)
+    name = models.CharField(max_length=50) # TODO 
+    surname = models.CharField(max_length=50) # TODO 
     date_joined = models.DateTimeField()
     google_user_id = models.CharField(max_length=255, null=True, blank=True)
+    google_calendar_id = models.CharField(max_length=1024, blank=True, null=True)
     # TODO: profile pic url?
 
     is_active = models.BooleanField(default=True)
@@ -49,7 +47,6 @@ class User(AbstractBaseUser):
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
 
-
     def has_perm(self, perm, obj=None):
         """Return True if the user has the specified permission."""
         return self.is_superuser
@@ -59,7 +56,7 @@ class User(AbstractBaseUser):
         return self.is_superuser
 
     def __str__(self):
-        return f"{self.user_name} ({self.email})"
+        return f"{self.name} ({self.email})"
 
     class Meta:
         managed = False
@@ -68,12 +65,12 @@ class User(AbstractBaseUser):
 
 class Group(models.Model):
     group_id = models.AutoField(primary_key=True)
-    group_name = models.CharField(max_length=100)
-    group_description = models.CharField(max_length=1000, blank=True, null=True)
-    super_group = models.ForeignKey("self", models.CASCADE, blank=True, null=True, related_name="subgroups")
+    name = models.CharField(max_length=100)
+    description = models.CharField(max_length=1000, blank=True, null=True)
+    supergroup = models.ForeignKey("self", models.CASCADE, blank=True, null=True, related_name="subgroups")
 
     def __str__(self) -> str:
-        return f"{self.group_name} ({self.group_id})"
+        return f"{self.name} ({self.group_id})"
 
     class Meta:
         managed = False
@@ -83,13 +80,13 @@ class Group(models.Model):
 class Event(models.Model):
     event_id = models.AutoField(primary_key=True)
     group = models.ForeignKey(Group, models.CASCADE, related_name="group_events")
-    event_name = models.CharField(max_length=100)
-    event_description = models.CharField(max_length=1000, blank=True, null=True)
+    name = models.CharField(max_length=100)
+    description = models.CharField(max_length=1000, blank=True, null=True)
     date = models.DateTimeField()
     place = models.CharField(max_length=100)
 
     def __str__(self) -> str:
-        return f"{self.event_name} ({self.event_id})"
+        return f"{self.name} ({self.event_id})"
 
     class Meta:
         managed = False
@@ -113,11 +110,11 @@ class Track(models.Model):
 class File(models.Model):
     file_id = models.AutoField(primary_key=True)
     track = models.ForeignKey(Track, models.CASCADE, related_name="track_files")
-    file_name = models.CharField(max_length=100)
-    file_content = models.BinaryField()
+    name = models.CharField(max_length=100)
+    content = models.BinaryField()
 
     def __str__(self) -> str:
-        return f"{self.file_name} ({self.file_id})"
+        return f"{self.name} ({self.file_id})"
 
     class Meta:
         managed = False
@@ -126,10 +123,10 @@ class File(models.Model):
 
 class Instrument(models.Model):
     instrument_id = models.AutoField(primary_key=True)
-    instrument_name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100)
 
     def __str__(self) -> str:
-        return f"{self.instrument_name} ({self.instrument_id})"
+        return f"{self.name} ({self.instrument_id})"
 
     class Meta:
         managed = False
@@ -140,10 +137,12 @@ class Message(models.Model):
     message_id = models.AutoField(primary_key=True)
     user = models.ForeignKey(User, models.CASCADE, related_name="sent_messages")
     group = models.ForeignKey(Group, models.CASCADE, related_name="group_messages")
+    title = models.CharField(max_length=100)
     content = models.CharField(max_length=2000)
+    date = models.DateTimeField()
 
     def __str__(self) -> str:
-        return f"{self.user} → {self.group.group_name} ({self.message_id})"
+        return f"{self.user} → {self.group.name} ({self.message_id})"
 
     class Meta:
         managed = False
@@ -156,7 +155,7 @@ class EventAttendee(models.Model):
     user = models.ForeignKey(User, models.CASCADE, related_name="user_events")
 
     def __str__(self) -> str:
-        return f"{self.event.event_name} → {self.user} ({self.event_attendee_id})"
+        return f"{self.event.name} → {self.user} ({self.event_attendee_id})"
 
     class Meta:
         managed = False
@@ -170,7 +169,7 @@ class EventTrack(models.Model):
     event = models.ForeignKey(Event, models.CASCADE, related_name="event_tracks")
 
     def __str__(self) -> str:
-        return f"{self.event.event_name} → {self.track.name} ({self.event_track_id})"
+        return f"{self.event.name} → {self.track.name} ({self.event_track_id})"
 
     class Meta:
         managed = False
@@ -184,7 +183,7 @@ class FileAllowedMember(models.Model):
     user = models.ForeignKey(User, models.CASCADE, related_name="user_files")
 
     def __str__(self) -> str:
-        return f"{self.file.file_name} → {self.user} ({self.file_allowed_member_id})"
+        return f"{self.file.name} → {self.user} ({self.file_allowed_member_id})"
 
     class Meta:
         managed = False
@@ -198,7 +197,7 @@ class FileInstrument(models.Model):
     instrument = models.ForeignKey(Instrument, models.CASCADE, related_name="instrument_files")
 
     def __str__(self) -> str:
-        return f"{self.file.file_name} → {self.instrument.instrument_name} ({self.file_instrument_id})"
+        return f"{self.file.name} → {self.instrument.name} ({self.file_instrument_id})"
 
     class Meta:
         managed = False
@@ -213,7 +212,7 @@ class Invitation(models.Model):
     permission_level = models.CharField(max_length=1)
 
     def __str__(self) -> str:
-        return f"{self.group.group_name} → {self.user} ({self.invitation_id})"
+        return f"{self.group.name} → {self.user} ({self.invitation_id})"
 
     class Meta:
         managed = False
@@ -228,7 +227,7 @@ class Member(models.Model):
     permission_level = models.CharField(max_length=1)
 
     def __str__(self) -> str:
-        return f"{self.group.group_name} → {self.user} ({self.member_id})"
+        return f"{self.group.name} → {self.user} ({self.member_id})"
 
     class Meta:
         managed = False
@@ -240,9 +239,10 @@ class MessageRecipient(models.Model):
     message_recipient_id = models.AutoField(primary_key=True)
     message = models.ForeignKey(Message, models.CASCADE, related_name="message_recipient")
     user = models.ForeignKey(User, models.CASCADE, related_name="received_messages")
+    is_read = models.CharField(max_length=1)
 
     def __str__(self) -> str:
-        return f"{self.message.user} → {self.message.group.group_name} → {self.user} ({self.message_recipient_id})"
+        return f"{self.message.user} → {self.message.group.name} → {self.user} ({self.message_recipient_id})"
 
     class Meta:
         managed = False
@@ -256,7 +256,7 @@ class UserInstrument(models.Model):
     instrument = models.ForeignKey(Instrument, models.CASCADE, related_name="instrument_users")
 
     def __str__(self) -> str:
-        return f"{self.user} → {self.instrument.instrument_name} ({self.user_instrument_id})"
+        return f"{self.user} → {self.instrument.name} ({self.user_instrument_id})"
 
     class Meta:
         managed = False

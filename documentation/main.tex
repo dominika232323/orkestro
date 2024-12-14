@@ -51,7 +51,7 @@
     \vspace{0.5cm}
     WERSJA 3 \\
     \vspace{0.5cm}
-    10.12.2024 \\
+    13.12.2024 \\
     Semestr 24Z
 
     \vfill
@@ -754,7 +754,7 @@ Każda maszyna z REST API może obsługiwać wszystkie zapytania - celem korzyst
     \caption{Podział zapytań do REST API na moduły}
 \end{figure}
 
-Wszystkie maszyny wirtualne pracują na Ubuntu Server 24.04. Użytkownik do połączenia z serwisem używa dowolnego urządzenia obsługującego rozsądnie aktualną i znaną przeglądarkę internetową. Możliwe jest dodawanie i usuwanie maszyn odpowiedzialnych za REST API i replikację bazy danych.
+Wszystkie maszyny wirtualne pracują na Ubuntu Server 24.04. Użytkownik do połączenia z serwisem używa dowolnego urządzenia obsługującego rozsądnie aktualną i znaną przeglądarkę internetową. Możliwe jest dodawanie i usuwanie maszyn odpowiedzialnych za REST API.
 
 Koszt pracy jednej, najtańszej dostępnej maszyny to około 210 zł miesięcznie, ale korzystając z Azure Spot można go obniżyć do około 29 zł miesięcznie w zamian za niedostępność maszyny przez około 5\% czasu. Korzystanie z publicznego adresu IP jest na ten moment darmowe, ale od października 2025 r. będzie kosztować około 14 zł miesięcznie. Do testowych wdrożeń korzystamy z kont studenckich, na których mamy dostęp do darmowych środków. Życzeniem klienta była możliwość minimalizacji kosztów utrzymania serwisu uruchomionego dla niewielkiej liczby użytkowników. Sposób połączenia komponentów umożliwia więc w szczególności uruchomienie wszystkich potrzebnych procesów na jednej maszynie wirtualnej:
 
@@ -776,7 +776,7 @@ Koszt pracy jednej, najtańszej dostępnej maszyny to około 210 zł miesięczni
 
 \begin{figure} [H]
     \centering
-    \includegraphics[width=0.95\linewidth]{images/logical3.png}
+    \includegraphics[width=0.95\linewidth]{images/logical.png}
     \caption{Model logiczny danych}
 \end{figure}
 
