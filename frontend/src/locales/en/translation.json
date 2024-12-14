@@ -33,7 +33,8 @@
     "group": "Group",
     "message": "Message",
     "date": "Date",
-    "hour": "Time"
+    "hour": "Time",
+    "hover-text": "Confirm message as read"
   },
   "settings": {
     "title": "Settings",

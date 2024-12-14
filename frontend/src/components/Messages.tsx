@@ -10,6 +10,7 @@ export default function Messages() {
       from: "Jan Kowalski",
       date: "28-10-2024",
       hour: "13:36",
+      isConfirmed: false,
       message:
         "Dzień dobry,\n 7.11 odbędzie się koncert.\nZ poważaniem, Jan Kowalski",
     },
@@ -19,6 +20,7 @@ export default function Messages() {
       from: "Piotr Nowak",
       date: "31-10-2024",
       hour: "21:36",
+      isConfirmed: true,
       message:
         "Dzień dobry,\n 5.11 odbędzie się próba do koncertu. Przypominam o instrumentach i o wydrukowaniu nut.\n Z wyrazami szacunku, Piotr Nowak",
     },
@@ -44,6 +46,7 @@ export default function Messages() {
               message={notification.message}
               date={notification.date}
               hour={notification.hour}
+              isConfirmed={notification.isConfirmed}
             />
           ))}
         </ul>

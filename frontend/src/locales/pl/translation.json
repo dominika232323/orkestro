@@ -33,7 +33,8 @@
     "group": "Grupa",
     "message": "Wiadomość",
     "date": "Data",
-    "hour": "Godzina"
+    "hour": "Godzina",
+    "hover-text": "Potwierdź przeczytanie wiadomości"
   },
   "settings": {
     "title": "Ustawienia",
