@@ -61,6 +61,7 @@
     "title": "Pliki",
     "no-files": "Brak plików dla wybranej grupy",
     "download": "Pobierz",
-    "add-file": "Nowy plik"
+    "add-file": "Nowy plik",
+    "search-placeholder": "Znajdź pliki..."
   }
 }

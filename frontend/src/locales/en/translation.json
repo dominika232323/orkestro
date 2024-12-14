@@ -61,6 +61,7 @@
     "title": "Files",
     "no-files": "No files for selected group",
     "download": "Download",
-    "add-file": "New file"
+    "add-file": "New file",
+    "search-placeholder": "Search files..."
   }
 }
