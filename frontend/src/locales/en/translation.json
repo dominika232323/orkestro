@@ -75,6 +75,12 @@
       "musician": "Musician",
       "moderator": "Moderator"
     },
-    "no-members": "No members"
+    "no-members": "No members",
+    "previous": "Previous",
+    "next": "Next",
+    "search-placeholder": "Search members...",
+    "cancel-filter": "Cancel filter",
+    "messages": "Messages",
+    "send-messages": "New message"
   }
 }

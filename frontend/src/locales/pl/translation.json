@@ -75,6 +75,12 @@
       "musician": "Muzyk",
       "moderator": "Moderator"
     },
-    "no-members": "Brak członków grupy"
+    "no-members": "Brak członków grupy",
+    "previous": "Poprzedni",
+    "next": "Następni",
+    "search-placeholder": "Znajdź użytkowników...",
+    "cancel-filter": "Usuń filtr",
+    "messages": "Wiadomości",
+    "send-messages": "Nowa wiadomość"
   }
 }

@@ -8,6 +8,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 interface IUser {
+  id: string;
   name: string;
   role: string;
 }
@@ -29,18 +30,12 @@ const initialGroups: IGroup[] = [
     events: ["Concert", "Rehearsal"],
     files: ["racer_x_technical_difficulties", "megadeth_holy_wars"],
     members: [
-      {
-        name: "Jan Kowalski",
-        role: "manager",
-      },
-      {
-        name: "Maciej Nowak",
-        role: "musician",
-      },
-      {
-        name: "Aleksandra Marczak",
-        role: "moderator",
-      },
+      { id: "1", name: "Jan Kowalski", role: "manager" },
+      { id: "2", name: "Maciej Nowak", role: "musician" },
+      { id: "3", name: "Aleksandra Marczak", role: "moderator" },
+      { id: "4", name: "Szymon Brodowski", role: "musician" },
+      { id: "5", name: "Błażej Zwoliński", role: "musician" },
+      { id: "6", name: "Piotr Wróblewski", role: "moderator" },
     ],
   },
   {
@@ -50,14 +45,8 @@ const initialGroups: IGroup[] = [
     events: ["Practice"],
     files: ["lady_pank_mala_wojna"],
     members: [
-      {
-        name: "Jan Kowalski",
-        role: "manager",
-      },
-      {
-        name: "Łukasz Jagnieża",
-        role: "musician",
-      },
+      { id: "7", name: "Jan Kowalski", role: "manager" },
+      { id: "8", name: "Łukasz Jagnieża", role: "musician" },
     ],
   },
   {
@@ -79,6 +68,8 @@ export default function GroupPanel() {
     groups[0].description
   );
   const [currentPage, setCurrentPage] = useState(0);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [roleFilter, setRoleFilter] = useState<string | null>(null);
 
   const membersPerPage = 5;
   const currentGroup = groups[currentGroupIndex];
@@ -88,6 +79,8 @@ export default function GroupPanel() {
     setCurrentGroupIndex(newIndex);
     setGroupName(groups[newIndex].name);
     setGroupDescription(groups[newIndex].description);
+    setSearchQuery("");
+    setRoleFilter(null);
     setCurrentPage(0);
   };
 
@@ -96,6 +89,8 @@ export default function GroupPanel() {
     setCurrentGroupIndex(newIndex);
     setGroupName(groups[newIndex].name);
     setGroupDescription(groups[newIndex].description);
+    setSearchQuery("");
+    setRoleFilter(null);
     setCurrentPage(0);
   };
 
@@ -105,25 +100,45 @@ export default function GroupPanel() {
     alert(t("group-panel.changes-saved"));
   };
 
-  const handleDeleteMember = (index: number) => {
+  const handleDeleteMember = (id: string) => {
     const updatedGroups = [...groups];
-    updatedGroups[currentGroupIndex].members.splice(index, 1);
+    updatedGroups[currentGroupIndex].members = updatedGroups[
+      currentGroupIndex
+    ].members.filter((member) => member.id !== id);
     setGroups(updatedGroups);
     setCurrentPage(0);
   };
 
-  const handleRoleChange = (index: number, newRole: string) => {
+  const handleRoleChange = (id: string, newRole: string) => {
     const updatedGroups = [...groups];
-    updatedGroups[currentGroupIndex].members[index].role = newRole;
+    const member = updatedGroups[currentGroupIndex].members.find(
+      (member) => member.id === id
+    );
+    if (member) member.role = newRole;
     setGroups(updatedGroups);
   };
 
-  const paginatedMembers = currentGroup.members.slice(
+  const toggleRoleFilter = (role: string) => {
+    setRoleFilter((current) => (current === role ? null : role));
+    setCurrentPage(0);
+  };
+
+  // Filter members by name and role
+  const filteredMembers = currentGroup.members.filter((member) => {
+    const matchesName = member.name
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase());
+    const matchesRole = roleFilter ? member.role === roleFilter : true;
+    return matchesName && matchesRole;
+  });
+
+  // Paginate the filtered members
+  const paginatedMembers = filteredMembers.slice(
     currentPage * membersPerPage,
     currentPage * membersPerPage + membersPerPage
   );
 
-  const totalPages = Math.ceil(currentGroup.members.length / membersPerPage);
+  const totalPages = Math.ceil(filteredMembers.length / membersPerPage);
 
   return (
     <div className="bg-gray-200 p-6 rounded-lg shadow-md max-w-4xl mx-auto mt-8">
@@ -146,53 +161,72 @@ export default function GroupPanel() {
         </button>
       </div>
 
-      {/* Group Name and Description */}
-      <div className="mb-4">
-        <label className="block text-gray-700 font-medium">
-          {t("group-panel.group-name")}
-        </label>
-        <input
-          type="text"
-          value={groupName}
-          onChange={(e) => setGroupName(e.target.value)}
-          className="w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 mb-4"
-        />
-        <label className="block text-gray-700 font-medium">
-          {t("group-panel.group-description")}
-        </label>
-        <textarea
-          value={groupDescription}
-          onChange={(e) => setGroupDescription(e.target.value)}
-          className="w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 mb-4"
-        />
-        <button
-          className="py-2 px-4 bg-green-500 text-white rounded-lg hover:bg-green-600 font-medium"
-          onClick={handleSaveChanges}
-        >
-          {t("group-panel.save-changes")}
+      <div className="mb-4 flex items-center space-x-4 justify-center">
+        <button className="p-2 bg-blue-500 text-white rounded-full hover:bg-blue-600">
+          {t("group-panel.messages")}
+        </button>
+        <button className="p-2 bg-blue-500 text-white rounded-full hover:bg-blue-600">
+          {t("group-panel.send-messages")}
         </button>
       </div>
 
-      {/* Members Section */}
-      <h2 className="text-lg font-bold mt-6 mb-4">
-        {t("group-panel.members")}
-      </h2>
-      {currentGroup.members.length > 0 ? (
-        paginatedMembers.map((member, index) => (
+      <div className="mb-4 flex items-center space-x-4">
+        <input
+          type="text"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          placeholder={t("group-panel.search-placeholder")}
+          className="flex-1 p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+        />
+        <button
+          className={`py-2 px-4 rounded-lg font-medium ${
+            roleFilter === "manager"
+              ? "bg-red-500 text-white"
+              : "bg-gray-300 text-gray-800 hover:bg-gray-400"
+          }`}
+          onClick={() => toggleRoleFilter("manager")}
+        >
+          {roleFilter === "manager"
+            ? t("group-panel.cancel-filter")
+            : t("group-panel.roles.manager")}
+        </button>
+        <button
+          className={`py-2 px-4 rounded-lg font-medium ${
+            roleFilter === "musician"
+              ? "bg-red-500 text-white"
+              : "bg-gray-300 text-gray-800 hover:bg-gray-400"
+          }`}
+          onClick={() => toggleRoleFilter("musician")}
+        >
+          {roleFilter === "musician"
+            ? t("group-panel.cancel-filter")
+            : t("group-panel.roles.musician")}
+        </button>
+        <button
+          className={`py-2 px-4 rounded-lg font-medium ${
+            roleFilter === "moderator"
+              ? "bg-red-500 text-white"
+              : "bg-gray-300 text-gray-800 hover:bg-gray-400"
+          }`}
+          onClick={() => toggleRoleFilter("moderator")}
+        >
+          {roleFilter === "moderator"
+            ? t("group-panel.cancel-filter")
+            : t("group-panel.roles.moderator")}
+        </button>
+      </div>
+
+      {filteredMembers.length > 0 ? (
+        paginatedMembers.map((member) => (
           <div
-            key={index}
+            key={member.id}
             className="flex items-center justify-between bg-white p-4 rounded-lg shadow border border-gray-200 mb-2"
           >
             <p>{member.name}</p>
             <div className="flex items-center space-x-4">
               <select
                 value={member.role}
-                onChange={(e) =>
-                  handleRoleChange(
-                    index + currentPage * membersPerPage,
-                    e.target.value
-                  )
-                }
+                onChange={(e) => handleRoleChange(member.id, e.target.value)}
                 className="p-2 border border-gray-300 rounded-lg"
               >
                 <option value="manager">
@@ -207,9 +241,7 @@ export default function GroupPanel() {
               </select>
               <button
                 className="p-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
-                onClick={() =>
-                  handleDeleteMember(index + currentPage * membersPerPage)
-                }
+                onClick={() => handleDeleteMember(member.id)}
               >
                 <FontAwesomeIcon icon={faTrash} />
               </button>
@@ -222,7 +254,6 @@ export default function GroupPanel() {
         </p>
       )}
 
-      {/* Pagination */}
       {totalPages > 1 && (
         <div className="flex justify-center mt-4 space-x-4">
           <button
