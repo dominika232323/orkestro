@@ -130,11 +130,17 @@ ALTER TABLE user_instruments ADD CONSTRAINT user_instruments_unique UNIQUE ( ins
 
 CREATE TABLE users (
     user_id            SERIAL NOT NULL,
-    user_name          VARCHAR(50) NOT NULL,
-    user_surname       VARCHAR(50) NOT NULL,
-    user_email         VARCHAR(100) NOT NULL,
-    google_user_id     VARCHAR(255) NOT NULL,
-    google_calendar_id VARCHAR(1024)
+    email              VARCHAR(100) NOT NULL,
+    password           VARCHAR(255),
+    user_name          VARCHAR(50),
+    user_surname       VARCHAR(50),
+    google_user_id     VARCHAR(255),
+    google_calendar_id VARCHAR(1024),
+    date_joined        TIMESTAMP,
+    last_login         TIMESTAMP,
+    is_superuser       BOOLEAN,
+    is_staff           BOOLEAN,
+    is_active          BOOLEAN
 );
 
 ALTER TABLE users ADD CONSTRAINT users_pk PRIMARY KEY ( user_id );

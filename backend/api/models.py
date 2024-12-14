@@ -1,17 +1,65 @@
+from django.contrib.auth.models import (
+    AbstractBaseUser,
+    BaseUserManager,
+)
 from django.db import models
+from django.utils import timezone
+
 # IDs in bridging tables like event_attendees are redundant and exist because Django can't handle compound primary keys
 
 
-class User(models.Model):
+class UserManager(BaseUserManager):
+    def create_user(self, email, password=None, **extra_fields):
+        if not email:
+            raise ValueError("The Email field must be set")
+        email = self.normalize_email(email)
+        user = self.model(email=email, **extra_fields)
+        user.date_joined = timezone.now()
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, email, password=None, **extra_fields):
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+
+        if extra_fields.get('is_staff') is not True:
+            raise ValueError('Superuser must have is_staff=True.')
+        if extra_fields.get('is_superuser') is not True:
+            raise ValueError('Superuser must have is_superuser=True.')
+
+        return self.create_user(email, password, **extra_fields)
+
+
+class User(AbstractBaseUser):
     user_id = models.AutoField(primary_key=True)
+    email = models.EmailField(max_length=100, unique=True)
     user_name = models.CharField(max_length=50)
     user_surname = models.CharField(max_length=50)
-    user_email = models.EmailField(max_length=100)
-    google_user_id = models.CharField(max_length=255)
-    google_calendar_id = models.CharField(max_length=1024, blank=True, null=True)
+    date_joined = models.DateTimeField()
+    google_user_id = models.CharField(max_length=255, null=True, blank=True)
+    # TODO: profile pic url?
 
-    def __str__(self) -> str:
-        return f"{self.user_name} ({self.user_id})"
+    is_active = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=False)
+    is_superuser = models.BooleanField(default=False)
+
+    objects = UserManager()
+
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = []
+
+
+    def has_perm(self, perm, obj=None):
+        """Return True if the user has the specified permission."""
+        return self.is_superuser
+
+    def has_module_perms(self, app_label):
+        """Return True if the user has permissions to view the app `app_label`."""
+        return self.is_superuser
+
+    def __str__(self):
+        return f"{self.user_name} ({self.email})"
 
     class Meta:
         managed = False
@@ -95,7 +143,7 @@ class Message(models.Model):
     content = models.CharField(max_length=2000)
 
     def __str__(self) -> str:
-        return f"{self.user.user_name} → {self.group.group_name} ({self.message_id})"
+        return f"{self.user} → {self.group.group_name} ({self.message_id})"
 
     class Meta:
         managed = False
@@ -108,7 +156,7 @@ class EventAttendee(models.Model):
     user = models.ForeignKey(User, models.CASCADE, related_name="user_events")
 
     def __str__(self) -> str:
-        return f"{self.event.event_name} → {self.user.user_name} ({self.event_attendee_id})"
+        return f"{self.event.event_name} → {self.user} ({self.event_attendee_id})"
 
     class Meta:
         managed = False
@@ -136,7 +184,7 @@ class FileAllowedMember(models.Model):
     user = models.ForeignKey(User, models.CASCADE, related_name="user_files")
 
     def __str__(self) -> str:
-        return f"{self.file.file_name} → {self.user.user_name} ({self.file_allowed_member_id})"
+        return f"{self.file.file_name} → {self.user} ({self.file_allowed_member_id})"
 
     class Meta:
         managed = False
@@ -165,7 +213,7 @@ class Invitation(models.Model):
     permission_level = models.CharField(max_length=1)
 
     def __str__(self) -> str:
-        return f"{self.group.group_name} → {self.user.user_name} ({self.invitation_id})"
+        return f"{self.group.group_name} → {self.user} ({self.invitation_id})"
 
     class Meta:
         managed = False
@@ -180,7 +228,7 @@ class Member(models.Model):
     permission_level = models.CharField(max_length=1)
 
     def __str__(self) -> str:
-        return f"{self.group.group_name} → {self.user.user_name} ({self.member_id})"
+        return f"{self.group.group_name} → {self.user} ({self.member_id})"
 
     class Meta:
         managed = False
@@ -194,7 +242,7 @@ class MessageRecipient(models.Model):
     user = models.ForeignKey(User, models.CASCADE, related_name="received_messages")
 
     def __str__(self) -> str:
-        return f"{self.message.user.user_name} → {self.message.group.group_name} → {self.user} ({self.message_recipient_id})"
+        return f"{self.message.user} → {self.message.group.group_name} → {self.user} ({self.message_recipient_id})"
 
     class Meta:
         managed = False
@@ -208,7 +256,7 @@ class UserInstrument(models.Model):
     instrument = models.ForeignKey(Instrument, models.CASCADE, related_name="instrument_users")
 
     def __str__(self) -> str:
-        return f"{self.user.user_name} → {self.instrument.instrument_name} ({self.user_instrument_id})"
+        return f"{self.user} → {self.instrument.instrument_name} ({self.user_instrument_id})"
 
     class Meta:
         managed = False

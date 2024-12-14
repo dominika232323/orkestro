@@ -1,13 +1,13 @@
-INSERT INTO users (user_name, user_surname, user_email, google_user_id, google_calendar_id) VALUES ('Kacper', 'Kowalczyk', 'k.kowalczyk3575@gmail.com', '116364304460949576074', NULL);
-INSERT INTO users (user_name, user_surname, user_email, google_user_id, google_calendar_id) VALUES ('Michał', 'Machnikowski', '@gmail.com', '000', NULL);
-INSERT INTO users (user_name, user_surname, user_email, google_user_id, google_calendar_id) VALUES ('Dominika', 'Boguszewska', '@gmail.com', '001', NULL);
-INSERT INTO users (user_name, user_surname, user_email, google_user_id, google_calendar_id) VALUES ('Andrzej', 'Pultyn', '@gmail.com', '002', NULL);
-INSERT INTO users (user_name, user_surname, user_email, google_user_id, google_calendar_id) VALUES ('Tymon', 'Chlebowski', 'k.kowalczyk3575+orkestro@gmail.com', '116348624460949576074', NULL);
-INSERT INTO users (user_name, user_surname, user_email, google_user_id, google_calendar_id) VALUES ('Zdzisława', 'Kazimierczuk', 'k.kowalczyk3575+orkestro@gmail.com', '116364304468432156074', NULL);
-INSERT INTO users (user_name, user_surname, user_email, google_user_id, google_calendar_id) VALUES ('Tobiasz', 'Śniegowski', '+orkestro@gmail.com', '116364304469830176074', NULL);
-INSERT INTO users (user_name, user_surname, user_email, google_user_id, google_calendar_id) VALUES ('Jolanta', 'Tucka', '+orkestro@gmail.com', '116364304460949646474', NULL);
-INSERT INTO users (user_name, user_surname, user_email, google_user_id, google_calendar_id) VALUES ('Mieczysława', 'Winiarczyk', '+orkestro@gmail.com', '116553204460949576074', NULL);
-INSERT INTO users (user_name, user_surname, user_email, google_user_id, google_calendar_id) VALUES ('Sebastian', 'Lewandowski', '+orkestro@gmail.com', '116364304460947354074', NULL);
+INSERT INTO users (user_name, user_surname, email, google_user_id, google_calendar_id) VALUES ('Kacper', 'Kowalczyk', 'k.kowalczyk3575@gmail.com', '116364304460949576074', NULL);
+INSERT INTO users (user_name, user_surname, email, google_user_id, google_calendar_id) VALUES ('Michał', 'Machnikowski', '@gmail.com', '000', NULL);
+INSERT INTO users (user_name, user_surname, email, google_user_id, google_calendar_id) VALUES ('Dominika', 'Boguszewska', '@gmail.com', '001', NULL);
+INSERT INTO users (user_name, user_surname, email, google_user_id, google_calendar_id) VALUES ('Andrzej', 'Pultyn', '@gmail.com', '002', NULL);
+INSERT INTO users (user_name, user_surname, email, google_user_id, google_calendar_id) VALUES ('Tymon', 'Chlebowski', 'k.kowalczyk3575+orkestro@gmail.com', '116348624460949576074', NULL);
+INSERT INTO users (user_name, user_surname, email, google_user_id, google_calendar_id) VALUES ('Zdzisława', 'Kazimierczuk', 'k.kowalczyk3575+orkestro@gmail.com', '116364304468432156074', NULL);
+INSERT INTO users (user_name, user_surname, email, google_user_id, google_calendar_id) VALUES ('Tobiasz', 'Śniegowski', '+orkestro@gmail.com', '116364304469830176074', NULL);
+INSERT INTO users (user_name, user_surname, email, google_user_id, google_calendar_id) VALUES ('Jolanta', 'Tucka', '+orkestro@gmail.com', '116364304460949646474', NULL);
+INSERT INTO users (user_name, user_surname, email, google_user_id, google_calendar_id) VALUES ('Mieczysława', 'Winiarczyk', '+orkestro@gmail.com', '116553204460949576074', NULL);
+INSERT INTO users (user_name, user_surname, email, google_user_id, google_calendar_id) VALUES ('Sebastian', 'Lewandowski', '+orkestro@gmail.com', '116364304460947354074', NULL);
 -- id 10/Sebastian Lewandowski nie jest w żadnej grupie, można testowo zaprosić
 
 INSERT INTO groups (group_name, group_description, super_group_id) VALUES ('Pusta grupa', 'Grupa do dodawania treści', NULL);
