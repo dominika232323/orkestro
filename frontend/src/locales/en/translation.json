@@ -49,6 +49,10 @@
     "title": "Calendar"
   },
   "events": {
-    "title": "Events"
+    "title": "Events",
+    "date": "Date",
+    "time": "Time",
+    "description": "Description",
+    "address": "Address"
   }
 }

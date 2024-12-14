@@ -49,6 +49,10 @@
     "title": "Kalendarz"
   },
   "events": {
-    "title": "Wydarzenia"
+    "title": "Wydarzenia",
+    "date": "Data",
+    "time": "Godzina",
+    "description": "Opis",
+    "address": "Adres"
   }
 }
