@@ -4,6 +4,7 @@ import { useState } from "react";
 import Notifications from "../components/Messages";
 import Calendar from "../components/Calendar";
 import Settings from "../components/Settings";
+import Events from "../components/Events";
 
 export default function MainPage() {
   const [page, changePage] = useState("groups");
@@ -15,6 +16,7 @@ export default function MainPage() {
       {page === "messages" && <Notifications />}
       {page === "calendar" && <Calendar />}
       {page === "settings" && <Settings />}
+      {page === "events" && <Events />}
     </>
   );
 }
