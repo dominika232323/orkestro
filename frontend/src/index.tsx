@@ -1,7 +1,6 @@
 import {GoogleOAuthProvider} from "@react-oauth/google";
 import ReactDOM from "react-dom/client";
 import React from "react";
-import "fontawesome-free/js/all";
 
 import "./i18n";
 import "./index.css";
