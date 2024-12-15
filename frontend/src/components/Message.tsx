@@ -73,7 +73,7 @@ export default function Message({
           <span className="ml-1 font-semibold">{hour}</span>
         </p>
       </div>
-      <p className="text-gray-700 font-medium mb-2">{title}</p>
+      <p className="text-gray-700 font-bold mb-2">{title}</p>
       <p className="text-gray-600 leading-relaxed">{message}</p>
       {!isConfirmedState && (
         <button
