@@ -1,0 +1,92 @@
+{
+  "top-bar": {
+    "events": "Events",
+    "files": "Files",
+    "group": "Manage groups",
+    "calendar": "Calendar",
+    "groups": "Groups",
+    "messages": "Messages",
+    "settings": "Settings",
+    "logout": "Logout"
+  },
+  "login-page": {
+    "description": "Manage music groups, send messages and share files in one place.",
+    "login": "Login",
+    "select-language": "Select language:"
+  },
+  "invitations": {
+    "title": "User Invitations",
+    "no-invitations": "No active invitations"
+  },
+  "groups": {
+    "title": "Groups"
+  },
+  "group": {
+    "manage": "Manage",
+    "events": "Events",
+    "files": "Files"
+  },
+  "messages": {
+    "title": "Messages",
+    "no-messages": "No messages"
+  },
+  "message": {
+    "from": "From",
+    "group": "Group",
+    "message": "Message",
+    "date": "Date",
+    "hour": "Time",
+    "hover-text": "Confirm message as read"
+  },
+  "settings": {
+    "title": "Settings",
+    "name": "Name",
+    "surname": "Surname",
+    "email": "E-mail",
+    "google-calendar": "Google Calendar",
+    "add-instrument": "Add instrument",
+    "save": "Save"
+  },
+  "calendar": {
+    "title": "Calendar"
+  },
+  "events": {
+    "title": "Events",
+    "date": "Date",
+    "time": "Time",
+    "description": "Description",
+    "address": "Address",
+    "no-events": "No events for selected group",
+    "add-event": "New event",
+    "prev": "Previous",
+    "next": "Next",
+    "page": "Page"
+  },
+  "files": {
+    "title": "Files",
+    "no-files": "No files for selected group",
+    "download": "Download",
+    "add-file": "New file",
+    "search-placeholder": "Search files..."
+  },
+  "group-panel": {
+    "title": "Manage Group",
+    "group-name": "Group name",
+    "group-description": "Description",
+    "save-changes": "Save changes",
+    "members": "Members",
+    "roles": {
+      "manager": "Manager",
+      "musician": "Musician",
+      "moderator": "Moderator"
+    },
+    "no-members": "No members",
+    "previous": "Previous",
+    "next": "Next",
+    "search-placeholder": "Search members...",
+    "cancel-filter": "Cancel filter",
+    "messages": "Messages",
+    "send-messages": "New message",
+    "page": "Page"
+  }
+}

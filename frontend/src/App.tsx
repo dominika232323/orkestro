@@ -1,10 +1,22 @@
 import {createBrowserRouter, RouterProvider} from "react-router-dom";
 
+import {LanguageProvider} from "./LanguageContext";
+
+import LoginPage from "./pages/LoginPage";
+import MainPage from "./pages/MainPage";
 import TestPage from "./pages/TestPage";
 
 
 function App() {
     const router = createBrowserRouter([
+        {
+            path: "/",
+            element: <LoginPage />,
+        },
+        {
+            path: "/main-page",
+            element: <MainPage/>,
+        },
         {
             path: "/test/",
             element: <TestPage/>,
@@ -12,7 +24,9 @@ function App() {
     ]);
 
     return (
-        <RouterProvider router={router}/>
+        <LanguageProvider>
+            <RouterProvider router={router}/>
+        </LanguageProvider>
     );
 }
 

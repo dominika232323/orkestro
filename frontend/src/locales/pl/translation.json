@@ -1,0 +1,92 @@
+{
+  "top-bar": {
+    "events": "Wydarzenia",
+    "files": "Pliki",
+    "group": "Zarządzaj grupami",
+    "calendar": "Kalendarz",
+    "groups": "Grupy",
+    "messages": "Wiadomości",
+    "settings": "Ustawienia",
+    "logout": "Wyloguj"
+  },
+  "login-page": {
+    "description": "Zarządzaj zespołami muzycznymi, wysyłaj wiadomości i dziel się plikami w jednym miejscu.",
+    "login": "Zaloguj się",
+    "select-language": "Wybierz język:"
+  },
+  "invitations": {
+    "title": "Zaproszenia",
+    "no-invitations": "Brak zaproszeń"
+  },
+  "groups": {
+    "title": "Grupy"
+  },
+  "group": {
+    "manage": "Zarządzaj",
+    "events": "Wydarzenia",
+    "files": "Pliki"
+  },
+  "messages": {
+    "title": "Wiadomości",
+    "no-messages": "Brak wiadomości"
+  },
+  "message": {
+    "from": "Od",
+    "group": "Grupa",
+    "message": "Wiadomość",
+    "date": "Data",
+    "hour": "Godzina",
+    "hover-text": "Potwierdź przeczytanie wiadomości"
+  },
+  "settings": {
+    "title": "Ustawienia",
+    "name": "Imię",
+    "surname": "Nazwisko",
+    "email": "E-mail",
+    "google-calendar": "Kalendarz Google",
+    "add-instrument": "Dodaj instrument",
+    "save": "Zapisz"
+  },
+  "calendar": {
+    "title": "Kalendarz"
+  },
+  "events": {
+    "title": "Wydarzenia",
+    "date": "Data",
+    "time": "Godzina",
+    "description": "Opis",
+    "address": "Adres",
+    "no-events": "Brak wydarzeń dla wybranej grupy",
+    "add-event": "Nowe wydarzenie",
+    "prev": "Poprzedni",
+    "next": "Następni",
+    "page": "Strona"
+  },
+  "files": {
+    "title": "Pliki",
+    "no-files": "Brak plików dla wybranej grupy",
+    "download": "Pobierz",
+    "add-file": "Nowy plik",
+    "search-placeholder": "Znajdź pliki..."
+  },
+  "group-panel": {
+    "title": "Zarządzaj grupą",
+    "group-name": "Nazwa grupy",
+    "group-description": "Opis grupy",
+    "save-changes": "Zapisz zmiany",
+    "members": "Członkowie",
+    "roles": {
+      "manager": "Kierownik",
+      "musician": "Muzyk",
+      "moderator": "Moderator"
+    },
+    "no-members": "Brak członków grupy",
+    "previous": "Poprzedni",
+    "next": "Następni",
+    "search-placeholder": "Znajdź użytkowników...",
+    "cancel-filter": "Usuń filtr",
+    "messages": "Wiadomości",
+    "send-messages": "Nowa wiadomość",
+    "page": "Strona"
+  }
+}
