@@ -24,10 +24,10 @@ export default function TopBar({
     <div className="flex items-center justify-between bg-gray-100 p-4 shadow-md">
       {/* Left Section - Icons */}
       <div className="flex items-center space-x-4">
-        <HoverText textToShow={t("top-bar.groups")}>
+        <HoverText textToShow={t("top-bar.group")}>
           <TopBarIcon
             handleChangePage={handleChangePage}
-            pageName="groups"
+            pageName="group"
             iconObject={faUser}
           />
         </HoverText>
@@ -51,6 +51,12 @@ export default function TopBar({
       <div className="flex items-center space-x-6 text-sm">
         <button
           className="hover:text-gray-700 font-medium"
+          onClick={() => handleChangePage("groups")}
+        >
+          {t("top-bar.groups")}
+        </button>
+        <button
+          className="hover:text-gray-700 font-medium"
           onClick={() => handleChangePage("events")}
         >
           {t("top-bar.events")}
@@ -60,12 +66,6 @@ export default function TopBar({
           onClick={() => handleChangePage("files")}
         >
           {t("top-bar.files")}
-        </button>
-        <button
-          className="hover:text-gray-700 font-medium"
-          onClick={() => handleChangePage("group")}
-        >
-          {t("top-bar.group")}
         </button>
       </div>
 

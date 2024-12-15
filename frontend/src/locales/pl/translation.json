@@ -22,7 +22,9 @@
     "title": "Grupy"
   },
   "group": {
-    "manage": "Zarządzaj"
+    "manage": "Zarządzaj",
+    "events": "Wydarzenia",
+    "files": "Pliki"
   },
   "messages": {
     "title": "Wiadomości",
@@ -55,7 +57,10 @@
     "description": "Opis",
     "address": "Adres",
     "no-events": "Brak wydarzeń dla wybranej grupy",
-    "add-event": "Nowe wydarzenie"
+    "add-event": "Nowe wydarzenie",
+    "prev": "Poprzedni",
+    "next": "Następni",
+    "page": "Strona"
   },
   "files": {
     "title": "Pliki",
@@ -81,6 +86,7 @@
     "search-placeholder": "Znajdź użytkowników...",
     "cancel-filter": "Usuń filtr",
     "messages": "Wiadomości",
-    "send-messages": "Nowa wiadomość"
+    "send-messages": "Nowa wiadomość",
+    "page": "Strona"
   }
 }

@@ -22,7 +22,9 @@
     "title": "Groups"
   },
   "group": {
-    "manage": "Manage"
+    "manage": "Manage",
+    "events": "Events",
+    "files": "Files"
   },
   "messages": {
     "title": "Messages",
@@ -55,7 +57,10 @@
     "description": "Description",
     "address": "Address",
     "no-events": "No events for selected group",
-    "add-event": "New event"
+    "add-event": "New event",
+    "prev": "Previous",
+    "next": "Next",
+    "page": "Page"
   },
   "files": {
     "title": "Files",
@@ -81,6 +86,7 @@
     "search-placeholder": "Search members...",
     "cancel-filter": "Cancel filter",
     "messages": "Messages",
-    "send-messages": "New message"
+    "send-messages": "New message",
+    "page": "Page"
   }
 }

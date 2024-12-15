@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowLeft,
   faArrowRight,
-  faTrash,
+  faTimes,
 } from "@fortawesome/free-solid-svg-icons";
 
 interface IUser {
@@ -62,12 +62,12 @@ const initialGroups: IGroup[] = [
 export default function GroupPanel() {
   const { t } = useLanguage();
   const [groups, setGroups] = useState(initialGroups);
-  const [currentGroupIndex, setCurrentGroupIndex] = useState(0);
+  const [currentGroupIndex, setCurrentGroupIndex] = useState(1);
   const [groupName, setGroupName] = useState(groups[0].name);
   const [groupDescription, setGroupDescription] = useState(
     groups[0].description
   );
-  const [currentPage, setCurrentPage] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
   const [roleFilter, setRoleFilter] = useState<string | null>(null);
 
@@ -81,7 +81,7 @@ export default function GroupPanel() {
     setGroupDescription(groups[newIndex].description);
     setSearchQuery("");
     setRoleFilter(null);
-    setCurrentPage(0);
+    setCurrentPage(1);
   };
 
   const handleNextGroup = () => {
@@ -91,7 +91,7 @@ export default function GroupPanel() {
     setGroupDescription(groups[newIndex].description);
     setSearchQuery("");
     setRoleFilter(null);
-    setCurrentPage(0);
+    setCurrentPage(1);
   };
 
   const handleSaveChanges = () => {
@@ -134,8 +134,8 @@ export default function GroupPanel() {
 
   // Paginate the filtered members
   const paginatedMembers = filteredMembers.slice(
-    currentPage * membersPerPage,
-    currentPage * membersPerPage + membersPerPage
+    (currentPage - 1) * membersPerPage,
+    currentPage * membersPerPage
   );
 
   const totalPages = Math.ceil(filteredMembers.length / membersPerPage);
@@ -243,7 +243,7 @@ export default function GroupPanel() {
                 className="p-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
                 onClick={() => handleDeleteMember(member.id)}
               >
-                <FontAwesomeIcon icon={faTrash} />
+                <FontAwesomeIcon icon={faTimes} />
               </button>
             </div>
           </div>
@@ -258,17 +258,20 @@ export default function GroupPanel() {
         <div className="flex justify-center mt-4 space-x-4">
           <button
             className="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 0))}
-            disabled={currentPage === 0}
+            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
           >
             {t("group-panel.previous")}
           </button>
+          <span className="self-center font-medium">
+            {t("group-panel.page")} {currentPage} / {totalPages}
+          </span>
           <button
             className="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
             onClick={() =>
-              setCurrentPage((prev) => Math.min(prev + 1, totalPages - 1))
+              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
             }
-            disabled={currentPage === totalPages - 1}
+            disabled={currentPage === totalPages}
           >
             {t("group-panel.next")}
           </button>

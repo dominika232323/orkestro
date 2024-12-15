@@ -1,15 +1,15 @@
-import { useLanguage } from "../LanguageContext";
-import { useState } from "react";
+import React, { useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowLeft,
   faArrowRight,
+  faPlus,
   faCalendarAlt,
   faClock,
-  faLocationDot,
   faPen,
-  faPlus,
+  faLocationDot,
 } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useLanguage } from "../LanguageContext";
 
 interface IEvent {
   id: string;
@@ -30,38 +30,26 @@ const groups: IGroup[] = [
   {
     id: "1",
     name: "Group A",
-    events: [
-      {
-        id: "1",
-        name: "Concert",
-        date: "2024-01-10",
-        time: "18:00",
-        description: "A great concert featuring talented musicians.",
-        address: "123 Music Hall, Cityville",
-      },
-      {
-        id: "2",
-        name: "Rehearsal",
-        date: "2024-01-08",
-        time: "15:00",
-        description: "Rehearsal for the upcoming concert.",
-        address: "Music Room, School of Arts",
-      },
-    ],
+    events: Array.from({ length: 12 }, (_, i) => ({
+      id: `${i + 1}`,
+      name: `Event ${i + 1}`,
+      date: `2024-01-${(i + 1).toString().padStart(2, "0")}`,
+      time: "18:00",
+      description: `Description for Event ${i + 1}`,
+      address: `Location ${i + 1}`,
+    })),
   },
   {
     id: "2",
     name: "Group B",
-    events: [
-      {
-        id: "3",
-        name: "Workshop",
-        date: "2024-01-12",
-        time: "10:00",
-        description: "A workshop on music composition.",
-        address: "Auditorium, City Hall",
-      },
-    ],
+    events: Array.from({ length: 7 }, (_, i) => ({
+      id: `${i + 1}`,
+      name: `Event ${i + 1}`,
+      date: `2024-02-${(i + 1).toString().padStart(2, "0")}`,
+      time: "15:00",
+      description: `Description for Event ${i + 1}`,
+      address: `Location ${i + 1}`,
+    })),
   },
   {
     id: "3",
@@ -72,28 +60,58 @@ const groups: IGroup[] = [
 
 export default function Events() {
   const { t } = useLanguage();
+
+  // States for managing current group, pagination, and selected event
   const [currentGroupIndex, setCurrentGroupIndex] = useState(0);
-  const [selectedEvent, setSelectedEvent] = useState<IEvent | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
 
+  const eventsPerPage = 5;
+
+  // Current Group and its events
   const currentGroup = groups[currentGroupIndex];
+  const totalPages = Math.ceil(currentGroup.events.length / eventsPerPage);
 
+  // Paginated Events
+  const paginatedEvents = currentGroup.events.slice(
+    (currentPage - 1) * eventsPerPage,
+    currentPage * eventsPerPage
+  );
+
+  // Selected Event Details
+  const selectedEvent = currentGroup.events.find(
+    (event) => event.id === selectedEventId
+  );
+
+  // Group Navigation Handlers
   const handlePrevGroup = () => {
     setCurrentGroupIndex((prev) => (prev - 1 + groups.length) % groups.length);
-    setSelectedEvent(null); // Reset selected event
+    setCurrentPage(1); // Reset page to 1
+    setSelectedEventId(null); // Reset selected event
   };
 
   const handleNextGroup = () => {
     setCurrentGroupIndex((prev) => (prev + 1) % groups.length);
-    setSelectedEvent(null); // Reset selected event
+    setCurrentPage(1);
+    setSelectedEventId(null);
   };
 
-  const handleNewEvent = () => {};
+  // Pagination Handlers
+  const handlePrevPage = () => {
+    if (currentPage > 1) setCurrentPage((prev) => prev - 1);
+  };
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) setCurrentPage((prev) => prev + 1);
+  };
 
   return (
     <div className="bg-gray-200 p-6 rounded-lg shadow-md max-w-4xl mx-auto mt-8">
       <h1 className="text-2xl font-bold text-center mb-4">
         {t("events.title")}
       </h1>
+
+      {/* Group Navigation */}
       <div className="flex justify-between items-center mb-6">
         <button
           className="p-2 bg-blue-500 text-white rounded-full hover:bg-blue-600"
@@ -101,7 +119,7 @@ export default function Events() {
         >
           <FontAwesomeIcon icon={faArrowLeft} />
         </button>
-        <h1 className="text-xl font-bold">{currentGroup.name}</h1>
+        <h2 className="text-xl font-bold">{currentGroup.name}</h2>
         <button
           className="p-2 bg-blue-500 text-white rounded-full hover:bg-blue-600"
           onClick={handleNextGroup}
@@ -112,69 +130,94 @@ export default function Events() {
 
       {/* List of Events */}
       <ul className="space-y-4">
-        {currentGroup.events.length > 0 ? (
-          currentGroup.events.map((event) => (
+        {paginatedEvents.length > 0 ? (
+          paginatedEvents.map((event) => (
             <li
               key={event.id}
-              className="bg-white p-4 rounded-lg shadow border border-gray-200 hover:shadow-lg cursor-pointer"
-              onClick={() => setSelectedEvent(event)}
+              className={`bg-white p-4 rounded-lg shadow border hover:shadow-lg cursor-pointer ${
+                selectedEventId === event.id
+                  ? "border-blue-500 bg-blue-50"
+                  : "border-gray-200"
+              }`}
+              onClick={() => setSelectedEventId(event.id)}
             >
               <p className="font-bold">{event.name}</p>
               <p className="text-gray-600">{event.date}</p>
             </li>
           ))
         ) : (
-          <li>
-            <p className="text-gray-600 text-center">{t("events.no-events")}</p>
-          </li>
+          <li className="text-center text-gray-600">{t("events.no-events")}</li>
         )}
+        {/* Add Event Button */}
         <li>
-          <button
-            className="w-full py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 font-medium"
-            onClick={handleNewEvent}
-          >
+          <button className="w-full py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 font-medium">
             <FontAwesomeIcon icon={faPlus} className="mr-2" />
             {t("events.add-event")}
           </button>
         </li>
       </ul>
 
-      {/* Event Details */}
+      {/* Pagination Buttons */}
+      {currentGroup.events.length > eventsPerPage && (
+        <div className="flex justify-center gap-4 mt-6">
+          <button
+            className={
+              "p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+            }
+            onClick={handlePrevPage}
+            disabled={currentPage === 1}
+          >
+            {t("events.prev")}
+          </button>
+          <span className="self-center font-medium">
+            {t("events.page")} {currentPage} / {totalPages}
+          </span>
+          <button
+            className={
+              "p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+            }
+            onClick={handleNextPage}
+            disabled={currentPage === totalPages}
+          >
+            {t("events.next")}
+          </button>
+        </div>
+      )}
+
+      {/* Selected Event Details */}
       {selectedEvent && (
         <div className="bg-white p-6 rounded-lg shadow-md mt-6">
           <h2 className="text-lg font-bold mb-4">{selectedEvent.name}</h2>
           <p>
             <strong>
-              <span className="mr-2 text-gray-500">
-                <FontAwesomeIcon icon={faCalendarAlt} />
-              </span>
+              <FontAwesomeIcon
+                icon={faCalendarAlt}
+                className="mr-2 text-gray-500"
+              />
               {t("events.date")}:
             </strong>{" "}
             {selectedEvent.date}
           </p>
           <p>
             <strong>
-              <span className="mr-2 text-gray-500">
-                <FontAwesomeIcon icon={faClock} />
-              </span>
+              <FontAwesomeIcon icon={faClock} className="mr-2 text-gray-500" />
               {t("events.time")}:
             </strong>{" "}
             {selectedEvent.time}
           </p>
           <p>
             <strong>
-              <span className="mr-2 text-gray-500">
-                <FontAwesomeIcon icon={faPen} />
-              </span>
+              <FontAwesomeIcon icon={faPen} className="mr-2 text-gray-500" />
               {t("events.description")}:
             </strong>{" "}
             {selectedEvent.description}
           </p>
           <p>
             <strong>
-              <span className="mr-2 text-gray-500">
-                <FontAwesomeIcon icon={faLocationDot} />
-              </span>
+              <FontAwesomeIcon
+                icon={faLocationDot}
+                className="mr-2 text-gray-500"
+              />
               {t("events.address")}:
             </strong>{" "}
             {selectedEvent.address}
