@@ -2,7 +2,7 @@
   "top-bar": {
     "events": "Events",
     "files": "Files",
-    "group": "Group",
+    "group": "Manage groups",
     "calendar": "Calendar",
     "groups": "Groups",
     "messages": "Messages",

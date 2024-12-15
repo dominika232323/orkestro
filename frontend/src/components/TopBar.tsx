@@ -5,7 +5,7 @@ import {
   faCog,
   faKey,
   faMessage,
-  faUser,
+  faUsers,
 } from "@fortawesome/free-solid-svg-icons";
 import HoverText from "./HoverText";
 import TopBarIcon from "./TopBarIcon";
@@ -28,7 +28,7 @@ export default function TopBar({
           <TopBarIcon
             handleChangePage={handleChangePage}
             pageName="group"
-            iconObject={faUser}
+            iconObject={faUsers}
           />
         </HoverText>
         <HoverText textToShow={t("top-bar.messages")}>
