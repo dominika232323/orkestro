@@ -239,7 +239,7 @@ class MessageRecipient(models.Model):
     message_recipient_id = models.AutoField(primary_key=True)
     message = models.ForeignKey(Message, models.CASCADE, related_name="message_recipient")
     user = models.ForeignKey(User, models.CASCADE, related_name="received_messages")
-    is_read = models.CharField(max_length=1)
+    is_read = models.BooleanField()
 
     def __str__(self) -> str:
         return f"{self.message.user} → {self.message.group.name} → {self.user} ({self.message_recipient_id})"
