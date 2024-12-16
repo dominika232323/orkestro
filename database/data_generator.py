@@ -38,7 +38,7 @@ def messages():
 
 def recipients():
     for i in range(1, message_count + 1):
-        is_read = 0 if i in [message_count - 1, message_count] else 1
+        is_read = "FALSE" if i in [message_count - 1, message_count] else "TRUE"
         print(f"INSERT INTO message_recipients (message_id, user_id, is_read) VALUES ({i}, 1, {is_read});")
         print(f"INSERT INTO message_recipients (message_id, user_id, is_read) VALUES ({i}, 2, {is_read});")
         print(f"INSERT INTO message_recipients (message_id, user_id, is_read) VALUES ({i}, 3, {is_read});")

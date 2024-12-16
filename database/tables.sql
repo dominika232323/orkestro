@@ -94,7 +94,7 @@ CREATE TABLE message_recipients (
     message_recipient_id SERIAL NOT NULL,
     message_id           INTEGER NOT NULL,
     user_id              INTEGER NOT NULL,
-    is_read              CHAR(1) NOT NULL
+    is_read              BOOLEAN NOT NULL
 );
 
 ALTER TABLE message_recipients ADD CONSTRAINT message_recipients_pk PRIMARY KEY ( message_recipient_id );
