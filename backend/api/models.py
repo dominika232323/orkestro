@@ -78,7 +78,7 @@ class Group(models.Model):
 
 class Event(models.Model):
     event_id = models.AutoField(primary_key=True)
-    group = models.ForeignKey(Group, models.CASCADE, related_name="group_events")
+    group = models.ForeignKey(Group, models.CASCADE, related_name="events")
     name = models.CharField(max_length=100)
     description = models.CharField(max_length=1000, blank=True, null=True)
     date = models.DateTimeField()
@@ -94,7 +94,7 @@ class Event(models.Model):
 
 class Track(models.Model):
     track_id = models.AutoField(primary_key=True)
-    group = models.ForeignKey(Group, models.CASCADE, related_name="group_tracks")
+    group = models.ForeignKey(Group, models.CASCADE, related_name="tracks")
     name = models.CharField(max_length=100)
     artist = models.CharField(max_length=100)
 
@@ -108,7 +108,7 @@ class Track(models.Model):
 
 class File(models.Model):
     file_id = models.AutoField(primary_key=True)
-    track = models.ForeignKey(Track, models.CASCADE, related_name="track_files")
+    track = models.ForeignKey(Track, models.CASCADE, related_name="files")
     name = models.CharField(max_length=100)
     content = models.BinaryField()
 
@@ -135,7 +135,7 @@ class Instrument(models.Model):
 class Message(models.Model):
     message_id = models.AutoField(primary_key=True)
     user = models.ForeignKey(User, models.CASCADE, related_name="sent_messages")
-    group = models.ForeignKey(Group, models.CASCADE, related_name="group_messages")
+    group = models.ForeignKey(Group, models.CASCADE, related_name="messages")
     title = models.CharField(max_length=100)
     content = models.CharField(max_length=2000)
     date = models.DateTimeField()
@@ -150,8 +150,8 @@ class Message(models.Model):
 
 class EventAttendee(models.Model):
     event_attendee_id = models.AutoField(primary_key=True)
-    event = models.ForeignKey(Event, models.CASCADE, related_name="event_users")
-    user = models.ForeignKey(User, models.CASCADE, related_name="user_events")
+    event = models.ForeignKey(Event, models.CASCADE, related_name="attendees")
+    user = models.ForeignKey(User, models.CASCADE, related_name="attended_events")
 
     def __str__(self) -> str:
         return f"{self.event.name} → {self.user} ({self.event_attendee_id})"
@@ -164,8 +164,8 @@ class EventAttendee(models.Model):
 
 class EventTrack(models.Model):
     event_track_id = models.AutoField(primary_key=True)
-    track = models.ForeignKey(Track, models.CASCADE, related_name="track_events")
-    event = models.ForeignKey(Event, models.CASCADE, related_name="event_tracks")
+    track = models.ForeignKey(Track, models.CASCADE, related_name="events")
+    event = models.ForeignKey(Event, models.CASCADE, related_name="tracks")
 
     def __str__(self) -> str:
         return f"{self.event.name} → {self.track.name} ({self.event_track_id})"
@@ -178,8 +178,8 @@ class EventTrack(models.Model):
 
 class FileAllowedMember(models.Model):
     file_allowed_member_id = models.AutoField(primary_key=True)
-    file = models.ForeignKey(File, models.CASCADE, related_name="file_users")
-    user = models.ForeignKey(User, models.CASCADE, related_name="user_files")
+    file = models.ForeignKey(File, models.CASCADE, related_name="allowed_users")
+    user = models.ForeignKey(User, models.CASCADE, related_name="allowed_files")
 
     def __str__(self) -> str:
         return f"{self.file.name} → {self.user} ({self.file_allowed_member_id})"
@@ -192,8 +192,8 @@ class FileAllowedMember(models.Model):
 
 class FileInstrument(models.Model):
     file_instrument_id = models.AutoField(primary_key=True)
-    file = models.ForeignKey(File, models.CASCADE, related_name="file_instruments")
-    instrument = models.ForeignKey(Instrument, models.CASCADE, related_name="instrument_files")
+    file = models.ForeignKey(File, models.CASCADE, related_name="instruments")
+    instrument = models.ForeignKey(Instrument, models.CASCADE, related_name="files")
 
     def __str__(self) -> str:
         return f"{self.file.name} → {self.instrument.name} ({self.file_instrument_id})"
@@ -206,8 +206,8 @@ class FileInstrument(models.Model):
 
 class Invitation(models.Model):
     invitation_id = models.AutoField(primary_key=True)
-    group = models.ForeignKey(Group, models.CASCADE, related_name="group_invitations")
-    user = models.ForeignKey(User, models.CASCADE, related_name="user_invitations")
+    group = models.ForeignKey(Group, models.CASCADE, related_name="invitations")
+    user = models.ForeignKey(User, models.CASCADE, related_name="invitations")
     permission_level = models.CharField(max_length=1)
 
     def __str__(self) -> str:
@@ -221,8 +221,8 @@ class Invitation(models.Model):
 
 class Member(models.Model):
     member_id = models.AutoField(primary_key=True)
-    group = models.ForeignKey(Group, models.CASCADE, related_name="group_users")
-    user = models.ForeignKey(User, models.CASCADE, related_name="user_groups")
+    group = models.ForeignKey(Group, models.CASCADE, related_name="members")
+    user = models.ForeignKey(User, models.CASCADE, related_name="group_memberships")
     permission_level = models.CharField(max_length=1)
 
     def __str__(self) -> str:
@@ -236,7 +236,7 @@ class Member(models.Model):
 
 class MessageRecipient(models.Model):
     message_recipient_id = models.AutoField(primary_key=True)
-    message = models.ForeignKey(Message, models.CASCADE, related_name="message_recipient")
+    message = models.ForeignKey(Message, models.CASCADE, related_name="recipients")
     user = models.ForeignKey(User, models.CASCADE, related_name="received_messages")
     is_read = models.BooleanField()
 
@@ -251,8 +251,8 @@ class MessageRecipient(models.Model):
 
 class UserInstrument(models.Model):
     user_instrument_id = models.AutoField(primary_key=True)
-    user = models.ForeignKey(User, models.CASCADE, related_name="user_instruments")
-    instrument = models.ForeignKey(Instrument, models.CASCADE, related_name="instrument_users")
+    user = models.ForeignKey(User, models.CASCADE, related_name="instruments")
+    instrument = models.ForeignKey(Instrument, models.CASCADE, related_name="users")
 
     def __str__(self) -> str:
         return f"{self.user} → {self.instrument.name} ({self.user_instrument_id})"
