@@ -31,16 +31,15 @@ class UserManager(BaseUserManager):
 class User(AbstractBaseUser):
     user_id = models.AutoField(primary_key=True)
     email = models.EmailField(max_length=100, unique=True)
-    name = models.CharField(max_length=50) # TODO 
-    surname = models.CharField(max_length=50) # TODO 
+    name = models.CharField(max_length=50)
+    surname = models.CharField(max_length=50)
     date_joined = models.DateTimeField()
-    google_user_id = models.CharField(max_length=255, null=True, blank=True)
-    google_calendar_id = models.CharField(max_length=1024, blank=True, null=True)
-    # TODO: profile pic url?
-
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
+    google_user_id = models.CharField(max_length=255, null=True, blank=True)
+    google_calendar_id = models.CharField(max_length=1024, blank=True, null=True)
+    # TODO: profile pic url?
 
     objects = UserManager()
 
