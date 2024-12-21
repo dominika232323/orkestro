@@ -92,5 +92,23 @@ def hello_protected(request):
 
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
-def user_id(request):
-    return Response({"user_id": request.user.user_id})
+def user_name(request):
+    return Response({"user_name": request.user.name})
+
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def user_surname(request):
+    return Response({"user_surname": request.user.surname})
+
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def user_email(request):
+    return Response({"user_email": request.user.email})
+
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def user_google_calendar_id(request):
+    return Response({"user_google_calendar_id": request.user.google_calendar_id})
