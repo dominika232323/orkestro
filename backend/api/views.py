@@ -11,7 +11,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from .models import User
+from .models import User, UserInstrument
 
 
 class GoogleLoginView(APIView):
@@ -250,3 +250,20 @@ def update_user_google_calendar_id(request):
             {"error": "Invalid Google Calendar ID", "details": str(e)},
             status=status.HTTP_400_BAD_REQUEST
         )
+
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def user_instruments(request):
+    user = request.user
+    user_instruments = UserInstrument.objects.filter(user=user).select_related("instrument")
+
+    instruments_data = [
+        {
+            "instrument_id": user_instrument.instrument.instrument_id,
+            "name": user_instrument.instrument.name,
+        }
+        for user_instrument in user_instruments
+    ]
+
+    return Response({"instruments": instruments_data})

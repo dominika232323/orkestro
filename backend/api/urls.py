@@ -18,4 +18,5 @@ urlpatterns = [
     path("update-user-surname/", views.update_user_surname, name="update_user_surname"),
     path("update-user-email/", views.update_user_email, name="update_user_email"),
     path("update-user-google-calendar-id/", views.update_user_google_calendar_id, name="update_user_google_calendar_id"),
+    path("user-instruments/", views.user_instruments, name="user_instruments"),
 ]
