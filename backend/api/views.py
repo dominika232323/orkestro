@@ -88,3 +88,9 @@ def hello_world(request):
 @permission_classes([IsAuthenticated])
 def hello_protected(request):
     return Response({"text": f"Hello, {request.user.email}!"})
+
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def user_id(request):
+    return Response({"user_id": request.user.user_id})
