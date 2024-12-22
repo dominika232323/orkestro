@@ -76,3 +76,4 @@ Przykładowe strony:
 
 - <http://localhost:5000/>
 - <http://localhost:5000/admin/>
+- <http://localhost:5000/test/> (tymczasowa strona z testami API i logowaniem Google)
