@@ -19,4 +19,6 @@ urlpatterns = [
     path("update-user-email/", views.update_user_email, name="update_user_email"),
     path("update-user-google-calendar-id/", views.update_user_google_calendar_id, name="update_user_google_calendar_id"),
     path("user-instruments/", views.user_instruments, name="user_instruments"),
+    path("add-user-instrument-by-name/", views.add_user_instrument_by_name, name="add_user_instrument_by_name"),
+    path("remove-user-instrument-by-name/", views.remove_user_instrument_by_name, name="remove_user_instrument_by_name"),
 ]
