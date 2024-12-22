@@ -2,6 +2,7 @@ from django.urls import path
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 import api.views_user
+import api.views_user_events
 import api.views_user_instrument
 from . import views
 
@@ -23,4 +24,5 @@ urlpatterns = [
     path("user-instruments/", api.views_user_instrument.user_instruments, name="user_instruments"),
     path("add-user-instrument-by-name/", api.views_user_instrument.add_user_instrument_by_name, name="add_user_instrument_by_name"),
     path("delete-user-instrument-by-name/", api.views_user_instrument.delete_user_instrument_by_name, name="delete_user_instrument_by_name"),
+    path("user_events/", api.views_user_events.user_events, name="user_events"),
 ]

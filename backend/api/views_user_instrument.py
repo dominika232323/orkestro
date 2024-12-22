@@ -10,14 +10,14 @@ from api.models import UserInstrument, Instrument
 @permission_classes([IsAuthenticated])
 def user_instruments(request):
     user = request.user
-    user_instruments = UserInstrument.objects.filter(user=user).select_related("instrument")
+    instruments = UserInstrument.objects.filter(user=user).select_related("instrument")
 
     instruments_data = [
         {
             "instrument_id": user_instrument.instrument.instrument_id,
             "name": user_instrument.instrument.name,
         }
-        for user_instrument in user_instruments
+        for user_instrument in instruments
     ]
 
     return Response({"instruments": instruments_data})
