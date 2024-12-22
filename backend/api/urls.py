@@ -3,8 +3,21 @@ from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 from . import views
-from .views import *
-
+from .view_set.event_attendee_view_set import EventAttendeeViewSet
+from .view_set.event_track_view_set import EventTrackViewSet
+from .view_set.event_view_set import EventViewSet
+from .view_set.file_allowed_member_view_set import FileAllowedMemberViewSet
+from .view_set.file_instrument_view_set import FileInstrumentViewSet
+from .view_set.file_view_set import FileViewSet
+from .view_set.group_view_set import GroupViewSet
+from .view_set.instrument_view_set import InstrumentViewSet
+from .view_set.invitation_view_set import InvitationViewSet
+from .view_set.member_view_set import MemberViewSet
+from .view_set.message_recipient_view_set import MessageRecipientViewSet
+from .view_set.message_view_set import MessageViewSet
+from .view_set.track_view_set import TrackViewSet
+from .view_set.user_instrument_view_set import UserInstrumentViewSet
+from .view_set.user_view_set import UserViewSet
 
 router = DefaultRouter()
 router.register(r'users', UserViewSet)
