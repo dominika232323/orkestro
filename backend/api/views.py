@@ -76,7 +76,7 @@ class GoogleLoginView(APIView):
 
         except ValueError as e:
             return Response(
-                {"error": "Invalid token", "details": str(e)},
+                {"error": "Bad request", "details": str(e)},
                 status=status.HTTP_400_BAD_REQUEST
             )
 
