@@ -12,17 +12,13 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     permission_classes = [IsAuthenticated]
 
-    @action(detail=False, methods=["get"], url_path="name")
-    def get_name(self, request):
-        return Response({"user_surname": request.user.name})
-
     @action(detail=False, methods=["get"])
-    def surname(self, request):
-        return Response({"user_surname": request.user.surname})
-
-    @action(detail=False, methods=["get"])
-    def email(self, request):
-        return Response({"user_email": request.user.email})
+    def me(self, request):
+        return Response({
+            "name": request.user.name,
+            "surname": request.user.surname,
+            "email": request.user.email
+        })
 
     @action(detail=False, methods=["get", "post"])
     def google_calendar_id(self, request):
