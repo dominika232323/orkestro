@@ -2,14 +2,14 @@ from django.conf import settings
 from django.utils import timezone
 from google.auth.transport import requests
 from google.oauth2 import id_token
-from rest_framework import status
+from rest_framework import status, viewsets
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from .models import User
+from .serializers import *
 
 
 class GoogleLoginView(APIView):
@@ -88,3 +88,93 @@ def hello_world(request):
 @permission_classes([IsAuthenticated])
 def hello_protected(request):
     return Response({"text": f"Hello, {request.user.email}!"})
+
+
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated]
+
+
+class GroupViewSet(viewsets.ModelViewSet):
+    queryset = Group.objects.all()
+    serializer_class = GroupSerializer
+    permission_classes = [IsAuthenticated]
+
+
+class EventViewSet(viewsets.ModelViewSet):
+    queryset = Event.objects.all()
+    serializer_class = EventSerializer
+    permission_classes = [IsAuthenticated]
+
+
+class TrackViewSet(viewsets.ModelViewSet):
+    queryset = Track.objects.all()
+    serializer_class = TrackSerializer
+    permission_classes = [IsAuthenticated]
+
+
+class FileViewSet(viewsets.ModelViewSet):
+    queryset = File.objects.all()
+    serializer_class = FileSerializer
+    permission_classes = [IsAuthenticated]
+
+
+class InstrumentViewSet(viewsets.ModelViewSet):
+    queryset = Instrument.objects.all()
+    serializer_class = InstrumentSerializer
+    permission_classes = [IsAuthenticated]
+
+
+class MessageViewSet(viewsets.ModelViewSet):
+    queryset = Message.objects.all()
+    serializer_class = MessageSerializer
+    permission_classes = [IsAuthenticated]
+
+
+class EventAttendeeViewSet(viewsets.ModelViewSet):
+    queryset = EventAttendee.objects.all()
+    serializer_class = EventAttendeeSerializer
+    permission_classes = [IsAuthenticated]
+
+
+class EventTrackViewSet(viewsets.ModelViewSet):
+    queryset = EventTrack.objects.all()
+    serializer_class = EventTrackSerializer
+    permission_classes = [IsAuthenticated]
+
+
+class FileAllowedMemberViewSet(viewsets.ModelViewSet):
+    queryset = FileAllowedMember.objects.all()
+    serializer_class = FileAllowedMemberSerializer
+    permission_classes = [IsAuthenticated]
+
+
+class FileInstrumentViewSet(viewsets.ModelViewSet):
+    queryset = FileInstrument.objects.all()
+    serializer_class = FileInstrumentSerializer
+    permission_classes = [IsAuthenticated]
+
+
+class InvitationViewSet(viewsets.ModelViewSet):
+    queryset = Invitation.objects.all()
+    serializer_class = InvitationSerializer
+    permission_classes = [IsAuthenticated]
+
+
+class MemberViewSet(viewsets.ModelViewSet):
+    queryset = Member.objects.all()
+    serializer_class = MemberSerializer
+    permission_classes = [IsAuthenticated]
+
+
+class MessageRecipientViewSet(viewsets.ModelViewSet):
+    queryset = MessageRecipient.objects.all()
+    serializer_class = MessageRecipientSerializer
+    permission_classes = [IsAuthenticated]
+
+
+class UserInstrumentViewSet(viewsets.ModelViewSet):
+    queryset = UserInstrument.objects.all()
+    serializer_class = UserInstrumentSerializer
+    permission_classes = [IsAuthenticated]
