@@ -13,6 +13,8 @@ from .models import User
 
 
 class GoogleLoginView(APIView):
+    authentication_classes = []  # disable JWT authentication for this view
+
     def post(self, request):
         try:
             credential = request.data.get("credential")
