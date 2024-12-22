@@ -16,7 +16,7 @@ class UserInstrumentViewSet(viewsets.ModelViewSet):
     def instruments(self, request):
         if request.method == "GET":
             user = request.user
-            user_instruments = UserInstrument.objects.filter(user=user).select_related("instrument")
+            user_instruments = user.instruments.all()
 
             instruments = [ui.instrument for ui in user_instruments]
             serialized_instruments = InstrumentSerializer(instruments, many=True)

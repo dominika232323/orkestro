@@ -16,7 +16,7 @@ class EventAttendeeViewSet(viewsets.ModelViewSet):
     def events(self, request):
         if request.method == "GET":
             user = request.user
-            user_events = EventAttendee.objects.filter(user=user).select_related("event")
+            user_events = user.attended_events.all()
 
             events = [ui.event for ui in user_events]
             serialized_events = EventSerializer(events, many=True)
