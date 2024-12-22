@@ -1,5 +1,7 @@
 from rest_framework import serializers
-from .models import *
+
+from .models import User, Group, Event, Track, File, Instrument, Message, EventAttendee, EventTrack, FileAllowedMember, \
+    FileInstrument, Invitation, Member, MessageRecipient, UserInstrument
 
 
 class UserSerializer(serializers.ModelSerializer):
