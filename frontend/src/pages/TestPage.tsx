@@ -29,7 +29,7 @@ export default function TestPage() {
             setError(null);
             setMessage(null);
             try {
-                const response = await fetch("http://localhost:8000/api/hello-world/");
+                const response = await fetch("/api/hello-world/");
                 if (!response.ok) {
                     throw new Error(`HTTP error ${response.status}`);
                 }
@@ -49,7 +49,7 @@ export default function TestPage() {
         const fetchMessageProtected = async () => {
             setErrorP(null);
             setMessageP(null);
-            const response = axios.get<HelloMessage>("http://localhost:8000/api/hello-protected/")
+            const response = axios.get<HelloMessage>("/api/hello-protected/")
             .then((response) => setMessageP(response.data))
             .catch((error) => setErrorP(error.message));
         };
@@ -66,7 +66,7 @@ export default function TestPage() {
 
             try {
                 const backendResponse = await axios.post(
-                    `http://localhost:8000/api/login-google/`,
+                    `/api/login-google/`,
                     {"credential": credential}
                 );
 

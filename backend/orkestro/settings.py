@@ -36,9 +36,8 @@ DEBUG = True if os.getenv("DJANGO_DEBUG", "0") == "1" else False
 
 ALLOWED_HOSTS = []
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:5000",
 ]
 
 
@@ -56,7 +55,6 @@ INSTALLED_APPS = [
     # Third-party
     "rest_framework",
     "rest_framework.authtoken",
-    "corsheaders",
 
     # Own
     "api",
@@ -65,7 +63,6 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
-    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -143,7 +140,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = "static/"
+STATIC_URL = "static-django/"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field

@@ -46,12 +46,10 @@ python manage.py createsuperuser
 
 ### Serwer deweloperski
 ```sh
-python manage.py runserver
+python manage.py runserver 0.0.0.0:8000
 ```
 
-Serwer jest dostępny na: <http://localhost:8000/>
-
-Przykładowa strona: <http://localhost:8000/admin/>
+Serwer słucha na: <http://localhost:8000/>
 
 ## React.js frontend (`frontend/`)
 ### Instalacja zależności
@@ -64,4 +62,18 @@ npm install
 npm start
 ```
 
-Strona jest dostępna na: <http://localhost:3000/>
+Serwer słucha na: <http://localhost:3000/>
+
+## Nginx (`nginx/`)
+### Uruchomienie
+```sh
+docker compose up
+```
+
+Aplikacja dostępna jest na: <http://localhost:5000/>
+
+Przykładowe strony:
+
+- <http://localhost:5000/>
+- <http://localhost:5000/admin/>
+- <http://localhost:5000/test/> (tymczasowa strona z testami API i logowaniem Google)
