@@ -2,7 +2,7 @@ import {useEffect, useState} from "react";
 import {GoogleLogin} from "@react-oauth/google";
 import {jwtDecode} from "jwt-decode";
 
-import axios from "../axiosInstance";  // axios instance configured for JWT tokens
+import {storeTokens, removeTokens, axiosInstance as axios} from "../auth";
 
 
 interface HelloMessage {
@@ -71,9 +71,7 @@ export default function TestPage() {
                 );
 
                 const {access_token, refresh_token} = backendResponse.data;
-
-                localStorage.setItem("access_token", access_token);
-                localStorage.setItem("refresh_token", refresh_token);
+                storeTokens(access_token, refresh_token);
                 setProfile(decoded);
 
                 console.log("Login successful:", backendResponse.data);
@@ -91,8 +89,7 @@ export default function TestPage() {
     };
 
     const logOut = () => {
-        localStorage.setItem("access_token", "");
-        localStorage.setItem("refresh_token", "");
+        removeTokens();
         setProfile(null);
     };
 
