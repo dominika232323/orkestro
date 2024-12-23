@@ -2,4 +2,3 @@
 .vscode/
 .env
 backend/http_requests/
-package-lock.json
