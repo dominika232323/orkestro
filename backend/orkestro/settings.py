@@ -40,11 +40,6 @@ CSRF_TRUSTED_ORIGINS = [
     "http://localhost:5000",
 ]
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5000",
-    "http://127.0.0.1:5000",
-]
-
 
 # Application definition
 
@@ -60,7 +55,6 @@ INSTALLED_APPS = [
     # Third-party
     "rest_framework",
     "rest_framework.authtoken",
-    "corsheaders",
 
     # Own
     "api",
@@ -69,7 +63,6 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
-    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
