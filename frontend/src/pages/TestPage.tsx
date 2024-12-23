@@ -1,4 +1,5 @@
 import {useEffect, useState} from "react";
+import Cookies from "js-cookie";
 import {GoogleLogin} from "@react-oauth/google";
 import {jwtDecode} from "jwt-decode";
 
@@ -72,8 +73,8 @@ export default function TestPage() {
 
                 const {access_token, refresh_token} = backendResponse.data;
 
-                localStorage.setItem("access_token", access_token);
-                localStorage.setItem("refresh_token", refresh_token);
+                Cookies.set("access_token", access_token, {expires: 0.020833}); // 30 minutes
+                Cookies.set("refresh_token", refresh_token, {expires: 1}); // 1 day
                 setProfile(decoded);
 
                 console.log("Login successful:", backendResponse.data);
@@ -91,8 +92,8 @@ export default function TestPage() {
     };
 
     const logOut = () => {
-        localStorage.setItem("access_token", "");
-        localStorage.setItem("refresh_token", "");
+        Cookies.remove("access_token");
+        Cookies.remove("refresh_token");
         setProfile(null);
     };
 
