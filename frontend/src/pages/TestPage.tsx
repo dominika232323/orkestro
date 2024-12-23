@@ -1,9 +1,8 @@
 import {useEffect, useState} from "react";
-import Cookies from "js-cookie";
 import {GoogleLogin} from "@react-oauth/google";
 import {jwtDecode} from "jwt-decode";
 
-import axios from "../axiosInstance";  // axios instance configured for JWT tokens
+import {storeTokens, removeTokens, axiosInstance as axios} from "../auth";
 
 
 interface HelloMessage {
@@ -72,9 +71,7 @@ export default function TestPage() {
                 );
 
                 const {access_token, refresh_token} = backendResponse.data;
-
-                Cookies.set("access_token", access_token, {expires: 0.020833}); // 30 minutes
-                Cookies.set("refresh_token", refresh_token, {expires: 1}); // 1 day
+                storeTokens(access_token, refresh_token);
                 setProfile(decoded);
 
                 console.log("Login successful:", backendResponse.data);
@@ -92,8 +89,7 @@ export default function TestPage() {
     };
 
     const logOut = () => {
-        Cookies.remove("access_token");
-        Cookies.remove("refresh_token");
+        removeTokens();
         setProfile(null);
     };
 

@@ -2,7 +2,30 @@ import axios from "axios";
 import Cookies from "js-cookie";
 
 
-const axiosInstance = axios.create({
+const access_token_lifetime: number = 0.020833  // 30 minutes
+const refresh_token_lifetime: number = 1  // 1 day
+
+export function setAccessToken(access_token: string) {
+    Cookies.set("access_token", access_token, {expires: access_token_lifetime});
+}
+
+export function setRefreshToken(refresh_token: string) {
+    Cookies.set("refresh_token", refresh_token, {expires: refresh_token_lifetime});
+}
+
+export function storeTokens(access_token: string, refresh_token: string) {
+    setAccessToken(access_token);
+    setRefreshToken(refresh_token);
+    console.log("Tokens stored in cookies successfully");
+}
+
+export function removeTokens() {
+    Cookies.remove("access_token");
+    Cookies.remove("refresh_token");
+}
+
+// axios instance configured for JWT tokens
+export const axiosInstance = axios.create({
     headers: {
         "Content-Type": "application/json",
     },
@@ -21,9 +44,7 @@ axiosInstance.interceptors.response.use(
                         `/api/token/refresh/`,
                         {refresh: refreshToken}
                     );
-                    Cookies.set("access_token", response.data.access, {expires: 0.020833}); // 30 minutes
-                    axiosInstance.defaults.headers.Authorization = `Bearer ${response.data.access}`;
-                    originalRequest.headers.Authorization = `Bearer ${response.data.access}`;
+                    setAccessToken(response.data.access);
                     return axiosInstance(originalRequest);
                 }
             } catch (refreshError) {
@@ -33,5 +54,3 @@ axiosInstance.interceptors.response.use(
         return Promise.reject(error);
     }
 );
-
-export default axiosInstance;
