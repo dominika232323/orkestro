@@ -8,17 +8,6 @@ const axiosInstance = axios.create({
     },
 });
 
-axiosInstance.interceptors.request.use(
-    async (config) => {
-        const token = Cookies.get("access_token");
-        if (token) {
-            config.headers.Authorization = `Bearer ${token}`;
-        }
-        return config;
-    },
-    (error) => Promise.reject(error)
-);
-
 axiosInstance.interceptors.response.use(
     (response) => response,
     async (error) => {
