@@ -2,27 +2,45 @@ import {useEffect, useState} from "react";
 import {GoogleLogin} from "@react-oauth/google";
 import {jwtDecode} from "jwt-decode";
 
-import {storeTokens, removeTokens, axiosInstance as axios} from "../auth";
+import {getAccessToken, getRefreshToken, storeTokens, removeTokens, axiosInstance as axios} from "../auth";
 
 
 interface HelloMessage {
     text: string;
 }
 
+interface User {
+  email: string;
+  name: string;
+  surname: string;
+  google_user_id: string;
+  google_calendar_id: string;
+}
+
 export default function TestPage() {
+    const [user, setUser] = useState<User | null>(null);
+    const [justLoggedIn, setJustLoggedIn] = useState<boolean>(false);
     const [message, setMessage] = useState<HelloMessage | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [messageP, setMessageP] = useState<HelloMessage | null>(null);
     const [errorP, setErrorP] = useState<string | null>(null);
-    const [profile, setProfile] = useState<any>(null);
 
-    // useEffect(() => {
-    //     const access_token = localStorage.getItem("access_token");
-    //     const refresh_token = localStorage.getItem("refresh_token");
-    //     if (access_token && refresh_token) {
-    //         // TODO: fetch profile data from backend
-    //     }
-    // }, []);
+    useEffect(() => {
+        const fetchUser = async () => {
+            const access_token = getAccessToken();
+            const refresh_token = getRefreshToken();
+            if (access_token || refresh_token) {
+                const response = await axios.get<User>("/api/users/me/")
+                .then((response) => {
+                    setUser(response.data);
+                    console.log("Logged in as:", response.data)
+                })
+                .catch((error) => console.error("Error fetching user data:", error));
+            }
+        }
+
+        fetchUser();
+    }, [justLoggedIn]);
 
     useEffect(() => {
         const fetchMessage = async () => {
@@ -35,15 +53,13 @@ export default function TestPage() {
                 }
                 const result: HelloMessage = await response.json();
                 setMessage(result);
-                console.log("Message:", message);
             } catch (error) {
                 setError(`${error}`);
-                console.error("Failed to fetch data", error);
             }
         };
 
         fetchMessage();
-    }, [profile]);
+    }, [user]);
 
     useEffect(() => {
         const fetchMessageProtected = async () => {
@@ -55,14 +71,13 @@ export default function TestPage() {
         };
 
         fetchMessageProtected();
-    }, [profile]);
+    }, [user]);
 
-    const handleSuccess = async (credentialResponse: any) => {
+    const handleLoginSuccess = async (credentialResponse: any) => {
         try {
-            console.log("Response:", credentialResponse);
             const credential = credentialResponse.credential;
             const decoded: any = jwtDecode(credentialResponse.credential);
-            console.log("Decoded User Info:", decoded);
+            console.log("Google login successful:", decoded);
 
             try {
                 const backendResponse = await axios.post(
@@ -72,9 +87,8 @@ export default function TestPage() {
 
                 const {access_token, refresh_token} = backendResponse.data;
                 storeTokens(access_token, refresh_token);
-                setProfile(decoded);
-
-                console.log("Login successful:", backendResponse.data);
+                setJustLoggedIn(true);
+                console.log("Backend login successful:", backendResponse.data);
             } catch (error) {
                 console.error("Backend login failed:", error);
             }
@@ -85,12 +99,12 @@ export default function TestPage() {
     };
 
     const handleError = () => {
-        console.log("Login Failed");
+        console.log("Google login failed");
     };
 
     const logOut = () => {
         removeTokens();
-        setProfile(null);
+        setUser(null);
     };
 
     return (
@@ -108,19 +122,18 @@ export default function TestPage() {
                 }
 
 
-                {profile ?
+                {user ?
                     <div>
-                        <img src={profile.picture}/>
-                        <h3>User Logged in</h3>
-                        <p>Name: {profile.given_name}</p>
-                        <p>Surname: {profile.family_name}</p>
-                        <p>Email Address: {profile.email}</p>
-                        <br />
-                        <button onClick={logOut}>Log out</button>
+                        <p>Email: {user.email}</p>
+                        <p>Name: {user.name}</p>
+                        <p>Surname: {user.surname}</p>
+                        <p> Google user ID: {user.google_user_id}</p>
+                        <p> Google calendar ID: {user.google_calendar_id}</p>
+                        <button className="bg-white" onClick={logOut}>Log out</button>
                     </div>
                     :
                     <div className="flex justify-center items-center bg-gray-100">
-                        <GoogleLogin onSuccess={handleSuccess} onError={handleError} />
+                        <GoogleLogin onSuccess={handleLoginSuccess} onError={handleError} />
                     </div>
                 }
 

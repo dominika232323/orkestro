@@ -5,6 +5,14 @@ import Cookies from "js-cookie";
 const access_token_lifetime: number = 0.020833  // 30 minutes
 const refresh_token_lifetime: number = 1  // 1 day
 
+export function getAccessToken() {
+    return Cookies.get("access_token")
+}
+
+export function getRefreshToken() {
+    return Cookies.get("refresh_token")
+}
+
 export function setAccessToken(access_token: string) {
     Cookies.set("access_token", access_token, {expires: access_token_lifetime});
 }
@@ -38,7 +46,7 @@ axiosInstance.interceptors.response.use(
         if (error.response && error.response.status === 401 && !originalRequest._retry) {
             originalRequest._retry = true;
             try {
-                const refreshToken = Cookies.get("refresh_token");
+                const refreshToken = getRefreshToken();
                 if (refreshToken) {
                     const response = await axios.post(
                         `/api/token/refresh/`,
