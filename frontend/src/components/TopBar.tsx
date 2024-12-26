@@ -88,7 +88,7 @@ export default function TopBar({
             iconObject={faCog}
           />
         </HoverText>
-        <Link to="/">
+        <button onClick={handleLogOut}>
           <HoverText textToShow={t("top-bar.logout")}>
             <TopBarIcon
               handleChangePage={() => {}}
@@ -96,7 +96,7 @@ export default function TopBar({
               iconObject={faKey}
             />
           </HoverText>
-        </Link>
+        </button>
       </div>
     </div>
   );

@@ -3,18 +3,11 @@ import {GoogleLogin} from "@react-oauth/google";
 import {jwtDecode} from "jwt-decode";
 
 import {getAccessToken, getRefreshToken, storeTokens, removeTokens, axiosInstance as axios} from "../auth";
+import {User} from "../interfaces";
 
 
 interface HelloMessage {
     text: string;
-}
-
-interface User {
-  email: string;
-  name: string;
-  surname: string;
-  google_user_id: string;
-  google_calendar_id: string;
 }
 
 export default function TestPage() {
