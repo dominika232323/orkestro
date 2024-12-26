@@ -1,5 +1,8 @@
 import axios from "axios";
 import Cookies from "js-cookie";
+import {jwtDecode} from "jwt-decode";
+
+import {User} from "./interfaces";
 
 
 const access_token_lifetime: number = 0.020833  // 30 minutes
@@ -62,3 +65,58 @@ axiosInstance.interceptors.response.use(
         return Promise.reject(error);
     }
 );
+
+export const backendLogin = async (credentialResponse: any, setJustLoggedIn: Function = (_: any) => {}) => {
+    try {
+        const credential = credentialResponse.credential;
+        const decoded: any = jwtDecode(credentialResponse.credential);
+        console.log("Google login successful:", decoded);
+
+        await axios.post(
+            "/api/login-google/",
+            {"credential": credential}
+        )
+        .then((backendResponse) => {
+            const {access_token, refresh_token} = backendResponse.data;
+            storeTokens(access_token, refresh_token);
+            console.log("Backend login successful:", backendResponse.data);
+            setJustLoggedIn(true);
+        })
+        .catch((error) => console.error("Backend login failed:", error));
+
+    } catch (error) {
+        console.error("Error decoding JWT:", error);
+    }
+}
+
+export const fetchUserLogin = async () => {
+    const access_token = getAccessToken();
+    const refresh_token = getRefreshToken();
+    if (access_token || refresh_token) {
+        await axiosInstance.get<User>("/api/users/me/")
+            .then((response) => {
+                console.log("Logged in as:", response.data)
+                window.location.href = "/main-page";
+            })
+            .catch((error) => console.error("Error fetching user data:", error));
+    }
+}
+
+export const fetchUserOrRedirect = async (setUser: Function = (_: any) => {}) => {
+    const access_token = getAccessToken();
+    const refresh_token = getRefreshToken();
+    if (access_token || refresh_token) {
+        await axiosInstance.get<User>("/api/users/me/")
+            .then((response) => {
+                setUser(response.data);
+            })
+            .catch((error) => {
+                console.error("Error fetching user data, redirecting to login:", error)
+                window.location.href = "/";
+            });
+    }
+    else {
+        console.error("No tokens, redirecting to login")
+        window.location.href = "/";
+    }
+}

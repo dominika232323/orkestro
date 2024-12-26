@@ -1,59 +1,25 @@
 import {useEffect, useState} from "react";
 import {GoogleLogin} from "@react-oauth/google";
-import {jwtDecode} from "jwt-decode";
 
 import {useLanguage} from "../LanguageContext";
-import {getAccessToken, getRefreshToken, storeTokens, axiosInstance as axios} from "../auth";
-import {User} from "../interfaces";
+import {backendLogin, fetchUserLogin} from "../auth";
 
 
 export default function LoginPage() {
   const { t, changeLanguage, currentLanguage } = useLanguage();
   const [justLoggedIn, setJustLoggedIn] = useState<boolean>(false);
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      const access_token = getAccessToken();
-      const refresh_token = getRefreshToken();
-      if (access_token || refresh_token) {
-        await axios.get<User>("/api/users/me/")
-          .then((response) => {
-            console.log("Logged in as:", response.data)
-            window.location.href = "/main-page";
-          })
-          .catch((error) => console.error("Error fetching user data:", error));
-      }
-    }
-
-    fetchUser();
-  }, [justLoggedIn]);
-
   const handleLoginSuccess = async (credentialResponse: any) => {
-    try {
-      const credential = credentialResponse.credential;
-      const decoded: any = jwtDecode(credentialResponse.credential);
-      console.log("Google login successful:", decoded);
-
-      await axios.post(
-        "/api/login-google/",
-        {"credential": credential}
-      )
-      .then((backendResponse) => {
-        const {access_token, refresh_token} = backendResponse.data;
-        storeTokens(access_token, refresh_token);
-        setJustLoggedIn(true);
-        console.log("Backend login successful:", backendResponse.data);
-      })
-      .catch((error) => console.error("Backend login failed:", error));
-
-    } catch (error) {
-      console.error("Error decoding JWT:", error);
-    }
+    backendLogin(credentialResponse, setJustLoggedIn);
   };
 
   const handleLoginError = () => {
     console.log("Google login failed");
   };
+
+  useEffect(() => {
+    fetchUserLogin();
+  }, [justLoggedIn]);
 
   return (
     <div className="flex flex-col justify-center items-center h-screen bg-gray-100">
