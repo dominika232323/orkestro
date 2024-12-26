@@ -14,11 +14,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=["get"])
     def me(self, request):
-        return Response({
-            "name": request.user.name,
-            "surname": request.user.surname,
-            "email": request.user.email
-        })
+        return Response(UserSerializer(request.user).data)
 
     @action(detail=False, methods=["get", "post"])
     def google_calendar_id(self, request):
