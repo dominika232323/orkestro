@@ -30,7 +30,7 @@ export default function TestPage() {
             const access_token = getAccessToken();
             const refresh_token = getRefreshToken();
             if (access_token || refresh_token) {
-                const response = await axios.get<User>("/api/users/me/")
+                await axios.get<User>("/api/users/me/")
                 .then((response) => {
                     setUser(response.data);
                     console.log("Logged in as:", response.data)
@@ -65,7 +65,8 @@ export default function TestPage() {
         const fetchMessageProtected = async () => {
             setErrorP(null);
             setMessageP(null);
-            const response = axios.get<HelloMessage>("/api/hello-protected/")
+
+            axios.get<HelloMessage>("/api/hello-protected/")
             .then((response) => setMessageP(response.data))
             .catch((error) => setErrorP(error.message));
         };
@@ -79,19 +80,17 @@ export default function TestPage() {
             const decoded: any = jwtDecode(credentialResponse.credential);
             console.log("Google login successful:", decoded);
 
-            try {
-                const backendResponse = await axios.post(
-                    `/api/login-google/`,
-                    {"credential": credential}
-                );
-
+            await axios.post(
+                "/api/login-google/",
+                {"credential": credential}
+            )
+            .then((backendResponse) => {
                 const {access_token, refresh_token} = backendResponse.data;
                 storeTokens(access_token, refresh_token);
                 setJustLoggedIn(true);
                 console.log("Backend login successful:", backendResponse.data);
-            } catch (error) {
-                console.error("Backend login failed:", error);
-            }
+            })
+            .catch((error) => console.error("Backend login failed:", error));
 
         } catch (error) {
             console.error("Error decoding JWT:", error);
