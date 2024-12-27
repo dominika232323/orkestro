@@ -7,7 +7,7 @@ from .models import User, Group, Event, Track, File, Instrument, Message, EventA
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ["email", "name", "surname", "google_user_id", "google_calendar_id"]
+        fields = ["email", "name", "surname", "google_user_id", "google_calendar_id", "profile_picture_url"]
 
 
 class GroupSerializer(serializers.ModelSerializer):
