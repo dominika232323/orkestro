@@ -2,7 +2,7 @@ import {useEffect, useState} from "react";
 
 import { useLanguage } from "../LanguageContext";
 import {axiosInstance as axios, fetchUserOrRedirect} from "../auth";
-import InvitationComponent from "./Invitation";
+import InvitationComponent from "./InvitationComponent";
 import {Invitation} from "../interfaces";
 
 
@@ -34,7 +34,7 @@ export default function Invitations() {
       {invitations.length > 0 ?
         <ul className="space-y-4">
           {invitations.map((inv) => (
-            <InvitationComponent key={inv.invitation_id} text={inv.group.name}/>  // TODO: key is unused in component
+            <InvitationComponent invitation={inv}/>
           ))}
         </ul>
         :
