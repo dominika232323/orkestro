@@ -1,24 +1,45 @@
+import {useEffect, useState} from "react";
+
 import { useLanguage } from "../LanguageContext";
-import Invitation from "./Invitation";
+import {axiosInstance as axios, fetchUserOrRedirect} from "../auth";
+import InvitationComponent from "./Invitation";
+import {Invitation} from "../interfaces";
+
 
 export default function Invitations() {
   const { t } = useLanguage();
-  const invitations = ["Group 1", "Group 2"];
-  // const invitations: string[] = [];
+  const [invitations, setInvitations] = useState<Invitation[]>([]);
+
+  useEffect(() => {
+    fetchUserOrRedirect();
+  }, []);
+
+  useEffect(() => {
+    const fetchInvitations = async () => {
+      await axios.get<Invitation[]>("/api/invitations/pending/")
+        .then((response) => {
+          setInvitations(response.data);
+        })
+        .catch((error) => console.error("Error fetching invitations:", error));
+    };
+
+    fetchInvitations();
+  }, []);
+
   return (
     <div className="bg-gray-200 p-6 rounded-lg shadow-md max-w-4xl mx-auto mt-8">
       <h1 className="text-2xl font-bold text-center mb-4">
         {t("invitations.title")}
       </h1>
-      {invitations.length > 0 ? (
+      {invitations.length > 0 ?
         <ul className="space-y-4">
-          {invitations.map((item) => (
-            <Invitation key={item} text={item} />
+          {invitations.map((inv) => (
+            <InvitationComponent key={inv.invitation_id} text={inv.group.name}/>  // TODO: key is unused in component
           ))}
         </ul>
-      ) : (
+        :
         <p>{t("invitations.no-invitations")}</p>
-      )}
+      }
     </div>
   );
 }
