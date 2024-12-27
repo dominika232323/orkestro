@@ -36,8 +36,6 @@ class GoogleLoginView(APIView):
             google_user_id = idinfo.get("sub")
             profile_picture_url = idinfo.get("picture")
 
-            print(profile_picture_url)
-
             user, created = User.objects.get_or_create(
                 email = email,
                 defaults = {
