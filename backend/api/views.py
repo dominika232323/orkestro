@@ -24,55 +24,67 @@ class GoogleLoginView(APIView):
                     status=status.HTTP_400_BAD_REQUEST
                 )
 
-            idinfo = id_token.verify_oauth2_token(
+            info = id_token.verify_oauth2_token(
                 credential,
                 requests.Request(),
                 settings.GOOGLE_CLIENT_ID
             )
 
-            email = idinfo.get("email")
-            name = idinfo.get("given_name")
-            surname = idinfo.get("family_name", "")
-            google_user_id = idinfo.get("sub")
+            email = info["email"]
+            name = info["given_name"]
+            surname = info.get("family_name", "")
+            google_user_id = info["sub"]
 
-            user, created = User.objects.get_or_create(
-                email = email,
-                defaults = {
-                    "name": name,
-                    "surname": surname,
-                    "google_user_id": google_user_id,
-                    "is_active": True,
-                }
-            )
+            try:
+                user = User.objects.get(email=email)
+                created = False
 
-            if user.google_user_id and user.google_user_id != google_user_id:
-                return Response(
-                    {"error": "Invalid Google user ID"},
-                    status=status.HTTP_400_BAD_REQUEST
-                )
+                # verify google user id
+                if user.google_user_id and user.google_user_id != google_user_id:
+                    return Response(
+                        {"error": "Invalid Google user ID"},
+                        status=status.HTTP_400_BAD_REQUEST
+                    )
 
-            if not created:
+                # verify account is active
+                if not user.is_active:
+                    return Response(
+                        {"error": "User account is disabled"},
+                        status=status.HTTP_403_FORBIDDEN
+                    )
+
+                # fill in missing fields
                 if not user.name:
                     user.name = name
                 if not user.surname:
                     user.surname = surname
                 if not user.google_user_id:
                     user.google_user_id = google_user_id
-            user.last_login = timezone.now()
-            user.save()
 
-            if not user.is_active:
-                return Response(
-                    {"error": "User account is disabled"},
-                    status=status.HTTP_403_FORBIDDEN
+                user.last_login = timezone.now()
+                user.save()
+
+            except User.DoesNotExist:
+                user = User(
+                    email=email,
+                    name=name,
+                    surname=surname,
+                    google_user_id=google_user_id,
+                    date_joined=timezone.now(),
+                    last_login = timezone.now(),
                 )
+                created = True
+                user.save()
 
-            refresh = RefreshToken.for_user(user)
+            refresh_token = RefreshToken.for_user(user)
 
-            return Response({
-                "access_token": str(refresh.access_token),
-                "refresh_token": str(refresh),
-            })
+            return Response(
+                {
+                    "access_token": str(refresh_token.access_token),
+                    "refresh_token": str(refresh_token),
+                },
+                status=(status.HTTP_201_CREATED if created else status.HTTP_200_OK)
+            )
 
         except ValueError as e:
             return Response(
