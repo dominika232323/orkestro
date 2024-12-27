@@ -71,6 +71,8 @@ class FileInstrumentSerializer(serializers.ModelSerializer):
 
 
 class InvitationSerializer(serializers.ModelSerializer):
+    group = GroupSerializer()
+
     class Meta:
         model = Invitation
         fields = "__all__"
