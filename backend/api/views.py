@@ -62,8 +62,8 @@ class GoogleLoginView(APIView):
                 if not user.google_user_id:
                     user.google_user_id = google_user_id
 
-                if profile_picture_url and user.profile_picture_url != profile_picture_url:
-                    user.profile_picture_url = profile_picture_url
+                # update every time in case user changed it
+                user.profile_picture_url = profile_picture_url
 
                 user.last_login = timezone.now()
                 user.save()
