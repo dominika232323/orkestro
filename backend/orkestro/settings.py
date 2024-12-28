@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from datetime import timedelta
 import os
+import sys
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -104,6 +105,9 @@ DATABASES = {
         "PORT": os.getenv("DJANGO_DB_PORT"),
     }
 }
+
+if len(sys.argv) > 1 and sys.argv[1] == "test":
+    DATABASES["default"] = {'ENGINE': 'django.db.backends.sqlite3'}
 
 
 # Password validation

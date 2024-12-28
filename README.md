@@ -52,6 +52,14 @@ python manage.py runserver 0.0.0.0:8000
 
 Serwer słucha na: <http://localhost:8000/>
 
+### Testy z pokryciem linii i gałęzi
+```sh
+coverage run manage.py test
+coverage report -m
+coverage run --branch manage.py test
+coverage report -m
+```
+
 ## React.js frontend (`frontend/`)
 ### Instalacja zależności
 ```sh
