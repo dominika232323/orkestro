@@ -19,3 +19,19 @@ export interface Invitation {
     user: number;
     permission_level: string;
 }
+
+export interface Message {
+    message_id: number;
+    user: User;
+    group: Group;
+    title: string;
+    content: string;
+    date: Date;
+}
+
+export interface MessageRecipient {
+    message_recipient_id: number;
+    message: Message;
+    user: User;
+    is_read: boolean;
+}
