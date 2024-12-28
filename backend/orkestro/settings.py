@@ -106,9 +106,6 @@ DATABASES = {
     }
 }
 
-if len(sys.argv) > 1 and sys.argv[1] == "test":
-    DATABASES["default"] = {'ENGINE': 'django.db.backends.sqlite3'}
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators

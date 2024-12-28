@@ -30,6 +30,8 @@ docker cp tables.sql orkestro-db:/
 docker cp data.sql orkestro-db:/
 docker exec -it orkestro-db psql -U myuser -d orkestrodb -f /tables.sql
 docker exec -it orkestro-db psql -U myuser -d orkestrodb -f /data.sql
+docker exec -it orkestro-db psql -U myuser -d test_orkestrodb -f /tables.sql
+
 ```
 
 ## Django backend (`backend/`)
@@ -54,9 +56,9 @@ Serwer słucha na: <http://localhost:8000/>
 
 ### Testy z pokryciem linii i gałęzi
 ```sh
-coverage run manage.py test
+coverage run manage.py test --keepdb
 coverage report -m
-coverage run --branch manage.py test
+coverage run --branch manage.py test --keepdb
 coverage report -m
 ```
 
