@@ -21,7 +21,7 @@ CREATE TABLE events (
     group_id    INTEGER NOT NULL,
     name        VARCHAR(100) NOT NULL,
     description VARCHAR(1000),
-    date        TIMESTAMP NOT NULL,
+    date        TIMESTAMP WITH TIME ZONE NOT NULL,
     place       VARCHAR(100) NOT NULL
 );
 
@@ -106,7 +106,7 @@ CREATE TABLE messages (
     group_id   INTEGER NOT NULL,
     title      VARCHAR(100) NOT NULL,
     content    VARCHAR(2000) NOT NULL,
-    date       TIMESTAMP NOT NULL
+    date       TIMESTAMP WITH TIME ZONE NOT NULL
 );
 
 ALTER TABLE messages ADD CONSTRAINT messages_pk PRIMARY KEY ( message_id );
@@ -137,8 +137,8 @@ CREATE TABLE users (
     surname             VARCHAR(50),
     google_user_id      VARCHAR(255),
     google_calendar_id  VARCHAR(1024),
-    date_joined         TIMESTAMP,
-    last_login          TIMESTAMP,
+    date_joined         TIMESTAMP WITH TIME ZONE,
+    last_login          TIMESTAMP WITH TIME ZONE,
     profile_picture_url VARCHAR(255),
     is_superuser        BOOLEAN,
     is_staff            BOOLEAN,
