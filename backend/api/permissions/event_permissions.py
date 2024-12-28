@@ -1,5 +1,5 @@
 """
-Verifies permission to view/edit event data in the group.
+Verifies permission to interact with event data in the group (see event_view_set.py).
 """
 from rest_framework.permissions import BasePermission
 
@@ -8,7 +8,7 @@ from api.models import Event
 
 class CanViewEvent(BasePermission):
     def has_permission(self, request, view):
-        if request.method != "GET" or request.user.is_staff:
+        if request.method != "GET" or request.user.is_staff or view.action == "by_user":
             return True
         if view.action != "by_group":
             return False
