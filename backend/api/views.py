@@ -34,6 +34,7 @@ class GoogleLoginView(APIView):
             name = info["given_name"]
             surname = info.get("family_name", "")
             google_user_id = info["sub"]
+            profile_picture_url = info.get("picture", None)
 
             try:
                 user = User.objects.get(email=email)
@@ -61,6 +62,9 @@ class GoogleLoginView(APIView):
                 if not user.google_user_id:
                     user.google_user_id = google_user_id
 
+                if profile_picture_url and user.profile_picture_url != profile_picture_url:
+                    user.profile_picture_url = profile_picture_url
+
                 user.last_login = timezone.now()
                 user.save()
 
@@ -70,8 +74,9 @@ class GoogleLoginView(APIView):
                     name=name,
                     surname=surname,
                     google_user_id=google_user_id,
+                    profile_picture_url=profile_picture_url,
                     date_joined=timezone.now(),
-                    last_login = timezone.now(),
+                    last_login=timezone.now(),
                 )
                 created = True
                 user.save()
