@@ -34,7 +34,7 @@ export default function Invitations() {
       {invitations.length > 0 ?
         <ul className="space-y-4">
           {invitations.map((inv) => (
-            <InvitationComponent invitation={inv}/>
+            <InvitationComponent key={inv.invitation_id} invitation={inv}/>
           ))}
         </ul>
         :

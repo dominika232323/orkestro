@@ -10,7 +10,10 @@ interface Params {
 
 export default function InvitationComponent({invitation}: Params) {
   return (
-    <li className="bg-white p-4 rounded-lg shadow flex items-center justify-between">
+    <li
+      id={String(invitation.invitation_id)}
+      className="bg-white p-4 rounded-lg shadow flex items-center justify-between"
+    >
       <p className="text-lg font-semibold">{invitation.group.name}</p>
       <div className="flex items-center gap-4">
         <button

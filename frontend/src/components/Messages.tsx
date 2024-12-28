@@ -45,7 +45,7 @@ export default function Messages() {
       {messages.length > 0 ?
         <ul className="space-y-4">
           {messages.map((msg) => (
-            <MessageComponent message_recipient={msg}/>
+            <MessageComponent key={msg.message_recipient_id} message_recipient={msg}/>
           ))}
         </ul>
         :
