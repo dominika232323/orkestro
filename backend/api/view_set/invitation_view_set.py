@@ -12,12 +12,12 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from api.models import Invitation, User, Group, Member
-from api.serializers import InvitationSerializer
+from api.serializers import InvitationSerializer, GroupSerializer
 from api.permissions.invitation_permissions import CanViewInvitation, CanCreateInvitation, CanRespondToInvitation
 
 
 class InvitationViewSet(viewsets.ModelViewSet):
-    queryset = Invitation.objects.select_related("group").all()
+    queryset = Invitation.objects.all()
     serializer_class = InvitationSerializer
     permission_classes = [IsAuthenticated, CanViewInvitation, CanCreateInvitation, CanRespondToInvitation]
     http_method_names = ["get", "post", "head"]
@@ -40,15 +40,6 @@ class InvitationViewSet(viewsets.ModelViewSet):
         data.save()
         return Response(status=status.HTTP_201_CREATED)
 
-    @action(detail=False, methods=["get"])
-    def pending(self, request):
-        pending_invitations = Invitation.objects.filter(
-            user=request.user,
-        ).select_related("group")
-
-        serializer = self.get_serializer(pending_invitations, many=True)
-        return Response(serializer.data)
-
     @action(detail=True, methods=["post"])
     def respond(self, request):
         invitation_id = int(request.data.get("invitation_id"))
@@ -62,6 +53,7 @@ class InvitationViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=["get"])
     def by_user(self, request):
         invitations = Invitation.objects.filter(user=request.user)
-        group_names = [i.group.name for i in invitations]
+        groups = [i.group for i in invitations]
         serialized_invitations = InvitationSerializer(invitations, many=True)
-        return Response({"invitations": serialized_invitations.data, "group_names": group_names})
+        serialized_groups = GroupSerializer(groups, many=True)
+        return Response({"invitations": serialized_invitations.data, "groups": serialized_groups.data})

@@ -41,9 +41,6 @@ class InstrumentSerializer(serializers.ModelSerializer):
 
 
 class MessageSerializer(serializers.ModelSerializer):
-    user = UserSerializer()
-    group = GroupSerializer()
-
     class Meta:
         model = Message
         fields = "__all__"
@@ -74,8 +71,6 @@ class FileInstrumentSerializer(serializers.ModelSerializer):
 
 
 class InvitationSerializer(serializers.ModelSerializer):
-    group = GroupSerializer()
-
     class Meta:
         model = Invitation
         fields = "__all__"
@@ -88,8 +83,6 @@ class MemberSerializer(serializers.ModelSerializer):
 
 
 class MessageRecipientSerializer(serializers.ModelSerializer):
-    message = MessageSerializer()
-
     class Meta:
         model = MessageRecipient
         fields = "__all__"
