@@ -32,22 +32,16 @@ class GroupViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         data = GroupSerializer(data=request.data)
         if not data.is_valid():
-            return Response(
-                {"error": "Data validation failed"},
-                status=status.HTTP_400_BAD_REQUEST
-            )
+            return Response({"error": "Data validation failed"}, status=status.HTTP_400_BAD_REQUEST)
         group = data.save()
         Member.objects.create(user=request.user, group=group, permission_level="A")
-        return Response(status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_201_CREATED)
 
     def update(self, request, pk=None, *args, **kwargs):
         group = Group.objects.get(group_id=pk)
         data = GroupSerializer(instance=group, data=request.data)
         if not data.is_valid() or request.data.get("group_id") != int(pk) or not self.has_same_supergroup(request, group):
-            return Response(
-                {"error": "Data validation failed"},
-                status=status.HTTP_400_BAD_REQUEST
-            )
+            return Response({"error": "Data validation failed"}, status=status.HTTP_400_BAD_REQUEST)
         data.save()
         return Response(status=status.HTTP_200_OK)
 

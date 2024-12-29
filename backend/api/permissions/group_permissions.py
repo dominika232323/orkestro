@@ -17,11 +17,14 @@ class CanCreateSubgroup(BasePermission):
             return True
         if request.data.get("supergroup") is None:
             return True
-        supergroup = Group.objects.filter(group_id=request.data.get("supergroup"))
-        managers = supergroup[0].members.filter(permission_level="A")
-        if request.user.user_id in [m.user_id for m in managers]:
-            return True
-        return False
+        try:
+            supergroup = Group.objects.get(group_id=request.data.get("supergroup"))
+            managers = supergroup.members.filter(permission_level="A")
+            if request.user.user_id in [m.user_id for m in managers]:
+                return True
+            return False
+        except Group.DoesNotExist:
+            return False
 
 
 class CanEditDeleteGroup(BasePermission):

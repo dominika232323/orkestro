@@ -206,7 +206,7 @@ class FileInstrument(models.Model):
 
 class Invitation(models.Model):
     invitation_id = models.AutoField(primary_key=True)
-    group = models.ForeignKey(Group, models.CASCADE, related_name="invitations")
+    group = models.ForeignKey(Group, models.CASCADE, related_name="invitees")
     user = models.ForeignKey(User, models.CASCADE, related_name="invitations")
     permission_level = models.CharField(max_length=1)
 

@@ -24,21 +24,15 @@ class EventViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         data = EventSerializer(data=request.data)
         if not data.is_valid():
-            return Response(
-                {"error": "Data validation failed"},
-                status=status.HTTP_400_BAD_REQUEST
-            )
+            return Response({"error": "Data validation failed"}, status=status.HTTP_400_BAD_REQUEST)
         data.save()
-        return Response(status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_201_CREATED)
 
     def update(self, request, pk=None, *args, **kwargs):
         event = Event.objects.get(event_id=pk)
         data = EventSerializer(instance=event, data=request.data)
         if not data.is_valid() or request.data.get("group") != event.group_id or request.data.get("event_id") != int(pk):
-            return Response(
-                {"error": "Data validation failed"},
-                status=status.HTTP_400_BAD_REQUEST
-            )
+            return Response({"error": "Data validation failed"}, status=status.HTTP_400_BAD_REQUEST)
         data.save()
         return Response(status=status.HTTP_200_OK)
 
