@@ -1,14 +1,14 @@
 from django.apps import apps
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import Group as DjangoGroup
 
+from . import models
 from .forms import UserChangeForm, UserCreationForm
-from .models import Event, EventAttendee, EventTrack, File, FileAllowedMember, FileInstrument, Message, MessageRecipient, User, UserInstrument
 
 
 class UserInstrumentsInlineAdmin(admin.TabularInline):
-    model = UserInstrument
+    model = models.UserInstrument
     extra = 1  # show only 1 empty field for adding new objects
 
 
@@ -40,7 +40,7 @@ class UserAdmin(BaseUserAdmin):
 
 
 class MessageRecipientInlineAdmin(admin.TabularInline):
-    model = MessageRecipient
+    model = models.MessageRecipient
     extra = 1  # show only 1 empty field for adding new objects
 
 
@@ -49,12 +49,12 @@ class MessageAdmin(admin.ModelAdmin):
 
 
 class EventTrackInlineAdmin(admin.TabularInline):
-    model = EventTrack
+    model = models.EventTrack
     extra = 1  # show only 1 empty field for adding new objects
 
 
 class EventAttendeeInlineAdmin(admin.TabularInline):
-    model = EventAttendee
+    model = models.EventAttendee
     extra = 1  # show only 1 empty field for adding new objects
 
 
@@ -63,12 +63,12 @@ class EventAdmin(admin.ModelAdmin):
 
 
 class FileInstrumentInlineAdmin(admin.TabularInline):
-    model = FileInstrument
+    model = models.FileInstrument
     extra = 1  # show only 1 empty field for adding new objects
 
 
 class FileAllowedMemberInlineAdmin(admin.TabularInline):
-    model = FileAllowedMember
+    model = models.FileAllowedMember
     extra = 1  # show only 1 empty field for adding new objects
 
 
@@ -76,22 +76,27 @@ class FileAdmin(admin.ModelAdmin):
     inlines = [FileInstrumentInlineAdmin, FileAllowedMemberInlineAdmin]
 
 
-api_models = apps.get_app_config("api").get_models()
+# unregister unused default Django Group model
+admin.site.unregister(DjangoGroup)
 
-for model in api_models:
+# register models with default admin panels
+for model in [
+    models.Group,
+    models.Track,
+    models.Instrument,
+    models.EventAttendee,
+    models.EventTrack,
+    models.FileAllowedMember,
+    models.FileInstrument,
+    models.Invitation,
+    models.Member,
+    models.MessageRecipient,
+    models.UserInstrument
+]:
     admin.site.register(model)
 
-# unregister previously registered models
-admin.site.unregister(User)
-admin.site.unregister(Message)
-admin.site.unregister(Event)
-admin.site.unregister(File)
-
-# register them again with custom admins
-admin.site.register(User, UserAdmin)
-admin.site.register(Message, MessageAdmin)
-admin.site.register(Event, EventAdmin)
-admin.site.register(File, FileAdmin)
-
-# Unregister unused default Django Group model
-admin.site.unregister(Group)
+# register models with custom admin panels
+admin.site.register(models.User, UserAdmin)
+admin.site.register(models.Message, MessageAdmin)
+admin.site.register(models.Event, EventAdmin)
+admin.site.register(models.File, FileAdmin)
