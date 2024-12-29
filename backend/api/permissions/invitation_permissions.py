@@ -8,7 +8,7 @@ from api.models import Invitation, Group
 
 class CanViewInvitation(BasePermission):
     def has_permission(self, request, view):
-        return request.method != "GET" or request.user.is_staff or view.action == "by_user"
+        return request.method != "GET" or request.user.is_staff or view.action == "by_user" or view.action == "pending"
 
 
 class CanCreateInvitation(BasePermission):
