@@ -11,7 +11,7 @@ import GroupPanel from "../components/GroupPanel";
 import {removeTokens, fetchUserOrRedirect} from "../auth";
 
 
-export default function MainPage() {
+export default function HomePage() {
   const [page, changePage] = useState("groups");
 
   useEffect(() => {

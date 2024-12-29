@@ -1,10 +1,15 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useLanguage } from "../LanguageContext";
-import { faPlus, faXmark } from "@fortawesome/free-solid-svg-icons";
-import { useState } from "react";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {useLanguage} from "../LanguageContext";
+import {faPlus, faXmark, faCircleUser} from "@fortawesome/free-solid-svg-icons";
+import {useEffect, useState} from "react";
+
+import {fetchUserOrRedirect} from "../auth";
+import {User} from "../interfaces";
+
 
 export default function Settings() {
   const { t } = useLanguage();
+  const [user, setUser] = useState<User>();
   const [person, setPerson] = useState({
     name: "Jan",
     surname: "Kowalski",
@@ -13,6 +18,10 @@ export default function Settings() {
     instruments: ["Violin", "Flute", "Guitar"],
   });
   const [newInstrument, setNewInstrument] = useState("");
+
+  useEffect(() => {
+    fetchUserOrRedirect(setUser);
+  }, []);
 
   const handleSave = () => {
     // Add save functionality (e.g., API call)
@@ -44,6 +53,21 @@ export default function Settings() {
         {t("settings.title")}
       </h1>
 
+      {/* Profile picture */}
+      <div className="mb-4">
+        {user && user.profile_picture_url ?
+          <img
+            className="h-32 rounded-full"
+            src={user.profile_picture_url}
+          />
+          :
+          <FontAwesomeIcon
+            className="h-32 text-gray-700 rounded-full"
+            icon={faCircleUser}
+          />
+        }
+      </div>
+
       {/* Name */}
       <div className="mb-4">
         <label className="block font-medium text-gray-700">
@@ -52,10 +76,10 @@ export default function Settings() {
         <input
           type="text"
           className="w-full p-2 border border-gray-300 rounded-lg"
-          value={person.name}
-          onChange={(e) =>
+          value={user && user.name}
+          /* onChange={(e) =>
             setPerson((prev) => ({ ...prev, name: e.target.value }))
-          }
+          } */
         />
       </div>
 
@@ -67,10 +91,10 @@ export default function Settings() {
         <input
           type="text"
           className="w-full p-2 border border-gray-300 rounded-lg"
-          value={person.surname}
-          onChange={(e) =>
+          value={user && user.surname}
+          /* onChange={(e) =>
             setPerson((prev) => ({ ...prev, surname: e.target.value }))
-          }
+          } */
         />
       </div>
 
@@ -82,10 +106,10 @@ export default function Settings() {
         <input
           type="text"
           className="w-full p-2 border border-gray-300 rounded-lg"
-          value={person.email}
-          onChange={(e) =>
+          value={user && user.email}
+          /* onChange={(e) =>
             setPerson((prev) => ({ ...prev, email: e.target.value }))
-          }
+          } */
         />
       </div>
 
@@ -97,13 +121,13 @@ export default function Settings() {
         <input
           type="text"
           className="w-full p-2 border border-gray-300 rounded-lg"
-          value={person.googleCalendar}
-          onChange={(e) =>
+          value={user && user.google_calendar_id}
+          /* onChange={(e) =>
             setPerson((prev) => ({
               ...prev,
               googleCalendar: e.target.value,
             }))
-          }
+          } */
         />
       </div>
 

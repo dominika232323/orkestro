@@ -3,7 +3,7 @@ import {createBrowserRouter, RouterProvider} from "react-router-dom";
 import {LanguageProvider} from "./LanguageContext";
 
 import LoginPage from "./pages/LoginPage";
-import MainPage from "./pages/MainPage";
+import HomePage from "./pages/HomePage";
 import TestPage from "./pages/TestPage";
 
 
@@ -14,8 +14,8 @@ function App() {
             element: <LoginPage />,
         },
         {
-            path: "/main-page",
-            element: <MainPage/>,
+            path: "/home",
+            element: <HomePage/>,
         },
         {
             path: "/test/",

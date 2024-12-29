@@ -14,15 +14,16 @@ class UserAdmin(BaseUserAdmin):
     list_display = ("email", "name", "surname", "is_active", "is_staff", "is_superuser")
     list_filter = ("is_staff", "is_active", "is_superuser")
     fieldsets = (
-        (None, {"fields": ("email", "password", "google_user_id")}),
+        (None, {"fields": ("email", "password")}),
         ("Personal info", {"fields": ("name", "surname")}),
+        ("Google", {"fields" : ("profile_picture_url", "google_user_id", "google_calendar_id")}),
         ("Permissions", {"fields": ("is_active", "is_staff", "is_superuser")}),
         ("Important dates", {"fields": ("last_login", "date_joined")}),
     )
     add_fieldsets = (
         (None, {
             "classes": ("wide",),
-            "fields": ("email", "name", "surname", "password1", "password2", "is_staff", "is_active", "is_superuser"),
+            "fields": ("email", "name", "surname", "is_staff", "is_active", "is_superuser"),
         }),
     )
     search_fields = ("email",)
