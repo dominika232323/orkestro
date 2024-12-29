@@ -4,7 +4,7 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import Group
 
 from .forms import UserChangeForm, UserCreationForm
-from .models import Message, MessageRecipient, User, UserInstrument
+from .models import Event, EventAttendee, EventTrack, Message, MessageRecipient, User, UserInstrument
 
 
 class UserInstrumentsInlineAdmin(admin.TabularInline):
@@ -48,16 +48,34 @@ class MessageAdmin(admin.ModelAdmin):
     inlines = [MessageRecipientInlineAdmin]
 
 
+class EventTrackInlineAdmin(admin.TabularInline):
+    model = EventTrack
+    extra = 1  # show only 1 empty field for adding new objects
+
+
+class EventAttendeeInlineAdmin(admin.TabularInline):
+    model = EventAttendee
+    extra = 1  # show only 1 empty field for adding new objects
+
+
+class EventAdmin(admin.ModelAdmin):
+    inlines = [EventTrackInlineAdmin, EventAttendeeInlineAdmin]
+
+
 api_models = apps.get_app_config("api").get_models()
 
 for model in api_models:
     admin.site.register(model)
 
-admin.site.unregister(User)  # unregister previously registered User model
-admin.site.register(User, UserAdmin)  # register it again with custom admin
+# unregister previously registered models
+admin.site.unregister(User)
+admin.site.unregister(Message)
+admin.site.unregister(Event)
 
-admin.site.unregister(Message)  # unregister previously registered Message model
-admin.site.register(Message, MessageAdmin)  # register it again with custom admin
+# register them again with custom admins
+admin.site.register(User, UserAdmin)
+admin.site.register(Message, MessageAdmin)
+admin.site.register(Event, EventAdmin)
 
 # Unregister unused default Django Group model
 admin.site.unregister(Group)
