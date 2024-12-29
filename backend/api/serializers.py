@@ -7,7 +7,7 @@ from .models import User, Group, Event, Track, File, Instrument, Message, EventA
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ["email", "name", "surname", "google_user_id", "google_calendar_id", "profile_picture_url"]
+        fields = ["user_id", "email", "name", "surname", "google_user_id", "google_calendar_id", "profile_picture_url"]
 
 
 class GroupSerializer(serializers.ModelSerializer):
@@ -41,6 +41,10 @@ class InstrumentSerializer(serializers.ModelSerializer):
 
 
 class MessageSerializer(serializers.ModelSerializer):
+    # on read serialize nested objects
+    user_details = UserSerializer(source="user", read_only=True)
+    group_details = GroupSerializer(source="group", read_only=True)
+
     class Meta:
         model = Message
         fields = "__all__"
@@ -71,6 +75,9 @@ class FileInstrumentSerializer(serializers.ModelSerializer):
 
 
 class InvitationSerializer(serializers.ModelSerializer):
+    # on read serialize nested group
+    group_details = GroupSerializer(source="group", read_only=True)
+
     class Meta:
         model = Invitation
         fields = "__all__"
@@ -83,6 +90,9 @@ class MemberSerializer(serializers.ModelSerializer):
 
 
 class MessageRecipientSerializer(serializers.ModelSerializer):
+    # on read serialize nested message
+    message_details = MessageSerializer(source="message", read_only=True)
+
     class Meta:
         model = MessageRecipient
         fields = "__all__"

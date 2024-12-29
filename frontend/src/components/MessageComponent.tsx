@@ -36,14 +36,14 @@ export default function MessageComponent({message_recipient}: Params) {
             <FontAwesomeIcon icon={faUser} />
           </span>
           {t("message.from")}:{" "}
-          <span className="ml-1 font-semibold">{message_recipient.message.user.name + " " + message_recipient.message.user.surname}</span>
+          <span className="ml-1 font-semibold">{message_recipient.message_details.user_details.name + " " + message_recipient.message_details.user_details.surname}</span>
         </p>
         <p className="flex items-center text-gray-700 font-medium mt-2">
           <span className="mr-2 text-green-500">
             <FontAwesomeIcon icon={faUsers} />
           </span>
           {t("message.group")}:{" "}
-          <span className="ml-1 font-semibold">{message_recipient.message.group.name}</span>
+          <span className="ml-1 font-semibold">{message_recipient.message_details.group_details.name}</span>
         </p>
         <p className="flex items-center text-gray-700 font-medium mt-2">
           <span className="mr-2 text-gray-500">
@@ -53,7 +53,7 @@ export default function MessageComponent({message_recipient}: Params) {
           <span
             className="ml-1 font-semibold"
           >
-            {message_recipient.message.date.toLocaleDateString(
+            {message_recipient.message_details.date.toLocaleDateString(
               "pl-PL",
               {day: "2-digit", month: "2-digit", year: "numeric"}
             )}
@@ -67,12 +67,12 @@ export default function MessageComponent({message_recipient}: Params) {
           <span
             className="ml-1 font-semibold"
           >
-            {message_recipient.message.date.toLocaleTimeString("pl-PL")}
+            {message_recipient.message_details.date.toLocaleTimeString("pl-PL")}
           </span>
         </p>
       </div>
-      <p className="text-gray-700 font-bold mb-2">{message_recipient.message.title}</p>
-      <p className="text-gray-600 leading-relaxed">{message_recipient.message.content}</p>
+      <p className="text-gray-700 font-bold mb-2">{message_recipient.message_details.title}</p>
+      <p className="text-gray-600 leading-relaxed">{message_recipient.message_details.content}</p>
       {!isRead && (
         <button
           onClick={handleConfirm}

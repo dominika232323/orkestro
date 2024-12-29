@@ -16,15 +16,18 @@ export interface Group {
 
 export interface Invitation {
     invitation_id: number;
-    group: Group;
+    group: number;
+    group_details: Group;
     user: number;
     permission_level: string;
 }
 
 export interface Message {
     message_id: number;
-    user: User;
-    group: Group;
+    user: number;
+    user_details: User;
+    group: number;
+    group_details: Group;
     title: string;
     content: string;
     date: Date;
@@ -32,7 +35,9 @@ export interface Message {
 
 export interface MessageRecipient {
     message_recipient_id: number;
-    message: Message;
-    user: User;
+    message: number;
+    message_details: Message;
+    user: number;
+    user_details: User;
     is_read: boolean;
 }

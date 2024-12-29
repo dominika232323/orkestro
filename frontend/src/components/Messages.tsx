@@ -19,9 +19,9 @@ export default function Messages() {
         .then((response) => {
           const parsedMessages = response.data.map((msg_recipient) => ({
             ...msg_recipient,
-            message: {
-              ...msg_recipient.message,
-              date: new Date(msg_recipient.message.date), // parse date
+            message_details: {
+              ...msg_recipient.message_details,
+              date: new Date(msg_recipient.message_details.date), // parse date
             },
           }));
 
