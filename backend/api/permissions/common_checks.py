@@ -1,0 +1,32 @@
+"""
+Contains segments of code used in multiple x_permissions.py files:
+- checking permissions of the calling user within a group
+- finding an object's group (if the object is invalid, None is returned, which fails is_... checks)
+"""
+
+from api.models import Event
+
+def is_manager(request, group_id):
+    if group_id is None:
+        return False
+    group_membership = request.user.group_memberships.filter(group=group_id)
+    return len(group_membership) != 0 and group_membership[0].permission_level == "A"
+
+def is_moderator(request, group_id):
+    if group_id is None:
+        return False
+    group_membership = request.user.group_memberships.filter(group=group_id)
+    return len(group_membership) != 0 and group_membership[0].permission_level in ["A", "B"]
+
+def is_member(request, group_id):
+    if group_id is None:
+        return False
+    group_membership = request.user.group_memberships.filter(group=group_id)
+    return len(group_membership) != 0
+
+def get_group_by_event_id(event_id):
+    try:
+        event = Event.objects.get(event_id=event_id)
+        return event.group.group_id
+    except Event.DoesNotExist:
+        return None

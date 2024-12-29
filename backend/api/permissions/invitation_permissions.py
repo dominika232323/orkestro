@@ -3,7 +3,9 @@ Verifies permission to interact with invitation data (see invitation_view_set.py
 """
 from rest_framework.permissions import BasePermission
 
-from api.models import Invitation, Group
+from api.models import Invitation
+
+from api.permissions.common_checks import is_manager
 
 
 class CanViewInvitation(BasePermission):
@@ -15,9 +17,7 @@ class CanCreateInvitation(BasePermission):
     def has_permission(self, request, view):
         if request.method != "POST" or request.user.is_staff or view.action == "respond":
             return True
-        group_id = request.data.get("group")
-        group_membership = request.user.group_memberships.filter(group=group_id)
-        return len(group_membership) != 0 and group_membership[0].permission_level == "A"
+        return is_manager(request, request.data.get("group"))
 
 
 class CanRespondToInvitation(BasePermission):

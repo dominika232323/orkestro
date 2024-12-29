@@ -25,7 +25,7 @@ class GroupViewSet(viewsets.ModelViewSet):
     def has_same_supergroup(request, group):
         if request.data.get("supergroup") is None and group.supergroup is None:
             return True
-        if bool(request.data.get("supergroup") is None) ^ bool(group.supergroup is None):
+        if request.data.get("supergroup") is None or group.supergroup is None:
             return False
         return int(request.data.get("supergroup")) == group.supergroup.group_id
 
