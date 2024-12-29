@@ -96,7 +96,7 @@ export const fetchUserLogin = async () => {
         await axiosInstance.get<User>("/api/users/me/")
             .then((response) => {
                 console.log("Logged in as:", response.data)
-                window.location.href = "/main-page";
+                window.location.href = "/home";
             })
             .catch((error) => console.error("Error fetching user data:", error));
     }
