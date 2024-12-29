@@ -30,6 +30,7 @@ docker cp tables.sql orkestro-db:/
 docker cp data.sql orkestro-db:/
 docker exec -it orkestro-db psql -U myuser -d orkestrodb -f /tables.sql
 docker exec -it orkestro-db psql -U myuser -d orkestrodb -f /data.sql
+docker exec -it orkestro-db psql -U myuser -d orkestrodb -c "CREATE DATABASE test_orkestrodb;"
 docker exec -it orkestro-db psql -U myuser -d test_orkestrodb -f /tables.sql
 
 ```

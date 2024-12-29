@@ -28,7 +28,7 @@ class InvitationViewSet(viewsets.ModelViewSet):
             group = Group.objects.get(group_id=request.data.get("group"))
             group_membership = invitee.group_memberships.filter(group=group)
             group_invitation = invitee.invitations.filter(group=group)
-            return len(group_membership) != 0 or len(group_invitation) != 0
+            return len(group_membership) == 0 and len(group_invitation) == 0
         except (User.DoesNotExist, Group.DoesNotExist):
             return False
 
