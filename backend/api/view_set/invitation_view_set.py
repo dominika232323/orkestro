@@ -5,6 +5,7 @@ Handles API requests regarding invitation data:
 - getting all invitations sent to the calling user
 Staff users can do all of the above + list all invitations or a specific one.
 """
+
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
@@ -16,7 +17,7 @@ from api.permissions.invitation_permissions import CanViewInvitation, CanCreateI
 
 
 class InvitationViewSet(viewsets.ModelViewSet):
-    queryset = Invitation.objects.all()
+    queryset = Invitation.objects.select_related("group").all()
     serializer_class = InvitationSerializer
     permission_classes = [IsAuthenticated, CanViewInvitation, CanCreateInvitation, CanRespondToInvitation]
     http_method_names = ["get", "post", "head"]
@@ -38,6 +39,15 @@ class InvitationViewSet(viewsets.ModelViewSet):
             return Response({"error": "Data validation failed"}, status=status.HTTP_400_BAD_REQUEST)
         data.save()
         return Response(status=status.HTTP_201_CREATED)
+
+    @action(detail=False, methods=["get"])
+    def pending(self, request):
+        pending_invitations = Invitation.objects.filter(
+            user=request.user,
+        ).select_related("group")
+
+        serializer = self.get_serializer(pending_invitations, many=True)
+        return Response(serializer.data)
 
     @action(detail=True, methods=["post"])
     def respond(self, request):
