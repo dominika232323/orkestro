@@ -10,7 +10,7 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 
 from api.models import Member
-from api.serializers import MemberSerializer
+from api.serializers import MemberSerializer, UserSerializer
 from rest_framework.response import Response
 
 from api.permissions.member_permissions import CanViewCreateMember, CanEditDeleteMember
@@ -50,5 +50,7 @@ class MemberViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=["get"])
     def by_group(self, request):
         members = Member.objects.filter(group=request.GET.get("group_id"))
+        users = [m.user for m in members]
         serialized_members = MemberSerializer(members, many=True)
-        return Response({"members": serialized_members.data})
+        serialized_users = UserSerializer(users, many=True)
+        return Response({"members": serialized_members.data, "users": serialized_users.data})
