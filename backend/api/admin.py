@@ -11,24 +11,26 @@ class UserAdmin(BaseUserAdmin):
     form = UserChangeForm
     add_form = UserCreationForm
 
+    ordering = ("email",)
     list_display = ("email", "name", "surname", "is_active", "is_staff", "is_superuser")
     list_filter = ("is_staff", "is_active", "is_superuser")
+    filter_horizontal = ()
+    search_fields = ("email",)
+
     fieldsets = (
         (None, {"fields": ("email", "password")}),
         ("Personal info", {"fields": ("name", "surname")}),
-        ("Google", {"fields" : ("profile_picture_url", "google_user_id", "google_calendar_id")}),
+        ("Google", {"fields": ("profile_picture_url", "google_user_id", "google_calendar_id")}),
         ("Permissions", {"fields": ("is_active", "is_staff", "is_superuser")}),
         ("Important dates", {"fields": ("last_login", "date_joined")}),
     )
+
     add_fieldsets = (
         (None, {
             "classes": ("wide",),
             "fields": ("email", "name", "surname", "is_staff", "is_active", "is_superuser"),
         }),
     )
-    search_fields = ("email",)
-    ordering = ("email",)
-    filter_horizontal = ()
 
 
 api_models = apps.get_app_config("api").get_models()
