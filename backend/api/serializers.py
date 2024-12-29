@@ -1,3 +1,6 @@
+"""
+Serializers for model objects. Extra fields serialize nested objects on read.
+"""
 from rest_framework import serializers
 
 from .models import User, Group, Event, Track, File, Instrument, Message, EventAttendee, EventTrack, FileAllowedMember, \
@@ -41,7 +44,6 @@ class InstrumentSerializer(serializers.ModelSerializer):
 
 
 class MessageSerializer(serializers.ModelSerializer):
-    # on read serialize nested objects
     user_details = UserSerializer(source="user", read_only=True)
     group_details = GroupSerializer(source="group", read_only=True)
 
@@ -51,6 +53,8 @@ class MessageSerializer(serializers.ModelSerializer):
 
 
 class EventAttendeeSerializer(serializers.ModelSerializer):
+    user_details = UserSerializer(source="user", read_only=True)
+
     class Meta:
         model = EventAttendee
         fields = "__all__"
@@ -75,7 +79,6 @@ class FileInstrumentSerializer(serializers.ModelSerializer):
 
 
 class InvitationSerializer(serializers.ModelSerializer):
-    # on read serialize nested group
     group_details = GroupSerializer(source="group", read_only=True)
 
     class Meta:
@@ -84,13 +87,14 @@ class InvitationSerializer(serializers.ModelSerializer):
 
 
 class MemberSerializer(serializers.ModelSerializer):
+    user_details = UserSerializer(source="user", read_only=True)
+
     class Meta:
         model = Member
         fields = "__all__"
 
 
 class MessageRecipientSerializer(serializers.ModelSerializer):
-    # on read serialize nested message
     message_details = MessageSerializer(source="message", read_only=True)
 
     class Meta:

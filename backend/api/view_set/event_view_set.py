@@ -22,34 +22,29 @@ class EventViewSet(viewsets.ModelViewSet):
     http_method_names = ["get", "post", "put", "delete", "head"]
 
     def create(self, request, *args, **kwargs):
-        data = EventSerializer(data=request.data)
-        if not data.is_valid():
+        serializer = self.get_serializer(data=request.data)
+        if not serializer.is_valid():
             return Response({"error": "Data validation failed"}, status=status.HTTP_400_BAD_REQUEST)
-        data.save()
-        return Response(status=status.HTTP_201_CREATED)
+        serializer.save()
+        return Response(data=serializer.data, status=status.HTTP_201_CREATED)
 
     def update(self, request, pk=None, *args, **kwargs):
         event = Event.objects.get(event_id=pk)
-        data = EventSerializer(instance=event, data=request.data)
-        if not data.is_valid() or request.data.get("group") != event.group_id or request.data.get("event_id") != int(pk):
+        serializer = self.get_serializer(instance=event, data=request.data)
+        if not serializer.is_valid() or request.data.get("group") != event.group_id or request.data.get("event_id") != int(pk):
             return Response({"error": "Data validation failed"}, status=status.HTTP_400_BAD_REQUEST)
-        data.save()
-        return Response(status=status.HTTP_200_OK)
-
-    def destroy(self, request, pk=None, *args, **kwargs):
-        event = Event.objects.get(event_id=pk)
-        event.delete()
-        return Response(status=status.HTTP_200_OK)
+        serializer.save()
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     @action(detail=False, methods=["get"])
     def by_group(self, request):
         events = Event.objects.filter(group=request.GET.get("group_id"))
-        serialized_events = EventSerializer(events, many=True)
-        return Response({"events": serialized_events.data})
+        serializer = self.get_serializer(events, many=True)
+        return Response(serializer.data)
 
     @action(detail=False, methods=["get"])
-    def by_user(self, request):
-        participations = EventAttendee.objects.filter(user=request.user)
+    def me(self, request):
+        participations = EventAttendee.objects.filter(user=request.user).select_related("event")
         events = [p.event for p in participations]
-        serialized_events = EventSerializer(events, many=True)
-        return Response({"events": serialized_events.data})
+        serializer = self.get_serializer(events, many=True)
+        return Response(serializer.data)
