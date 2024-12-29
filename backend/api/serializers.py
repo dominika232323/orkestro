@@ -41,8 +41,9 @@ class InstrumentSerializer(serializers.ModelSerializer):
 
 
 class MessageSerializer(serializers.ModelSerializer):
-    user = UserSerializer()
-    group = GroupSerializer()
+    # on read serialize nested objects
+    user_details = UserSerializer(source="user", read_only=True)
+    group_details = GroupSerializer(source="group", read_only=True)
 
     class Meta:
         model = Message
@@ -74,7 +75,8 @@ class FileInstrumentSerializer(serializers.ModelSerializer):
 
 
 class InvitationSerializer(serializers.ModelSerializer):
-    group = GroupSerializer()
+    # on read serialize nested group
+    group_details = GroupSerializer(source="group", read_only=True)
 
     class Meta:
         model = Invitation
@@ -88,7 +90,8 @@ class MemberSerializer(serializers.ModelSerializer):
 
 
 class MessageRecipientSerializer(serializers.ModelSerializer):
-    message = MessageSerializer()
+    # on read serialize nested message
+    message_details = MessageSerializer(source="message", read_only=True)
 
     class Meta:
         model = MessageRecipient
