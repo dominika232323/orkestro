@@ -4,11 +4,12 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import Group
 
 from .forms import UserChangeForm, UserCreationForm
-from .models import User, UserInstrument
+from .models import Message, MessageRecipient, User, UserInstrument
 
 
 class UserInstrumentsInlineAdmin(admin.TabularInline):
     model = UserInstrument
+    extra = 1  # show only 1 empty field for adding new objects
 
 
 class UserAdmin(BaseUserAdmin):
@@ -38,6 +39,15 @@ class UserAdmin(BaseUserAdmin):
     )
 
 
+class MessageRecipientInlineAdmin(admin.TabularInline):
+    model = MessageRecipient
+    extra = 1  # show only 1 empty field for adding new objects
+
+
+class MessageAdmin(admin.ModelAdmin):
+    inlines = [MessageRecipientInlineAdmin]
+
+
 api_models = apps.get_app_config("api").get_models()
 
 for model in api_models:
@@ -45,6 +55,9 @@ for model in api_models:
 
 admin.site.unregister(User)  # unregister previously registered User model
 admin.site.register(User, UserAdmin)  # register it again with custom admin
+
+admin.site.unregister(Message)  # unregister previously registered Message model
+admin.site.register(Message, MessageAdmin)  # register it again with custom admin
 
 # Unregister unused default Django Group model
 admin.site.unregister(Group)
