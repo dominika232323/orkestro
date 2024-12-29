@@ -4,7 +4,11 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import Group
 
 from .forms import UserChangeForm, UserCreationForm
-from .models import User
+from .models import User, UserInstrument
+
+
+class UserInstrumentsInlineAdmin(admin.TabularInline):
+    model = UserInstrument
 
 
 class UserAdmin(BaseUserAdmin):
@@ -24,6 +28,7 @@ class UserAdmin(BaseUserAdmin):
         ("Permissions", {"fields": ("is_active", "is_staff", "is_superuser")}),
         ("Important dates", {"fields": ("last_login", "date_joined")}),
     )
+    inlines = [UserInstrumentsInlineAdmin]
 
     add_fieldsets = (
         (None, {
