@@ -1,6 +1,6 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useLanguage } from "../LanguageContext";
-import { faPlus, faXmark } from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {useLanguage} from "../LanguageContext";
+import {faPlus, faXmark, faCircleUser} from "@fortawesome/free-solid-svg-icons";
 import {useEffect, useState} from "react";
 
 import {fetchUserOrRedirect} from "../auth";
@@ -52,6 +52,21 @@ export default function Settings() {
       <h1 className="text-2xl font-bold text-center mb-4">
         {t("settings.title")}
       </h1>
+
+      {/* Profile picture */}
+      <div className="mb-4">
+        {user && user.profile_picture_url ?
+          <img
+            className="h-32 rounded-full"
+            src={user.profile_picture_url}
+          />
+          :
+          <FontAwesomeIcon
+            className="h-32 text-gray-700 rounded-full"
+            icon={faCircleUser}
+          />
+        }
+      </div>
 
       {/* Name */}
       <div className="mb-4">

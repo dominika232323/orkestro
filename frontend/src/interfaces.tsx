@@ -4,6 +4,7 @@ export interface User {
     surname: string;
     google_user_id: string;
     google_calendar_id: string;
+    profile_picture_url: string;
 }
 
 export interface Group {
