@@ -4,7 +4,7 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import Group
 
 from .forms import UserChangeForm, UserCreationForm
-from .models import Event, EventAttendee, EventTrack, Message, MessageRecipient, User, UserInstrument
+from .models import Event, EventAttendee, EventTrack, File, FileAllowedMember, FileInstrument, Message, MessageRecipient, User, UserInstrument
 
 
 class UserInstrumentsInlineAdmin(admin.TabularInline):
@@ -62,6 +62,20 @@ class EventAdmin(admin.ModelAdmin):
     inlines = [EventTrackInlineAdmin, EventAttendeeInlineAdmin]
 
 
+class FileInstrumentInlineAdmin(admin.TabularInline):
+    model = FileInstrument
+    extra = 1  # show only 1 empty field for adding new objects
+
+
+class FileAllowedMemberInlineAdmin(admin.TabularInline):
+    model = FileAllowedMember
+    extra = 1  # show only 1 empty field for adding new objects
+
+
+class FileAdmin(admin.ModelAdmin):
+    inlines = [FileInstrumentInlineAdmin, FileAllowedMemberInlineAdmin]
+
+
 api_models = apps.get_app_config("api").get_models()
 
 for model in api_models:
@@ -71,11 +85,13 @@ for model in api_models:
 admin.site.unregister(User)
 admin.site.unregister(Message)
 admin.site.unregister(Event)
+admin.site.unregister(File)
 
 # register them again with custom admins
 admin.site.register(User, UserAdmin)
 admin.site.register(Message, MessageAdmin)
 admin.site.register(Event, EventAdmin)
+admin.site.register(File, FileAdmin)
 
 # Unregister unused default Django Group model
 admin.site.unregister(Group)
