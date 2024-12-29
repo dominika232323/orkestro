@@ -15,7 +15,7 @@ class UserAdmin(BaseUserAdmin):
     list_display = ("email", "name", "surname", "is_active", "is_staff", "is_superuser")
     list_filter = ("is_staff", "is_active", "is_superuser")
     filter_horizontal = ()
-    search_fields = ("email",)
+    search_fields = ("email", "name", "surname")
 
     fieldsets = (
         (None, {"fields": ("email", "password")}),
