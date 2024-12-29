@@ -39,7 +39,7 @@ class User(AbstractBaseUser):
     is_superuser = models.BooleanField(default=False)
     google_user_id = models.CharField(max_length=255, null=True, blank=True)
     google_calendar_id = models.CharField(max_length=1024, blank=True, null=True)
-    # TODO: profile pic url?
+    profile_picture_url = models.URLField(blank=True, null=True)
 
     objects = UserManager()
 
