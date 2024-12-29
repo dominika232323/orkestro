@@ -10,23 +10,22 @@ def is_manager(request, group_id):
     if group_id is None:
         return False
     group_membership = request.user.group_memberships.filter(group=group_id)
-    return len(group_membership) != 0 and group_membership[0].permission_level == "A"
+    return group_membership.exists() and group_membership[0].permission_level == "A"
 
 def is_moderator(request, group_id):
     if group_id is None:
         return False
     group_membership = request.user.group_memberships.filter(group=group_id)
-    return len(group_membership) != 0 and group_membership[0].permission_level in ["A", "B"]
+    return group_membership.exists() and group_membership[0].permission_level in ["A", "B"]
 
 def is_member(request, group_id):
     if group_id is None:
         return False
-    group_membership = request.user.group_memberships.filter(group=group_id)
-    return len(group_membership) != 0
+    return request.user.group_memberships.filter(group=group_id).exists()
 
 def get_group_by_event_id(event_id):
     try:
-        event = Event.objects.get(event_id=event_id)
+        event = Event.objects.get(event_id=event_id).select_related("group")
         return event.group.group_id
     except Event.DoesNotExist:
         return None

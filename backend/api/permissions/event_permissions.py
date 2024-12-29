@@ -8,7 +8,7 @@ from api.permissions.common_checks import is_member, is_manager, get_group_by_ev
 
 class CanViewEvent(BasePermission):
     def has_permission(self, request, view):
-        if request.method != "GET" or request.user.is_staff or view.action == "by_user":
+        if request.method != "GET" or request.user.is_staff or view.action == "me":
             return True
         if view.action != "by_group":
             return False

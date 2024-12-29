@@ -16,7 +16,7 @@ from api.permissions.event_attendee_permissions import CanViewEventAttendee, Can
 
 
 class EventAttendeeViewSet(viewsets.ModelViewSet):
-    queryset = EventAttendee.objects.all()
+    queryset = EventAttendee.objects.all().select_related("user")
     serializer_class = EventAttendeeSerializer
     permission_classes = [IsAuthenticated, CanViewEventAttendee, CanCreateEventAttendee, CanDeleteEventAttendee]
     http_method_names = ["get", "post", "delete", "head"]
@@ -25,24 +25,17 @@ class EventAttendeeViewSet(viewsets.ModelViewSet):
     def is_member(request):
         event = Event.objects.get(event_id=request.data.get("event"))
         user = User.objects.get(user_id=request.data.get("user"))
-        return user.group_memberships.filter(group=event.group).exists()
+        return user.group_memberships.filter(group_id=event.group_id).exists()
 
     def create(self, request, *args, **kwargs):
-        data = EventAttendeeSerializer(data=request.data)
-        if not data.is_valid() or not self.is_member(request):
+        serializer = self.get_serializer(data=request.data)
+        if not serializer.is_valid() or not self.is_member(request):
             return Response({"error": "Data validation failed"}, status=status.HTTP_400_BAD_REQUEST)
-        data.save()
-        return Response(status=status.HTTP_201_CREATED)
-
-    def destroy(self, request, pk=None, *args, **kwargs):
-        event_attendee = EventAttendee.objects.get(event_attendee_id=pk)
-        event_attendee.delete()
-        return Response(status=status.HTTP_200_OK)
+        serializer.save()
+        return Response(data=serializer.data, status=status.HTTP_201_CREATED)
 
     @action(detail=False, methods=["get"])
     def by_event(self, request):
-        event_attendees = EventAttendee.objects.filter(event_id=request.GET.get("event_id"))
-        users = [ea.user for ea in event_attendees]
-        serialized_event_attendees = EventAttendeeSerializer(event_attendees, many=True)
-        serialized_users = UserSerializer(users, many=True)
-        return Response({"event_attendees": serialized_event_attendees.data, "users": serialized_users.data})
+        event_attendees = EventAttendee.objects.filter(event_id=request.GET.get("event_id")).select_related("user")
+        serializer = self.get_serializer(event_attendees, many=True)
+        return Response(serializer.data)

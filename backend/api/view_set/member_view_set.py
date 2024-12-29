@@ -17,39 +17,40 @@ from api.permissions.member_permissions import CanViewCreateMember, CanEditDelet
 
 
 class MemberViewSet(viewsets.ModelViewSet):
-    queryset = Member.objects.all()
+    queryset = Member.objects.all().select_related("user")
     serializer_class = MemberSerializer
     permission_classes = [IsAuthenticated, CanViewCreateMember, CanEditDeleteMember]
     http_method_names = ["get", "post", "put", "delete", "head"]
 
     @staticmethod
-    def is_last_manager(pk):
-        member = Member.objects.get(member_id=pk)
-        managers = Member.objects.filter(group=member.group, permission_level="A")
+    def is_last_manager(member):
+        managers = Member.objects.filter(group_id=member.group_id, permission_level="A")
         return len(managers) == 1 and managers[0] == member
+
+    @staticmethod
+    def are_constants_changed(request, member, pk):
+        return request.data.get("group") != member.group_id or request.data.get("member_id") != int(pk) \
+            or request.data.get("user") != member.user_id
 
     def update(self, request, pk=None, *args, **kwargs):
         member = Member.objects.get(member_id=pk)
-        data = MemberSerializer(instance=member, data=request.data)
-        if not data.is_valid() or request.data.get("group") != member.group_id or request.data.get("member_id") != int(pk)\
-                or request.data.get("user") != member.user_id:
+        serializer = self.get_serializer(instance=member, data=request.data)
+        if not serializer.is_valid() or self.are_constants_changed(request, member, pk):
             return Response({"error": "Data validation failed"}, status=status.HTTP_400_BAD_REQUEST)
-        if self.is_last_manager(pk) and request.data.get("permission_level") != "A":
+        if self.is_last_manager(member) and request.data.get("permission_level") != "A":
             return Response({"error": "Can't demote the last manager"}, status=status.HTTP_400_BAD_REQUEST)
-        data.save()
-        return Response(status=status.HTTP_200_OK)
+        serializer.save()
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     def destroy(self, request, pk=None, *args, **kwargs):
         member = Member.objects.get(member_id=pk)
-        if self.is_last_manager(pk):
+        if self.is_last_manager(member):
             return Response({"error": "Can't remove the last manager"}, status=status.HTTP_400_BAD_REQUEST)
         member.delete()
-        return Response(status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(detail=False, methods=["get"])
     def by_group(self, request):
-        members = Member.objects.filter(group=request.GET.get("group_id"))
-        users = [m.user for m in members]
-        serialized_members = MemberSerializer(members, many=True)
-        serialized_users = UserSerializer(users, many=True)
-        return Response({"members": serialized_members.data, "users": serialized_users.data})
+        members = Member.objects.filter(group_id=request.GET.get("group_id")).select_related("user")
+        serializer = self.get_serializer(members, many=True)
+        return Response(serializer.data)

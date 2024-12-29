@@ -10,7 +10,7 @@ from api.permissions.common_checks import is_manager
 
 class CanViewInvitation(BasePermission):
     def has_permission(self, request, view):
-        return request.method != "GET" or request.user.is_staff or view.action == "by_user" or view.action == "pending"
+        return request.method != "GET" or request.user.is_staff or view.action == "me"
 
 
 class CanCreateInvitation(BasePermission):
@@ -25,9 +25,8 @@ class CanRespondToInvitation(BasePermission):
         if request.method != "POST" or request.user.is_staff or view.action != "respond":
             return True
         try:
-            invitation_id = int(request.data.get("invitation_id"))
+            invitation = Invitation.objects.get(invitation_id=int(request.data.get("invitation_id")))
             bool(request.data.get("accept"))
-            inv = Invitation.objects.get(invitation_id=invitation_id)
-            return request.user == inv.user
+            return request.user.user_id == invitation.user_id
         except (Invitation.DoesNotExist, TypeError):
             return False
