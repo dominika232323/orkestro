@@ -1,8 +1,8 @@
 """
 Handles API requests regarding event attendee data:
-- adding and removing entries (requires being the manager of the event's group)
+- adding and removing entries (requires being a manager of the event's group)
 - getting all attendees of an event (requires being a member of that group)
-Staff users can do all of the above + list all invitations or a specific one.
+Staff users can do all of the above + list all event attendees or a specific one.
 """
 from rest_framework import viewsets, status
 from rest_framework.decorators import action

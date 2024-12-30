@@ -21,12 +21,7 @@ class CanCreateInvitation(BasePermission):
 
 
 class CanRespondToInvitation(BasePermission):
-    def has_permission(self, request, view):
-        if request.method != "POST" or request.user.is_staff or view.action != "respond":
+    def has_object_permission(self, request, view, obj):
+        if request.method != "POST" or request.user.is_staff or view.action not in ["accept", "reject"]:
             return True
-        try:
-            invitation = Invitation.objects.get(invitation_id=int(request.data.get("invitation_id")))
-            bool(request.data.get("accept"))
-            return request.user.user_id == invitation.user_id
-        except (Invitation.DoesNotExist, TypeError):
-            return False
+        return obj.user_id == request.user.user_id
