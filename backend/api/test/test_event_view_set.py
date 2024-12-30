@@ -153,5 +153,48 @@ class EventViewSetTestCase(TestCase):
                 event.refresh_from_db()
                 self.assertEqual(event.name, case["expected_name"])
 
+    def test_update_event_serializer_validation(self):
+        # Create a test event
+        event = Event.objects.create(group=self.group, name="n", description="d", date=datetime.now(timezone.utc), place="p")
+
+        # Define valid event update data
+        valid_event_data = {
+            "name": "updated name",
+            "description": "updated description",
+            "place": "updated place",
+            "group": self.group.group_id,
+            "event_id": event.event_id,
+            "date": datetime.now(timezone.utc).isoformat()
+        }
+
+        # Define invalid event data
+        invalid_event_data = {
+            "group": self.group.group_id,
+            "name": "",
+            "description": "An event with no name",
+        }
+
+        # Define test cases with event data, user and expected outcomes
+        test_cases = [
+            {"event_data": valid_event_data, "user": self.staff, "expected_status": 200, "expected_name": valid_event_data["name"]},
+            {"event_data": invalid_event_data, "user": self.staff, "expected_status": 400, "expected_name": None},
+        ]
+
+        for case in test_cases:
+            with self.subTest(user=case["user"]):
+                # Create and authenticate the request
+                request = self.factory.put(f"/api/events/{event.event_id}/", data=case["event_data"], format='json')
+                force_authenticate(request, user=case["user"])
+                response = EventViewSet.as_view({'put': 'update'})(request, pk=event.event_id)
+
+                # Assert the status code
+                self.assertEqual(response.status_code, case["expected_status"])
+
+                # If the status is 200, check response's object count and the event name
+                if case["expected_status"] == 200:
+                    # Fetch the updated event
+                    event.refresh_from_db()
+                    self.assertEqual(event.name, case["expected_name"])
+
     def tearDown(self):
         basic_setup_teardown(self.group, [self.staff, self.manager, self.moderator, self.musician, self.outsider, self.unauthenticated])
