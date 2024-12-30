@@ -16,7 +16,7 @@ export default function Invitations() {
 
   useEffect(() => {
     const fetchInvitations = async () => {
-      await axios.get<Invitation[]>("/api/invitations/pending/")
+      await axios.get<Invitation[]>("/api/invitations/me/")
         .then((response) => {
           setInvitations(response.data);
         })
