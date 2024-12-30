@@ -4,7 +4,7 @@ Contains segments of code used in multiple x_permissions.py files:
 - finding an object's group (if the object is invalid, None is returned, which fails is_... checks)
 """
 
-from api.models import Event
+from api.models import Event, Message
 
 def is_manager(request, group_id):
     if group_id is None:
@@ -28,4 +28,11 @@ def get_group_by_event_id(event_id):
         event = Event.objects.get(event_id=event_id).select_related("group")
         return event.group.group_id
     except Event.DoesNotExist:
+        return None
+
+def get_group_by_message_id(message_id):
+    try:
+        message = Message.objects.get(message_id=message_id).select_related("group")
+        return message.group.group_id
+    except Message.DoesNotExist:
         return None

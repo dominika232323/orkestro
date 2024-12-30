@@ -15,7 +15,7 @@ export default function Messages() {
 
   useEffect(() => {
     const fetchMessages = async () => {
-      await axios.get<MessageRecipient[]>("/api/message-recipients/received/")
+      await axios.get<MessageRecipient[]>("/api/message-recipients/me/")
         .then((response) => {
           const parsedMessages = response.data.map((msg_recipient) => ({
             ...msg_recipient,
