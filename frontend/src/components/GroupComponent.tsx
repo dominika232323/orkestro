@@ -6,7 +6,7 @@ interface IGroup {
   subGroups?: IGroup[];
 }
 
-export default function Group({ id, name, subGroups }: IGroup) {
+export default function GroupComponent({ id, name, subGroups }: IGroup) {
   const { t } = useLanguage();
   return (
     <li className="bg-white p-4 rounded-lg shadow mb-2">
@@ -36,7 +36,7 @@ export default function Group({ id, name, subGroups }: IGroup) {
       {subGroups && subGroups.length > 0 && (
         <ul className="pl-6 border-l-2 border-gray-300 mt-2 space-y-2">
           {subGroups.map((subGroup) => (
-            <Group
+            <GroupComponent
               key={subGroup.id}
               id={subGroup.id}
               name={subGroup.name}

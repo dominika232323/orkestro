@@ -1,18 +1,18 @@
 import {useEffect, useState} from "react";
 
-import GroupsPanel from "../components/GroupsPanel";
 import TopBar from "../components/TopBar";
+import ManageGroupsPanel from "../components/ManageGroupsPanel";
 import Messages from "../components/Messages";
 import Calendar from "../components/Calendar";
-import Settings from "../components/Settings";
+import InvitationsAndGroups from "../components/InvitationsAndGroups";
 import Events from "../components/Events";
 import Files from "../components/Files";
-import GroupPanel from "../components/GroupPanel";
+import Settings from "../components/Settings";
 import {removeTokens, fetchUserOrRedirect} from "../auth";
 
 
 export default function HomePage() {
-  const [page, changePage] = useState("groups");
+  const [page, changePage] = useState("invitations-and-groups");
 
   useEffect(() => {
     fetchUserOrRedirect();
@@ -25,14 +25,14 @@ export default function HomePage() {
 
   return (
     <>
-      <TopBar handleChangePage={changePage} handleLogOut={handleLogOut} />
-      {page === "groups" && <GroupsPanel />}
+      <TopBar handleChangePage={changePage} handleLogOut={handleLogOut}/>
+      {page === "manage-groups" && <ManageGroupsPanel/>}
       {page === "messages" && <Messages/>}
-      {page === "calendar" && <Calendar />}
-      {page === "settings" && <Settings />}
-      {page === "events" && <Events />}
-      {page === "files" && <Files />}
-      {page === "group" && <GroupPanel />}
+      {page === "calendar" && <Calendar/>}
+      {page === "invitations-and-groups" && <InvitationsAndGroups/>}
+      {page === "events" && <Events/>}
+      {page === "files" && <Files/>}
+      {page === "settings" && <Settings/>}
     </>
   );
 }

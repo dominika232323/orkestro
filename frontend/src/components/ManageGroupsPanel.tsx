@@ -59,7 +59,7 @@ const initialGroups: IGroup[] = [
   },
 ];
 
-export default function GroupPanel() {
+export default function ManageGroupsPanel() {
   const { t } = useLanguage();
   const [groups, setGroups] = useState(initialGroups);
   const [currentGroupIndex, setCurrentGroupIndex] = useState(1);
@@ -97,7 +97,7 @@ export default function GroupPanel() {
   const handleSaveChanges = () => {
     groups[currentGroupIndex].name = groupName;
     groups[currentGroupIndex].description = groupDescription;
-    alert(t("group-panel.changes-saved"));
+    alert(t("manage-groups.changes-saved"));
   };
 
   const handleDeleteMember = (id: string) => {
@@ -143,7 +143,7 @@ export default function GroupPanel() {
   return (
     <div className="bg-gray-200 p-6 rounded-lg shadow-md max-w-4xl mx-auto mt-8">
       <h1 className="text-2xl font-bold text-center mb-4">
-        {t("group-panel.title")}
+        {t("manage-groups.title")}
       </h1>
       <div className="flex justify-between items-center mb-6">
         <button
@@ -163,10 +163,10 @@ export default function GroupPanel() {
 
       <div className="mb-4 flex items-center space-x-4 justify-center">
         <button className="p-2 bg-blue-500 text-white rounded-full hover:bg-blue-600">
-          {t("group-panel.messages")}
+          {t("manage-groups.messages")}
         </button>
         <button className="p-2 bg-blue-500 text-white rounded-full hover:bg-blue-600">
-          {t("group-panel.send-messages")}
+          {t("manage-groups.send-messages")}
         </button>
       </div>
 
@@ -175,7 +175,7 @@ export default function GroupPanel() {
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder={t("group-panel.search-placeholder")}
+          placeholder={t("manage-groups.search-placeholder")}
           className="flex-1 p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
         />
         <button
@@ -187,8 +187,8 @@ export default function GroupPanel() {
           onClick={() => toggleRoleFilter("manager")}
         >
           {roleFilter === "manager"
-            ? t("group-panel.cancel-filter")
-            : t("group-panel.roles.manager")}
+            ? t("manage-groups.cancel-filter")
+            : t("manage-groups.roles.manager")}
         </button>
         <button
           className={`py-2 px-4 rounded-lg font-medium ${
@@ -199,8 +199,8 @@ export default function GroupPanel() {
           onClick={() => toggleRoleFilter("musician")}
         >
           {roleFilter === "musician"
-            ? t("group-panel.cancel-filter")
-            : t("group-panel.roles.musician")}
+            ? t("manage-groups.cancel-filter")
+            : t("manage-groups.roles.musician")}
         </button>
         <button
           className={`py-2 px-4 rounded-lg font-medium ${
@@ -211,8 +211,8 @@ export default function GroupPanel() {
           onClick={() => toggleRoleFilter("moderator")}
         >
           {roleFilter === "moderator"
-            ? t("group-panel.cancel-filter")
-            : t("group-panel.roles.moderator")}
+            ? t("manage-groups.cancel-filter")
+            : t("manage-groups.roles.moderator")}
         </button>
       </div>
 
@@ -230,13 +230,13 @@ export default function GroupPanel() {
                 className="p-2 border border-gray-300 rounded-lg"
               >
                 <option value="manager">
-                  {t("group-panel.roles.manager")}
+                  {t("manage-groups.roles.manager")}
                 </option>
                 <option value="musician">
-                  {t("group-panel.roles.musician")}
+                  {t("manage-groups.roles.musician")}
                 </option>
                 <option value="moderator">
-                  {t("group-panel.roles.moderator")}
+                  {t("manage-groups.roles.moderator")}
                 </option>
               </select>
               <button
@@ -250,7 +250,7 @@ export default function GroupPanel() {
         ))
       ) : (
         <p className="text-gray-600 text-center">
-          {t("group-panel.no-members")}
+          {t("manage-groups.no-members")}
         </p>
       )}
 
@@ -261,10 +261,10 @@ export default function GroupPanel() {
             onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
             disabled={currentPage === 1}
           >
-            {t("group-panel.previous")}
+            {t("manage-groups.previous")}
           </button>
           <span className="self-center font-medium">
-            {t("group-panel.page")} {currentPage} / {totalPages}
+            {t("manage-groups.page")} {currentPage} / {totalPages}
           </span>
           <button
             className="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
@@ -273,7 +273,7 @@ export default function GroupPanel() {
             }
             disabled={currentPage === totalPages}
           >
-            {t("group-panel.next")}
+            {t("manage-groups.next")}
           </button>
         </div>
       )}
