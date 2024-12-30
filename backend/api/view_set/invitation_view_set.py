@@ -36,10 +36,15 @@ class InvitationViewSet(viewsets.ModelViewSet):
         return Response(data=serializer.data, status=status.HTTP_201_CREATED)
 
     @action(detail=True, methods=["post"])
-    def respond(self, request):
-        inv = Invitation.objects.get(invitation_id=int(request.data.get("invitation_id")))
-        if bool(request.data.get("accept")):
-            Member.objects.create(group_id=inv.group_id, user_id=inv.user_id, permission_level=inv.permission_level)
+    def accept(self, request, pk=None):
+        inv = self.get_object()
+        Member.objects.create(group_id=inv.group_id, user_id=inv.user_id, permission_level=inv.permission_level)
+        inv.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    @action(detail=True, methods=["post"])
+    def reject(self, request, pk=None):
+        inv = self.get_object()
         inv.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
