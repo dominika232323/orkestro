@@ -23,11 +23,6 @@ export default function Settings() {
     fetchUserOrRedirect(setUser);
   }, []);
 
-  const handleSave = () => {
-    // Add save functionality (e.g., API call)
-    console.log("Saved:", person);
-  };
-
   const handleAddInstrument = () => {
     if (newInstrument.trim() !== "") {
       setPerson((prev) => ({
@@ -77,9 +72,6 @@ export default function Settings() {
           type="text"
           className="w-full p-2 border border-gray-300 rounded-lg"
           value={user && user.name}
-          /* onChange={(e) =>
-            setPerson((prev) => ({ ...prev, name: e.target.value }))
-          } */
         />
       </div>
 
@@ -92,9 +84,6 @@ export default function Settings() {
           type="text"
           className="w-full p-2 border border-gray-300 rounded-lg"
           value={user && user.surname}
-          /* onChange={(e) =>
-            setPerson((prev) => ({ ...prev, surname: e.target.value }))
-          } */
         />
       </div>
 
@@ -107,9 +96,6 @@ export default function Settings() {
           type="text"
           className="w-full p-2 border border-gray-300 rounded-lg"
           value={user && user.email}
-          /* onChange={(e) =>
-            setPerson((prev) => ({ ...prev, email: e.target.value }))
-          } */
         />
       </div>
 
@@ -118,17 +104,18 @@ export default function Settings() {
         <label className="block font-medium text-gray-700">
           {t("settings.google-calendar")}
         </label>
-        <input
-          type="text"
-          className="w-full p-2 border border-gray-300 rounded-lg"
-          value={user && user.google_calendar_id}
-          /* onChange={(e) =>
-            setPerson((prev) => ({
-              ...prev,
-              googleCalendar: e.target.value,
-            }))
-          } */
-        />
+        <div className="flex gap-2">
+          <input
+            type="text"
+            className="flex-grow p-2 border border-gray-300 rounded-lg"
+            value={user && user.google_calendar_id}
+          />
+          <button
+            className="p-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
+          >
+            Connect
+          </button>
+         </div>
       </div>
 
       {/* Instruments */}
@@ -171,14 +158,6 @@ export default function Settings() {
           ))}
         </ul>
       )}
-
-      {/* Save Button */}
-      <button
-        className="w-full py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 font-medium"
-        onClick={handleSave}
-      >
-        {t("settings.save")}
-      </button>
     </div>
   );
 }
