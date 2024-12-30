@@ -44,8 +44,10 @@
     "surname": "Surname",
     "email": "E-mail",
     "google-calendar": "Google Calendar",
-    "add-instrument": "Add instrument",
-    "save": "Save"
+    "connect": "Connect",
+    "connected": "Connected",
+    "unconnected": "Unconnected",
+    "add-instrument": "Add instrument"
   },
   "calendar": {
     "title": "Calendar"

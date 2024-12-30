@@ -48,77 +48,43 @@ export default function Settings() {
         {t("settings.title")}
       </h1>
 
-      {/* Profile picture */}
-      <div className="mb-4">
-        {user && user.profile_picture_url ?
-          <img
-            className="h-32 rounded-full"
-            src={user.profile_picture_url}
-          />
-          :
-          <FontAwesomeIcon
-            className="h-32 text-gray-700 rounded-full"
-            icon={faCircleUser}
-          />
-        }
+      <div className="flex items-center gap-8 mb-4">
+        <div className="h-32 w-32">
+          {user && user.profile_picture_url ?
+            <img
+              className="w-full rounded-full"
+              src={user.profile_picture_url}
+            />
+            :
+            <FontAwesomeIcon
+              className="w-full text-gray-700 rounded-full"
+              icon={faCircleUser}
+            />
+          }
+        </div>
+        <div className="leading-relaxed">
+          <p><span className="text-gray-700">{t("settings.name")}: </span>{user && user.name}</p>
+          <p><span className="text-gray-700">{t("settings.surname")}: </span>{user && user.surname}</p>
+          <p><span className="text-gray-700">{t("settings.email")}: </span>{user && user.email}</p>
+          <p>
+            <span className="text-gray-700">{t("settings.google-calendar")}: </span>
+            {user && user.google_calendar_id ?
+              <span className="text-green-700">{t("settings.connected")}</span>
+              :
+              <>
+                <span className="text-red-700">{t("settings.unconnected")}</span>
+                <button
+                  className="px-2 py-0.5 bg-green-500 text-white rounded-lg hover:bg-green-600 ml-2"
+                >
+                  {t("settings.connect")}
+                </button>
+              </>
+            }
+          </p>
+        </div>
       </div>
 
-      {/* Name */}
-      <div className="mb-4">
-        <label className="block font-medium text-gray-700">
-          {t("settings.name")}
-        </label>
-        <input
-          type="text"
-          className="w-full p-2 border border-gray-300 rounded-lg"
-          value={user && user.name}
-        />
-      </div>
-
-      {/* Surname */}
-      <div className="mb-4">
-        <label className="block font-medium text-gray-700">
-          {t("settings.surname")}
-        </label>
-        <input
-          type="text"
-          className="w-full p-2 border border-gray-300 rounded-lg"
-          value={user && user.surname}
-        />
-      </div>
-
-      {/* Email */}
-      <div className="mb-4">
-        <label className="block font-medium text-gray-700">
-          {t("settings.email")}
-        </label>
-        <input
-          type="text"
-          className="w-full p-2 border border-gray-300 rounded-lg"
-          value={user && user.email}
-        />
-      </div>
-
-      {/* Google Calendar */}
-      <div className="mb-4">
-        <label className="block font-medium text-gray-700">
-          {t("settings.google-calendar")}
-        </label>
-        <div className="flex gap-2">
-          <input
-            type="text"
-            className="flex-grow p-2 border border-gray-300 rounded-lg"
-            value={user && user.google_calendar_id}
-          />
-          <button
-            className="p-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
-          >
-            Connect
-          </button>
-         </div>
-      </div>
-
-      {/* Instruments */}
+      {/* Add instrument */}
       <div className="mb-4">
         <label className="block font-medium text-gray-700">
           {t("settings.add-instrument")}
