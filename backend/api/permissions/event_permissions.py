@@ -3,7 +3,7 @@ Verifies permission to interact with event data in the group (see event_view_set
 """
 from rest_framework.permissions import BasePermission
 
-from api.permissions.common_checks import is_member, is_manager, get_group_by_event_id
+from api.permissions.common_checks import is_member, is_manager
 
 
 class CanViewEvent(BasePermission):
@@ -26,4 +26,4 @@ class CanEditDeleteEvent(BasePermission):
     def has_object_permission(self, request, view, obj):
         if request.method not in ["PUT", "DELETE"] or request.user.is_staff:
             return True
-        return is_manager(request, get_group_by_event_id(obj.event_id))
+        return is_manager(request, obj.group_id)

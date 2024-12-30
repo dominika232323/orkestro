@@ -31,12 +31,25 @@ class TrackSerializer(serializers.ModelSerializer):
     class Meta:
         model = Track
         fields = "__all__"
+        read_only_fields = ["track_id", "group"]
 
 
 class FileSerializer(serializers.ModelSerializer):
+    track_details = TrackSerializer(source="track", read_only=True)
+
     class Meta:
         model = File
         fields = "__all__"
+        read_only_fields = ["file_id", "track"]
+
+
+class FileReadSerializer(serializers.ModelSerializer):
+    track_details = TrackSerializer(source="track", read_only=True)
+
+    class Meta:
+        model = File
+        fields = ["track_details", "file_id", "track", "name"]
+        read_only_fields = ["file_id", "track"]
 
 
 class InstrumentSerializer(serializers.ModelSerializer):

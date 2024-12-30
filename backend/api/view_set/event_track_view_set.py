@@ -11,12 +11,13 @@ from rest_framework.response import Response
 
 from api.models import Event, Track, EventTrack
 from api.serializers import EventTrackSerializer
+from api.permissions.event_track_permissions import CanViewEventTrack, CanCreateEventTrack, CanDeleteEventTrack
 
 
 class EventTrackViewSet(viewsets.ModelViewSet):
     queryset = EventTrack.objects.all()
     serializer_class = EventTrackSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, CanViewEventTrack, CanCreateEventTrack, CanDeleteEventTrack]
     http_method_names = ["get", "post", "delete", "head"]
 
     @staticmethod
