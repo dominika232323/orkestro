@@ -30,6 +30,7 @@ class EventViewSet(viewsets.ModelViewSet):
 
     def update(self, request, pk=None, *args, **kwargs):
         event = Event.objects.get(event_id=pk)
+        self.check_object_permissions(request, event)
         serializer = self.get_serializer(instance=event, data=request.data)
         if not serializer.is_valid() or request.data.get("group") != event.group_id or request.data.get("event_id") != int(pk):
             return Response({"error": "Data validation failed"}, status=status.HTTP_400_BAD_REQUEST)
