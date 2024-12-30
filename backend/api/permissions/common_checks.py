@@ -25,7 +25,7 @@ def is_member(request, group_id):
 
 def get_group_by_event_id(event_id):
     try:
-        event = Event.objects.get(event_id=event_id).select_related("group")
+        event = Event.objects.get(event_id=event_id)
         return event.group.group_id
     except Event.DoesNotExist:
         return None
