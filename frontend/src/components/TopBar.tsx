@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import {
   faCalendarDays,
   faCog,
-  faKey,
+  faArrowRightFromBracket,
   faMessage,
   faUsers,
 } from "@fortawesome/free-solid-svg-icons";
@@ -93,7 +93,7 @@ export default function TopBar({
             <TopBarIcon
               handleChangePage={() => {}}
               pageName=""
-              iconObject={faKey}
+              iconObject={faArrowRightFromBracket}
             />
           </HoverText>
         </button>
