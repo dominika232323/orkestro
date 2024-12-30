@@ -2,7 +2,7 @@ import {useEffect, useState} from "react";
 
 import GroupsPanel from "../components/GroupsPanel";
 import TopBar from "../components/TopBar";
-import Notifications from "../components/Messages";
+import Messages from "../components/Messages";
 import Calendar from "../components/Calendar";
 import Settings from "../components/Settings";
 import Events from "../components/Events";
@@ -27,7 +27,7 @@ export default function HomePage() {
     <>
       <TopBar handleChangePage={changePage} handleLogOut={handleLogOut} />
       {page === "groups" && <GroupsPanel />}
-      {page === "messages" && <Notifications />}
+      {page === "messages" && <Messages/>}
       {page === "calendar" && <Calendar />}
       {page === "settings" && <Settings />}
       {page === "events" && <Events />}
