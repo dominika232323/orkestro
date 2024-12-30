@@ -1,5 +1,5 @@
 import { useLanguage } from "../LanguageContext";
-import Group from "./Group";
+import GroupComponent from "./GroupComponent";
 
 export default function Groups() {
   const { t } = useLanguage();
@@ -33,11 +33,11 @@ export default function Groups() {
   return (
     <div className="bg-gray-200 p-6 rounded-lg shadow-md max-w-4xl mx-auto mt-8">
       <h1 className="text-2xl font-bold text-center mb-4">
-        {t("groups.title")}
+        {t("invitations-and-groups.title")}
       </h1>
       <ul className="space-y-4">
         {groups.map((group) => (
-          <Group
+          <GroupComponent
             key={group.id}
             id={group.id}
             name={group.name}

@@ -1,11 +1,11 @@
 {
   "top-bar": {
+    "manage-groups": "Manage groups",
+    "messages": "Messages",
+    "calendar": "Calendar",
+    "invitations-and-groups": "Groups",
     "events": "Events",
     "files": "Files",
-    "group": "Manage groups",
-    "calendar": "Calendar",
-    "groups": "Groups",
-    "messages": "Messages",
     "settings": "Settings",
     "logout": "Logout"
   },
@@ -15,10 +15,10 @@
     "select-language": "Select language:"
   },
   "invitations": {
-    "title": "User Invitations",
+    "title": "User invitations",
     "no-invitations": "No active invitations"
   },
-  "groups": {
+  "invitations-and-groups": {
     "title": "Groups"
   },
   "group": {
@@ -69,8 +69,8 @@
     "add-file": "New file",
     "search-placeholder": "Search files..."
   },
-  "group-panel": {
-    "title": "Manage Group",
+  "manage-groups": {
+    "title": "Manage group",
     "group-name": "Group name",
     "group-description": "Description",
     "save-changes": "Save changes",
