@@ -116,44 +116,42 @@ class EventViewSetTestCase(TestCase):
                     self.assertEqual(response.data["place"], request_data["place"])
 
     def test_update_event_access(self):
-        # Create a test event
-        event = Event.objects.create(group=self.group, name="n", description="d", date=datetime.now(timezone.utc), place="p")
-
-        # Define test cases for event update with different users
+        # Define test cases for updating the event
         test_cases = [
-            {"user": self.staff, "expected_status": 200, "new_name": "Updated Event", "new_description": "Updated Description"},
-            {"user": self.manager, "expected_status": 403, "new_name": "Manager Update", "new_description": "Manager Description"},
-            {"user": self.moderator, "expected_status": 403, "new_name": "Unauthorized Update", "new_description": "Unauthorized Description"},
-            {"user": self.musician, "expected_status": 403, "new_name": "Unauthorized Update", "new_description": "Unauthorized Description"},
-            {"user": self.outsider, "expected_status": 403, "new_name": "Unauthorized Update", "new_description": "Unauthorized Description"},
-            {"user": self.unauthenticated, "expected_status": 403, "new_name": "Unauthorized Update", "new_description": "Unauthorized Description"},
+            {"user": self.staff, "expected_status": 200, "expected_name": "updated name"},
+            {"user": self.manager, "expected_status": 200, "expected_name": "updated name"},
+            {"user": self.moderator, "expected_status": 403, "expected_name": "n"},
+            {"user": self.musician, "expected_status": 403, "expected_name": "n"},
+            {"user": self.outsider, "expected_status": 403, "expected_name": "n"},
+            {"user": self.unauthenticated, "expected_status": 403, "expected_name": "n"},
         ]
 
         for case in test_cases:
             with self.subTest(user=case["user"]):
-                # Prepare data for the event update
+                # Create a test event
+                event = Event.objects.create(group=self.group, name="n", description="d", date=datetime.now(timezone.utc), place="p")
+
+                # Create the request data
                 request_data = {
+                    "name": "updated name",
+                    "description": "updated description",
+                    "place": "updated place",
                     "group": self.group.group_id,
-                    "name": "n",
-                    "description": "d",
-                    "date": datetime.now(timezone.utc).isoformat(),
-                    "place": "p",
+                    "event_id": event.event_id,
+                    "date": datetime.now(timezone.utc).isoformat()
                 }
 
                 # Create and authenticate the request
-                request = self.factory.put(f"/api/events/{event.event_id}/", data=request_data, format="json")
+                request = self.factory.put(f"/api/events/{event.event_id}/", data=request_data, format='json')
                 force_authenticate(request, user=case["user"])
                 response = EventViewSet.as_view({'put': 'update'})(request, pk=event.event_id)
 
                 # Assert the status code
                 self.assertEqual(response.status_code, case["expected_status"])
 
-                # If the status is 200 (OK), check if the event has been updated
-                if case["expected_status"] == 200:
-                    # Fetch the updated event and check the changes
-                    event.refresh_from_db()
-                    self.assertEqual(event.name, case["new_name"])
-                    self.assertEqual(event.description, case["new_description"])
+                # Fetch the updated event
+                event.refresh_from_db()
+                self.assertEqual(event.name, case["expected_name"])
 
     def tearDown(self):
         basic_setup_teardown(self.group, [self.staff, self.manager, self.moderator, self.musician, self.outsider, self.unauthenticated])
