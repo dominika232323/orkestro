@@ -27,15 +27,10 @@ class MemberViewSet(viewsets.ModelViewSet):
         managers = Member.objects.filter(group_id=member.group_id, permission_level="A")
         return len(managers) == 1 and managers[0] == member
 
-    @staticmethod
-    def are_constants_changed(request, member, pk):
-        return request.data.get("group") != member.group_id or request.data.get("member_id") != int(pk) \
-            or request.data.get("user") != member.user_id
-
     def update(self, request, pk=None, *args, **kwargs):
-        member = Member.objects.get(member_id=pk)
+        member = self.get_object()
         serializer = self.get_serializer(instance=member, data=request.data)
-        if not serializer.is_valid() or self.are_constants_changed(request, member, pk):
+        if not serializer.is_valid():
             return Response({"error": "Data validation failed"}, status=status.HTTP_400_BAD_REQUEST)
         if self.is_last_manager(member) and request.data.get("permission_level") != "A":
             return Response({"error": "Can't demote the last manager"}, status=status.HTTP_400_BAD_REQUEST)
@@ -43,7 +38,7 @@ class MemberViewSet(viewsets.ModelViewSet):
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     def destroy(self, request, pk=None, *args, **kwargs):
-        member = Member.objects.get(member_id=pk)
+        member = self.get_object()
         if self.is_last_manager(member):
             return Response({"error": "Can't remove the last manager"}, status=status.HTTP_400_BAD_REQUEST)
         member.delete()

@@ -21,21 +21,6 @@ class EventViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated, CanViewEvent, CanCreateEvent, CanEditDeleteEvent]
     http_method_names = ["get", "post", "put", "delete", "head"]
 
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        if not serializer.is_valid():
-            return Response({"error": "Data validation failed"}, status=status.HTTP_400_BAD_REQUEST)
-        serializer.save()
-        return Response(data=serializer.data, status=status.HTTP_201_CREATED)
-
-    def update(self, request, pk=None, *args, **kwargs):
-        event = Event.objects.get(event_id=pk)
-        serializer = self.get_serializer(instance=event, data=request.data)
-        if not serializer.is_valid() or request.data.get("group") != event.group_id or request.data.get("event_id") != int(pk):
-            return Response({"error": "Data validation failed"}, status=status.HTTP_400_BAD_REQUEST)
-        serializer.save()
-        return Response(data=serializer.data, status=status.HTTP_200_OK)
-
     @action(detail=False, methods=["get"])
     def by_group(self, request):
         events = Event.objects.filter(group=request.GET.get("group_id"))

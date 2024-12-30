@@ -17,12 +17,14 @@ class GroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
         fields = "__all__"
+        read_only_fields = ["group_id", "supergroup"]
 
 
 class EventSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
         fields = "__all__"
+        read_only_fields = ["event_id", "group"]
 
 
 class TrackSerializer(serializers.ModelSerializer):
@@ -92,6 +94,7 @@ class MemberSerializer(serializers.ModelSerializer):
     class Meta:
         model = Member
         fields = "__all__"
+        read_only_fields = ["member_id", "group_id", "user_id"]
 
 
 class MessageRecipientSerializer(serializers.ModelSerializer):
