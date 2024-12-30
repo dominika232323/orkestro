@@ -63,6 +63,8 @@ class EventAttendeeSerializer(serializers.ModelSerializer):
 
 
 class EventTrackSerializer(serializers.ModelSerializer):
+    event_details = EventSerializer(source="event", read_only=True)
+
     class Meta:
         model = EventTrack
         fields = "__all__"
