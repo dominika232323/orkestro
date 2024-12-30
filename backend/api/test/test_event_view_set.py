@@ -13,15 +13,33 @@ class EventViewSetTestCase(TestCase):
         self.staff, self.manager, self.moderator, self.musician, self.outsider, self.unauthenticated, self.group = basic_setup()
         self.factory = APIRequestFactory()
 
-    def test_basic(self):
+    def test_view_event_access(self):
+        # Create a test event
         Event.objects.create(group=self.group, name="n", description="d", date=datetime.now(timezone.utc), place="p")
 
-        request = self.factory.get("/api/events/", content_type='application/json')
-        force_authenticate(request, user=self.staff)
-        response = EventViewSet.as_view({'get': 'list'})(request)
+        # Define test cases with user and expected outcomes
+        test_cases = [
+            {"user": self.staff, "expected_status": 200, "expected_name": "n"},
+            {"user": self.manager, "expected_status": 403, "expected_name": None},
+            {"user": self.moderator, "expected_status": 403, "expected_name": None},
+            {"user": self.musician, "expected_status": 403, "expected_name": None},
+            {"user": self.outsider, "expected_status": 403, "expected_name": None},
+            {"user": self.unauthenticated, "expected_status": 403, "expected_name": None},
+        ]
 
-        self.assertEqual(response.data[0]["name"], "n")
-        print(response, response.data)
+        for case in test_cases:
+            with self.subTest(user=case["user"]):
+                # Create and authenticate the request
+                request = self.factory.get("/api/events/", content_type='application/json')
+                force_authenticate(request, user=case["user"])
+                response = EventViewSet.as_view({'get': 'list'})(request)
+
+                # Assert the status code
+                self.assertEqual(response.status_code, case["expected_status"])
+
+                # If the status is 200, check the event name
+                if case["expected_status"] == 200:
+                    self.assertEqual(response.data[0]["name"], case["expected_name"])
 
     def tearDown(self):
         basic_setup_teardown(self.group, [self.staff, self.manager, self.moderator, self.musician, self.outsider, self.unauthenticated])
