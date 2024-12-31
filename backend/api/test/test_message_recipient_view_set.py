@@ -12,21 +12,31 @@ class MessageRecipientViewSetTestCase(TestCase):
         self.staff, self.manager, self.moderator, self.musician, self.outsider, self.unauthenticated, self.group = basic_setup()
         self.factory = APIRequestFactory()
 
-    def test_me(self):
-        message_1 = Message.objects.create(user=self.moderator, group=self.group, title="t 1", content="c 1", date=timezone.now())
-        message_2 = Message.objects.create(user=self.manager, group=self.group, title="t 2", content="c 2", date=timezone.now())
-        message_3 = Message.objects.create(user=self.musician, group=self.group, title="t 3", content="c 3", date=timezone.now())
-        message_4 = Message.objects.create(user=self.moderator, group=self.group, title="t 4", content="c 4", date=timezone.now())
-        message_5 = Message.objects.create(user=self.manager, group=self.group, title="t 5", content="c 5", date=timezone.now())
+        self.message_1 = Message.objects.create(user=self.moderator, group=self.group, title="t 1", content="c 1", date=timezone.now())
+        self.message_2 = Message.objects.create(user=self.manager, group=self.group, title="t 2", content="c 2", date=timezone.now())
+        self.message_3 = Message.objects.create(user=self.musician, group=self.group, title="t 3", content="c 3", date=timezone.now())
+        self.message_4 = Message.objects.create(user=self.moderator, group=self.group, title="t 4", content="c 4", date=timezone.now())
+        self.message_5 = Message.objects.create(user=self.manager, group=self.group, title="t 5", content="c 5", date=timezone.now())
 
-        MessageRecipient.objects.create(message=message_1, user=self.musician, is_read=True)
-        MessageRecipient.objects.create(message=message_1, user=self.manager, is_read=False)
-        MessageRecipient.objects.create(message=message_2, user=self.musician, is_read=True)
-        MessageRecipient.objects.create(message=message_2, user=self.moderator, is_read=True)
-        MessageRecipient.objects.create(message=message_3, user=self.manager, is_read=False)
-        MessageRecipient.objects.create(message=message_3, user=self.moderator, is_read=True)
-        MessageRecipient.objects.create(message=message_4, user=self.manager, is_read=False)
-        MessageRecipient.objects.create(message=message_5, user=self.moderator, is_read=False)
+    def test_mark_as_read(self):
+        MessageRecipient.objects.create(message=self.message_1, user=self.musician, is_read=False)
+        MessageRecipient.objects.create(message=self.message_1, user=self.manager, is_read=False)
+        MessageRecipient.objects.create(message=self.message_2, user=self.musician, is_read=False)
+        MessageRecipient.objects.create(message=self.message_2, user=self.moderator, is_read=False)
+        MessageRecipient.objects.create(message=self.message_3, user=self.manager, is_read=False)
+        MessageRecipient.objects.create(message=self.message_3, user=self.moderator, is_read=False)
+        MessageRecipient.objects.create(message=self.message_4, user=self.manager, is_read=False)
+        MessageRecipient.objects.create(message=self.message_5, user=self.moderator, is_read=False)
+
+    def test_me(self):
+        MessageRecipient.objects.create(message=self.message_1, user=self.musician, is_read=True)
+        MessageRecipient.objects.create(message=self.message_1, user=self.manager, is_read=False)
+        MessageRecipient.objects.create(message=self.message_2, user=self.musician, is_read=True)
+        MessageRecipient.objects.create(message=self.message_2, user=self.moderator, is_read=True)
+        MessageRecipient.objects.create(message=self.message_3, user=self.manager, is_read=False)
+        MessageRecipient.objects.create(message=self.message_3, user=self.moderator, is_read=True)
+        MessageRecipient.objects.create(message=self.message_4, user=self.manager, is_read=False)
+        MessageRecipient.objects.create(message=self.message_5, user=self.moderator, is_read=False)
 
         # Define test cases with expected outcomes
         test_cases = [
@@ -49,5 +59,10 @@ class MessageRecipientViewSetTestCase(TestCase):
                 self.assertEqual(len(response.data), case["expected_count"])
 
     def tearDown(self):
-        basic_setup_teardown(self.group, [self.staff, self.manager, self.moderator, self.musician, self.outsider,
-                                          self.unauthenticated])
+        self.message_1.delete()
+        self.message_2.delete()
+        self.message_3.delete()
+        self.message_4.delete()
+        self.message_5.delete()
+        
+        basic_setup_teardown(self.group, [self.staff, self.manager, self.moderator, self.musician, self.outsider, self.unauthenticated])
