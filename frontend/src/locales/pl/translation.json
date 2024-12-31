@@ -1,11 +1,11 @@
 {
   "top-bar": {
+    "manage-groups": "Zarządzaj grupami",
+    "messages": "Wiadomości",
+    "calendar": "Kalendarz",
+    "invitations-and-groups": "Grupy",
     "events": "Wydarzenia",
     "files": "Pliki",
-    "group": "Zarządzaj grupami",
-    "calendar": "Kalendarz",
-    "groups": "Grupy",
-    "messages": "Wiadomości",
     "settings": "Ustawienia",
     "logout": "Wyloguj"
   },
@@ -18,7 +18,7 @@
     "title": "Zaproszenia",
     "no-invitations": "Brak zaproszeń"
   },
-  "groups": {
+  "invitations-and-groups": {
     "title": "Grupy"
   },
   "group": {
@@ -69,7 +69,7 @@
     "add-file": "Nowy plik",
     "search-placeholder": "Znajdź pliki..."
   },
-  "group-panel": {
+  "manage-groups": {
     "title": "Zarządzaj grupą",
     "group-name": "Nazwa grupy",
     "group-description": "Opis grupy",

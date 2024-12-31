@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import {
   faCalendarDays,
   faCog,
-  faKey,
+  faArrowRightFromBracket,
   faMessage,
   faUsers,
 } from "@fortawesome/free-solid-svg-icons";
@@ -24,10 +24,10 @@ export default function TopBar({
     <div className="flex items-center justify-between bg-gray-100 p-4 shadow-md">
       {/* Left Section - Icons */}
       <div className="flex items-center space-x-4">
-        <HoverText textToShow={t("top-bar.group")}>
+        <HoverText textToShow={t("top-bar.manage-groups")}>
           <TopBarIcon
             handleChangePage={handleChangePage}
-            pageName="group"
+            pageName="manage-groups"
             iconObject={faUsers}
           />
         </HoverText>
@@ -51,9 +51,9 @@ export default function TopBar({
       <div className="flex items-center space-x-6 text-sm">
         <button
           className="hover:text-gray-700 font-medium"
-          onClick={() => handleChangePage("groups")}
+          onClick={() => handleChangePage("invitations-and-groups")}
         >
-          {t("top-bar.groups")}
+          {t("top-bar.invitations-and-groups")}
         </button>
         <button
           className="hover:text-gray-700 font-medium"
@@ -93,7 +93,7 @@ export default function TopBar({
             <TopBarIcon
               handleChangePage={() => {}}
               pageName=""
-              iconObject={faKey}
+              iconObject={faArrowRightFromBracket}
             />
           </HoverText>
         </button>

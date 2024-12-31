@@ -51,4 +51,4 @@ class UserViewSet(viewsets.ModelViewSet):
         members = Member.objects.filter(group=request.GET.get("group_id"))
         users = [m.user for m in members]
         serialized_users = UserSerializer(users, many=True)
-        return Response({"users": serialized_users.data})
+        return Response(serialized_users.data)
