@@ -1,5 +1,4 @@
-from datetime import datetime, timezone
-
+from django.utils import timezone
 from django.test import TestCase
 from rest_framework.test import APIRequestFactory, force_authenticate
 
@@ -37,7 +36,7 @@ class EventAttendeeViewSetTestCase(TestCase):
 
     # def test_is_member(self):
     #     # Create a test event
-    #     event = Event.objects.create(group=self.group, name="n", description="d", date=datetime.now(timezone.utc), place="p")
+    #     event = Event.objects.create(group=self.group, name="n", description="d", date=timezone.now(), place="p")
     #
     #     test_cases = [
     #         {"user": self.staff, "is_member": False},
@@ -56,8 +55,8 @@ class EventAttendeeViewSetTestCase(TestCase):
     #             self.assertEqual(result, case["is_member"])
 
     def test_by_event(self):
-        event_1 = Event.objects.create(group=self.group, name="n 1", description="d 1", date=datetime.now(timezone.utc), place="p 1")
-        event_2 = Event.objects.create(group=self.group, name="n 2", description="d 2", date=datetime.now(timezone.utc), place="p 2")
+        event_1 = Event.objects.create(group=self.group, name="n 1", description="d 1", date=timezone.now(), place="p 1")
+        event_2 = Event.objects.create(group=self.group, name="n 2", description="d 2", date=timezone.now(), place="p 2")
 
         EventAttendee.objects.create(event=event_1, user=self.moderator)
         EventAttendee.objects.create(event=event_1, user=self.musician)

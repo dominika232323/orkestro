@@ -1,6 +1,5 @@
-from datetime import datetime, timezone
-
 from django.test import TestCase
+from django.utils import timezone
 from rest_framework.test import APIRequestFactory, force_authenticate
 
 from api.models import Event, EventAttendee
@@ -15,7 +14,7 @@ class EventViewSetTestCase(TestCase):
 
     def test_view_event_access(self):
         # Create a test event
-        Event.objects.create(group=self.group, name="n", description="d", date=datetime.now(timezone.utc), place="p")
+        Event.objects.create(group=self.group, name="n", description="d", date=timezone.now(), place="p")
 
         # Define test cases with user and expected outcomes
         test_cases = [
@@ -42,8 +41,8 @@ class EventViewSetTestCase(TestCase):
                     self.assertEqual(response.data[0]["name"], case["expected_name"])
 
     def test_by_group(self):
-        event_1 = Event.objects.create(group=self.group, name="n 1", description="d 1", date=datetime.now(timezone.utc), place="p 1")
-        event_2 = Event.objects.create(group=self.group, name="n 2", description="d 2", date=datetime.now(timezone.utc), place="p 2")
+        Event.objects.create(group=self.group, name="n 1", description="d 1", date=timezone.now(), place="p 1")
+        Event.objects.create(group=self.group, name="n 2", description="d 2", date=timezone.now(), place="p 2")
 
         # Define test cases with expected outcomes
         test_cases = [
@@ -71,9 +70,9 @@ class EventViewSetTestCase(TestCase):
 
     def test_me(self):
         # Create events
-        event1 = Event.objects.create(group=self.group, name="Event 1", description="Desc 1", date=datetime.now(timezone.utc), place="Place 1")
-        event2 = Event.objects.create(group=self.group, name="Event 2", description="Desc 2", date=datetime.now(timezone.utc), place="Place 2")
-        event3 = Event.objects.create(group=self.group, name="Event 3", description="Desc 3", date=datetime.now(timezone.utc), place="Place 3")
+        event1 = Event.objects.create(group=self.group, name="Event 1", description="Desc 1", date=timezone.now(), place="Place 1")
+        event2 = Event.objects.create(group=self.group, name="Event 2", description="Desc 2", date=timezone.now(), place="Place 2")
+        event3 = Event.objects.create(group=self.group, name="Event 3", description="Desc 3", date=timezone.now(), place="Place 3")
 
         # Assign participations
         EventAttendee.objects.create(user=self.staff, event=event1)
