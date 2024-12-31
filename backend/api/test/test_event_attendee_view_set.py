@@ -5,6 +5,7 @@ from rest_framework.test import APIRequestFactory, force_authenticate
 
 from api.models import Event, EventAttendee
 from api.test.common_setups import basic_setup, basic_setup_teardown
+from api.view_set.event_attendee_view_set import EventAttendeeViewSet
 from api.view_set.event_view_set import EventViewSet
 
 
@@ -13,7 +14,7 @@ class EventAttendeeViewSetTestCase(TestCase):
         self.staff, self.manager, self.moderator, self.musician, self.outsider, self.unauthenticated, self.group = basic_setup()
         self.factory = APIRequestFactory()
 
-    def test_view_event_access(self):
+    def test_view_event_attendee_access(self):
         # Define test cases with user and expected outcomes
         test_cases = [
             {"user": self.staff, "expected_status": 200},
@@ -34,6 +35,49 @@ class EventAttendeeViewSetTestCase(TestCase):
                 # Assert the status code
                 self.assertEqual(response.status_code, case["expected_status"])
 
+    # def test_is_member(self):
+    #     # Create a test event
+    #     event = Event.objects.create(group=self.group, name="n", description="d", date=datetime.now(timezone.utc), place="p")
+    #
+    #     test_cases = [
+    #         {"user": self.staff, "is_member": False},
+    #         {"user": self.manager, "is_member": False},
+    #         {"user": self.moderator, "is_member": False},
+    #         {"user": self.musician, "is_member": False},
+    #         {"user": self.outsider, "is_member": False},
+    #         {"user": self.unauthenticated, "is_member": False},
+    #     ]
+    #
+    #     for case in test_cases:
+    #         with self.subTest(user=case["user"]):
+    #             # Test case where the user is a member of the group
+    #             request = self.factory.post("/api/event-attendees/", data={"event": event.event_id, "user": case["user"].user_id}, format="json")
+    #             result = EventAttendeeViewSet.is_member(request)
+    #             self.assertEqual(result, case["is_member"])
+
+    def test_by_event(self):
+        event_1 = Event.objects.create(group=self.group, name="n 1", description="d 1", date=datetime.now(timezone.utc), place="p 1")
+        event_2 = Event.objects.create(group=self.group, name="n 2", description="d 2", date=datetime.now(timezone.utc), place="p 2")
+
+        EventAttendee.objects.create(event=event_1, user=self.moderator)
+        EventAttendee.objects.create(event=event_1, user=self.musician)
+        EventAttendee.objects.create(event=event_2, user=self.musician)
+
+        # Define test cases with expected outcomes
+        test_cases = [
+            {"event": event_1, "expected_status": 200, "expected_count": 2},
+            {"event": event_2, "expected_status": 200, "expected_count": 1},
+        ]
+
+        for case in test_cases:
+            with self.subTest(event=case["event"]):
+                # Create and authenticate the request
+                request = self.factory.get(f"/api/event-attendees/by_event/?event_id={case["event"].event_id}")
+                force_authenticate(request, user=self.staff)
+                response = EventAttendeeViewSet.as_view({'get': 'by_event'})(request)
+
+                self.assertEqual(response.status_code, case["expected_status"])
+                self.assertEqual(len(response.data), case["expected_count"])
 
     def tearDown(self):
         basic_setup_teardown(self.group, [self.staff, self.manager, self.moderator, self.musician, self.outsider, self.unauthenticated])
