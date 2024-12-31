@@ -15,7 +15,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from api.models import File
-from api.serializers import FileSerializer, FileReadSerializer
+from api.serializers import FileSerializer
 from api.models import FileAllowedMember, Event, EventTrack, FileInstrument
 
 from api.permissions.file_permissions import CanViewFile, CanDownloadFile, CanCreateFile, CanDeleteFile
@@ -23,20 +23,23 @@ from api.permissions.file_permissions import CanViewFile, CanDownloadFile, CanCr
 
 class FileViewSet(viewsets.ModelViewSet):
     queryset = File.objects.all()
-    serializer_class = FileReadSerializer # file content hidden from most responses
+    serializer_class = FileSerializer # file content hidden from most responses
     permission_classes = [IsAuthenticated, CanViewFile, CanDownloadFile, CanCreateFile, CanDeleteFile]
     http_method_names = ["get", "post", "delete", "head"]
 
     def create(self, request, *args, **kwargs):
-        # TODO: uploading files
-        # in react, file creation should be followed by giving oneself permission to it using returned ID
-        return Response({"info": "not implemented yet"}, status=status.HTTP_201_CREATED)
+        serializer = self.get_serializer(data=request.data)
+        if not serializer.is_valid():
+            return Response({"error": "Data validation failed"}, status=status.HTTP_400_BAD_REQUEST)
+        file = serializer.save()
+        file.content = request.FILES.get("file").read()
+        file.save()
+        return Response(data=serializer.data, status=status.HTTP_201_CREATED)
 
     @action(detail=True, methods=["get"])
     def download(self, request, pk=None, *args, **kwargs):
-        self.get_object()
-        # TODO: downloading files
-        return Response({"info": "not implemented yet"})
+        file = self.get_object()
+        return FileResponse(io.BytesIO(file.content), filename=file.name, as_attachment=True)
 
     @action(detail=False, methods=["get"])
     def search(self, request):
