@@ -125,6 +125,8 @@ class MessageRecipientSerializer(serializers.ModelSerializer):
 
 
 class UserInstrumentSerializer(serializers.ModelSerializer):
+    instruments_details = InstrumentSerializer(source="instrument", read_only=True)
+
     class Meta:
         model = UserInstrument
         fields = "__all__"
