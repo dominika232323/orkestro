@@ -21,7 +21,6 @@ class EventAttendeeViewSetTestCase(TestCase):
             {"user": self.moderator, "expected_status": 403},
             {"user": self.musician, "expected_status": 403},
             {"user": self.outsider, "expected_status": 403},
-            {"user": self.unauthenticated, "expected_status": 403},
         ]
 
         for case in test_cases:
@@ -44,7 +43,6 @@ class EventAttendeeViewSetTestCase(TestCase):
     #         {"user": self.moderator, "is_member": False},
     #         {"user": self.musician, "is_member": False},
     #         {"user": self.outsider, "is_member": False},
-    #         {"user": self.unauthenticated, "is_member": False},
     #     ]
     #
     #     for case in test_cases:

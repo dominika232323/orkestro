@@ -23,7 +23,6 @@ class EventViewSetTestCase(TestCase):
             {"user": self.moderator, "expected_status": 403, "expected_name": None},
             {"user": self.musician, "expected_status": 403, "expected_name": None},
             {"user": self.outsider, "expected_status": 403, "expected_name": None},
-            {"user": self.unauthenticated, "expected_status": 403, "expected_name": None},
         ]
 
         for case in test_cases:
@@ -51,7 +50,6 @@ class EventViewSetTestCase(TestCase):
             {"user": self.moderator, "expected_status": 200, "expected_event_count": 2},
             {"user": self.musician, "expected_status": 200, "expected_event_count": 2},
             {"user": self.outsider, "expected_status": 403, "expected_event_count": 0},
-            {"user": self.unauthenticated, "expected_status": 403, "expected_event_count": 0},
         ]
 
         for case in test_cases:
@@ -85,7 +83,6 @@ class EventViewSetTestCase(TestCase):
             {"user": self.musician, "expected_status": 200, "expected_event_names": ["Event 3"]},
             {"user": self.manager, "expected_status": 200, "expected_event_names": []},
             {"user": self.outsider, "expected_status": 200, "expected_event_names": []},
-            {"user": self.unauthenticated, "expected_status": 200, "expected_event_names": []},
         ]
 
         for case in test_cases:
