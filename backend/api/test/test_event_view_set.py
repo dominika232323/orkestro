@@ -196,5 +196,33 @@ class EventViewSetTestCase(TestCase):
                     event.refresh_from_db()
                     self.assertEqual(event.name, case["expected_name"])
 
+    def test_by_group(self):
+        event_1 = Event.objects.create(group=self.group, name="n 1", description="d 1", date=datetime.now(timezone.utc), place="p 1")
+        event_2 = Event.objects.create(group=self.group, name="n 2", description="d 2", date=datetime.now(timezone.utc), place="p 2")
+
+        # Define test cases with expected outcomes
+        test_cases = [
+            {"user": self.staff, "expected_status": 200, "expected_event_count": 2},
+            {"user": self.manager, "expected_status": 200, "expected_event_count": 2},
+            {"user": self.moderator, "expected_status": 200, "expected_event_count": 2},
+            {"user": self.musician, "expected_status": 200, "expected_event_count": 2},
+            {"user": self.outsider, "expected_status": 403, "expected_event_count": 0},
+            {"user": self.unauthenticated, "expected_status": 403, "expected_event_count": 0},
+        ]
+
+        for case in test_cases:
+            with self.subTest(user=case["user"]):
+                # Create and authenticate the request
+                request = self.factory.get(f"/api/events/by_group/?group_id={self.group.group_id}")
+                force_authenticate(request, user=case["user"])
+                response = EventViewSet.as_view({'get': 'by_group'})(request)
+
+                # Assert the response status
+                self.assertEqual(response.status_code, case["expected_status"])
+
+                # Assert the event count for valid responses
+                if case["expected_status"] == 200:
+                    self.assertEqual(len(response.data), case["expected_event_count"])
+
     def tearDown(self):
         basic_setup_teardown(self.group, [self.staff, self.manager, self.moderator, self.musician, self.outsider, self.unauthenticated])
