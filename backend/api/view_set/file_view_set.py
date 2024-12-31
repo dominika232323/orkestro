@@ -5,6 +5,10 @@ Handles API requests regarding file data:
 - getting all files shared with the calling user for an event
 Staff users can do all of the above + list all files or a specific one.
 """
+import io
+
+from django.http import FileResponse
+
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
@@ -40,9 +44,10 @@ class FileViewSet(viewsets.ModelViewSet):
             .filter(user_id=request.user, file__track__track_id=request.GET.get("track_id"),
                     file__name__icontains=request.GET.get("name") or ""))
         files = [ffm.file for ffm in files_for_me]
-        if request.GET.get("instrument") is not None:
-            file_instruments = (FileInstrument.objects.select_related("file", "instrument").defer('file__content')
-                .filter(instrument__name__icontains=request.GET.get("instrument"), file__in=files))
+        print(files)
+        if len(request.GET.getlist("instrument_id")) != 0:
+            file_instruments = (FileInstrument.objects.select_related("file").defer('file__content')
+                .filter(file__in=files, instrument_id__in=request.GET.getlist("instrument_id")))
             files = set([fi.file for fi in file_instruments])
         serializer = self.get_serializer(files, many=True)
         return Response(serializer.data)
