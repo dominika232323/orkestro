@@ -25,6 +25,7 @@ class FileViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         # TODO: uploading files
+        # in react, file creation should be followed by giving oneself permission to it using returned ID
         return Response({"info": "not implemented yet"}, status=status.HTTP_201_CREATED)
 
     @action(detail=True, methods=["get"])

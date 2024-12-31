@@ -90,6 +90,8 @@ class FileAllowedMemberSerializer(serializers.ModelSerializer):
 
 
 class FileInstrumentSerializer(serializers.ModelSerializer):
+    instruments_details = InstrumentSerializer(source="instrument", read_only=True)
+
     class Meta:
         model = FileInstrument
         fields = "__all__"
