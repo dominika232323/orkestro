@@ -84,6 +84,8 @@ class EventTrackSerializer(serializers.ModelSerializer):
 
 
 class FileAllowedMemberSerializer(serializers.ModelSerializer):
+    user_details = UserSerializer(source="user", read_only=True)
+
     class Meta:
         model = FileAllowedMember
         fields = "__all__"
