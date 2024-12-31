@@ -3,7 +3,7 @@ from datetime import datetime, timezone
 from django.test import TestCase
 from rest_framework.test import APIRequestFactory, force_authenticate
 
-from api.models import Event
+from api.models import Event, EventAttendee
 from api.test.common_setups import basic_setup, basic_setup_teardown
 from api.view_set.event_view_set import EventViewSet
 
@@ -223,6 +223,41 @@ class EventViewSetTestCase(TestCase):
                 # Assert the event count for valid responses
                 if case["expected_status"] == 200:
                     self.assertEqual(len(response.data), case["expected_event_count"])
+
+    def test_me(self):
+        # Create events
+        event1 = Event.objects.create(group=self.group, name="Event 1", description="Desc 1", date=datetime.now(timezone.utc), place="Place 1")
+        event2 = Event.objects.create(group=self.group, name="Event 2", description="Desc 2", date=datetime.now(timezone.utc), place="Place 2")
+        event3 = Event.objects.create(group=self.group, name="Event 3", description="Desc 3", date=datetime.now(timezone.utc), place="Place 3")
+
+        # Assign participations
+        EventAttendee.objects.create(user=self.staff, event=event1)
+        EventAttendee.objects.create(user=self.staff, event=event2)
+        EventAttendee.objects.create(user=self.musician, event=event3)
+
+        # Define test cases with expected outcomes
+        test_cases = [
+            {"user": self.staff, "expected_status": 200, "expected_event_names": ["Event 1", "Event 2"]},
+            {"user": self.musician, "expected_status": 200, "expected_event_names": ["Event 3"]},
+            {"user": self.manager, "expected_status": 200, "expected_event_names": []},
+            {"user": self.outsider, "expected_status": 200, "expected_event_names": []},
+            {"user": self.unauthenticated, "expected_status": 200, "expected_event_names": []},
+        ]
+
+        for case in test_cases:
+            with self.subTest(user=case["user"]):
+                # Create and authenticate the request
+                request = self.factory.get("/api/events/me/")
+                force_authenticate(request, user=case["user"])
+                response = EventViewSet.as_view({'get': 'me'})(request)
+
+                # Assert the response status
+                self.assertEqual(response.status_code, case["expected_status"])
+
+                # Assert the returned event names for valid responses
+                if case["expected_status"] == 200:
+                    returned_event_names = [event["name"] for event in response.data]
+                    self.assertEqual(returned_event_names, case["expected_event_names"])
 
     def tearDown(self):
         basic_setup_teardown(self.group, [self.staff, self.manager, self.moderator, self.musician, self.outsider, self.unauthenticated])
