@@ -1,4 +1,3 @@
-from django.utils import timezone
 from django.test import TestCase
 from rest_framework.test import APIRequestFactory, force_authenticate
 
@@ -24,7 +23,7 @@ class GroupViewSetTestCase(TestCase):
         for case in test_cases:
             with self.subTest(user=case["user"]):
                 # Create and authenticate the request
-                request = self.factory.get("/api/events/me/")
+                request = self.factory.get("/api/groups/me/")
                 force_authenticate(request, user=case["user"])
                 response = GroupViewSet.as_view({'get': 'me'})(request)
 
