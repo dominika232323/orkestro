@@ -21,11 +21,23 @@ class GroupSerializer(serializers.ModelSerializer):
         read_only_fields = ["group_id", "supergroup"]
 
 
+class GroupCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Group
+        fields = "__all__"
+
+
 class EventSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
         fields = "__all__"
         read_only_fields = ["event_id", "group"]
+
+
+class EventCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Event
+        fields = "__all__"
 
 
 class TrackSerializer(serializers.ModelSerializer):
@@ -35,22 +47,18 @@ class TrackSerializer(serializers.ModelSerializer):
         read_only_fields = ["track_id", "group"]
 
 
+class TrackCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Track
+        fields = "__all__"
+
+
 class FileSerializer(serializers.ModelSerializer):
     track_details = TrackSerializer(source="track", read_only=True)
 
     class Meta:
         model = File
-        fields = "__all__"
-        read_only_fields = ["file_id", "track"]
-
-
-class FileReadSerializer(serializers.ModelSerializer):
-    track_details = TrackSerializer(source="track", read_only=True)
-
-    class Meta:
-        model = File
         fields = ["track_details", "file_id", "track", "name"]
-        read_only_fields = ["file_id", "track"]
 
 
 class InstrumentSerializer(serializers.ModelSerializer):
@@ -115,6 +123,14 @@ class MemberSerializer(serializers.ModelSerializer):
         model = Member
         fields = "__all__"
         read_only_fields = ["member_id", "group_id", "user_id"]
+
+
+class MemberCreateSerializer(serializers.ModelSerializer):
+    user_details = UserSerializer(source="user", read_only=True)
+
+    class Meta:
+        model = Member
+        fields = "__all__"
 
 
 class MessageRecipientSerializer(serializers.ModelSerializer):

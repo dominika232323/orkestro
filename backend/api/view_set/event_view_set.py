@@ -11,7 +11,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from api.models import Event, EventAttendee
-from api.serializers import EventSerializer
+from api.serializers import EventSerializer, EventCreateSerializer
 from api.permissions.event_permissions import CanViewEvent, CanEditDeleteEvent, CanCreateEvent
 
 
@@ -20,6 +20,13 @@ class EventViewSet(viewsets.ModelViewSet):
     serializer_class = EventSerializer
     permission_classes = [IsAuthenticated, CanViewEvent, CanCreateEvent, CanEditDeleteEvent]
     http_method_names = ["get", "post", "put", "delete", "head"]
+
+    def create(self, request, *args, **kwargs):
+        serializer = EventCreateSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response({"error": "Data validation failed"}, status=status.HTTP_400_BAD_REQUEST)
+        serializer.save()
+        return Response(data=serializer.data, status=status.HTTP_201_CREATED)
 
     @action(detail=False, methods=["get"])
     def by_group(self, request):
