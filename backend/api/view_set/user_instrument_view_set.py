@@ -1,3 +1,9 @@
+"""
+Handles API requests regarding user's instrument data:
+- adding and removing instruments a user can play (requires being that user)
+- viewing instruments of a user (requires being their groupmate).
+Staff members can do all of the above + list all user instruments or a specific one.
+"""
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated

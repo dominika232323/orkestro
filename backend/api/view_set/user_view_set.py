@@ -1,3 +1,10 @@
+"""
+Handles API requests regarding user data:
+- viewing and editing one's own data (some administrative columns are hidden from this viewset - see the serializer)
+- viewing users in a group (requires being a member of that group)
+- getting the ID of the user with given e-mail address (allows sending invitations without leaking everyone's full data)
+Staff members can do all of the above + list all users or a specific one.
+"""
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
@@ -40,7 +47,7 @@ class UserViewSet(viewsets.ModelViewSet):
                 )
 
     @action(detail=False, methods=["get"])
-    def by_email(self, request): # for invitations, api should probably block getting full info about non-group-members
+    def by_email(self, request):
         user = User.objects.filter(email=request.GET.get("email"))
         if len(user) == 0:
             return Response(status=status.HTTP_404_NOT_FOUND)
