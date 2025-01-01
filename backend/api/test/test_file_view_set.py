@@ -1,5 +1,5 @@
-from django.utils import timezone
 from django.test import TestCase
+from django.core.files.base import ContentFile
 from django.core.files.uploadedfile import SimpleUploadedFile
 from rest_framework.test import APIRequestFactory, force_authenticate
 
@@ -76,6 +76,29 @@ class FileViewSetTestCase(TestCase):
         # Assertions
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.data["error"], "Data validation failed")
+
+    def test_download(self):
+        # Authenticated user allowed to download
+        test_cases = [
+            {"user": self.staff, "expected_status": 200},
+            {"user": self.manager, "expected_status": 200},
+            {"user": self.moderator, "expected_status": 200},
+            {"user": self.musician, "expected_status": 200},
+            {"user": self.outsider, "expected_status": 403},
+        ]
+
+        for case in test_cases:
+            with self.subTest(user=case["user"]):
+                # Create a request
+                request = self.factory.get(f"/files/{self.file_1.file_id}/download/")
+                force_authenticate(request, user=case["user"])
+
+                # Instantiate the view and call the download method
+                view = FileViewSet.as_view({"get": "download"})
+                response = view(request, pk=self.file_1.file_id)
+
+                # Assertions
+                self.assertEqual(response.status_code, case["expected_status"])
 
     def tearDown(self):
         self.file_1.delete()
