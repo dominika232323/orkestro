@@ -28,6 +28,10 @@ class UserModelTests(TestCase):
     def test_string_representation(self):
         self.assertEqual(str(self.user), "Test (testuser@example.com)")
 
+    def tearDown(self):
+        self.user.delete()
+        self.superuser.delete()
+
 
 class GroupModelTests(TestCase):
     def setUp(self):
@@ -38,6 +42,9 @@ class GroupModelTests(TestCase):
 
     def test_string_representation(self):
         self.assertEqual(str(self.group), f"Music Group ({self.group.group_id})")
+
+    def tearDown(self):
+        self.group.delete()
 
 
 class EventModelTests(TestCase):
@@ -52,6 +59,10 @@ class EventModelTests(TestCase):
     def test_string_representation(self):
         self.assertEqual(str(self.event), f"Concert ({self.event.event_id})")
 
+    def tearDown(self):
+        self.event.delete()
+        self.group.delete()
+
 
 class TrackModelTests(TestCase):
     def setUp(self):
@@ -64,6 +75,10 @@ class TrackModelTests(TestCase):
 
     def test_string_representation(self):
         self.assertEqual(str(self.track), f"Music Track ({self.track.track_id})")
+
+    def tearDown(self):
+        self.track.delete()
+        self.group.delete()
 
 
 class FileModelTests(TestCase):
@@ -78,6 +93,11 @@ class FileModelTests(TestCase):
     def test_string_representation(self):
         self.assertEqual(str(self.file), f"Music File ({self.file.file_id})")
 
+    def tearDown(self):
+        self.file.delete()
+        self.track.delete()
+        self.group.delete()
+
 
 class InstrumentModelTests(TestCase):
     def setUp(self):
@@ -88,6 +108,9 @@ class InstrumentModelTests(TestCase):
 
     def test_string_representation(self):
         self.assertEqual(str(self.instrument), f"Guitar ({self.instrument.instrument_id})")
+
+    def tearDown(self):
+        self.instrument.delete()
 
 
 class MessageModelTests(TestCase):
