@@ -4,7 +4,7 @@ from rest_framework.test import APIRequestFactory
 
 from api.models import Event, Message, Track, File
 from api.permissions.common_checks import get_group_by_event_id, get_group_by_message_id, get_group_by_track_id, \
-    get_group_by_file_id, is_manager, is_moderator, is_member
+    get_group_by_file_id, is_manager, is_moderator, is_member, is_author
 from api.test.common_setups import basic_setup, basic_setup_teardown
 
 
@@ -108,6 +108,40 @@ class PermissionsCommonChecksTestCase(TestCase):
                 request.user = case["user"]
 
                 self.assertEqual(is_member(request, None), case["is_member"])
+
+    def test_is_author(self):
+        message = Message.objects.create(user=self.moderator, group=self.group, title="t", content="c", date=timezone.now())
+
+        test_cases = [
+            {"user": self.staff, "is_author": False},
+            {"user": self.manager, "is_author": False},
+            {"user": self.moderator, "is_author": True},
+            {"user": self.musician, "is_author": False},
+            {"user": self.outsider, "is_author": False},
+        ]
+
+        for case in test_cases:
+            with self.subTest(user=case["user"]):
+                request = self.factory.get("/")
+                request.user = case["user"]
+
+                self.assertEqual(is_author(request, message.message_id), case["is_author"])
+
+    def test_is_author_message_does_not_exist(self):
+        test_cases = [
+            {"user": self.staff, "is_author": None},
+            {"user": self.manager, "is_author": None},
+            {"user": self.moderator, "is_author": None},
+            {"user": self.musician, "is_author": None},
+            {"user": self.outsider, "is_author": None},
+        ]
+
+        for case in test_cases:
+            with self.subTest(user=case["user"]):
+                request = self.factory.get("/")
+                request.user = case["user"]
+
+                self.assertEqual(is_author(request, 1), case["is_author"])
 
     def test_get_group_by_event_id(self):
         event = Event.objects.create(group=self.group, name="n", description="d", date=timezone.now(), place="p")
