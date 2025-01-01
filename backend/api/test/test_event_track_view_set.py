@@ -33,7 +33,7 @@ class EventTrackViewSetTestCase(TestCase):
                 }
 
                 # Create a request
-                request = self.factory.post("/event-tracks/", event_track_data, format="json")
+                request = self.factory.post("/api/event-tracks/", event_track_data, format="json")
                 force_authenticate(request, user=case["user"])
 
                 # Instantiate the view and call the create method
@@ -55,7 +55,7 @@ class EventTrackViewSetTestCase(TestCase):
         }
 
         # Create a request
-        request = self.factory.post("/event-tracks/", event_track_data, format="json")
+        request = self.factory.post("/api/event-tracks/", event_track_data, format="json")
         force_authenticate(request, user=self.staff)
 
         # Instantiate the view and call the create method
