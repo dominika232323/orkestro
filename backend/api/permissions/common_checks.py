@@ -63,6 +63,6 @@ def get_group_by_track_id(track_id):
 def get_group_by_file_id(file_id):
     try:
         file = File.objects.get(file_id=file_id)
-        return file.group.group_id
+        return file.track.group.group_id
     except File.DoesNotExist:
         return None
