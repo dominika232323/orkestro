@@ -2,8 +2,9 @@ from django.utils import timezone
 from django.test import TestCase
 from rest_framework.test import APIRequestFactory
 
-from api.models import Event, Message
-from api.permissions.common_checks import get_group_by_event_id, get_group_by_message_id
+from api.models import Event, Message, Track, File
+from api.permissions.common_checks import get_group_by_event_id, get_group_by_message_id, get_group_by_track_id, \
+    get_group_by_file_id
 from api.test.common_setups import basic_setup, basic_setup_teardown
 
 
@@ -25,6 +26,21 @@ class PermissionsCommonChecksTestCase(TestCase):
 
     def test_get_group_by_message_id_event_does_not_exist(self):
         self.assertEqual(get_group_by_message_id(1), None)
+
+    def test_get_group_by_track_id(self):
+        track = Track.objects.create(group=self.group, name="n", artist="a")
+        self.assertEqual(get_group_by_track_id(track.track_id), self.group.group_id)
+
+    def test_get_group_by_track_id_event_does_not_exist(self):
+        self.assertEqual(get_group_by_track_id(1), None)
+
+    def test_get_group_by_file_id(self):
+        track = Track.objects.create(group=self.group, name="n", artist="a")
+        file = File.objects.create(track=track, name="n")
+        self.assertEqual(get_group_by_file_id(file.file_id), self.group.group_id)
+
+    def test_get_group_by_file_id_event_does_not_exist(self):
+        self.assertEqual(get_group_by_file_id(1), None)
 
     def tearDown(self):
         basic_setup_teardown(self.group, [self.staff, self.manager, self.moderator, self.musician, self.outsider, self.unauthenticated])
