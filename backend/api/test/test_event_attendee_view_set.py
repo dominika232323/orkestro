@@ -1,5 +1,6 @@
 from django.utils import timezone
 from django.test import TestCase
+from rest_framework.request import Request
 from rest_framework.test import APIRequestFactory, force_authenticate
 
 from api.models import Event, EventAttendee
@@ -32,25 +33,6 @@ class EventAttendeeViewSetTestCase(TestCase):
 
                 # Assert the status code
                 self.assertEqual(response.status_code, case["expected_status"])
-
-    # def test_is_member(self):
-    #     # Create a test event
-    #     event = Event.objects.create(group=self.group, name="n", description="d", date=timezone.now(), place="p")
-    #
-    #     test_cases = [
-    #         {"user": self.staff, "is_member": False},
-    #         {"user": self.manager, "is_member": False},
-    #         {"user": self.moderator, "is_member": False},
-    #         {"user": self.musician, "is_member": False},
-    #         {"user": self.outsider, "is_member": False},
-    #     ]
-    #
-    #     for case in test_cases:
-    #         with self.subTest(user=case["user"]):
-    #             # Test case where the user is a member of the group
-    #             request = self.factory.post("/api/event-attendees/", data={"event": event.event_id, "user": case["user"].user_id}, format="json")
-    #             result = EventAttendeeViewSet.is_member(request)
-    #             self.assertEqual(result, case["is_member"])
 
     def test_by_event(self):
         event_1 = Event.objects.create(group=self.group, name="n 1", description="d 1", date=timezone.now(), place="p 1")
