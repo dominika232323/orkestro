@@ -23,7 +23,7 @@ from api.permissions.file_permissions import CanViewFile, CanDownloadFile, CanCr
 
 class FileViewSet(viewsets.ModelViewSet):
     queryset = File.objects.all()
-    serializer_class = FileSerializer # file content hidden from most responses
+    serializer_class = FileSerializer
     permission_classes = [IsAuthenticated, CanViewFile, CanDownloadFile, CanCreateFile, CanDeleteFile]
     http_method_names = ["get", "post", "delete", "head"]
 
@@ -47,7 +47,6 @@ class FileViewSet(viewsets.ModelViewSet):
             .filter(user_id=request.user, file__track__track_id=request.GET.get("track_id"),
                     file__name__icontains=request.GET.get("name") or ""))
         files = [ffm.file for ffm in files_for_me]
-        print(files)
         if len(request.GET.getlist("instrument_id")) != 0:
             file_instruments = (FileInstrument.objects.select_related("file").defer('file__content')
                 .filter(file__in=files, instrument_id__in=request.GET.getlist("instrument_id")))

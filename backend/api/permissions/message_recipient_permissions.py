@@ -1,9 +1,9 @@
 """
-Verifies permission to interact with message recipient data (see message_recpient_view_set.py).
+Verifies permission to interact with message recipient data (see message_recipient_view_set.py).
 """
 from rest_framework.permissions import BasePermission
 
-from api.permissions.common_checks import is_moderator, get_group_by_message_id
+from api.permissions.common_checks import is_author
 
 
 class CanViewMessageRecipient(BasePermission):
@@ -13,13 +13,20 @@ class CanViewMessageRecipient(BasePermission):
 
 class CanCreateMessageRecipient(BasePermission):
     def has_permission(self, request, view):
-        if request.method != "POST" or request.user.is_staff:
+        if request.method != "POST" or request.user.is_staff or view.action in ["mark_as_read", "send_email"]:
             return True
-        return is_moderator(request, get_group_by_message_id(request.data.get("message")))
+        return is_author(request, request.data.get("message"))
 
 
 class CanMarkAsRead(BasePermission):
     def has_object_permission(self, request, view, obj):
-        if request.method != "POST" or request.user.is_staff:
+        if request.method != "POST" or request.user.is_staff or view.action != "mark_as_read":
             return True
         return obj.user_id == request.user.user_id
+
+
+class CanSendEmail(BasePermission):
+    def has_object_permission(self, request, view, obj):
+        if request.method != "POST" or request.user.is_staff or view.action != "send_email":
+            return True
+        return obj.message.user_id == request.user.user_id
