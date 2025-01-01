@@ -27,6 +27,7 @@ class UserModelTests(TestCase):
     def test_string_representation(self):
         self.assertEqual(str(self.user), "Test (testuser@example.com)")
 
+
 class GroupModelTests(TestCase):
     def setUp(self):
         self.group = Group.objects.create(name="Music Group", description="A group for musicians")
@@ -36,6 +37,7 @@ class GroupModelTests(TestCase):
 
     def test_string_representation(self):
         self.assertEqual(str(self.group), f"Music Group ({self.group.group_id})")
+
 
 class EventModelTests(TestCase):
     def setUp(self):
@@ -48,6 +50,20 @@ class EventModelTests(TestCase):
 
     def test_string_representation(self):
         self.assertEqual(str(self.event), f"Concert ({self.event.event_id})")
+
+
+class TrackModelTests(TestCase):
+    def setUp(self):
+        self.group = Group.objects.create(name="Music Group")
+        self.track = Track.objects.create(group=self.group, name="Music Track", artist="Artist")
+
+    def test_track_creation(self):
+        self.assertEqual(self.track.name, "Music Track")
+        self.assertEqual(self.track.artist, "Artist")
+
+    def test_string_representation(self):
+        self.assertEqual(str(self.track), f"Music Track ({self.track.track_id})")
+
 
 class MessageRecipientModelTests(TestCase):
     def setUp(self):
@@ -66,6 +82,7 @@ class MessageRecipientModelTests(TestCase):
 
     def test_string_representation(self):
         self.assertEqual(str(self.recipient), f"{self.message.user} → {self.message.group.name} → {self.user} ({self.recipient.message_recipient_id})")
+
 
 class UniqueConstraintTests(TestCase):
     def setUp(self):
@@ -88,6 +105,7 @@ class UniqueConstraintTests(TestCase):
         Member.objects.create(group=self.group, user=self.user, permission_level="A")
         with self.assertRaises(Exception):
             Member.objects.create(group=self.group, user=self.user, permission_level="B")
+
 
 class InstrumentModelTests(TestCase):
     def setUp(self):
