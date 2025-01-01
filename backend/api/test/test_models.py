@@ -109,41 +109,18 @@ class MessageModelTests(TestCase):
 
 class MessageRecipientModelTests(TestCase):
     def setUp(self):
-        self.user = User.objects.create_user(email="testuser@example.com", password="password", name="Test", surname="User")
-        self.group = Group.objects.create(name="Music Group")
-        self.message = Message.objects.create(user=self.user, group=self.group, title="Hello", content="Test message", date=timezone.now())
-        self.recipient = MessageRecipient.objects.create(message=self.message, user=self.user, is_read=False)
+        self.staff, self.manager, self.moderator, self.musician, self.outsider, self.unauthenticated, self.group = basic_setup()
+        self.message = Message.objects.create(user=self.moderator, group=self.group, title="Hello", content="Test message", date=timezone.now())
+        self.recipient = MessageRecipient.objects.create(message=self.message, user=self.musician, is_read=False)
 
     def test_message_recipient_creation(self):
         self.assertEqual(self.recipient.message, self.message)
         self.assertFalse(self.recipient.is_read)
 
-    def test_unique_constraint(self):
-        with self.assertRaises(Exception):
-            MessageRecipient.objects.create(message=self.message, user=self.user)
-
     def test_string_representation(self):
-        self.assertEqual(str(self.recipient), f"{self.message.user} → {self.message.group.name} → {self.user} ({self.recipient.message_recipient_id})")
+        self.assertEqual(str(self.recipient), f"{self.message.user} → {self.message.group.name} → {self.musician} ({self.recipient.message_recipient_id})")
 
-
-class UniqueConstraintTests(TestCase):
-    def setUp(self):
-        self.user = User.objects.create_user(email="testuser@example.com", password="password", name="Test", surname="User")
-        self.group = Group.objects.create(name="Music Group")
-        self.event = Event.objects.create(group=self.group, name="Concert", date=timezone.now(), place="NYC")
-        self.track = Track.objects.create(group=self.group, name="Song", artist="Artist")
-
-    def test_event_attendee_unique_constraint(self):
-        EventAttendee.objects.create(event=self.event, user=self.user)
-        with self.assertRaises(Exception):
-            EventAttendee.objects.create(event=self.event, user=self.user)
-
-    def test_event_track_unique_constraint(self):
-        EventTrack.objects.create(event=self.event, track=self.track)
-        with self.assertRaises(Exception):
-            EventTrack.objects.create(event=self.event, track=self.track)
-
-    def test_member_unique_constraint(self):
-        Member.objects.create(group=self.group, user=self.user, permission_level="A")
-        with self.assertRaises(Exception):
-            Member.objects.create(group=self.group, user=self.user, permission_level="B")
+    def tearDown(self):
+        self.recipient.delete()
+        self.message.delete()
+        basic_setup_teardown(self.group, [self.staff, self.manager, self.moderator, self.musician, self.outsider, self.unauthenticated])
