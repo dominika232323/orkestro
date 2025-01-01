@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.utils import timezone
 
 from api.models import User, Group, Event, Message, MessageRecipient, Track, EventAttendee, EventTrack, Member, \
-    Instrument, File, FileAllowedMember, FileInstrument, Invitation
+    Instrument, File, FileAllowedMember, FileInstrument, Invitation, UserInstrument
 from api.test.common_setups import basic_setup, basic_setup_teardown
 
 
@@ -266,4 +266,23 @@ class MessageRecipientModelTests(TestCase):
     def tearDown(self):
         self.recipient.delete()
         self.message.delete()
+        basic_setup_teardown(self.group, [self.staff, self.manager, self.moderator, self.musician, self.outsider, self.unauthenticated])
+
+
+class UserInstrumentModelTests(TestCase):
+    def setUp(self):
+        self.staff, self.manager, self.moderator, self.musician, self.outsider, self.unauthenticated, self.group = basic_setup()
+        self.instrument = Instrument.objects.create(name="Instrument")
+        self.user_instrument = UserInstrument.objects.create(user=self.musician, instrument=self.instrument)
+
+    def test_user_instrument_creation(self):
+        self.assertEqual(self.user_instrument.instrument, self.instrument)
+        self.assertEqual(self.user_instrument.user, self.musician)
+
+    def test_string_representation(self):
+        self.assertEqual(str(self.user_instrument), f"{self.musician} → {self.instrument.name} ({self.user_instrument.user_instrument_id})")
+
+    def tearDown(self):
+        self.user_instrument.delete()
+        self.instrument.delete()
         basic_setup_teardown(self.group, [self.staff, self.manager, self.moderator, self.musician, self.outsider, self.unauthenticated])
