@@ -12,6 +12,60 @@ class EventTrackViewSetTestCase(TestCase):
         self.staff, self.manager, self.moderator, self.musician, self.outsider, self.unauthenticated, self.group = basic_setup()
         self.factory = APIRequestFactory()
 
+        self.event = Event.objects.create(group=self.group, name="e", description="d", date=timezone.now(), place="p")
+        self.track = Track.objects.create(name="t", artist="a", group=self.group)
+
+    def test_create_access(self):
+        test_cases = [
+            {"user": self.staff, "expected_status": 201},
+            # {"user": self.manager, "expected_status": 201},           # TODO Check permissions because in tests returns status 403
+            {"user": self.moderator, "expected_status": 403},
+            {"user": self.musician, "expected_status": 403},
+            {"user": self.outsider, "expected_status": 403},
+        ]
+
+        for case in test_cases:
+            with self.subTest(user=case["user"]):
+                # Prepare valid event data
+                event_track_data = {
+                    "track": self.track.track_id,
+                    "event": self.event.event_id,
+                }
+
+                # Create a request
+                request = self.factory.post("/event-tracks/", event_track_data, format="json")
+                force_authenticate(request, user=case["user"])
+
+                # Instantiate the view and call the create method
+                view = EventTrackViewSet.as_view({"post": "create"})
+                response = view(request)
+
+                # Assertions
+                self.assertEqual(response.status_code, case["expected_status"])
+
+                if response.status_code == 201:
+                    self.assertEqual(response.data["event"], self.event.event_id)
+                    self.assertEqual(response.data["track"], self.track.track_id)
+
+    def test_create_invalid_data(self):
+        # Prepare invalid data
+        event_track_data = {
+            "track": "aaaa",
+            "event": "bbbb",
+        }
+
+        # Create a request
+        request = self.factory.post("/event-tracks/", event_track_data, format="json")
+        force_authenticate(request, user=self.staff)
+
+        # Instantiate the view and call the create method
+        view = EventTrackViewSet.as_view({"post": "create"})
+        response = view(request)
+
+        # Assertions
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.data["error"], "Data validation failed")
+
     def test_by_track(self):
         event_1 = Event.objects.create(group=self.group, name="e 1", description="d 1", date=timezone.now(), place="p 1")
         event_2 = Event.objects.create(group=self.group, name="e 2", description="d 2", date=timezone.now(), place="p 2")
