@@ -39,6 +39,64 @@ class EventViewSetTestCase(TestCase):
                 if case["expected_status"] == 200:
                     self.assertEqual(response.data[0]["name"], case["expected_name"])
 
+    def test_create_access(self):
+        test_cases = [
+            {"user": self.staff, "expected_status": 201},
+            {"user": self.manager, "expected_status": 201},
+            {"user": self.moderator, "expected_status": 403},
+            {"user": self.musician, "expected_status": 403},
+            {"user": self.outsider, "expected_status": 403},
+        ]
+
+        for case in test_cases:
+            with self.subTest(user=case["user"]):
+                # Prepare valid event data
+                event_data = {
+                    "name": "Test Event",
+                    "description": "Event Description",
+                    "date": timezone.now(),
+                    "place": "Event Place",
+                    "group": self.group.group_id,
+                }
+
+                # Create a request
+                request = self.factory.post("/events/", event_data, format="json")
+                force_authenticate(request, user=case["user"])
+
+                # Instantiate the view and call the create method
+                view = EventViewSet.as_view({"post": "create"})
+                response = view(request)
+
+                # Assertions
+                self.assertEqual(response.status_code, case["expected_status"])
+
+                if response.status_code == 201:
+                    self.assertEqual(response.data["name"], "Test Event")
+                    self.assertEqual(response.data["description"], "Event Description")
+                    self.assertEqual(response.data["place"], "Event Place")
+                    self.assertEqual(response.data["group"], self.group.group_id)
+
+    def test_create_invalid_data(self):
+        # Prepare invalid event data
+        event_data = {
+            "name": "Test Event",
+            "description": "Event Description",
+            "date": timezone.now(),
+            "place": "Event Place",
+        }
+
+        # Create a request
+        request = self.factory.post("/events/", event_data, format="json")
+        force_authenticate(request, user=self.staff)
+
+        # Instantiate the view and call the create method
+        view = EventViewSet.as_view({"post": "create"})
+        response = view(request)
+
+        # Assertions
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.data["error"], "Data validation failed")
+
     def test_by_group(self):
         Event.objects.create(group=self.group, name="n 1", description="d 1", date=timezone.now(), place="p 1")
         Event.objects.create(group=self.group, name="n 2", description="d 2", date=timezone.now(), place="p 2")
