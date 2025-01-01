@@ -18,26 +18,42 @@ class MessageRecipientViewSetTestCase(TestCase):
         self.message_4 = Message.objects.create(user=self.moderator, group=self.group, title="t 4", content="c 4", date=timezone.now())
         self.message_5 = Message.objects.create(user=self.manager, group=self.group, title="t 5", content="c 5", date=timezone.now())
 
+        self.message_recipient_1 = MessageRecipient.objects.create(message=self.message_1, user=self.musician, is_read=False)
+        self.message_recipient_2 = MessageRecipient.objects.create(message=self.message_1, user=self.manager, is_read=False)
+        self.message_recipient_3 = MessageRecipient.objects.create(message=self.message_2, user=self.musician, is_read=True)
+        self.message_recipient_4 = MessageRecipient.objects.create(message=self.message_2, user=self.moderator, is_read=False)
+        self.message_recipient_5 = MessageRecipient.objects.create(message=self.message_3, user=self.manager, is_read=True)
+        self.message_recipient_6 = MessageRecipient.objects.create(message=self.message_3, user=self.moderator, is_read=False)
+        self.message_recipient_7 = MessageRecipient.objects.create(message=self.message_4, user=self.manager, is_read=False)
+        self.message_recipient_8 = MessageRecipient.objects.create(message=self.message_5, user=self.moderator, is_read=True)
+
     def test_mark_as_read(self):
-        MessageRecipient.objects.create(message=self.message_1, user=self.musician, is_read=False)
-        MessageRecipient.objects.create(message=self.message_1, user=self.manager, is_read=False)
-        MessageRecipient.objects.create(message=self.message_2, user=self.musician, is_read=False)
-        MessageRecipient.objects.create(message=self.message_2, user=self.moderator, is_read=False)
-        MessageRecipient.objects.create(message=self.message_3, user=self.manager, is_read=False)
-        MessageRecipient.objects.create(message=self.message_3, user=self.moderator, is_read=False)
-        MessageRecipient.objects.create(message=self.message_4, user=self.manager, is_read=False)
-        MessageRecipient.objects.create(message=self.message_5, user=self.moderator, is_read=False)
+        # Define test cases with expected outcomes
+        test_cases = [
+            {"message_recipient": self.message_recipient_1, "expected_status": 204},
+            {"message_recipient": self.message_recipient_2, "expected_status": 204},
+            {"message_recipient": self.message_recipient_3, "expected_status": 204},
+            {"message_recipient": self.message_recipient_4, "expected_status": 204},
+            {"message_recipient": self.message_recipient_5, "expected_status": 204},
+            {"message_recipient": self.message_recipient_6, "expected_status": 204},
+            {"message_recipient": self.message_recipient_7, "expected_status": 204},
+            {"message_recipient": self.message_recipient_8, "expected_status": 204},
+        ]
+
+        for case in test_cases:
+            with self.subTest(message_recipient=case["message_recipient"]):
+                # Create and authenticate the request
+                request = self.factory.post(f"/api/message-recipients/{case["message_recipient"].message_recipient_id}/mark_as_read/")
+                force_authenticate(request, user=self.staff)
+                response = MessageRecipientViewSet.as_view({'post': 'mark_as_read'})(request, pk=case["message_recipient"].message_recipient_id)
+
+                # Refresh the message recipient from the database
+                case["message_recipient"].refresh_from_db()
+
+                self.assertEqual(response.status_code, case["expected_status"])
+                self.assertTrue(case["message_recipient"].is_read)
 
     def test_me(self):
-        MessageRecipient.objects.create(message=self.message_1, user=self.musician, is_read=True)
-        MessageRecipient.objects.create(message=self.message_1, user=self.manager, is_read=False)
-        MessageRecipient.objects.create(message=self.message_2, user=self.musician, is_read=True)
-        MessageRecipient.objects.create(message=self.message_2, user=self.moderator, is_read=True)
-        MessageRecipient.objects.create(message=self.message_3, user=self.manager, is_read=False)
-        MessageRecipient.objects.create(message=self.message_3, user=self.moderator, is_read=True)
-        MessageRecipient.objects.create(message=self.message_4, user=self.manager, is_read=False)
-        MessageRecipient.objects.create(message=self.message_5, user=self.moderator, is_read=False)
-
         # Define test cases with expected outcomes
         test_cases = [
             {"user": self.staff, "expected_status": 200, "expected_count": 0},
@@ -59,10 +75,19 @@ class MessageRecipientViewSetTestCase(TestCase):
                 self.assertEqual(len(response.data), case["expected_count"])
 
     def tearDown(self):
+        self.message_recipient_1.delete()
+        self.message_recipient_2.delete()
+        self.message_recipient_3.delete()
+        self.message_recipient_4.delete()
+        self.message_recipient_5.delete()
+        self.message_recipient_6.delete()
+        self.message_recipient_7.delete()
+        self.message_recipient_8.delete()
+
         self.message_1.delete()
         self.message_2.delete()
         self.message_3.delete()
         self.message_4.delete()
         self.message_5.delete()
-        
+
         basic_setup_teardown(self.group, [self.staff, self.manager, self.moderator, self.musician, self.outsider, self.unauthenticated])
