@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.utils import timezone
 
 from api.models import User, Group, Event, Message, MessageRecipient, Track, EventAttendee, EventTrack, Member, \
-    Instrument, File, FileAllowedMember
+    Instrument, File, FileAllowedMember, FileInstrument
 from api.test.common_setups import basic_setup, basic_setup_teardown
 
 
@@ -186,6 +186,29 @@ class FileAllowedMemberModelTests(TestCase):
 
     def tearDown(self):
         self.file_allowed_member.delete()
+        self.file.delete()
+        self.track.delete()
+        basic_setup_teardown(self.group, [self.staff, self.manager, self.moderator, self.musician, self.outsider, self.unauthenticated])
+
+
+class FileInstrumentModelTests(TestCase):
+    def setUp(self):
+        self.staff, self.manager, self.moderator, self.musician, self.outsider, self.unauthenticated, self.group = basic_setup()
+        self.track = Track.objects.create(group=self.group, name="Music Track", artist="Artist")
+        self.file = File.objects.create(track=self.track, name="Music File")
+        self.instrument = Instrument.objects.create(name="Instrument")
+        self.file_instrument = FileInstrument.objects.create(file=self.file, instrument=self.instrument)
+
+    def test_file_instrument_creation(self):
+        self.assertEqual(self.file_instrument.instrument, self.instrument)
+        self.assertEqual(self.file_instrument.file, self.file)
+
+    def test_string_representation(self):
+        self.assertEqual(str(self.file_instrument), f"{self.file.name} → {self.instrument.name} ({self.file_instrument.file_instrument_id})")
+
+    def tearDown(self):
+        self.file_instrument.delete()
+        self.instrument.delete()
         self.file.delete()
         self.track.delete()
         basic_setup_teardown(self.group, [self.staff, self.manager, self.moderator, self.musician, self.outsider, self.unauthenticated])
