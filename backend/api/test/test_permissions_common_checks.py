@@ -4,7 +4,7 @@ from rest_framework.test import APIRequestFactory
 
 from api.models import Event, Message, Track, File
 from api.permissions.common_checks import get_group_by_event_id, get_group_by_message_id, get_group_by_track_id, \
-    get_group_by_file_id
+    get_group_by_file_id, is_manager
 from api.test.common_setups import basic_setup, basic_setup_teardown
 
 
@@ -12,6 +12,38 @@ class PermissionsCommonChecksTestCase(TestCase):
     def setUp(self):
         self.staff, self.manager, self.moderator, self.musician, self.outsider, self.unauthenticated, self.group = basic_setup()
         self.factory = APIRequestFactory()
+
+    def test_is_manager_with_valid_group(self):
+        test_cases = [
+            {"user": self.staff, "is_manager": False},
+            {"user": self.manager, "is_manager": True},
+            {"user": self.moderator, "is_manager": False},
+            {"user": self.musician, "is_manager": False},
+            {"user": self.outsider, "is_manager": False},
+        ]
+
+        for case in test_cases:
+            with self.subTest(user=case["user"]):
+                request = self.factory.get("/")
+                request.user = case["user"]
+
+                self.assertEqual(is_manager(request, self.group.group_id), case["is_manager"])
+
+    def test_is_manager_with_group_id_is_none(self):
+        test_cases = [
+            {"user": self.staff, "is_manager": False},
+            {"user": self.manager, "is_manager": False},
+            {"user": self.moderator, "is_manager": False},
+            {"user": self.musician, "is_manager": False},
+            {"user": self.outsider, "is_manager": False},
+        ]
+
+        for case in test_cases:
+            with self.subTest(user=case["user"]):
+                request = self.factory.get("/")
+                request.user = case["user"]
+
+                self.assertEqual(is_manager(request, None), case["is_manager"])
 
     def test_get_group_by_event_id(self):
         event = Event.objects.create(group=self.group, name="n", description="d", date=timezone.now(), place="p")
