@@ -111,13 +111,14 @@ class FileModelTests(TestCase):
 
 class InstrumentModelTests(TestCase):
     def setUp(self):
-        self.instrument = Instrument.objects.create(name="Guitar")
+        self.instrument = Instrument.objects.create(name_en="Guitar", name_pl="Gitara")
 
     def test_instrument_creation(self):
-        self.assertEqual(self.instrument.name, "Guitar")
+        self.assertEqual(self.instrument.name_en, "Guitar")
+        self.assertEqual(self.instrument.name_pl, "Gitara")
 
     def test_string_representation(self):
-        self.assertEqual(str(self.instrument), f"Guitar ({self.instrument.instrument_id})")
+        self.assertEqual(str(self.instrument), f"{self.instrument.name_pl}/{self.instrument.name_en} ({self.instrument.instrument_id})")
 
     def tearDown(self):
         self.instrument.delete()
@@ -206,7 +207,7 @@ class FileInstrumentModelTests(TestCase):
         self.staff, self.manager, self.moderator, self.musician, self.outsider, self.unauthenticated, self.group = basic_setup()
         self.track = Track.objects.create(group=self.group, name="Music Track", artist="Artist")
         self.file = File.objects.create(track=self.track, name="Music File")
-        self.instrument = Instrument.objects.create(name="Instrument")
+        self.instrument = Instrument.objects.create(name_en="Guitar", name_pl="Gitara")
         self.file_instrument = FileInstrument.objects.create(file=self.file, instrument=self.instrument)
 
     def test_file_instrument_creation(self):
@@ -214,7 +215,7 @@ class FileInstrumentModelTests(TestCase):
         self.assertEqual(self.file_instrument.file, self.file)
 
     def test_string_representation(self):
-        self.assertEqual(str(self.file_instrument), f"{self.file.name} → {self.instrument.name} ({self.file_instrument.file_instrument_id})")
+        self.assertEqual(str(self.file_instrument), f"{self.file.name} → {self.instrument.name_pl}/{self.instrument.name_en} ({self.file_instrument.file_instrument_id})")
 
     def tearDown(self):
         self.file_instrument.delete()
@@ -282,7 +283,7 @@ class MessageRecipientModelTests(TestCase):
 class UserInstrumentModelTests(TestCase):
     def setUp(self):
         self.staff, self.manager, self.moderator, self.musician, self.outsider, self.unauthenticated, self.group = basic_setup()
-        self.instrument = Instrument.objects.create(name="Instrument")
+        self.instrument = Instrument.objects.create(name_en="Guitar", name_pl="Gitara")
         self.user_instrument = UserInstrument.objects.create(user=self.musician, instrument=self.instrument)
 
     def test_user_instrument_creation(self):
@@ -290,7 +291,7 @@ class UserInstrumentModelTests(TestCase):
         self.assertEqual(self.user_instrument.user, self.musician)
 
     def test_string_representation(self):
-        self.assertEqual(str(self.user_instrument), f"{self.musician} → {self.instrument.name} ({self.user_instrument.user_instrument_id})")
+        self.assertEqual(str(self.user_instrument), f"{self.musician} → {self.instrument.name_pl}/{self.instrument.name_en} ({self.user_instrument.user_instrument_id})")
 
     def tearDown(self):
         self.user_instrument.delete()
