@@ -99,4 +99,7 @@ class EventTrackViewSetTestCase(TestCase):
                 self.assertEqual(len(response.data), case["expected_count"])
 
     def tearDown(self):
+        self.track.delete()
+        self.event.delete()
+
         basic_setup_teardown(self.group, [self.staff, self.manager, self.moderator, self.musician, self.outsider, self.unauthenticated])
