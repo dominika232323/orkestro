@@ -3,7 +3,7 @@ from django.core.files.base import ContentFile
 from django.core.files.uploadedfile import SimpleUploadedFile
 from rest_framework.test import APIRequestFactory, force_authenticate
 
-from api.models import File, Track
+from api.models import File, Track, Instrument, FileInstrument, FileAllowedMember
 from api.test.common_setups import basic_setup, basic_setup_teardown
 from api.view_set.file_view_set import FileViewSet
 
@@ -15,13 +15,25 @@ class FileViewSetTestCase(TestCase):
 
         self.track_1 = Track.objects.create(group=self.group, name="Track 1", artist="Artist 1")
         self.track_2 = Track.objects.create(group=self.group, name="Track 2", artist="Artist 2")
-        self.track_3 = Track.objects.create(group=self.group, name="Track 3", artist="Artist 3")
-        self.track_4 = Track.objects.create(group=self.group, name="Track 4", artist="Artist 4")
 
         self.file_1 = File.objects.create(track=self.track_1, name="File 1", content=b"Content 1")
-        self.file_2 = File.objects.create(track=self.track_2, name="File 2", content=b"Content 2")
-        self.file_3 = File.objects.create(track=self.track_3, name="File 3", content=b"Content 3")
-        self.file_4 = File.objects.create(track=self.track_4, name="File 4", content=b"Content 4")
+        self.file_2 = File.objects.create(track=self.track_1, name="File 2", content=b"Content 2")
+        self.file_3 = File.objects.create(track=self.track_2, name="File 3", content=b"Content 3")
+        self.file_4 = File.objects.create(track=self.track_2, name="File 4", content=b"Content 4")
+
+        self.instrument_1 = Instrument.objects.create(name_en="Guitar", name_pl="Gitara")
+        self.instrument_2 = Instrument.objects.create(name_en="Piano", name_pl="Pianino")
+
+        self.file_instrument_1 = FileInstrument.objects.create(file=self.file_1, instrument=self.instrument_1)
+        self.file_instrument_2 = FileInstrument.objects.create(file=self.file_2, instrument=self.instrument_1)
+        self.file_instrument_3 = FileInstrument.objects.create(file=self.file_3, instrument=self.instrument_2)
+        self.file_instrument_4 = FileInstrument.objects.create(file=self.file_4, instrument=self.instrument_2)
+
+        self.file_allowed_member_1 = FileAllowedMember.objects.create(user=self.moderator, file=self.file_1)
+        self.file_allowed_member_2 = FileAllowedMember.objects.create(user=self.musician, file=self.file_1)
+        self.file_allowed_member_3 = FileAllowedMember.objects.create(user=self.moderator, file=self.file_2)
+        self.file_allowed_member_4 = FileAllowedMember.objects.create(user=self.musician, file=self.file_3)
+        self.file_allowed_member_5 = FileAllowedMember.objects.create(user=self.musician, file=self.file_4)
 
     def test_create_access(self):
         test_cases = [
@@ -90,7 +102,7 @@ class FileViewSetTestCase(TestCase):
         for case in test_cases:
             with self.subTest(user=case["user"]):
                 # Create a request
-                request = self.factory.get(f"/files/{self.file_1.file_id}/download/")
+                request = self.factory.get(f"/api/files/{self.file_1.file_id}/download/")
                 force_authenticate(request, user=case["user"])
 
                 # Instantiate the view and call the download method
@@ -100,7 +112,44 @@ class FileViewSetTestCase(TestCase):
                 # Assertions
                 self.assertEqual(response.status_code, case["expected_status"])
 
+    def test_search_by_name(self):
+        test_cases = [
+            {"user": self.staff, "track": self.track_1, "expected_status": 200, "expected_count": 0},
+            {"user": self.manager, "track": self.track_1, "expected_status": 200, "expected_count": 0},
+            {"user": self.moderator, "track": self.track_1, "expected_status": 200, "expected_count": 2},
+            {"user": self.musician, "track": self.track_1, "expected_status": 200, "expected_count": 1},
+            {"user": self.outsider, "track": self.track_1, "expected_status": 200, "expected_count": 0},
+            {"user": self.staff, "track": self.track_2, "expected_status": 200, "expected_count": 0},
+            {"user": self.manager, "track": self.track_2, "expected_status": 200, "expected_count": 0},
+            {"user": self.moderator, "track": self.track_2, "expected_status": 200, "expected_count": 0},
+            {"user": self.musician, "track": self.track_2, "expected_status": 200, "expected_count": 2},
+            {"user": self.outsider, "track": self.track_2, "expected_status": 200, "expected_count": 0},
+        ]
+
+        for case in test_cases:
+            with self.subTest(user=case["user"], track=case["track"]):
+                # Simulate a search by name
+                request = self.factory.get("/api/files/search/", {"name": "File", "track_id": case["track"].track_id})
+                force_authenticate(request, user=case["user"])
+
+                # Call the view
+                view = FileViewSet.as_view({"get": "search"})
+                response = view(request)
+
+                # Assertions
+                self.assertEqual(response.status_code, case["expected_status"])
+                self.assertEqual(len(response.data), case["expected_count"])
+
     def tearDown(self):
+        self.file_allowed_member_1.delete()
+        self.file_allowed_member_2.delete()
+
+        self.file_instrument_1.delete()
+        self.file_instrument_2.delete()
+
+        self.instrument_1.delete()
+        self.instrument_2.delete()
+
         self.file_1.delete()
         self.file_2.delete()
         self.file_3.delete()
@@ -108,7 +157,5 @@ class FileViewSetTestCase(TestCase):
 
         self.track_1.delete()
         self.track_2.delete()
-        self.track_3.delete()
-        self.track_4.delete()
 
         basic_setup_teardown(self.group, [self.staff, self.manager, self.moderator, self.musician, self.outsider, self.unauthenticated])
