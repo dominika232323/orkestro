@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.utils import timezone
 
 from api.models import User, Group, Event, Message, MessageRecipient, Track, EventAttendee, EventTrack, Member, \
-    Instrument
+    Instrument, File
 
 
 class UserModelTests(TestCase):
@@ -64,6 +64,18 @@ class TrackModelTests(TestCase):
     def test_string_representation(self):
         self.assertEqual(str(self.track), f"Music Track ({self.track.track_id})")
 
+
+class FileModelTests(TestCase):
+    def setUp(self):
+        self.group = Group.objects.create(name="Music Group")
+        self.track = Track.objects.create(group=self.group, name="Music Track", artist="Artist")
+        self.file = File.objects.create(track=self.track, name="Music File")
+
+    def test_file_creation(self):
+        self.assertEqual(self.file.name, "Music File")
+
+    def test_string_representation(self):
+        self.assertEqual(str(self.file), f"Music File ({self.file.file_id})")
 
 class MessageRecipientModelTests(TestCase):
     def setUp(self):
