@@ -103,6 +103,7 @@ class MessageModelTests(TestCase):
         self.assertEqual(str(self.message), f"{self.message.user} → {self.message.group.name} ({self.message.message_id})")
 
     def tearDown(self):
+        self.message.delete()
         basic_setup_teardown(self.group, [self.staff, self.manager, self.moderator, self.musician, self.outsider, self.unauthenticated])
 
 
