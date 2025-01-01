@@ -77,6 +77,22 @@ class FileModelTests(TestCase):
     def test_string_representation(self):
         self.assertEqual(str(self.file), f"Music File ({self.file.file_id})")
 
+
+class InstrumentModelTests(TestCase):
+    def setUp(self):
+        self.instrument = Instrument.objects.create(name="Guitar")
+
+    def test_instrument_creation(self):
+        self.assertEqual(self.instrument.name, "Guitar")
+
+    def test_string_representation(self):
+        self.assertEqual(str(self.instrument), f"Guitar ({self.instrument.instrument_id})")
+
+
+# class MessageModelTests(TestCase):
+#     pass
+
+
 class MessageRecipientModelTests(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(email="testuser@example.com", password="password", name="Test", surname="User")
@@ -117,14 +133,3 @@ class UniqueConstraintTests(TestCase):
         Member.objects.create(group=self.group, user=self.user, permission_level="A")
         with self.assertRaises(Exception):
             Member.objects.create(group=self.group, user=self.user, permission_level="B")
-
-
-class InstrumentModelTests(TestCase):
-    def setUp(self):
-        self.instrument = Instrument.objects.create(name="Guitar")
-
-    def test_instrument_creation(self):
-        self.assertEqual(self.instrument.name, "Guitar")
-
-    def test_string_representation(self):
-        self.assertEqual(str(self.instrument), f"Guitar ({self.instrument.instrument_id})")
