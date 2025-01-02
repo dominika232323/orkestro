@@ -37,5 +37,38 @@ class UserViewSetTestCase(TestCase):
                 self.assertEqual(response.data["google_calendar_id"], case["user"].google_calendar_id)
                 self.assertEqual(response.data["profile_picture_url"], case["user"].profile_picture_url)
 
+    def test_by_email(self):
+        test_cases = [
+            {"user": self.staff, "expected_status": 200, "expected_event_count": 1},
+            {"user": self.manager, "expected_status": 200, "expected_event_count": 1},
+            {"user": self.moderator, "expected_status": 200, "expected_event_count": 1},
+            {"user": self.musician, "expected_status": 200, "expected_event_count": 1},
+            {"user": self.outsider, "expected_status": 200, "expected_event_count": 1},
+        ]
+
+        for case in test_cases:
+            with self.subTest(user=case["user"]):
+                # Create and authenticate the request
+                request = self.factory.get(f"/api/users/by_email/?email=outsider@a.com")
+                force_authenticate(request, user=case["user"])
+                response = UserViewSet.as_view({'get': 'by_email'})(request)
+
+                # Assert the response status
+                self.assertEqual(response.status_code, case["expected_status"])
+
+                # Assert the event count for valid responses
+                if case["expected_status"] == 200:
+                    self.assertEqual(len(response.data), case["expected_event_count"])
+                    self.assertEqual(response.data["user_id"], self.outsider.user_id)
+
+    def test_by_email_non_existent(self):
+        # Test for an invalid email
+        request = self.factory.get("/api/users/by_email/?email=nonexistent@example.com")
+        force_authenticate(request, user=self.staff)
+        response = UserViewSet.as_view({"get": "by_email"})(request)
+
+        # Assert that the response returns 404 NOT FOUND
+        self.assertEqual(response.status_code, 404)
+
     def tearDown(self):
         basic_setup_teardown(self.group, [self.staff, self.manager, self.moderator, self.musician, self.outsider, self.unauthenticated])
