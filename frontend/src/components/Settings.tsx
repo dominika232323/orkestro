@@ -4,12 +4,13 @@ import {faPlus, faXmark, faCircleUser} from "@fortawesome/free-solid-svg-icons";
 import {useEffect, useState} from "react";
 
 import {axiosInstance as axios, fetchUserOrRedirect} from "../auth";
-import {User, UserInstrument} from "../interfaces";
+import {User, Instrument, UserInstrument} from "../interfaces";
 
 
 export default function Settings() {
   const { t } = useLanguage();
   const [user, setUser] = useState<User>();
+  const [instruments, setInstruments] = useState<Instrument[]>([]);
   const [userInstruments, setUserInstruments] = useState<UserInstrument[]>([]);
   const [newInstrument, setNewInstrument] = useState<string>("");
 
@@ -18,6 +19,14 @@ export default function Settings() {
   }, []);
 
   useEffect(() => {
+    const fetchInstruments = async () => {
+      await axios.get<Instrument[]>("/api/instruments/")
+        .then((response) => {
+          setInstruments(response.data);
+        })
+        .catch((error) => console.error("Error fetching instruments:", error));
+    };
+
     const fetchUserInstruments = async () => {
       await axios.get<UserInstrument[]>(`/api/user-instruments/by_user/?user_id=${user?.user_id}`)
         .then((response) => {
@@ -27,6 +36,7 @@ export default function Settings() {
     };
 
     if (user) {
+      fetchInstruments();
       fetchUserInstruments();
     }
   }, [user]);
@@ -37,7 +47,7 @@ export default function Settings() {
         "/api/user-instruments/",
         {
           "user": user?.user_id,
-          "instrument": newInstrument,
+          "instrument": parseInt(newInstrument, 10),
         }
       )
       .then((response) => {
@@ -113,7 +123,7 @@ export default function Settings() {
             key={user_instrument.user_instrument_id}
             className="flex justify-between items-center p-2 bg-gray-300 border border-black rounded-lg"
           >
-            <span>{user_instrument.instrument_details.name_en}</span> {/* TODO: language */}
+            <span>{user_instrument.instrument_details.name_en} / {user_instrument.instrument_details.name_pl}</span> {/* TODO: language */}
             <button
               className="p-2 text-red-500 hover:text-red-600"
               onClick={() => handleRemoveInstrument(user_instrument.user_instrument_id)}
@@ -129,13 +139,17 @@ export default function Settings() {
           {t("settings.add-instrument")}
         </label>
         <div className="flex gap-2">
-          {/* TODO: select instrument conveniently instead of typing its id */}
-          <input
-            type="text"
+          <select
             className="flex-grow p-2 border border-gray-300 rounded-lg"
             value={newInstrument}
             onChange={(e) => setNewInstrument(e.target.value)}
-          />
+          >
+            {instruments.map((instrument) => (
+              <option key={instrument.instrument_id} value={instrument.instrument_id}>
+                {instrument.name_en} / {instrument.name_pl} {/* TODO: language */}
+              </option>
+            ))}
+          </select>
           <button
             className="p-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
             onClick={handleAddInstrument}
