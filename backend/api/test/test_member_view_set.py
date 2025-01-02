@@ -1,6 +1,8 @@
 from django.test import TestCase
+from django.utils import timezone
 from rest_framework.test import APIRequestFactory, force_authenticate
 
+from api.models import Member, User
 from api.test.common_setups import basic_setup, basic_setup_teardown
 from api.view_set.member_view_set import MemberViewSet
 
@@ -63,6 +65,94 @@ class MemberViewSetTestCase(TestCase):
         # Assertions
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.data["error"], "Data validation failed")
+
+    def test_update(self):
+        test_cases = [
+            {"user": self.staff, "expected_status": 200},
+            {"user": self.manager, "expected_status": 200},
+            {"user": self.moderator, "expected_status": 403},
+            {"user": self.musician, "expected_status": 403},
+            {"user": self.outsider, "expected_status": 403},
+        ]
+
+        for case in test_cases:
+            with self.subTest(user=case["user"]):
+                new_user = User.objects.create(email="user@a.com", name="User", surname="R", date_joined=timezone.now())
+                member_to_update = Member.objects.create(group=self.group, user=new_user, permission_level="C")
+
+                updated_data = {
+                    "group": self.group.group_id,
+                    "user": new_user.user_id,
+                    "permission_level": "B"
+                }
+
+                request = self.factory.put(
+                    f"/api/members/{member_to_update.member_id}/", updated_data, format="json"
+                )
+                force_authenticate(request, user=case["user"])
+                response = MemberViewSet.as_view({"put": "update"})(request, pk=member_to_update.member_id)
+
+                self.assertEqual(response.status_code, case["expected_status"])
+
+                if response.status_code == 200:
+                    self.assertEqual(response.data["permission_level"], updated_data["permission_level"])
+
+    def test_update_demote_last_manager(self):
+        test_cases = [
+            {"user": self.staff, "expected_status": 400},
+            {"user": self.manager, "expected_status": 400},
+            {"user": self.moderator, "expected_status": 403},
+            {"user": self.musician, "expected_status": 403},
+            {"user": self.outsider, "expected_status": 403},
+        ]
+
+        for case in test_cases:
+            with self.subTest(user=case["user"]):
+                updated_data = {
+                    "group": self.group.group_id,
+                    "user": self.manager.user_id,
+                    "permission_level": "C"
+                }
+
+                member_manager = Member.objects.get(user=self.manager)
+
+                request = self.factory.put(
+                    f"/api/members/{member_manager.member_id}/", updated_data, format="json"
+                )
+                force_authenticate(request, user=case["user"])
+                response = MemberViewSet.as_view({"put": "update"})(request, pk=member_manager.member_id)
+
+                self.assertEqual(response.status_code, case["expected_status"])
+
+                if response.status_code == 400:
+                    self.assertEqual(response.data["error"], "Can't demote the last manager")
+
+    def test_update_invalid_data(self):
+        test_cases = [
+            {"user": self.staff, "expected_status": 400},
+            {"user": self.manager, "expected_status": 400},
+            {"user": self.moderator, "expected_status": 403},
+            {"user": self.musician, "expected_status": 403},
+            {"user": self.outsider, "expected_status": 403},
+        ]
+
+        for case in test_cases:
+            with self.subTest(user=case["user"]):
+                updated_data = {"permission_level": "Invalid"}
+
+                new_user = User.objects.create(email="user@a.com", name="User", surname="R", date_joined=timezone.now())
+                member_to_update = Member.objects.create(group=self.group, user=new_user, permission_level="C")
+
+                request = self.factory.put(
+                    f"/api/members/{member_to_update.member_id}/", updated_data, format="json"
+                )
+                force_authenticate(request, user=case["user"])
+                response = MemberViewSet.as_view({"put": "update"})(request, pk=member_to_update.member_id)
+
+                self.assertEqual(response.status_code, case["expected_status"])
+
+                if response.status_code == 400:
+                    self.assertEqual(response.data["error"], "Data validation failed")
 
     def test_by_group(self):
         # Define test cases with expected outcomes
