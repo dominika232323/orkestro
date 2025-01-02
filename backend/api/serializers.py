@@ -101,7 +101,7 @@ class FileAllowedMemberSerializer(serializers.ModelSerializer):
 
 
 class FileInstrumentSerializer(serializers.ModelSerializer):
-    instruments_details = InstrumentSerializer(source="instrument", read_only=True)
+    instrument_details = InstrumentSerializer(source="instrument", read_only=True)
 
     class Meta:
         model = FileInstrument
@@ -142,7 +142,7 @@ class MessageRecipientSerializer(serializers.ModelSerializer):
 
 
 class UserInstrumentSerializer(serializers.ModelSerializer):
-    instruments_details = InstrumentSerializer(source="instrument", read_only=True)
+    instrument_details = InstrumentSerializer(source="instrument", read_only=True)
 
     class Meta:
         model = UserInstrument
