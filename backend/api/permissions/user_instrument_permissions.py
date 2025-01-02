@@ -19,7 +19,7 @@ class CanCreateUserInstrument(BasePermission):
     def has_permission(self, request, view):
         if request.method != "POST" or request.user.is_staff:
             return True
-        return request.data.get("user_id") == request.user.user_id
+        return request.data.get("user") == request.user.user_id
 
 
 class CanDeleteUserInstrument(BasePermission):

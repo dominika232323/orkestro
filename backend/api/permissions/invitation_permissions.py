@@ -15,7 +15,7 @@ class CanViewInvitation(BasePermission):
 
 class CanCreateInvitation(BasePermission):
     def has_permission(self, request, view):
-        if request.method != "POST" or request.user.is_staff or view.action == "respond":
+        if request.method != "POST" or request.user.is_staff or view.action in {"accept", "reject"}:
             return True
         return is_manager(request, request.data.get("group"))
 
