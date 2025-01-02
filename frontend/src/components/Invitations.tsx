@@ -14,15 +14,15 @@ export default function Invitations() {
     fetchUserOrRedirect();
   }, []);
 
-  useEffect(() => {
-    const fetchInvitations = async () => {
-      await axios.get<Invitation[]>("/api/invitations/me/")
-        .then((response) => {
-          setInvitations(response.data);
-        })
-        .catch((error) => console.error("Error fetching invitations:", error));
-    };
+  const fetchInvitations = async () => {
+    await axios.get<Invitation[]>("/api/invitations/me/")
+      .then((response) => {
+        setInvitations(response.data);
+      })
+      .catch((error) => console.error("Error fetching invitations:", error));
+  };
 
+  useEffect(() => {
     fetchInvitations();
   }, []);
 
@@ -34,7 +34,11 @@ export default function Invitations() {
       {invitations.length > 0 ?
         <ul className="space-y-4">
           {invitations.map((inv) => (
-            <InvitationComponent key={inv.invitation_id} invitation={inv}/>
+            <InvitationComponent
+              key={inv.invitation_id}
+              invitation={inv}
+              onActionComplete={fetchInvitations}
+            />
           ))}
         </ul>
         :

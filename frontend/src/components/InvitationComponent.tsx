@@ -7,13 +7,15 @@ import {Invitation} from "../interfaces";
 
 interface Params {
   invitation: Invitation;
+  onActionComplete: () => void;
 }
 
-export default function InvitationComponent({invitation}: Params) {
+export default function InvitationComponent({invitation, onActionComplete}: Params) {
   const handleAccept = async () => {
     await axios.post(`/api/invitations/${invitation.invitation_id}/accept/`)
     .then(() => {
       console.log(`Successfully accepted invitation ${invitation.invitation_id}`);
+      onActionComplete();
     })
     .catch((error) => console.error(`Error accepting invitation ${invitation.invitation_id}:`, error));
   }
@@ -22,6 +24,7 @@ export default function InvitationComponent({invitation}: Params) {
     await axios.post(`/api/invitations/${invitation.invitation_id}/reject/`)
     .then(() => {
       console.log(`Successfully rejected invitation ${invitation.invitation_id}`);
+      onActionComplete();
     })
     .catch((error) => console.error(`Error rejecting invitation ${invitation.invitation_id}:`, error));
   }
