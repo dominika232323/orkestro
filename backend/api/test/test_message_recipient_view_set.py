@@ -27,6 +27,62 @@ class MessageRecipientViewSetTestCase(TestCase):
         self.message_recipient_7 = MessageRecipient.objects.create(message=self.message_4, user=self.manager, is_read=False)
         self.message_recipient_8 = MessageRecipient.objects.create(message=self.message_5, user=self.moderator, is_read=True)
 
+    def test_create_access(self):
+        test_cases = [
+            {"user": self.staff, "expected_status": 201},
+            {"user": self.manager, "expected_status": 201},
+            {"user": self.moderator, "expected_status": 201},
+            {"user": self.musician, "expected_status": 201},
+            {"user": self.outsider, "expected_status": 201},
+        ]
+
+        for case in test_cases:
+            with self.subTest(user=case["user"]):
+                message = Message.objects.create(user=case["user"], group=self.group, title="t", content="c", date=timezone.now())
+
+                # Prepare valid data
+                message_recipient_data = {
+                    "message": message.message_id,
+                    "user": self.musician.user_id,
+                    "is_read": False,
+                }
+
+                # Create a request
+                request = self.factory.post("/api/message-recipients/", message_recipient_data, format="json")
+                force_authenticate(request, user=case["user"])
+
+                # Instantiate the view and call the create method
+                view = MessageRecipientViewSet.as_view({"post": "create"})
+                response = view(request)
+
+                # Assertions
+                self.assertEqual(response.status_code, case["expected_status"])
+
+                if response.status_code == 201:
+                    self.assertEqual(response.data["message"], message.message_id)
+                    self.assertEqual(response.data["user"], self.musician.user_id)
+                    self.assertEqual(response.data["is_read"], False)
+
+    def test_create_invalid_data(self):
+        # Prepare invalid data
+        message_recipient_data = {
+            "message": "self.message_4.message_id",
+            "user": self.musician.user_id,
+            "is_read": False,
+        }
+
+        # Create a request
+        request = self.factory.post("/api/message-recipients/", message_recipient_data, format="json")
+        force_authenticate(request, user=self.staff)
+
+        # Instantiate the view and call the create method
+        view = MessageRecipientViewSet.as_view({"post": "create"})
+        response = view(request)
+
+        # Assertions
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.data["error"], "Data validation failed")
+
     def test_mark_as_read(self):
         # Define test cases with expected outcomes
         test_cases = [
