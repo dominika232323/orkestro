@@ -58,7 +58,7 @@ export default function Settings() {
             />
             :
             <FontAwesomeIcon
-              className="h-full w-full text-gray-700 rounded-full"
+              className="h-full w-full text-gray-600 rounded-full"
               icon={faCircleUser}
             />
           }
