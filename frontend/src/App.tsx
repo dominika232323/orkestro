@@ -1,7 +1,5 @@
 import {createBrowserRouter, RouterProvider} from "react-router-dom";
 
-import {LanguageProvider} from "./LanguageContext";
-
 import LoginPage from "./pages/LoginPage";
 import HomePage from "./pages/HomePage";
 import TestPage from "./pages/TestPage";
@@ -24,9 +22,7 @@ function App() {
     ]);
 
     return (
-        <LanguageProvider>
-            <RouterProvider router={router}/>
-        </LanguageProvider>
+        <RouterProvider router={router}/>
     );
 }
 
