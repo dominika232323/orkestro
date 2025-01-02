@@ -47,6 +47,7 @@
     "connect": "Connect",
     "connected": "Connected",
     "unconnected": "Unconnected",
+    "user-instruments": "Instruments",
     "add-instrument": "Add instrument"
   },
   "calendar": {

@@ -18,7 +18,7 @@ export default function Settings() {
   //   googleCalendar: "Google Calendar",
   //   instruments: ["Violin", "Flute", "Guitar"],
   // });
-  // const [newInstrument, setNewInstrument] = useState("");
+  const [newInstrument, setNewInstrument] = useState<string>("");
 
   useEffect(() => {
     fetchUserOrRedirect(setUser);
@@ -38,15 +38,27 @@ export default function Settings() {
     }
   }, [user]);
 
-  // const handleAddInstrument = () => {
-  //   if (newInstrument.trim() !== "") {
-  //   setPerson((prev) => ({
-  //     ...prev,
-  //     instruments: [...prev.instruments, newInstrument],
-  //   }));
-  //   setNewInstrument("");
-  //   }
-  // };
+  const handleAddInstrument = async () => {
+    if (newInstrument.trim() !== "") {
+      await axios.post(
+        "/api/user-instruments/",
+        {
+          "user": user?.user_id,
+          "instrument": newInstrument,
+        }
+      )
+      .then((response) => {
+        const newUserInstrument: UserInstrument = response.data;
+        console.log("Successfully added user instruments");
+        setNewInstrument("");
+        setUserInstruments((prev) => ([
+          ...prev,
+          newUserInstrument,
+        ]))
+      })
+      .catch((error) => console.error("Error adding user instrument:", error));
+    }
+  };
 
   // const handleRemoveInstrument = (instrumentToRemove: string) => {
   //   setPerson((prev) => ({
@@ -63,7 +75,7 @@ export default function Settings() {
         {t("settings.title")}
       </h1>
 
-      <div className="flex items-center gap-8 mb-4">
+      <div className="flex items-center gap-8 mb-6">
         <div className="h-32 w-32">
           {user && user.profile_picture_url ?
             <img
@@ -100,27 +112,7 @@ export default function Settings() {
         </div>
       </div>
 
-      {/* Add instrument
-      <div className="mb-4">
-        <label className="block font-medium text-gray-700">
-          {t("settings.add-instrument")}
-        </label>
-        <div className="flex gap-2">
-          <input
-            type="text"
-            className="flex-grow p-2 border border-gray-300 rounded-lg"
-            value={newInstrument}
-            onChange={(e) => setNewInstrument(e.target.value)}
-          />
-          <button
-            className="p-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
-            onClick={handleAddInstrument}
-          >
-            <FontAwesomeIcon icon={faPlus} />
-          </button>
-        </div>
-      </div> */}
-
+      <h2 className="text-lg text-gray-700 mb-1">{t("settings.user-instruments")}</h2>
       <ul className="space-y-2 mb-4">
         {userInstruments.map((user_instrument) => (
           <li
@@ -137,6 +129,27 @@ export default function Settings() {
           </li>
         ))}
       </ul>
+
+      <div className="mb-4">
+        <label className="block font-medium text-gray-700">
+          {t("settings.add-instrument")}
+        </label>
+        <div className="flex gap-2">
+          {/* TODO: select instrument conveniently instead of typing its id */}
+          <input
+            type="text"
+            className="flex-grow p-2 border border-gray-300 rounded-lg"
+            value={newInstrument}
+            onChange={(e) => setNewInstrument(e.target.value)}
+          />
+          <button
+            className="p-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
+            onClick={handleAddInstrument}
+          >
+            <FontAwesomeIcon icon={faPlus} />
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
