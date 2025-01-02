@@ -26,4 +26,4 @@ class CanDeleteFileAllowedMember(BasePermission):
     def has_object_permission(self, request, view, obj):
         if request.method != "DELETE" or request.user.is_staff:
             return True
-        return is_manager(request, obj.track.group_id)
+        return is_manager(request, obj.file.track.group.group_id)
