@@ -54,6 +54,7 @@ export default function Settings() {
             <img
               className="w-full rounded-full"
               src={user.profile_picture_url}
+              alt="profile-picture"
             />
             :
             <FontAwesomeIcon
