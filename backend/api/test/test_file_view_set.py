@@ -1,9 +1,10 @@
 from django.test import TestCase
 from django.core.files.base import ContentFile
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.utils import timezone
 from rest_framework.test import APIRequestFactory, force_authenticate
 
-from api.models import File, Track, Instrument, FileInstrument, FileAllowedMember
+from api.models import File, Track, Instrument, FileInstrument, FileAllowedMember, Event, EventTrack
 from api.test.common_setups import basic_setup, basic_setup_teardown
 from api.view_set.file_view_set import FileViewSet
 
@@ -193,6 +194,41 @@ class FileViewSetTestCase(TestCase):
 
                 # Assertions
                 self.assertEqual(response.status_code, 200)
+                self.assertEqual(len(response.data), case["expected_count"])
+
+    def test_me_by_event(self):
+        event_1 = Event.objects.create(group=self.group, name="E1", description="D1", date=timezone.now(), place="P1")
+        event_2 = Event.objects.create(group=self.group, name="E2", description="D2", date=timezone.now(), place="P2")
+
+        EventTrack.objects.create(track=self.track_1, event=event_1)
+        EventTrack.objects.create(track=self.track_2, event=event_1)
+        EventTrack.objects.create(track=self.track_2, event=event_2)
+
+        test_cases = [
+            {"user": self.staff, "event": event_1, "expected_status": 200, "expected_count": 0},
+            {"user": self.manager, "event": event_1, "expected_status": 200, "expected_count": 0},
+            {"user": self.moderator, "event": event_1, "expected_status": 200, "expected_count": 2},
+            {"user": self.musician, "event": event_1, "expected_status": 200, "expected_count": 3},
+            {"user": self.outsider, "event": event_1, "expected_status": 200, "expected_count": 0},
+            {"user": self.staff, "event": event_2, "expected_status": 200, "expected_count": 0},
+            {"user": self.manager, "event": event_2, "expected_status": 200, "expected_count": 0},
+            {"user": self.moderator, "event": event_2, "expected_status": 200, "expected_count": 0},
+            {"user": self.musician, "event": event_2, "expected_status": 200, "expected_count": 2},
+            {"user": self.outsider, "event": event_2, "expected_status": 200, "expected_count": 0},
+        ]
+
+        for case in test_cases:
+            with self.subTest(user=case["user"], event=case["event"]):
+                # Create a request to fetch files for the event
+                request = self.factory.get(f"/api/files/me_by_event/?event_id={case["event"].event_id}")
+                force_authenticate(request, user=case["user"])
+
+                # Call the view
+                view = FileViewSet.as_view({"get": "me_by_event"})
+                response = view(request)
+
+                # Assertions
+                self.assertEqual(response.status_code, case["expected_status"])
                 self.assertEqual(len(response.data), case["expected_count"])
 
     def tearDown(self):
