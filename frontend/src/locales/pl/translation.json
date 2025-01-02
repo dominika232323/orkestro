@@ -44,8 +44,11 @@
     "surname": "Nazwisko",
     "email": "E-mail",
     "google-calendar": "Kalendarz Google",
-    "add-instrument": "Dodaj instrument",
-    "save": "Zapisz"
+    "connect": "Połącz",
+    "connected": "Połączony",
+    "unconnected": "Niepołączony",
+    "user-instruments": "Instrumenty",
+    "add-instrument": "Dodaj instrument"
   },
   "calendar": {
     "title": "Kalendarz"

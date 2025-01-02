@@ -23,6 +23,19 @@ export interface Invitation {
     permission_level: string;
 }
 
+export interface Instrument {
+    instrument_id: number;
+    name_pl: string;
+    name_en: string;
+}
+
+export interface UserInstrument {
+    user_instrument_id: number;
+    user: number;
+    instrument: number;
+    instrument_details: Instrument;
+}
+
 export interface Message {
     message_id: number;
     user: number;
