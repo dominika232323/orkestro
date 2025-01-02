@@ -154,6 +154,48 @@ class MemberViewSetTestCase(TestCase):
                 if response.status_code == 400:
                     self.assertEqual(response.data["error"], "Data validation failed")
 
+    def test_destroy(self):
+        test_cases = [
+            {"user": self.staff, "expected_status": 204},
+            {"user": self.manager, "expected_status": 204},
+            {"user": self.moderator, "expected_status": 403},
+            {"user": self.musician, "expected_status": 403},
+            {"user": self.outsider, "expected_status": 403},
+        ]
+
+        for case in test_cases:
+            with self.subTest(user=case["user"]):
+                new_user = User.objects.create(email="user@a.com", name="User", surname="R", date_joined=timezone.now())
+                member_to_destroy = Member.objects.create(user=new_user, group=self.group)
+
+                request = self.factory.delete(f"/api/members/{member_to_destroy.member_id}/")
+                force_authenticate(request, user=case["user"])
+                response = MemberViewSet.as_view({"delete": "destroy"})(request, pk=member_to_destroy.member_id)
+
+                self.assertEqual(response.status_code, case["expected_status"])
+
+    def test_destroy_last_manager(self):
+        test_cases = [
+            {"user": self.staff, "expected_status": 400},
+            {"user": self.manager, "expected_status": 400},
+            {"user": self.moderator, "expected_status": 403},
+            {"user": self.musician, "expected_status": 403},
+            {"user": self.outsider, "expected_status": 403},
+        ]
+
+        for case in test_cases:
+            with self.subTest(user=case["user"]):
+                member_manager = Member.objects.get(user=self.manager)
+
+                request = self.factory.delete(f"/api/members/{member_manager.member_id}/")
+                force_authenticate(request, user=case["user"])
+                response = MemberViewSet.as_view({"delete": "destroy"})(request, pk=member_manager.member_id)
+
+                self.assertEqual(response.status_code, case["expected_status"])
+
+                if response.status_code == 400:
+                    self.assertEqual(response.data["error"], "Can't remove the last manager")
+
     def test_by_group(self):
         # Define test cases with expected outcomes
         test_cases = [
