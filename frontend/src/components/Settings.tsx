@@ -8,11 +8,20 @@ import {User, Instrument, UserInstrument} from "../interfaces";
 
 
 export default function Settings() {
-  const { t } = useLanguage();
+  const {t, currentLanguage} = useLanguage();
   const [user, setUser] = useState<User>();
   const [instruments, setInstruments] = useState<Instrument[]>([]);
   const [userInstruments, setUserInstruments] = useState<UserInstrument[]>([]);
   const [newInstrument, setNewInstrument] = useState<string>("");
+
+  const instrumentName = (instrument: Instrument, language: string) => {
+    if (language === "pl") {
+      return instrument.name_pl;
+    }
+    else {
+      return instrument.name_en;
+    }
+  }
 
   useEffect(() => {
     fetchUserOrRedirect(setUser);
@@ -123,7 +132,7 @@ export default function Settings() {
             key={user_instrument.user_instrument_id}
             className="flex justify-between items-center p-2 bg-gray-300 border border-black rounded-lg"
           >
-            <span>{user_instrument.instrument_details.name_en} / {user_instrument.instrument_details.name_pl}</span> {/* TODO: language */}
+            <span>{instrumentName(user_instrument.instrument_details, currentLanguage)}</span>
             <button
               className="p-2 text-red-500 hover:text-red-600"
               onClick={() => handleRemoveInstrument(user_instrument.user_instrument_id)}
@@ -146,7 +155,7 @@ export default function Settings() {
           >
             {instruments.map((instrument) => (
               <option key={instrument.instrument_id} value={instrument.instrument_id}>
-                {instrument.name_en} / {instrument.name_pl} {/* TODO: language */}
+                {instrumentName(instrument, currentLanguage)}
               </option>
             ))}
           </select>
