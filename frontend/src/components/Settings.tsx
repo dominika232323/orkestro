@@ -3,44 +3,59 @@ import {useLanguage} from "../LanguageContext";
 import {faPlus, faXmark, faCircleUser} from "@fortawesome/free-solid-svg-icons";
 import {useEffect, useState} from "react";
 
-import {fetchUserOrRedirect} from "../auth";
-import {User} from "../interfaces";
+import {axiosInstance as axios, fetchUserOrRedirect} from "../auth";
+import {User, UserInstrument} from "../interfaces";
 
 
 export default function Settings() {
   const { t } = useLanguage();
   const [user, setUser] = useState<User>();
-  const [person, setPerson] = useState({
-    name: "Jan",
-    surname: "Kowalski",
-    email: "jan.kowalski@gmail.com",
-    googleCalendar: "Google Calendar",
-    instruments: ["Violin", "Flute", "Guitar"],
-  });
-  const [newInstrument, setNewInstrument] = useState("");
+  const [userInstruments, setUserInstruments] = useState<UserInstrument[]>([]);
+  // const [person, setPerson] = useState({
+  //   name: "Jan",
+  //   surname: "Kowalski",
+  //   email: "jan.kowalski@gmail.com",
+  //   googleCalendar: "Google Calendar",
+  //   instruments: ["Violin", "Flute", "Guitar"],
+  // });
+  // const [newInstrument, setNewInstrument] = useState("");
 
   useEffect(() => {
     fetchUserOrRedirect(setUser);
   }, []);
 
-  const handleAddInstrument = () => {
-    if (newInstrument.trim() !== "") {
-      setPerson((prev) => ({
-        ...prev,
-        instruments: [...prev.instruments, newInstrument],
-      }));
-      setNewInstrument("");
-    }
-  };
+  useEffect(() => {
+    const fetchUserInstruments = async () => {
+      await axios.get<UserInstrument[]>(`/api/user-instruments/by_user/?user_id=${user?.user_id}`)
+        .then((response) => {
+          setUserInstruments(response.data);
+        })
+        .catch((error) => console.error("Error fetching user instruments:", error));
+    };
 
-  const handleRemoveInstrument = (instrumentToRemove: string) => {
-    setPerson((prev) => ({
-      ...prev,
-      instruments: prev.instruments.filter(
-        (instrument) => instrument !== instrumentToRemove
-      ),
-    }));
-  };
+    if (user) {
+      fetchUserInstruments();
+    }
+  }, [user]);
+
+  // const handleAddInstrument = () => {
+  //   if (newInstrument.trim() !== "") {
+  //   setPerson((prev) => ({
+  //     ...prev,
+  //     instruments: [...prev.instruments, newInstrument],
+  //   }));
+  //   setNewInstrument("");
+  //   }
+  // };
+
+  // const handleRemoveInstrument = (instrumentToRemove: string) => {
+  //   setPerson((prev) => ({
+  //   ...prev,
+  //   instruments: prev.instruments.filter(
+  //     (instrument) => instrument !== instrumentToRemove
+  //   ),
+  //   }));
+  // };
 
   return (
     <div className="bg-gray-200 p-6 rounded-lg shadow-md max-w-4xl mx-auto mt-8">
@@ -85,7 +100,7 @@ export default function Settings() {
         </div>
       </div>
 
-      {/* Add instrument */}
+      {/* Add instrument
       <div className="mb-4">
         <label className="block font-medium text-gray-700">
           {t("settings.add-instrument")}
@@ -104,27 +119,24 @@ export default function Settings() {
             <FontAwesomeIcon icon={faPlus} />
           </button>
         </div>
-      </div>
+      </div> */}
 
-      {/* Instrument List */}
-      {person.instruments.length > 0 && (
-        <ul className="space-y-2 mb-4">
-          {person.instruments.map((instrument, index) => (
-            <li
-              key={index}
-              className="flex justify-between items-center p-2 bg-gray-300 border border-black rounded-lg"
+      <ul className="space-y-2 mb-4">
+        {userInstruments.map((user_instrument) => (
+          <li
+            key={user_instrument.user_instrument_id}
+            className="flex justify-between items-center p-2 bg-gray-300 border border-black rounded-lg"
+          >
+            <span>{user_instrument.instrument_details.name_en}</span> {/* TODO: language */}
+            <button
+              className="p-2 text-red-500 hover:text-red-600"
+              // onClick={() => handleRemoveInstrument(instrument)}
             >
-              <span>{instrument}</span>
-              <button
-                className="p-2 text-red-500 hover:text-red-600"
-                onClick={() => handleRemoveInstrument(instrument)}
-              >
-                <FontAwesomeIcon icon={faXmark} />
-              </button>
-            </li>
-          ))}
-        </ul>
-      )}
+              <FontAwesomeIcon icon={faXmark} />
+            </button>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
