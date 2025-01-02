@@ -42,7 +42,7 @@ export default function Settings() {
       )
       .then((response) => {
         const newUserInstrument: UserInstrument = response.data;
-        console.log("Successfully added user instruments");
+        console.log(`Successfully added user instrument ${newUserInstrument.user_instrument_id}`);
         setNewInstrument("");
         setUserInstruments((prev) => ([
           ...prev,
