@@ -21,8 +21,6 @@ class MessageViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated, CanViewMessage, CanCreateMessage]
     http_method_names = ["get", "post", "head"]
 
-    #TODO: sending emails
-
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         if not serializer.is_valid() or str(request.user.user_id) != request.data.get("user"):

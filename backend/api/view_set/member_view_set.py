@@ -10,7 +10,7 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 
 from api.models import Member
-from api.serializers import MemberSerializer, UserSerializer
+from api.serializers import MemberSerializer, MemberCreateSerializer
 from rest_framework.response import Response
 
 from api.permissions.member_permissions import CanViewCreateMember, CanEditDeleteMember
@@ -21,6 +21,13 @@ class MemberViewSet(viewsets.ModelViewSet):
     serializer_class = MemberSerializer
     permission_classes = [IsAuthenticated, CanViewCreateMember, CanEditDeleteMember]
     http_method_names = ["get", "post", "put", "delete", "head"]
+
+    def create(self, request, *args, **kwargs):
+        serializer = MemberCreateSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response({"error": "Data validation failed"}, status=status.HTTP_400_BAD_REQUEST)
+        serializer.save()
+        return Response(data=serializer.data, status=status.HTTP_201_CREATED)
 
     @staticmethod
     def is_last_manager(member):

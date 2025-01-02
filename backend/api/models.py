@@ -122,10 +122,11 @@ class File(models.Model):
 
 class Instrument(models.Model):
     instrument_id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=100)
+    name_pl = models.CharField(max_length=100)
+    name_en = models.CharField(max_length=100)
 
     def __str__(self) -> str:
-        return f"{self.name} ({self.instrument_id})"
+        return f"{self.name_pl}/{self.name_en} ({self.instrument_id})"
 
     class Meta:
         managed = False
@@ -196,7 +197,7 @@ class FileInstrument(models.Model):
     instrument = models.ForeignKey(Instrument, models.CASCADE, related_name="files")
 
     def __str__(self) -> str:
-        return f"{self.file.name} → {self.instrument.name} ({self.file_instrument_id})"
+        return f"{self.file.name} → {self.instrument.name_pl}/{self.instrument.name_en} ({self.file_instrument_id})"
 
     class Meta:
         managed = False
@@ -255,7 +256,7 @@ class UserInstrument(models.Model):
     instrument = models.ForeignKey(Instrument, models.CASCADE, related_name="users")
 
     def __str__(self) -> str:
-        return f"{self.user} → {self.instrument.name} ({self.user_instrument_id})"
+        return f"{self.user} → {self.instrument.name_pl}/{self.instrument.name_en} ({self.user_instrument_id})"
 
     class Meta:
         managed = False

@@ -11,7 +11,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from api.models import Group, Member
-from api.serializers import GroupSerializer
+from api.serializers import GroupSerializer, GroupCreateSerializer
 from api.permissions.group_permissions import CanViewGroup, CanEditDeleteGroup, CanCreateSubgroup
 
 
@@ -22,7 +22,7 @@ class GroupViewSet(viewsets.ModelViewSet):
     http_method_names = ["get", "post", "put", "delete", "head"]
 
     def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
+        serializer = GroupCreateSerializer(data=request.data)
         if not serializer.is_valid():
             return Response({"error": "Data validation failed"}, status=status.HTTP_400_BAD_REQUEST)
         group = serializer.save()

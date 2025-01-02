@@ -5,13 +5,17 @@ Handles API requests regarding file data:
 - getting all files shared with the calling user for an event
 Staff users can do all of the above + list all files or a specific one.
 """
+import io
+
+from django.http import FileResponse
+
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from api.models import File
-from api.serializers import FileSerializer, FileReadSerializer
+from api.serializers import FileSerializer
 from api.models import FileAllowedMember, Event, EventTrack, FileInstrument
 
 from api.permissions.file_permissions import CanViewFile, CanDownloadFile, CanCreateFile, CanDeleteFile
@@ -19,19 +23,23 @@ from api.permissions.file_permissions import CanViewFile, CanDownloadFile, CanCr
 
 class FileViewSet(viewsets.ModelViewSet):
     queryset = File.objects.all()
-    serializer_class = FileReadSerializer # file content hidden from most responses
+    serializer_class = FileSerializer
     permission_classes = [IsAuthenticated, CanViewFile, CanDownloadFile, CanCreateFile, CanDeleteFile]
     http_method_names = ["get", "post", "delete", "head"]
 
     def create(self, request, *args, **kwargs):
-        # TODO: uploading files
-        return Response({"info": "not implemented yet"}, status=status.HTTP_201_CREATED)
+        serializer = self.get_serializer(data=request.data)
+        if not serializer.is_valid():
+            return Response({"error": "Data validation failed"}, status=status.HTTP_400_BAD_REQUEST)
+        file = serializer.save()
+        file.content = request.FILES.get("file").read()
+        file.save()
+        return Response(data=serializer.data, status=status.HTTP_201_CREATED)
 
     @action(detail=True, methods=["get"])
     def download(self, request, pk=None, *args, **kwargs):
-        self.get_object()
-        # TODO: downloading files
-        return Response({"info": "not implemented yet"})
+        file = self.get_object()
+        return FileResponse(io.BytesIO(file.content), filename=file.name, as_attachment=True)
 
     @action(detail=False, methods=["get"])
     def search(self, request):
@@ -39,9 +47,9 @@ class FileViewSet(viewsets.ModelViewSet):
             .filter(user_id=request.user, file__track__track_id=request.GET.get("track_id"),
                     file__name__icontains=request.GET.get("name") or ""))
         files = [ffm.file for ffm in files_for_me]
-        if request.GET.get("instrument") is not None:
-            file_instruments = (FileInstrument.objects.select_related("file", "instrument").defer('file__content')
-                .filter(instrument__name__icontains=request.GET.get("instrument"), file__in=files))
+        if len(request.GET.getlist("instrument_id")) != 0:
+            file_instruments = (FileInstrument.objects.select_related("file").defer('file__content')
+                .filter(file__in=files, instrument_id__in=request.GET.getlist("instrument_id")))
             files = set([fi.file for fi in file_instruments])
         serializer = self.get_serializer(files, many=True)
         return Response(serializer.data)

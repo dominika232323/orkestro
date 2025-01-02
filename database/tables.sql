@@ -65,7 +65,8 @@ ALTER TABLE groups ADD CONSTRAINT groups_pk PRIMARY KEY ( group_id );
 
 CREATE TABLE instruments (
     instrument_id SERIAL NOT NULL,
-    name          VARCHAR(100) NOT NULL
+    name_pl       VARCHAR(100) NOT NULL,
+    name_en       VARCHAR(100) NOT NULL
 );
 
 ALTER TABLE instruments ADD CONSTRAINT instruments_pk PRIMARY KEY ( instrument_id );
