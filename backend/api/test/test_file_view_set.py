@@ -114,16 +114,16 @@ class FileViewSetTestCase(TestCase):
 
     def test_search_by_name(self):
         test_cases = [
-            {"user": self.staff, "track": self.track_1, "expected_status": 200, "expected_count": 0},
-            {"user": self.manager, "track": self.track_1, "expected_status": 200, "expected_count": 0},
-            {"user": self.moderator, "track": self.track_1, "expected_status": 200, "expected_count": 2},
-            {"user": self.musician, "track": self.track_1, "expected_status": 200, "expected_count": 1},
-            {"user": self.outsider, "track": self.track_1, "expected_status": 200, "expected_count": 0},
-            {"user": self.staff, "track": self.track_2, "expected_status": 200, "expected_count": 0},
-            {"user": self.manager, "track": self.track_2, "expected_status": 200, "expected_count": 0},
-            {"user": self.moderator, "track": self.track_2, "expected_status": 200, "expected_count": 0},
-            {"user": self.musician, "track": self.track_2, "expected_status": 200, "expected_count": 2},
-            {"user": self.outsider, "track": self.track_2, "expected_status": 200, "expected_count": 0},
+            {"user": self.staff, "track": self.track_1, "expected_count": 0},
+            {"user": self.manager, "track": self.track_1, "expected_count": 0},
+            {"user": self.moderator, "track": self.track_1, "expected_count": 2},
+            {"user": self.musician, "track": self.track_1, "expected_count": 1},
+            {"user": self.outsider, "track": self.track_1, "expected_count": 0},
+            {"user": self.staff, "track": self.track_2, "expected_count": 0},
+            {"user": self.manager, "track": self.track_2, "expected_count": 0},
+            {"user": self.moderator, "track": self.track_2, "expected_count": 0},
+            {"user": self.musician, "track": self.track_2, "expected_count": 2},
+            {"user": self.outsider, "track": self.track_2, "expected_count": 0},
         ]
 
         for case in test_cases:
@@ -137,7 +137,62 @@ class FileViewSetTestCase(TestCase):
                 response = view(request)
 
                 # Assertions
-                self.assertEqual(response.status_code, case["expected_status"])
+                self.assertEqual(response.status_code, 200)
+                self.assertEqual(len(response.data), case["expected_count"])
+
+    def test_search_by_instrument(self):
+        ins_1_id_list = [self.instrument_1.instrument_id]
+        ins_2_id_list = [self.instrument_2.instrument_id]
+        ins_1_2_id_list = ins_1_id_list + ins_2_id_list
+
+        test_cases = [
+            {"user": self.staff, "track": self.track_1, "instrument_ids": ins_1_id_list, "expected_count": 0},
+            {"user": self.manager, "track": self.track_1, "instrument_ids": ins_1_id_list, "expected_count": 0},
+            {"user": self.moderator, "track": self.track_1, "instrument_ids": ins_1_id_list, "expected_count": 2},
+            {"user": self.musician, "track": self.track_1, "instrument_ids": ins_1_id_list, "expected_count": 1},
+            {"user": self.outsider, "track": self.track_1, "instrument_ids": ins_1_id_list, "expected_count": 0},
+            {"user": self.staff, "track": self.track_2, "instrument_ids": ins_1_id_list, "expected_count": 0},
+            {"user": self.manager, "track": self.track_2, "instrument_ids": ins_1_id_list, "expected_count": 0},
+            {"user": self.moderator, "track": self.track_2, "instrument_ids": ins_1_id_list, "expected_count": 0},
+            {"user": self.musician, "track": self.track_2, "instrument_ids": ins_1_id_list, "expected_count": 0},
+            {"user": self.outsider, "track": self.track_2, "instrument_ids": ins_1_id_list, "expected_count": 0},
+            {"user": self.staff, "track": self.track_1, "instrument_ids": ins_2_id_list, "expected_count": 0},
+            {"user": self.manager, "track": self.track_1, "instrument_ids": ins_2_id_list, "expected_count": 0},
+            {"user": self.moderator, "track": self.track_1, "instrument_ids": ins_2_id_list, "expected_count": 0},
+            {"user": self.musician, "track": self.track_1, "instrument_ids": ins_2_id_list, "expected_count": 0},
+            {"user": self.outsider, "track": self.track_1, "instrument_ids": ins_2_id_list, "expected_count": 0},
+            {"user": self.staff, "track": self.track_2, "instrument_ids": ins_2_id_list, "expected_count": 0},
+            {"user": self.manager, "track": self.track_2, "instrument_ids": ins_2_id_list, "expected_count": 0},
+            {"user": self.moderator, "track": self.track_2, "instrument_ids": ins_2_id_list, "expected_count": 0},
+            {"user": self.musician, "track": self.track_2, "instrument_ids": ins_2_id_list, "expected_count": 2},
+            {"user": self.outsider, "track": self.track_2, "instrument_ids": ins_2_id_list, "expected_count": 0},
+            {"user": self.staff, "track": self.track_1, "instrument_ids": ins_1_2_id_list, "expected_count": 0},
+            {"user": self.manager, "track": self.track_1, "instrument_ids": ins_1_2_id_list, "expected_count": 0},
+            {"user": self.moderator, "track": self.track_1, "instrument_ids": ins_1_2_id_list, "expected_count": 2},
+            {"user": self.musician, "track": self.track_1, "instrument_ids": ins_1_2_id_list, "expected_count": 1},
+            {"user": self.outsider, "track": self.track_1, "instrument_ids": ins_1_2_id_list, "expected_count": 0},
+            {"user": self.staff, "track": self.track_2, "instrument_ids": ins_1_2_id_list, "expected_count": 0},
+            {"user": self.manager, "track": self.track_2, "instrument_ids": ins_1_2_id_list, "expected_count": 0},
+            {"user": self.moderator, "track": self.track_2, "instrument_ids": ins_1_2_id_list, "expected_count": 0},
+            {"user": self.musician, "track": self.track_2, "instrument_ids": ins_1_2_id_list, "expected_count": 2},
+            {"user": self.outsider, "track": self.track_2, "instrument_ids": ins_1_2_id_list, "expected_count": 0},
+        ]
+
+        for case in test_cases:
+            with self.subTest(user=case["user"], track=case["track"], instrument_ids=case["instrument_ids"]):
+                # Simulate a search by instrument
+                request = self.factory.get(
+                    "/api/files/search/",
+                    {"track_id": case["track"].track_id, "instrument_id": case["instrument_ids"]},
+                )
+                force_authenticate(request, user=case["user"])
+
+                # Call the view
+                view = FileViewSet.as_view({"get": "search"})
+                response = view(request)
+
+                # Assertions
+                self.assertEqual(response.status_code, 200)
                 self.assertEqual(len(response.data), case["expected_count"])
 
     def tearDown(self):
