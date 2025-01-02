@@ -1,6 +1,7 @@
 import { faCheck, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
+import {axiosInstance as axios} from "../auth";
 import {Invitation} from "../interfaces";
 
 
@@ -9,6 +10,22 @@ interface Params {
 }
 
 export default function InvitationComponent({invitation}: Params) {
+  const handleAccept = async () => {
+    await axios.post(`/api/invitations/${invitation.invitation_id}/accept/`)
+    .then(() => {
+      console.log(`Successfully accepted invitation ${invitation.invitation_id}`);
+    })
+    .catch((error) => console.error(`Error accepting invitation ${invitation.invitation_id}:`, error));
+  }
+
+  const handleReject = async () => {
+    await axios.post(`/api/invitations/${invitation.invitation_id}/reject/`)
+    .then(() => {
+      console.log(`Successfully rejected invitation ${invitation.invitation_id}`);
+    })
+    .catch((error) => console.error(`Error rejecting invitation ${invitation.invitation_id}:`, error));
+  }
+
   return (
     <li
       id={String(invitation.invitation_id)}
@@ -19,12 +36,14 @@ export default function InvitationComponent({invitation}: Params) {
         <button
           className="w-10 h-10 bg-green-500 hover:bg-green-600 text-white rounded-full flex items-center justify-center transition-colors"
           title="Accept"
+          onClick={handleAccept}
         >
           <FontAwesomeIcon icon={faCheck} />
         </button>
         <button
           className="w-10 h-10 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center transition-colors"
           title="Reject"
+          onClick={handleReject}
         >
           <FontAwesomeIcon icon={faTimes} />
         </button>
