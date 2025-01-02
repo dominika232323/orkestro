@@ -2,10 +2,11 @@
 Contains segments of code used in x_permissions.py files:
 - checking permissions of the calling user within a group
 - checking whether the calling user is the author of the message in message_recipient
+- checking whether two users share a group
 - finding an object's group (if the object is invalid, None is returned, which fails is_... checks)
 """
 
-from api.models import Event, Message, Track, File
+from api.models import Event, Message, Track, File, Member
 
 
 def is_manager(request, group_id):
@@ -34,6 +35,16 @@ def is_author(request, message_id):
         return request.user.user_id == message.user_id
     except Message.DoesNotExist:
         return None
+
+
+def have_common_group(caller_id, user_id):
+    caller_memberships = Member.objects.filter(user_id=caller_id)
+    user_memberships = Member.objects.filter(user_id=user_id)
+    for cm in caller_memberships:
+        for um in user_memberships:
+            if cm.group_id == um.group_id:
+                return True
+    return False
 
 
 def get_group_by_event_id(event_id):

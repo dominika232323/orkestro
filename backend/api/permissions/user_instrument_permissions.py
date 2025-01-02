@@ -3,26 +3,16 @@ Verifies permission to interact with user instrument data (see user_instrument_v
 """
 from rest_framework.permissions import BasePermission
 
-from api.models import Member
+from api.permissions.common_checks import have_common_group
 
 
 class CanViewUserInstrument(BasePermission):
-    @staticmethod
-    def have_common_group(caller_id, user_id):
-        caller_memberships = Member.objects.filter(user_id=caller_id)
-        user_memberships = Member.objects.filter(user_id=user_id)
-        for cm in caller_memberships:
-            for um in user_memberships:
-                if cm.group_id == um.group_id:
-                    return True
-        return False
-
     def has_permission(self, request, view):
         if request.method != "GET" or request.user.is_staff:
             return True
         if view.action != "by_user":
             return False
-        return self.have_common_group(request.user.user_id, request.GET.get("user_id"))
+        return str(request.user.user_id) == request.GET.get("user_id") or have_common_group(request.user.user_id, request.GET.get("user_id"))
 
 
 class CanCreateUserInstrument(BasePermission):
