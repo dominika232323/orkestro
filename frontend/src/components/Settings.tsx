@@ -11,13 +11,6 @@ export default function Settings() {
   const { t } = useLanguage();
   const [user, setUser] = useState<User>();
   const [userInstruments, setUserInstruments] = useState<UserInstrument[]>([]);
-  // const [person, setPerson] = useState({
-  //   name: "Jan",
-  //   surname: "Kowalski",
-  //   email: "jan.kowalski@gmail.com",
-  //   googleCalendar: "Google Calendar",
-  //   instruments: ["Violin", "Flute", "Guitar"],
-  // });
   const [newInstrument, setNewInstrument] = useState<string>("");
 
   useEffect(() => {
@@ -60,14 +53,18 @@ export default function Settings() {
     }
   };
 
-  // const handleRemoveInstrument = (instrumentToRemove: string) => {
-  //   setPerson((prev) => ({
-  //   ...prev,
-  //   instruments: prev.instruments.filter(
-  //     (instrument) => instrument !== instrumentToRemove
-  //   ),
-  //   }));
-  // };
+  const handleRemoveInstrument = async (user_instrument_id: number) => {
+    await axios.delete(`/api/user-instruments/${user_instrument_id}/`)
+    .then(() => {
+      console.log(`Successfully deleted user instrument ${user_instrument_id}`);
+      setUserInstruments((prev) => (
+        prev.filter(
+          (user_instrument) => user_instrument.user_instrument_id !== user_instrument_id
+        )
+      ))
+    })
+    .catch((error) => console.error(`Error deleting user instrument ${user_instrument_id}:`, error));
+  };
 
   return (
     <div className="bg-gray-200 p-6 rounded-lg shadow-md max-w-4xl mx-auto mt-8">
@@ -122,7 +119,7 @@ export default function Settings() {
             <span>{user_instrument.instrument_details.name_en}</span> {/* TODO: language */}
             <button
               className="p-2 text-red-500 hover:text-red-600"
-              // onClick={() => handleRemoveInstrument(instrument)}
+              onClick={() => handleRemoveInstrument(user_instrument.user_instrument_id)}
             >
               <FontAwesomeIcon icon={faXmark} />
             </button>
