@@ -100,27 +100,26 @@ class InvitationViewSetTestCase(TestCase):
                 self.assertEqual(response.status_code, case["expected_status"])
                 self.assertEqual(response.data["error"], "Data validation failed")
 
-    # TODO {'detail': ErrorDetail(string='You do not have permission to perform this action.', code='permission_denied')}
-    # def test_accept_invitation(self):
-    #     invitation = Invitation.objects.create(group=self.group, user=self.outsider, permission_level="C")
-    #
-    #     # Authenticate the outsider (invitee)
-    #     request = self.factory.post(f"/api/invitations/{invitation.invitation_id}/accept/")
-    #     force_authenticate(request, user=self.outsider)
-    #
-    #     # Call the accept method
-    #     view = InvitationViewSet.as_view({"post": "accept"})
-    #     response = view(request, pk=invitation.invitation_id)
-    #
-    #     # Assertions
-    #     self.assertEqual(response.status_code, 204)
-    #     self.assertFalse(Invitation.objects.filter(pk=invitation.invitation_id).exists())
-    #
-    #     # Check if a membership was created
-    #     membership = Member.objects.filter(
-    #         group=self.group, user=self.outsider, permission_level="C"
-    #     )
-    #     self.assertTrue(membership.exists())
+    def test_accept_invitation(self):
+        invitation = Invitation.objects.create(group=self.group, user=self.outsider, permission_level="C")
+
+        # Authenticate the outsider (invitee)
+        request = self.factory.post(f"/api/invitations/{invitation.invitation_id}/accept/")
+        force_authenticate(request, user=self.outsider)
+
+        # Call the accept method
+        view = InvitationViewSet.as_view({"post": "accept"})
+        response = view(request, pk=invitation.invitation_id)
+
+        # Assertions
+        self.assertEqual(response.status_code, 204)
+        self.assertFalse(Invitation.objects.filter(pk=invitation.invitation_id).exists())
+
+        # Check if a membership was created
+        membership = Member.objects.filter(
+            group=self.group, user=self.outsider, permission_level="C"
+        )
+        self.assertTrue(membership.exists())
 
     def test_accept_invitation_invalid_user(self):
         invitation = Invitation.objects.create(group=self.group, user=self.outsider, permission_level="C")
@@ -137,21 +136,20 @@ class InvitationViewSetTestCase(TestCase):
         self.assertEqual(response.status_code, 403)
         self.assertTrue(Invitation.objects.filter(pk=invitation.invitation_id).exists())
 
-    # TODO
-    # def test_reject_invitation(self):
-    #     invitation = Invitation.objects.create(group=self.group, user=self.outsider, permission_level="C")
-    #
-    #     # Authenticate the outsider (invitee)
-    #     request = self.factory.post(f"/api/invitations/{invitation.invitation_id}/reject/")
-    #     force_authenticate(request, user=self.outsider)
-    #
-    #     # Call the reject method
-    #     view = InvitationViewSet.as_view({"post": "reject"})
-    #     response = view(request, pk=invitation.invitation_id)
-    #
-    #     # Assertions
-    #     self.assertEqual(response.status_code, 204)
-    #     self.assertFalse(Invitation.objects.filter(pk=invitation.invitation_id).exists())
+    def test_reject_invitation(self):
+        invitation = Invitation.objects.create(group=self.group, user=self.outsider, permission_level="C")
+
+        # Authenticate the outsider (invitee)
+        request = self.factory.post(f"/api/invitations/{invitation.invitation_id}/reject/")
+        force_authenticate(request, user=self.outsider)
+
+        # Call the reject method
+        view = InvitationViewSet.as_view({"post": "reject"})
+        response = view(request, pk=invitation.invitation_id)
+
+        # Assertions
+        self.assertEqual(response.status_code, 204)
+        self.assertFalse(Invitation.objects.filter(pk=invitation.invitation_id).exists())
 
     def test_reject_invitation_invalid_user(self):
         invitation = Invitation.objects.create(group=self.group, user=self.outsider, permission_level="C")
