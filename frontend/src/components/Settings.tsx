@@ -52,13 +52,13 @@ export default function Settings() {
         <div className="h-32 w-32">
           {user && user.profile_picture_url ?
             <img
-              className="w-full rounded-full"
+              className="h-full w-full rounded-full"
               src={user.profile_picture_url}
               alt="profile-picture"
             />
             :
             <FontAwesomeIcon
-              className="w-full text-gray-700 rounded-full"
+              className="h-full w-full text-gray-700 rounded-full"
               icon={faCircleUser}
             />
           }
