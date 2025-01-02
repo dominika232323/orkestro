@@ -43,11 +43,8 @@ export default function Settings() {
       .then((response) => {
         const newUserInstrument: UserInstrument = response.data;
         console.log(`Successfully added user instrument ${newUserInstrument.user_instrument_id}`);
+        setUserInstruments([...userInstruments, newUserInstrument]);
         setNewInstrument("");
-        setUserInstruments((prev) => ([
-          ...prev,
-          newUserInstrument,
-        ]))
       })
       .catch((error) => console.error("Error adding user instrument:", error));
     }
