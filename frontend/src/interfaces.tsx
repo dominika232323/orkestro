@@ -15,18 +15,25 @@ export interface Group {
     supergroup: number;
 }
 
-export interface Instrument {
-    instrument_id: number;
-    name_pl: string;
-    name_en: string;
-}
-
 export interface Invitation {
     invitation_id: number;
     group: number;
     group_details: Group;
     user: number;
     permission_level: string;
+}
+
+export interface Instrument {
+    instrument_id: number;
+    name_pl: string;
+    name_en: string;
+}
+
+export interface UserInstrument {
+    user_instrument_id: number;
+    user: number;
+    instrument: number;
+    instrument_details: Instrument;
 }
 
 export interface Message {
@@ -47,11 +54,4 @@ export interface MessageRecipient {
     user: number;
     user_details: User;
     is_read: boolean;
-}
-
-export interface UserInstrument {
-    user_instrument_id: number;
-    user: number;
-    instrument: number;
-    instrument_details: Instrument;
 }
