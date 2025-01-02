@@ -10,6 +10,60 @@ class MemberViewSetTestCase(TestCase):
         self.staff, self.manager, self.moderator, self.musician, self.outsider, self.unauthenticated, self.group = basic_setup()
         self.factory = APIRequestFactory()
 
+    def test_create_access(self):
+        test_cases = [
+            {"user": self.staff, "expected_status": 201},
+            {"user": self.manager, "expected_status": 403},
+            {"user": self.moderator, "expected_status": 403},
+            {"user": self.musician, "expected_status": 403},
+            {"user": self.outsider, "expected_status": 403},
+        ]
+
+        for case in test_cases:
+            with self.subTest(user=case["user"]):
+                # Prepare valid data
+                member_data = {
+                    "group": self.group.group_id,
+                    "user": self.outsider.user_id,
+                    "permission_level": "C"
+                }
+
+                # Create a request
+                request = self.factory.post("/api/members/", member_data, format="json")
+                force_authenticate(request, user=case["user"])
+
+                # Instantiate the view and call the create method
+                view = MemberViewSet.as_view({"post": "create"})
+                response = view(request)
+
+                # Assertions
+                self.assertEqual(response.status_code, case["expected_status"])
+
+                if response.status_code == 201:
+                    self.assertEqual(response.data["group"], self.group.group_id)
+                    self.assertEqual(response.data["user"], self.outsider.user_id)
+                    self.assertEqual(response.data["permission_level"], "C")
+
+    def test_create_invalid_data(self):
+        # Prepare invalid data
+        member_data = {
+            "group": "self.group.group_id",
+            "user": self.outsider.user_id,
+            "permission_lever": "C"
+        }
+
+        # Create a request
+        request = self.factory.post("/api/members/", member_data, format="json")
+        force_authenticate(request, user=self.staff)
+
+        # Instantiate the view and call the create method
+        view = MemberViewSet.as_view({"post": "create"})
+        response = view(request)
+
+        # Assertions
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.data["error"], "Data validation failed")
+
     def test_by_group(self):
         # Define test cases with expected outcomes
         test_cases = [
