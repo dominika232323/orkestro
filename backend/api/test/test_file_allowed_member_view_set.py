@@ -46,6 +46,32 @@ class FileAllowedMemberViewSetTestCase(TestCase):
         self.assertEqual(response.status_code, 204)
         self.assertFalse(FileAllowedMember.objects.filter(file_allowed_member_id=self.file_allowed_manager2.file_allowed_member_id).exists())
 
+    def test_by_file(self):
+        # Define test cases with expected outcomes
+        test_cases = [
+            {"user": self.staff, "expected_status": 200, "expected_count": 2},
+            {"user": self.manager, "expected_status": 200, "expected_count": 2},
+            {"user": self.moderator, "expected_status": 200, "expected_count": 2},
+            {"user": self.musician, "expected_status": 200, "expected_count": 2},
+            {"user": self.outsider, "expected_status": 403, "expected_count": 0},
+        ]
+
+        for case in test_cases:
+            with self.subTest(user=case["user"]):
+                # Authenticate as a member who can view the file
+                request = self.factory.get("/api/file-allowed-members/by_file/", {"file_id": self.file.file_id})
+                force_authenticate(request, user=case["user"])
+
+                view = FileAllowedMemberViewSet.as_view({"get": "by_file"})
+                response = view(request)
+
+                # Assert response status code
+                self.assertEqual(response.status_code, case["expected_status"])
+
+                # Assert the event count for valid responses
+                if case["expected_status"] == 200:
+                    self.assertEqual(len(response.data), case["expected_count"])
+
     def tearDown(self):
         self.file_allowed_manager.delete()
         self.file_allowed_musician.delete()
