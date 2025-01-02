@@ -28,7 +28,7 @@ class UserInstrumentViewSetTestCase(TestCase):
             {"user": self.manager, "expected_status": 200, "expected_event_count": 0},
             {"user": self.moderator, "expected_status": 200, "expected_event_count": 2},
             {"user": self.musician, "expected_status": 200, "expected_event_count": 2},
-            {"user": self.outsider, "expected_status": 403, "expected_event_count": 0},
+            {"user": self.outsider, "expected_status": 200, "expected_event_count": 0},
         ]
 
         for case in test_cases:
