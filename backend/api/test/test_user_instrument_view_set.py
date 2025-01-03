@@ -34,7 +34,7 @@ class UserInstrumentViewSetTestCase(TestCase):
         for case in test_cases:
             with self.subTest(user=case["user"]):
                 # Create and authenticate the request
-                request = self.factory.get(f"/api/user-instruments/by_user/?user_id={case["user"].user_id}")
+                request = self.factory.get(f"/api/user-instruments/by_user/?user_id={case['user'].user_id}")
                 force_authenticate(request, user=case["user"])
                 response = UserInstrumentViewSet.as_view({'get': 'by_user'})(request)
 

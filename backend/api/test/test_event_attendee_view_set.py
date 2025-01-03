@@ -50,7 +50,7 @@ class EventAttendeeViewSetTestCase(TestCase):
         for case in test_cases:
             with self.subTest(event=case["event"]):
                 # Create and authenticate the request
-                request = self.factory.get(f"/api/event-attendees/by_event/?event_id={case["event"].event_id}")
+                request = self.factory.get(f"/api/event-attendees/by_event/?event_id={case['event'].event_id}")
                 force_authenticate(request, user=self.staff)
                 response = EventAttendeeViewSet.as_view({'get': 'by_event'})(request)
 

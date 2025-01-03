@@ -99,7 +99,7 @@ class MessageRecipientViewSetTestCase(TestCase):
         for case in test_cases:
             with self.subTest(message_recipient=case["message_recipient"]):
                 # Create and authenticate the request
-                request = self.factory.post(f"/api/message-recipients/{case["message_recipient"].message_recipient_id}/mark_as_read/")
+                request = self.factory.post(f"/api/message-recipients/{case['message_recipient'].message_recipient_id}/mark_as_read/")
                 force_authenticate(request, user=self.staff)
                 response = MessageRecipientViewSet.as_view({'post': 'mark_as_read'})(request, pk=case["message_recipient"].message_recipient_id)
 

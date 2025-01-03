@@ -18,7 +18,7 @@ class EventTrackViewSetTestCase(TestCase):
     def test_create_access(self):
         test_cases = [
             {"user": self.staff, "expected_status": 201},
-            # {"user": self.manager, "expected_status": 201},           # TODO Check permissions because in tests returns status 403
+            {"user": self.manager, "expected_status": 201},
             {"user": self.moderator, "expected_status": 403},
             {"user": self.musician, "expected_status": 403},
             {"user": self.outsider, "expected_status": 403},
@@ -46,6 +46,7 @@ class EventTrackViewSetTestCase(TestCase):
                 if response.status_code == 201:
                     self.assertEqual(response.data["event"], self.event.event_id)
                     self.assertEqual(response.data["track"], self.track.track_id)
+                    EventTrack.objects.get(event_track_id=response.data["event_track_id"]).delete()
 
     def test_create_invalid_data(self):
         # Prepare invalid data
@@ -91,7 +92,7 @@ class EventTrackViewSetTestCase(TestCase):
         for case in test_cases:
             with self.subTest(track=case["track"]):
                 # Create and authenticate the request
-                request = self.factory.get(f"/api/event-tracks/by_track/?track_id={case["track"].track_id}")
+                request = self.factory.get(f"/api/event-tracks/by_track/?track_id={case['track'].track_id}")
                 force_authenticate(request, user=self.staff)
                 response = EventTrackViewSet.as_view({'get': 'by_track'})(request)
 

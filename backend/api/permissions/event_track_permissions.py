@@ -12,14 +12,14 @@ class CanViewEventTrack(BasePermission):
             return True
         if view.action != "by_track":
             return False
-        return is_member(request, get_group_by_track_id(request.GET.get("track_id")))
+        return is_member(request, get_group_by_track_id(request.GET.get("track")))
 
 
 class CanCreateEventTrack(BasePermission):
     def has_permission(self, request, view):
         if request.method != "POST" or request.user.is_staff:
             return True
-        return is_manager(request, get_group_by_track_id(request.data.get("track_id")))
+        return is_manager(request, get_group_by_track_id(request.data.get("track")))
 
 
 class CanDeleteEventTrack(BasePermission):

@@ -220,7 +220,7 @@ class FileViewSetTestCase(TestCase):
         for case in test_cases:
             with self.subTest(user=case["user"], event=case["event"]):
                 # Create a request to fetch files for the event
-                request = self.factory.get(f"/api/files/me_by_event/?event_id={case["event"].event_id}")
+                request = self.factory.get(f"/api/files/me_by_event/?event_id={case['event'].event_id}")
                 force_authenticate(request, user=case["user"])
 
                 # Call the view

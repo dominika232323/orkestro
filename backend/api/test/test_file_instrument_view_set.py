@@ -43,7 +43,7 @@ class FileInstrumentViewSetTestCase(TestCase):
         for case in test_cases:
             with self.subTest(user=case["user"], file=case["file"]):
                 # Create and authenticate the request
-                request = self.factory.get(f"/api/file-instruments/by_file/?file_id={case["file"].file_id}")
+                request = self.factory.get(f"/api/file-instruments/by_file/?file_id={case['file'].file_id}")
                 force_authenticate(request, user=case["user"])
                 response = FileInstrumentViewSet.as_view({'get': 'by_file'})(request)
 
