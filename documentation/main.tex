@@ -802,15 +802,53 @@ Wybraliśmy relacyjną bazę danych PostgreSQL, z którą warstwa przetwarzania 
 
 Repozytorium projektu: \href{https://gitlab-stud.elka.pw.edu.pl/zgromadzeni/orkestro}{https://gitlab-stud.elka.pw.edu.pl/zgromadzeni/orkestro}
 
+\subsection{Metody realizacji}
+
 \textcolor{red}{TODO}
+
+ii. Lista języków programowania, bibliotek i środowisk
 
 Obowiązkowo określenie metod realizacji: języki programowania, frameworki, środowisko programowania/ uruchamiania/ wdrażania, środowisko ciągłej integracji]
 
-Obowiązkowo Diagram klas lub model pojęciowy struktury informacyjnej: E-R l
+\subsection{Struktura klas}
 
-Opcjonalnie model struktury systemu (diagram wdrożenia)
+W backendzie występuje duża liczba klas, które można podzielić na grupy funkcjonalne - dla lepszej przejrzystości struktura klas zostanie przedstawiona na kilku diagramach dla każdej takiej grupy. Na diagramach pojawią się klasy dostarczone przez Django, ponieważ praca z tym frameworkiem opiera się o pisanie klas pochodnych dostosowujących typowo spotykaną funkcjonalność aplikacji do danego projektu i oferujących dodatkowe funkcje. Wiele z tych klas ma dużą liczbę pól i metod oraz złożony schemat dziedziczenia - dla uproszczenia pokazujemy jedną klasę bazową z własnymi/odziedziczonymi elementami istotnymi dla aplikacji.
 
-Opcjonalnie specyfikacja realizacji przypadków użycia: diagramy sekwencji lub współpracy
+Jako argumenty czy zwracane typy funkcji wykorzystywane są dodatkowe klasy Django:
+\begin{itemize}
+\item request: zapytanie HTTP
+\item Response: odpowiedź HTTP
+\item view/View - funkcja przetwarzająca zapytanie
+\item QuerySet - dane z zapytania do bazy danych
+\end{itemize}
+
+"Zbiorczy" diagram klas (poszczególne grupy klas zebrane pod jedną nazwą, zaznaczone związki występują w pewnej formie pomiędzy klasami w grupach):
+
+\begin{figure} [H]
+    \centering
+    \includegraphics[width=0.4\linewidth]{images/general.png}
+    \caption{Ogólny diagram klas}
+\end{figure}
+
+\subsubsection{Model}
+
+\subsubsection{ViewSet}
+
+\subsubsection{Permission}
+
+Klasy dziedziczące po \texttt{BasePermission} służą do weryfikacji, czy użytkownik ma uprawnienia do wykonania danej akcji w \texttt{ViewSet} (wszystkie zawarte w nim klasy muszą na to pozwolić, by zrealizować zapytanie). Uprawnienie może dotyczyć zapytań zbiorowych i konkretnego obiektu.
+
+\begin{figure} [H]
+    \centering
+    \includegraphics[width=0.95\linewidth]{images/permissions.png}
+    \caption{Struktura klas typu Permission}
+\end{figure}
+
+\textcolor{red}{TODO}
+
+\subsection{Statystyki}
+
+\textcolor{red}{TODO}
 
 Obowiązkowo statystyki: liczba plików, linie kodu, liczba testów jednostkowych
 
