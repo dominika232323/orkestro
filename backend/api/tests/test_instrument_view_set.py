@@ -2,8 +2,8 @@ from django.test import TestCase
 from rest_framework.test import APIRequestFactory, force_authenticate
 
 from api.models import Instrument
-from api.view_set.instrument_view_set import InstrumentViewSet
-from api.test.common_setups import basic_setup, basic_setup_teardown
+from api.views.instrument_view_set import InstrumentViewSet
+from api.tests.common_setups import basic_setup, basic_setup_teardown
 
 
 class InstrumentViewSetTestCase(TestCase):

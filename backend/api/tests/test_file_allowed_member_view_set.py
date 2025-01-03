@@ -3,8 +3,8 @@ from django.utils import timezone
 from rest_framework.test import APIRequestFactory, force_authenticate
 
 from api.models import Track, File, User, Member, FileAllowedMember
-from api.test.common_setups import basic_setup, basic_setup_teardown
-from api.view_set.file_allowed_member_view_set import FileAllowedMemberViewSet
+from api.tests.common_setups import basic_setup, basic_setup_teardown
+from api.views.file_allowed_member_view_set import FileAllowedMemberViewSet
 
 
 class FileAllowedMemberViewSetTestCase(TestCase):

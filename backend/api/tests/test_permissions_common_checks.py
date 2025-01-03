@@ -5,7 +5,7 @@ from rest_framework.test import APIRequestFactory
 from api.models import Event, Message, Track, File
 from api.permissions.common_checks import get_group_by_event_id, get_group_by_message_id, get_group_by_track_id, \
     get_group_by_file_id, is_manager, is_moderator, is_member, is_author
-from api.test.common_setups import basic_setup, basic_setup_teardown
+from api.tests.common_setups import basic_setup, basic_setup_teardown
 
 
 class PermissionsCommonChecksTestCase(TestCase):

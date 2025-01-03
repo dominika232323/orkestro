@@ -3,8 +3,6 @@ from django.utils import timezone
 from google.auth.transport import requests
 from google.oauth2 import id_token
 from rest_framework import status
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -96,14 +94,3 @@ class GoogleLoginView(APIView):
                 {"error": "Bad request", "details": str(e)},
                 status=status.HTTP_400_BAD_REQUEST
             )
-
-
-@api_view(["GET"])
-def hello_world(request):
-    return Response({"text": "Hello, world!"})
-
-
-@api_view(["GET"])
-@permission_classes([IsAuthenticated])
-def hello_protected(request):
-    return Response({"text": f"Hello, {request.user.email}!"})

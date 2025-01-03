@@ -2,8 +2,8 @@ from django.test import TestCase
 from rest_framework.test import APIRequestFactory, force_authenticate
 
 from api.models import Group
-from api.test.common_setups import basic_setup, basic_setup_teardown
-from api.view_set.user_view_set import UserViewSet
+from api.tests.common_setups import basic_setup, basic_setup_teardown
+from api.views.user_view_set import UserViewSet
 
 
 class UserViewSetTestCase(TestCase):

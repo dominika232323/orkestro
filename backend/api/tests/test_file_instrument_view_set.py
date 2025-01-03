@@ -2,8 +2,8 @@ from django.test import TestCase
 from rest_framework.test import APIRequestFactory, force_authenticate
 
 from api.models import Track, File, Instrument, FileInstrument
-from api.test.common_setups import basic_setup, basic_setup_teardown
-from api.view_set.file_instrument_view_set import FileInstrumentViewSet
+from api.tests.common_setups import basic_setup, basic_setup_teardown
+from api.views.file_instrument_view_set import FileInstrumentViewSet
 
 
 class FileInstrumentViewSetTestCase(TestCase):

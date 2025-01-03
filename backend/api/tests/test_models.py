@@ -3,7 +3,7 @@ from django.utils import timezone
 
 from api.models import User, Group, Event, Message, MessageRecipient, Track, EventAttendee, EventTrack, Member, \
     Instrument, File, FileAllowedMember, FileInstrument, Invitation, UserInstrument
-from api.test.common_setups import basic_setup, basic_setup_teardown
+from api.tests.common_setups import basic_setup, basic_setup_teardown
 
 
 class UserModelTests(TestCase):

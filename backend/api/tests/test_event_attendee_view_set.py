@@ -3,9 +3,9 @@ from django.test import TestCase
 from rest_framework.test import APIRequestFactory, force_authenticate
 
 from api.models import Event, EventAttendee
-from api.test.common_setups import basic_setup, basic_setup_teardown
-from api.view_set.event_attendee_view_set import EventAttendeeViewSet
-from api.view_set.event_view_set import EventViewSet
+from api.tests.common_setups import basic_setup, basic_setup_teardown
+from api.views.event_attendee_view_set import EventAttendeeViewSet
+from api.views.event_view_set import EventViewSet
 
 
 class EventAttendeeViewSetTestCase(TestCase):

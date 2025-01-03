@@ -3,8 +3,8 @@ from django.utils import timezone
 from rest_framework.test import APIRequestFactory, force_authenticate
 
 from api.models import Instrument, UserInstrument
-from api.test.common_setups import basic_setup, basic_setup_teardown
-from api.view_set.user_instrument_view_set import UserInstrumentViewSet
+from api.tests.common_setups import basic_setup, basic_setup_teardown
+from api.views.user_instrument_view_set import UserInstrumentViewSet
 
 
 class UserInstrumentViewSetTestCase(TestCase):

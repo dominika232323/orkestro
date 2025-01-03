@@ -3,8 +3,8 @@ from django.test import TestCase
 from rest_framework.test import APIRequestFactory, force_authenticate
 
 from api.models import Event, Track, EventTrack
-from api.test.common_setups import basic_setup_teardown, basic_setup
-from api.view_set.event_track_view_set import EventTrackViewSet
+from api.tests.common_setups import basic_setup_teardown, basic_setup
+from api.views.event_track_view_set import EventTrackViewSet
 
 
 class EventTrackViewSetTestCase(TestCase):

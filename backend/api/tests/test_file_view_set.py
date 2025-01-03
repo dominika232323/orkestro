@@ -5,8 +5,8 @@ from django.utils import timezone
 from rest_framework.test import APIRequestFactory, force_authenticate
 
 from api.models import File, Track, Instrument, FileInstrument, FileAllowedMember, Event, EventTrack
-from api.test.common_setups import basic_setup, basic_setup_teardown
-from api.view_set.file_view_set import FileViewSet
+from api.tests.common_setups import basic_setup, basic_setup_teardown
+from api.views.file_view_set import FileViewSet
 
 
 class FileViewSetTestCase(TestCase):

@@ -1,8 +1,8 @@
 from django.test import TestCase
 from rest_framework.test import APIRequestFactory, force_authenticate
 
-from api.test.common_setups import basic_setup, basic_setup_teardown
-from api.views import hello_protected, hello_world
+from api.tests.common_setups import basic_setup, basic_setup_teardown
+from api.views.debug_views import hello_protected, hello_world
 
 
 class ViewTestCase(TestCase):

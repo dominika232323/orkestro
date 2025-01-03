@@ -3,8 +3,8 @@ from django.test import TestCase
 from rest_framework.test import APIRequestFactory, force_authenticate
 
 from api.models import Track, Event, EventTrack, Instrument, FileInstrument, File
-from api.test.common_setups import basic_setup, basic_setup_teardown
-from api.view_set.track_view_set import TrackViewSet
+from api.tests.common_setups import basic_setup, basic_setup_teardown
+from api.views.track_view_set import TrackViewSet
 
 
 class TrackViewSetTestCase(TestCase):
