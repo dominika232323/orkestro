@@ -41,7 +41,7 @@ router.register(r"user-instruments", UserInstrumentViewSet)
 urlpatterns = [
     path("", include(router.urls)),
     path("login-google/", GoogleLoginView.as_view(), name="api_google_login"),
-    path("token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
+    path("token-refresh/", TokenRefreshView.as_view(), name="token_refresh"),
     path("hello-world/", hello_world, name="hello_world"),
     path("hello-protected/", hello_protected, name="hello_protected"),
 ]

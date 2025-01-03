@@ -52,7 +52,7 @@ axiosInstance.interceptors.response.use(
                 const refreshToken = getRefreshToken();
                 if (refreshToken) {
                     const response = await axios.post(
-                        `/api/token/refresh/`,
+                        "/api/token-refresh/",
                         {refresh: refreshToken}
                     );
                     setAccessToken(response.data.access);
