@@ -1,7 +1,7 @@
 """
 Contains setUp/tearDown elements that are used in multiple test classes.
 """
-from datetime import datetime, timezone
+from django.utils import timezone
 
 from api.models import User, Group, Member
 
@@ -9,7 +9,7 @@ from api.models import User, Group, Member
 def basic_setup():
     group = Group.objects.create(name="Group")
 
-    now = datetime.now(timezone.utc)
+    now = timezone.now()
     staff = User.objects.create(email="staff@a.com", name="Staf", surname="F",date_joined=now,
                                 is_staff=True, is_superuser=True)
     manager = User.objects.create(email="manager@a.com", name="Manage", surname="R", date_joined=now)
