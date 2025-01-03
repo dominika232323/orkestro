@@ -5,7 +5,7 @@ import {jwtDecode} from "jwt-decode";
 import {User} from "./interfaces";
 
 
-const access_token_lifetime: number = 0.020833  // 30 minutes
+const access_token_lifetime: number = 1 / 24  // 1 hour
 const refresh_token_lifetime: number = 1  // 1 day
 
 export function getAccessToken() {
