@@ -36,7 +36,7 @@ export default function InvitationComponent({invitation, onActionComplete}: Para
     >
       <div>
         <p className="text-lg font-semibold mb-1">{invitation.group_details.name}</p>
-        <p className="">{invitation.group_details.description}</p>
+        <p>{invitation.group_details.description}</p>
       </div>
       <div className="flex items-center gap-4">
         <button
