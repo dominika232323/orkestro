@@ -16,10 +16,10 @@ export interface Group {
 }
 
 export interface GroupWithSubgroups {
-    group_id: number;
-    name: string;
-    description: string;
-    subgroups: GroupWithSubgroups[];
+  group_id: number;
+  name: string;
+  description: string;
+  subgroups: GroupWithSubgroups[];
 }
 
 export interface Invitation {
@@ -70,4 +70,11 @@ export interface Event {
   description: string;
   date: Date;
   place: string;
+}
+
+export interface Member {
+  member_id: number;
+  group: number;
+  user: number;
+  permission_level: string;
 }

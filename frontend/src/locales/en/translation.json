@@ -76,7 +76,7 @@
     "add-file": "New file",
     "search-placeholder": "Search files…"
   },
-  "manage-groups": {
+  "manage-group": {
     "title": "Manage group",
     "group-name": "Group name",
     "group-description": "Description",
@@ -94,6 +94,10 @@
     "cancel-filter": "Cancel filter",
     "messages": "Messages",
     "send-messages": "New message",
+    "page": "Page",
+    "search": "Search"
+  },
+  "pagination": {
     "page": "Page"
   }
 }
