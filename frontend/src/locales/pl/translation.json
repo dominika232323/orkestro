@@ -12,11 +12,11 @@
   "login-page": {
     "description": "Zarządzaj zespołami muzycznymi, wysyłaj wiadomości i dziel się plikami w jednym miejscu.",
     "login": "Zaloguj się",
-    "select-language": "Wybierz język:"
+    "select-language": "Wybierz język"
   },
   "invitations": {
     "title": "Zaproszenia",
-    "no-invitations": "Brak zaproszeń"
+    "no-invitations": "Brak oczekujących zaproszeń"
   },
   "invitations-and-groups": {
     "title": "Grupy"
@@ -62,7 +62,7 @@
     "no-events": "Brak wydarzeń dla wybranej grupy",
     "add-event": "Nowe wydarzenie",
     "prev": "Poprzedni",
-    "next": "Następni",
+    "next": "Następny",
     "page": "Strona"
   },
   "files": {
@@ -70,7 +70,7 @@
     "no-files": "Brak plików dla wybranej grupy",
     "download": "Pobierz",
     "add-file": "Nowy plik",
-    "search-placeholder": "Znajdź pliki..."
+    "search-placeholder": "Wyszukaj pliki…"
   },
   "manage-groups": {
     "title": "Zarządzaj grupą",
@@ -86,7 +86,7 @@
     "no-members": "Brak członków grupy",
     "previous": "Poprzedni",
     "next": "Następni",
-    "search-placeholder": "Znajdź użytkowników...",
+    "search-placeholder": "Wyszukaj użytkowników…",
     "cancel-filter": "Usuń filtr",
     "messages": "Wiadomości",
     "send-messages": "Nowa wiadomość",

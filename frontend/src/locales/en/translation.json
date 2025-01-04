@@ -12,11 +12,11 @@
   "login-page": {
     "description": "Manage music groups, send messages and share files in one place.",
     "login": "Login",
-    "select-language": "Select language:"
+    "select-language": "Select language"
   },
   "invitations": {
     "title": "User invitations",
-    "no-invitations": "No active invitations"
+    "no-invitations": "No pending invitations"
   },
   "invitations-and-groups": {
     "title": "Groups"
@@ -70,7 +70,7 @@
     "no-files": "No files for selected group",
     "download": "Download",
     "add-file": "New file",
-    "search-placeholder": "Search files..."
+    "search-placeholder": "Search files…"
   },
   "manage-groups": {
     "title": "Manage group",
@@ -86,7 +86,7 @@
     "no-members": "No members",
     "previous": "Previous",
     "next": "Next",
-    "search-placeholder": "Search members...",
+    "search-placeholder": "Search members…",
     "cancel-filter": "Cancel filter",
     "messages": "Messages",
     "send-messages": "New message",

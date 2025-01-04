@@ -38,7 +38,7 @@ export default function LoginPage() {
             htmlFor="language-select"
             className="block text-sm text-gray-600 mb-1"
           >
-            {t("login-page.select-language")}
+            {t("login-page.select-language")}:
           </label>
           <select
             id="language-select"
