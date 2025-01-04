@@ -31,7 +31,8 @@
     "no-messages": "Brak wiadomości",
     "loading": "Ładowanie wiadomości...",
     "page": "Strona",
-    "placeholder": "Szukaj po nadawcach, tytułach, grupach..."
+    "placeholder": "Szukaj po nadawcach, tytułach, grupach...",
+    "search": "Szukaj"
   },
   "message": {
     "from": "Od",

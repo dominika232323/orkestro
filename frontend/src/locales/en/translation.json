@@ -31,7 +31,8 @@
     "no-messages": "No messages",
     "loading": "Messages loading...",
     "placeholder": "Search for topic, sender, group...",
-    "page": "Page"
+    "page": "Page",
+    "search": "Search"
   },
   "message": {
     "from": "From",

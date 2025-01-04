@@ -15,34 +15,34 @@ export default function Messages() {
   const [currentPage, setCurrentPage] = useState(1);
   const [maxPage, setMaxPage] = useState(1);
 
+  const fetchMessages = async () => {
+    setLoading(true);
+
+    const messagesPerPage = 10; // Probably worth to send to API
+    // currentPage definitly sent to API
+
+    await axios
+      .get<MessageRecipient[]>("/api/message-recipients/me/")
+      .then((response) => {
+        const parsedMessages = response.data.map((msg_recipient) => ({
+          ...msg_recipient,
+          message_details: {
+            ...msg_recipient.message_details,
+            date: new Date(msg_recipient.message_details.date), // parse date
+          },
+        }));
+
+        setMessages(parsedMessages);
+
+        setMaxPage(5); // API must return total amount of pages
+      })
+      .catch((error) => console.error("Error fetching invitations:", error));
+    setLoading(false);
+  };
+
   useEffect(() => {
-    const fetchMessages = async () => {
-      setLoading(true);
-
-      const messagesPerPage = 10; // Probably worth to send to API
-      setCurrentPage(1); // also sent to API
-
-      await axios
-        .get<MessageRecipient[]>("/api/message-recipients/me/")
-        .then((response) => {
-          const parsedMessages = response.data.map((msg_recipient) => ({
-            ...msg_recipient,
-            message_details: {
-              ...msg_recipient.message_details,
-              date: new Date(msg_recipient.message_details.date), // parse date
-            },
-          }));
-
-          setMessages(parsedMessages);
-
-          setMaxPage(5); // API must return total amount of pages
-        })
-        .catch((error) => console.error("Error fetching invitations:", error));
-      setLoading(false);
-    };
-
     fetchMessages();
-  }, []);
+  }, [currentPage]);
 
   const handleNextPage = () => {
     if (currentPage <= maxPage - 1) {
@@ -56,6 +56,11 @@ export default function Messages() {
     }
   };
 
+  const handleSearch = () => {
+    setCurrentPage(1);
+    fetchMessages();
+  };
+
   return (
     <div className="bg-gray-200 p-6 rounded-lg max-w-4xl mx-auto mt-8">
       <h1 className="text-2xl font-bold text-center mb-4">
@@ -65,10 +70,18 @@ export default function Messages() {
         <input
           type="text"
           value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
+          onChange={(e) => {
+            setSearchQuery(e.target.value);
+          }}
           className="flex-1 p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           placeholder={t("messages.placeholder")}
         />
+        <button
+          onClick={handleSearch}
+          className="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+        >
+          {t("messages.search")}
+        </button>
       </div>
       {messages.length > 0 ? (
         <ul className="space-y-4">
