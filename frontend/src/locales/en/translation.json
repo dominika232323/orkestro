@@ -30,7 +30,7 @@
     "title": "Messages",
     "no-messages": "No messages",
     "loading": "Messages loading...",
-    "placeholder": "Search for topic, sender, content...",
+    "placeholder": "Search for topic, sender, group...",
     "page": "Page"
   },
   "message": {

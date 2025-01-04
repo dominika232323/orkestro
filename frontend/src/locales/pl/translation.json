@@ -30,7 +30,8 @@
     "title": "Wiadomości",
     "no-messages": "Brak wiadomości",
     "loading": "Ładowanie wiadomości...",
-    "page": "Strona"
+    "page": "Strona",
+    "placeholder": "Szukaj po nadawcach, tytułach, grupach..."
   },
   "message": {
     "from": "Od",
