@@ -1,14 +1,13 @@
-import {useEffect, useState} from "react";
-import {useNavigate} from "react-router-dom";
-import {GoogleLogin} from "@react-oauth/google";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { GoogleLogin } from "@react-oauth/google";
 
-import {useLanguage} from "../LanguageContext";
-import {backendLogin, fetchUserLogin} from "../auth";
-
+import { LanguageSelector, useLanguage } from "../LanguageContext";
+import { backendLogin, fetchUserLogin } from "../auth";
 
 export default function LoginPage() {
   const navigate = useNavigate();
-  const { t, changeLanguage, currentLanguage } = useLanguage();
+  const { t, currentLanguage } = useLanguage();
   const [justLoggedIn, setJustLoggedIn] = useState<boolean>(false);
 
   const handleLoginSuccess = async (credentialResponse: any) => {
@@ -30,7 +29,11 @@ export default function LoginPage() {
         <p className="text-gray-600 mb-6">{t("login-page.description")}</p>
 
         <div className="flex justify-center items-center">
-          <GoogleLogin onSuccess={handleLoginSuccess} onError={handleLoginError} />
+          <GoogleLogin
+            onSuccess={handleLoginSuccess}
+            onError={handleLoginError}
+            locale={currentLanguage}
+          />
         </div>
 
         <div className="mt-4">
@@ -40,15 +43,7 @@ export default function LoginPage() {
           >
             {t("login-page.select-language")}:
           </label>
-          <select
-            id="language-select"
-            className="bg-white border border-gray-300 rounded-md text-sm p-2 w-full"
-            onChange={(e) => changeLanguage(e.target.value)}
-            value={currentLanguage}
-          >
-            <option value="pl">🇵🇱 Polski</option>
-            <option value="en">🇬🇧 English</option>
-          </select>
+          <LanguageSelector />
         </div>
       </div>
     </div>

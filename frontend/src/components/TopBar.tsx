@@ -1,6 +1,6 @@
-import {useLanguage} from "../LanguageContext";
-import {useEffect} from "react";
-import {useNavigate} from "react-router-dom";
+import { LanguageSelector, useLanguage } from "../LanguageContext";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   faCalendarDays,
   faCog,
@@ -10,12 +10,11 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import HoverText from "./HoverText";
 import TopBarIcon from "./TopBarIcon";
-import {removeTokens, fetchUserOrRedirect} from "../auth";
-
+import { removeTokens, fetchUserOrRedirect } from "../auth";
 
 export default function TopBar() {
   const navigate = useNavigate();
-  const { t, changeLanguage, currentLanguage } = useLanguage();
+  const { t } = useLanguage();
 
   useEffect(() => {
     fetchUserOrRedirect(navigate);
@@ -31,22 +30,13 @@ export default function TopBar() {
       {/* Left Section - Icons */}
       <div className="flex items-center space-x-4">
         <HoverText textToShow={t("top-bar.manage-groups")}>
-          <TopBarIcon
-            location="manage-groups/"
-            iconObject={faUsers}
-          />
+          <TopBarIcon location="manage-groups/" iconObject={faUsers} />
         </HoverText>
         <HoverText textToShow={t("top-bar.messages")}>
-          <TopBarIcon
-            location="/messages/"
-            iconObject={faMessage}
-          />
+          <TopBarIcon location="/messages/" iconObject={faMessage} />
         </HoverText>
         <HoverText textToShow={t("top-bar.calendar")}>
-          <TopBarIcon
-            location="/calendar/"
-            iconObject={faCalendarDays}
-          />
+          <TopBarIcon location="/calendar/" iconObject={faCalendarDays} />
         </HoverText>
       </div>
 
@@ -75,27 +65,14 @@ export default function TopBar() {
       {/* Right Section - Controls */}
       <div className="flex items-center space-x-4">
         <div className="relative">
-          <select
-            className="bg-white border border-gray-300 rounded-md text-sm p-1"
-            onChange={(e) => changeLanguage(e.target.value)}
-            value={currentLanguage}
-          >
-            <option value="pl">🇵🇱 Polski</option>
-            <option value="en">🇬🇧 English</option>
-          </select>
+          <LanguageSelector />
         </div>
         <HoverText textToShow={t("top-bar.settings")}>
-          <TopBarIcon
-            location="/settings/"
-            iconObject={faCog}
-          />
+          <TopBarIcon location="/settings/" iconObject={faCog} />
         </HoverText>
-          <HoverText textToShow={t("top-bar.logout")}>
+        <HoverText textToShow={t("top-bar.logout")}>
           <div onClick={handleLogOut}>
-            <TopBarIcon
-              location={null}
-              iconObject={faArrowRightFromBracket}
-            />
+            <TopBarIcon location={null} iconObject={faArrowRightFromBracket} />
           </div>
         </HoverText>
       </div>
