@@ -14,9 +14,9 @@ export default function Calendar() {
   let daysOfWeek: string[] = [];
 
   if (currentLanguage === "pl") {
-    daysOfWeek = ["Nd", "Pon", "Wt", "Śr", "Czw", "Pt", "Sob"];
+    daysOfWeek = ["Pon", "Wt", "Śr", "Czw", "Pt", "Sob", "Nd"];
   } else if (currentLanguage === "en") {
-    daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
   }
 
   useEffect(() => {
@@ -33,7 +33,7 @@ export default function Calendar() {
   }, [year, month]);
 
   const daysInMonth = new Date(year, month + 1, 0).getDate();
-  const firstDayOfWeek = new Date(year, month, 1).getDay(); // 0 = Sunday, 6 = Saturday
+  const firstDayOfWeek = (new Date(year, month, 1).getDay() + 6) % 7; // adjust for Monday as the first day of the week
 
   const eventsForDay = (day: number) => {
     return events.filter(
