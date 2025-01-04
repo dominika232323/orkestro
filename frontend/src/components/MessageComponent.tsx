@@ -24,9 +24,7 @@ export default function MessageComponent({message_recipient}: Params) {
   const handleConfirm = async () => {
     setIsRead(true);
     await axios.post(`/api/message-recipients/${message_recipient.message_recipient_id}/mark_as_read/`)
-    .then(() => {
-      console.log(`Successfully confirmed message recipient ${message_recipient.message_recipient_id}`);
-    })
+    .then(() => console.log(`Successfully confirmed message recipient ${message_recipient.message_recipient_id}`))
     .catch((error) => console.error(`Error confirming message recipient ${message_recipient.message_recipient_id}:`, error));
   };
 

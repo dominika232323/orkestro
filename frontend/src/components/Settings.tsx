@@ -32,17 +32,13 @@ export default function Settings() {
   useEffect(() => {
     const fetchInstruments = async () => {
       await axios.get<Instrument[]>("/api/instruments/")
-        .then((response) => {
-          setInstruments(response.data);
-        })
+        .then((response) => setInstruments(response.data))
         .catch((error) => console.error("Error fetching instruments:", error));
     };
 
     const fetchUserInstruments = async () => {
       await axios.get<UserInstrument[]>(`/api/user-instruments/by_user/?user_id=${user?.user_id}`)
-        .then((response) => {
-          setUserInstruments(response.data);
-        })
+        .then((response) => setUserInstruments(response.data))
         .catch((error) => console.error("Error fetching user instruments:", error));
     };
 

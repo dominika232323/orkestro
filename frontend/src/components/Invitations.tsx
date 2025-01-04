@@ -12,9 +12,7 @@ export default function Invitations() {
 
   const fetchInvitations = async () => {
     await axios.get<Invitation[]>("/api/invitations/me/")
-      .then((response) => {
-        setInvitations(response.data);
-      })
+      .then((response) => setInvitations(response.data))
       .catch((error) => console.error("Error fetching invitations:", error));
   };
 
