@@ -141,7 +141,7 @@ export default function ManageGroups() {
   const totalPages = Math.ceil(filteredMembers.length / membersPerPage);
 
   return (
-    <div className="bg-gray-200 p-6 rounded-lg shadow-md max-w-4xl mx-auto mt-8">
+    <div className="bg-gray-200 p-6 rounded-lg max-w-4xl mx-auto mt-8">
       <h1 className="text-2xl font-bold text-center mb-4">
         {t("manage-groups.title")}
       </h1>
