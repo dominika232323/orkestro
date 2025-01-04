@@ -20,6 +20,7 @@ export default function Messages() {
       setLoading(true);
 
       const messagesPerPage = 10; // Probably worth to send to API
+      setCurrentPage(1); // also sent to API
 
       await axios
         .get<MessageRecipient[]>("/api/message-recipients/me/")
@@ -34,7 +35,6 @@ export default function Messages() {
 
           setMessages(parsedMessages);
 
-          setCurrentPage(1);
           setMaxPage(5); // API must return total amount of pages
         })
         .catch((error) => console.error("Error fetching invitations:", error));
