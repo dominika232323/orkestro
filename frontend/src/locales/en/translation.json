@@ -51,7 +51,11 @@
     "add-instrument": "Add instrument"
   },
   "calendar": {
-    "title": "Calendar"
+    "title": "Calendar",
+    "current-month": "Show current month",
+    "events-for": "Events for",
+    "no-events": "No events.",
+    "close": "Close"
   },
   "events": {
     "title": "Events",
