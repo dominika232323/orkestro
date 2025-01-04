@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react";
 
 import { useLanguage } from "../LanguageContext";
-import {axiosInstance as axios, fetchUserOrRedirect} from "../auth";
+import {axiosInstance as axios} from "../auth";
 import InvitationComponent from "./InvitationComponent";
 import {Invitation} from "../interfaces";
 
@@ -9,10 +9,6 @@ import {Invitation} from "../interfaces";
 export default function Invitations() {
   const { t } = useLanguage();
   const [invitations, setInvitations] = useState<Invitation[]>([]);
-
-  useEffect(() => {
-    fetchUserOrRedirect();
-  }, []);
 
   const fetchInvitations = async () => {
     await axios.get<Invitation[]>("/api/invitations/me/")

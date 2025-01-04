@@ -1,19 +1,36 @@
-import {createBrowserRouter, RouterProvider} from "react-router-dom";
+import {createBrowserRouter, RouterProvider, Navigate} from "react-router-dom";
 
 import LoginPage from "./pages/LoginPage";
-import HomePage from "./pages/HomePage";
 import TestPage from "./pages/TestPage";
+import MainLayout from "./layouts/MainLayout";
+import ManageGroups from "./components/ManageGroups";
+import Messages from "./components/Messages";
+import Calendar from "./components/Calendar";
+import InvitationsAndGroups from "./components/InvitationsAndGroups";
+import Events from "./components/Events";
+import Files from "./components/Files";
+import Settings from "./components/Settings";
 
 
-function App() {
+export default function App() {
     const router = createBrowserRouter([
         {
-            path: "/",
-            element: <LoginPage />,
+            path: "/login/",
+            element: <LoginPage/>,
         },
         {
-            path: "/home",
-            element: <HomePage/>,
+            path: "/",
+            element: <MainLayout/>,
+            children: [
+                {index: true, element: <Navigate to="/invitations-and-groups/" replace/>},
+                {path: "/manage-groups/", element: <ManageGroups/>},
+                {path: "/messages/", element: <Messages/>},
+                {path: "/calendar/", element: <Calendar/>},
+                {path: "/invitations-and-groups/", element: <InvitationsAndGroups/>},
+                {path: "/events/", element: <Events/>},
+                {path: "/files/", element: <Files/>},
+                {path: "/settings/", element: <Settings/>},
+            ],
         },
         {
             path: "/test/",
@@ -21,9 +38,5 @@ function App() {
         },
     ]);
 
-    return (
-        <RouterProvider router={router}/>
-    );
+    return <RouterProvider router={router}/>;
 }
-
-export default App;

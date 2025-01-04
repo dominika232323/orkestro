@@ -5,8 +5,11 @@ import {jwtDecode} from "jwt-decode";
 import {User} from "./interfaces";
 
 
-const access_token_lifetime: number = 1 / 24  // 1 hour
-const refresh_token_lifetime: number = 1  // 1 day
+const LOGIN_PAGE: string = "/login/";
+const REDIRECT_AFTER_LOGIN: string = "/invitations-and-groups/";
+
+const ACCESS_TOKEN_LIFETIME: number = 1 / 24  // 1 hour
+const REFRESH_TOKEN_LIFETIME: number = 1  // 1 day
 
 export function getAccessToken() {
     return Cookies.get("access_token")
@@ -17,11 +20,11 @@ export function getRefreshToken() {
 }
 
 export function setAccessToken(access_token: string) {
-    Cookies.set("access_token", access_token, {expires: access_token_lifetime});
+    Cookies.set("access_token", access_token, {expires: ACCESS_TOKEN_LIFETIME});
 }
 
 export function setRefreshToken(refresh_token: string) {
-    Cookies.set("refresh_token", refresh_token, {expires: refresh_token_lifetime});
+    Cookies.set("refresh_token", refresh_token, {expires: REFRESH_TOKEN_LIFETIME});
 }
 
 export function storeTokens(access_token: string, refresh_token: string) {
@@ -89,20 +92,21 @@ export const backendLogin = async (credentialResponse: any, setJustLoggedIn: Fun
     }
 }
 
-export const fetchUserLogin = async () => {
+export const fetchUserLogin = async (navigate: Function) => {
     const access_token = getAccessToken();
     const refresh_token = getRefreshToken();
+
     if (access_token || refresh_token) {
         await axiosInstance.get<User>("/api/users/me/")
             .then((response) => {
                 console.log("Logged in as:", response.data)
-                window.location.href = "/home";
+                navigate(REDIRECT_AFTER_LOGIN);
             })
             .catch((error) => console.error("Error fetching user data:", error));
     }
 }
 
-export const fetchUserOrRedirect = async (setUser: Function = (_: any) => {}) => {
+export const fetchUserOrRedirect = async (navigate: Function, setUser: Function = (_: any) => {}) => {
     const access_token = getAccessToken();
     const refresh_token = getRefreshToken();
     if (access_token || refresh_token) {
@@ -112,11 +116,11 @@ export const fetchUserOrRedirect = async (setUser: Function = (_: any) => {}) =>
             })
             .catch((error) => {
                 console.error("Error fetching user data, redirecting to login:", error)
-                window.location.href = "/";
+                window.location.href = LOGIN_PAGE;
             });
     }
     else {
         console.error("No tokens, redirecting to login")
-        window.location.href = "/";
+        window.location.href = LOGIN_PAGE;
     }
 }

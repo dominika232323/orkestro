@@ -59,7 +59,7 @@ const initialGroups: IGroup[] = [
   },
 ];
 
-export default function ManageGroupsPanel() {
+export default function ManageGroups() {
   const { t } = useLanguage();
   const [groups, setGroups] = useState(initialGroups);
   const [currentGroupIndex, setCurrentGroupIndex] = useState(1);

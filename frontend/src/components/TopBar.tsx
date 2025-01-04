@@ -1,5 +1,6 @@
-import { useLanguage } from "../LanguageContext";
-import { Link } from "react-router-dom";
+import {useLanguage} from "../LanguageContext";
+import {useEffect} from "react";
+import {useNavigate} from "react-router-dom";
 import {
   faCalendarDays,
   faCog,
@@ -9,39 +10,41 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import HoverText from "./HoverText";
 import TopBarIcon from "./TopBarIcon";
+import {removeTokens, fetchUserOrRedirect} from "../auth";
 
-interface TopBarProps {
-  handleChangePage: (newPage: string) => void;
-  handleLogOut: () => void;
-}
 
-export default function TopBar({
-  handleChangePage,
-  handleLogOut,
-}: TopBarProps) {
+export default function TopBar() {
+  const navigate = useNavigate();
   const { t, changeLanguage, currentLanguage } = useLanguage();
+
+  useEffect(() => {
+    fetchUserOrRedirect(navigate);
+  }, []);
+
+  const handleLogOut = () => {
+    removeTokens();
+    navigate("/login/");
+  };
+
   return (
     <div className="flex items-center justify-between bg-gray-100 p-4 shadow-md">
       {/* Left Section - Icons */}
       <div className="flex items-center space-x-4">
         <HoverText textToShow={t("top-bar.manage-groups")}>
           <TopBarIcon
-            handleChangePage={handleChangePage}
-            pageName="manage-groups"
+            location="manage-groups/"
             iconObject={faUsers}
           />
         </HoverText>
         <HoverText textToShow={t("top-bar.messages")}>
           <TopBarIcon
-            handleChangePage={handleChangePage}
-            pageName="messages"
+            location="/messages/"
             iconObject={faMessage}
           />
         </HoverText>
         <HoverText textToShow={t("top-bar.calendar")}>
           <TopBarIcon
-            handleChangePage={handleChangePage}
-            pageName="calendar"
+            location="/calendar/"
             iconObject={faCalendarDays}
           />
         </HoverText>
@@ -51,19 +54,19 @@ export default function TopBar({
       <div className="flex items-center space-x-6 text-sm">
         <button
           className="hover:text-gray-700 font-medium"
-          onClick={() => handleChangePage("invitations-and-groups")}
+          onClick={() => navigate("/invitations-and-groups/")}
         >
           {t("top-bar.invitations-and-groups")}
         </button>
         <button
           className="hover:text-gray-700 font-medium"
-          onClick={() => handleChangePage("events")}
+          onClick={() => navigate("/events/")}
         >
           {t("top-bar.events")}
         </button>
         <button
           className="hover:text-gray-700 font-medium"
-          onClick={() => handleChangePage("files")}
+          onClick={() => navigate("/files/")}
         >
           {t("top-bar.files")}
         </button>
@@ -83,16 +86,14 @@ export default function TopBar({
         </div>
         <HoverText textToShow={t("top-bar.settings")}>
           <TopBarIcon
-            handleChangePage={handleChangePage}
-            pageName="settings"
+            location="/settings/"
             iconObject={faCog}
           />
         </HoverText>
         <button onClick={handleLogOut}>
           <HoverText textToShow={t("top-bar.logout")}>
             <TopBarIcon
-              handleChangePage={() => {}}
-              pageName=""
+              location={null}
               iconObject={faArrowRightFromBracket}
             />
           </HoverText>
