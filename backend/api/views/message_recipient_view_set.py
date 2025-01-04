@@ -19,7 +19,7 @@ from api.permissions.message_recipient_permissions import CanViewMessageRecipien
 
 
 class MessageRecipientViewSet(viewsets.ModelViewSet):
-    queryset = MessageRecipient.objects.all().select_related("message", "user")
+    queryset = MessageRecipient.objects.all().select_related("message")
     serializer_class = MessageRecipientSerializer
     permission_classes = [IsAuthenticated, CanViewMessageRecipient, CanCreateMessageRecipient, CanMarkAsRead]
     http_method_names = ["get", "post", "head"]
