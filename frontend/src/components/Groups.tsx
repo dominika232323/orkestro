@@ -1,50 +1,67 @@
+import {useEffect, useState} from "react";
 import { useLanguage } from "../LanguageContext";
+import {axiosInstance as axios} from "../auth";
 import GroupComponent from "./GroupComponent";
+import {Group, GroupWithSubgroups} from "../interfaces";
+
 
 export default function Groups() {
   const { t } = useLanguage();
-  const groups = [
-    {
-      id: "1",
-      name: "Group A",
-      subGroups: [
-        {
-          id: "1-1",
-          name: "Sub-Group A1",
-          subGroups: [
-            { id: "1-1-1", name: "Sub-Sub-Group A1-1" },
-            {
-              id: "1-1-2",
-              name: "Sub-Sub-Group A1-2",
-              subGroups: [{ id: "1-1-2-1", name: "Sub-Sub-Sub-Group" }],
-            },
-          ],
-        },
-        { id: "1-2", name: "Sub-Group A2" },
-      ],
-    },
-    {
-      id: "2",
-      name: "Group B",
-      subGroups: [{ id: "2-1", name: "Sub-Group B1" }],
-    },
-  ];
+  const [groups, setGroups] = useState<GroupWithSubgroups[]>([]);
+
+  useEffect(() => {
+    async function fetchGroups() {
+
+      await axios.get<Group[]>("/api/groups/me/")
+        .then((response) => {
+          const flatGroups: Group[] = response.data;
+
+          // create a map of groups
+          const groupMap: Record<number, GroupWithSubgroups> = {};
+          flatGroups.forEach((group) => {
+            groupMap[group.group_id] = {
+              group_id: group.group_id,
+              name: group.name,
+              description: group.description,
+              subgroups: [],
+            };
+          });
+
+          const groupHierarchy: GroupWithSubgroups[] = [];
+          flatGroups.forEach((group) => {
+            if (group.supergroup) {
+              // if the group has a supergroup, add it to the parent's subgroups
+              groupMap[group.supergroup].subgroups.push(groupMap[group.group_id]);
+            }
+            else {
+              // if the group has no supergroup, it is a top-level group
+              groupHierarchy.push(groupMap[group.group_id]);
+            }
+          });
+
+          setGroups(groupHierarchy);
+        })
+        .catch((error) => console.error("Error fetching invitations:", error));
+    }
+
+    fetchGroups();
+  }, []);
 
   return (
     <div className="bg-gray-200 p-6 rounded-lg shadow-md max-w-4xl mx-auto mt-8">
       <h1 className="text-2xl font-bold text-center mb-4">
         {t("invitations-and-groups.title")}
       </h1>
-      <ul className="space-y-4">
+
+      <ul className="bg-white p-4 pt-2 rounded-lg space-y-6">
         {groups.map((group) => (
           <GroupComponent
-            key={group.id}
-            id={group.id}
-            name={group.name}
-            subGroups={group.subGroups}
+            key={group.group_id}
+            group={group}
           />
         ))}
       </ul>
     </div>
   );
 }
+
