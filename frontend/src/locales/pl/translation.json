@@ -28,7 +28,9 @@
   },
   "messages": {
     "title": "Wiadomości",
-    "no-messages": "Brak wiadomości"
+    "no-messages": "Brak wiadomości",
+    "loading": "Ładowanie wiadomości...",
+    "page": "Strona"
   },
   "message": {
     "from": "Od",
