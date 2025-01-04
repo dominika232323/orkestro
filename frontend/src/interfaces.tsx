@@ -15,6 +15,13 @@ export interface Group {
     supergroup: number;
 }
 
+export interface GroupWithSubgroups {
+    group_id: number;
+    name: string;
+    description: string;
+    subgroups: GroupWithSubgroups[];
+}
+
 export interface Invitation {
     invitation_id: number;
     group: number;
