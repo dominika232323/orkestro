@@ -5,6 +5,9 @@ import {jwtDecode} from "jwt-decode";
 import {User} from "./interfaces";
 
 
+const login_page: string = "/login/";
+const redirect_after_login: string = "/invitations-and-groups/";
+
 const access_token_lifetime: number = 1 / 24  // 1 hour
 const refresh_token_lifetime: number = 1  // 1 day
 
@@ -96,7 +99,7 @@ export const fetchUserLogin = async () => {
         await axiosInstance.get<User>("/api/users/me/")
             .then((response) => {
                 console.log("Logged in as:", response.data)
-                window.location.href = "/home";
+                window.location.href = redirect_after_login;
             })
             .catch((error) => console.error("Error fetching user data:", error));
     }
@@ -112,11 +115,11 @@ export const fetchUserOrRedirect = async (setUser: Function = (_: any) => {}) =>
             })
             .catch((error) => {
                 console.error("Error fetching user data, redirecting to login:", error)
-                window.location.href = "/";
+                window.location.href = login_page;
             });
     }
     else {
         console.error("No tokens, redirecting to login")
-        window.location.href = "/";
+        window.location.href = login_page;
     }
 }

@@ -1,21 +1,27 @@
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {useNavigate} from "react-router-dom";
+
 
 interface ITopBarIcon {
-  handleChangePage: (pageName: string) => void;
-  pageName: string;
+  location: string | null;
   iconObject: IconDefinition;
 }
 
 export default function TopBarIcon({
-  handleChangePage,
-  pageName,
+  location,
   iconObject,
 }: ITopBarIcon) {
+  const navigate = useNavigate();
+
   return (
     <div
       className="w-8 h-8 bg-gray-300 hover:bg-gray-400 rounded-full flex items-center justify-center"
-      onClick={() => handleChangePage(pageName)}
+      onClick={() => {
+        if (location) {
+          navigate(location)
+        }
+      }}
     >
       <FontAwesomeIcon icon={iconObject} />
     </div>

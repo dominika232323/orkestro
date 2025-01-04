@@ -1,17 +1,13 @@
 import {useEffect, useState} from "react";
 
 import { useLanguage } from "../LanguageContext";
-import {axiosInstance as axios, fetchUserOrRedirect} from "../auth";
+import {axiosInstance as axios} from "../auth";
 import {MessageRecipient} from "../interfaces";
 import MessageComponent from "./MessageComponent";
 
 export default function Messages() {
   const { t } = useLanguage();
   const [messages, setMessages] = useState<MessageRecipient[]>([]);
-
-  useEffect(() => {
-    fetchUserOrRedirect();
-  }, []);
 
   useEffect(() => {
     const fetchMessages = async () => {
