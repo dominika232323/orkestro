@@ -1,4 +1,5 @@
 import {useEffect, useState} from "react";
+import {useNavigate} from "react-router-dom";
 import {GoogleLogin} from "@react-oauth/google";
 
 import {useLanguage} from "../LanguageContext";
@@ -6,6 +7,7 @@ import {backendLogin, fetchUserLogin} from "../auth";
 
 
 export default function LoginPage() {
+  const navigate = useNavigate();
   const { t, changeLanguage, currentLanguage } = useLanguage();
   const [justLoggedIn, setJustLoggedIn] = useState<boolean>(false);
 
@@ -18,7 +20,7 @@ export default function LoginPage() {
   };
 
   useEffect(() => {
-    fetchUserLogin();
+    fetchUserLogin(navigate);
   }, [justLoggedIn]);
 
   return (

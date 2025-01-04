@@ -92,20 +92,21 @@ export const backendLogin = async (credentialResponse: any, setJustLoggedIn: Fun
     }
 }
 
-export const fetchUserLogin = async () => {
+export const fetchUserLogin = async (navigate: Function) => {
     const access_token = getAccessToken();
     const refresh_token = getRefreshToken();
+
     if (access_token || refresh_token) {
         await axiosInstance.get<User>("/api/users/me/")
             .then((response) => {
                 console.log("Logged in as:", response.data)
-                window.location.href = redirect_after_login;
+                navigate(redirect_after_login);
             })
             .catch((error) => console.error("Error fetching user data:", error));
     }
 }
 
-export const fetchUserOrRedirect = async (setUser: Function = (_: any) => {}) => {
+export const fetchUserOrRedirect = async (navigate: Function, setUser: Function = (_: any) => {}) => {
     const access_token = getAccessToken();
     const refresh_token = getRefreshToken();
     if (access_token || refresh_token) {

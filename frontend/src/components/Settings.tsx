@@ -2,12 +2,14 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {useLanguage} from "../LanguageContext";
 import {faPlus, faXmark, faCircleUser} from "@fortawesome/free-solid-svg-icons";
 import {useEffect, useState} from "react";
+import {useNavigate} from "react-router-dom";
 
 import {axiosInstance as axios, fetchUserOrRedirect} from "../auth";
 import {User, Instrument, UserInstrument} from "../interfaces";
 
 
 export default function Settings() {
+  const navigate = useNavigate();
   const {t, currentLanguage} = useLanguage();
   const [user, setUser] = useState<User>();
   const [instruments, setInstruments] = useState<Instrument[]>([]);
@@ -24,7 +26,7 @@ export default function Settings() {
   }
 
   useEffect(() => {
-    fetchUserOrRedirect(setUser);
+    fetchUserOrRedirect(navigate, setUser);
   }, []);
 
   useEffect(() => {

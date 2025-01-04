@@ -18,7 +18,7 @@ export default function TopBar() {
   const { t, changeLanguage, currentLanguage } = useLanguage();
 
   useEffect(() => {
-    fetchUserOrRedirect();
+    fetchUserOrRedirect(navigate);
   }, []);
 
   const handleLogOut = () => {
