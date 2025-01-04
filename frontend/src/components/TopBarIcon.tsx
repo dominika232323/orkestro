@@ -15,7 +15,7 @@ export default function TopBarIcon({
   const navigate = useNavigate();
 
   return (
-    <div
+    <button
       className="w-8 h-8 bg-gray-300 hover:bg-gray-400 rounded-full flex items-center justify-center"
       onClick={() => {
         if (location) {
@@ -24,6 +24,6 @@ export default function TopBarIcon({
       }}
     >
       <FontAwesomeIcon icon={iconObject} />
-    </div>
+    </button>
   );
 }

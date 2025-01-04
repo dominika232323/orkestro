@@ -90,14 +90,14 @@ export default function TopBar() {
             iconObject={faCog}
           />
         </HoverText>
-        <button onClick={handleLogOut}>
           <HoverText textToShow={t("top-bar.logout")}>
+          <div onClick={handleLogOut}>
             <TopBarIcon
               location={null}
               iconObject={faArrowRightFromBracket}
             />
-          </HoverText>
-        </button>
+          </div>
+        </HoverText>
       </div>
     </div>
   );
