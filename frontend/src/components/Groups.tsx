@@ -53,7 +53,7 @@ export default function Groups() {
         {t("invitations-and-groups.title")}
       </h1>
 
-      <ul className="space-y-4">
+      <ul className="bg-white p-4 pt-2 rounded-lg space-y-6">
         {groups.map((group) => (
           <GroupComponent
             key={group.group_id}
