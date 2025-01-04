@@ -29,9 +29,6 @@ export default function TopBar() {
     <div className="flex items-center justify-between bg-gray-100 p-4 shadow-md">
       {/* Left Section - Icons */}
       <div className="flex items-center space-x-4">
-        <HoverText textToShow={t("top-bar.manage-groups")}>
-          <TopBarIcon location="manage-groups/" iconObject={faUsers} />
-        </HoverText>
         <HoverText textToShow={t("top-bar.messages")}>
           <TopBarIcon location="/messages/" iconObject={faMessage} />
         </HoverText>
