@@ -9,6 +9,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 import HoverText from "./HoverText";
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
+import {axiosInstance as axios} from "../auth";
 import {MessageRecipient} from "../interfaces";
 
 
@@ -20,9 +21,13 @@ export default function MessageComponent({message_recipient}: Params) {
   const { t } = useLanguage();
   const [isRead, setIsRead] = useState(message_recipient.is_read);
 
-  const handleConfirm = function () {
+  const handleConfirm = async () => {
     setIsRead(true);
-    // TODO: API request
+    await axios.post(`/api/message-recipients/${message_recipient.message_recipient_id}/mark_as_read/`)
+    .then(() => {
+      console.log(`Successfully confirmed message recipient ${message_recipient.message_recipient_id}`);
+    })
+    .catch((error) => console.error(`Error confirming message recipient ${message_recipient.message_recipient_id}:`, error));
   };
 
   return (
