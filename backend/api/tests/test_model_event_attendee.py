@@ -15,6 +15,14 @@ class EventAttendeeModelTests(TestCase):
         self.assertEqual(self.attendee.event, self.event)
         self.assertEqual(self.attendee.user, self.moderator)
 
+    def test_event_attendee_creation_with_invalid_event(self):
+        with self.assertRaises(Exception):
+            EventAttendee.objects.create(event="Event", user=self.moderator)
+
+    def test_event_attendee_creation_with_invalid_user(self):
+        with self.assertRaises(Exception):
+            EventAttendee.objects.create(event=self.event, user="User")
+
     def test_string_representation(self):
         self.assertEqual(str(self.attendee), f"{self.event.name} → {self.moderator} ({self.attendee.event_attendee_id})")
 
