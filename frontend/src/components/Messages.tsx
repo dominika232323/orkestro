@@ -79,7 +79,7 @@ export default function Messages() {
       <h1 className="text-2xl font-bold text-center mb-4">
         {t("messages.title")}
       </h1>
-      <div className="flex">
+      <div className="flex mb-4">
         <input
           type="text"
           value={searchQuery}
@@ -98,7 +98,7 @@ export default function Messages() {
         </button>
       </div>
       {messages.length > 0 ? (
-        <ul className="mt-4 space-y-4">
+        <ul className="space-y-4">
           {messages.map((msg) => (
             <MessageComponent
               key={msg.message_recipient_id}
