@@ -112,11 +112,11 @@ class MessageRecipientViewSetTestCase(TestCase):
     def test_me(self):
         # Define test cases with expected outcomes
         test_cases = [
-            {"user": self.staff, "expected_status": 200, "expected_count": 0},
-            {"user": self.manager, "expected_status": 200, "expected_count": 3},
-            {"user": self.moderator, "expected_status": 200, "expected_count": 3},
-            {"user": self.musician, "expected_status": 200, "expected_count": 2},
-            {"user": self.outsider, "expected_status": 200, "expected_count": 0},
+            {"user": self.staff, "expected_status": 200, "expected_count": 0, "expected_page": 1, "expected_total_pages": 1},
+            {"user": self.manager, "expected_status": 200, "expected_count": 3, "expected_page": 1, "expected_total_pages": 1},
+            {"user": self.moderator, "expected_status": 200, "expected_count": 3, "expected_page": 1, "expected_total_pages": 1},
+            {"user": self.musician, "expected_status": 200, "expected_count": 2, "expected_page": 1, "expected_total_pages": 1},
+            {"user": self.outsider, "expected_status": 200, "expected_count": 0, "expected_page": 1, "expected_total_pages": 1},
         ]
 
         for case in test_cases:
@@ -128,7 +128,9 @@ class MessageRecipientViewSetTestCase(TestCase):
 
                 # Assert the response status and count
                 self.assertEqual(response.status_code, case["expected_status"])
-                self.assertEqual(len(response.data), case["expected_count"])
+                self.assertEqual(len(response.data["messages"]), case["expected_count"])
+                self.assertEqual(response.data["page_number"], case["expected_page"])
+                self.assertEqual(response.data["total_pages"], case["expected_total_pages"])
 
     def tearDown(self):
         self.message_recipient_1.delete()
