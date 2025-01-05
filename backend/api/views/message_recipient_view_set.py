@@ -55,7 +55,7 @@ class MessageRecipientViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=["get"])
     def me(self, request):
-        received_messages = MessageRecipient.objects.select_related("message", "user", "message__group").filter(
+        received_messages = MessageRecipient.objects.select_related("message", "user", "message__group").order_by('-message__date').filter(
             (Q(message__user__name__icontains=request.GET.get("sender") or "") | Q(message__user__surname__icontains=request.GET.get("sender") or "")),
             user=request.user, message__title__icontains=request.GET.get("title") or "", message__group__name__icontains=request.GET.get("group") or "")
         page = Paginator(received_messages, 20).get_page(request.GET.get("page"))
