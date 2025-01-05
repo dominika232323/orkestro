@@ -16,10 +16,10 @@ export interface Group {
 }
 
 export interface GroupWithSubgroups {
-    group_id: number;
-    name: string;
-    description: string;
-    subgroups: GroupWithSubgroups[];
+  group_id: number;
+  name: string;
+  description: string;
+  subgroups: GroupWithSubgroups[];
 }
 
 export interface Invitation {
@@ -45,9 +45,9 @@ export interface UserInstrument {
 
 export interface Message {
   message_id: number;
-  user: number;
+  user_id: number;
   user_details: User;
-  group: number;
+  group_id: number;
   group_details: Group;
   title: string;
   content: string;
@@ -65,9 +65,24 @@ export interface MessageRecipient {
 
 export interface Event {
   event_id: number;
-  group: number;
+  group_id: number;
   name: string;
   description: string;
   date: Date;
   place: string;
+}
+
+export interface Member {
+  member_id: number;
+  group_id: number;
+  user_id: number;
+  name: string;
+  surname: string;
+  role: string;
+}
+
+export interface File {
+  file_id: number;
+  track: string;
+  name: string;
 }

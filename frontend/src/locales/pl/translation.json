@@ -24,7 +24,8 @@
   "group": {
     "manage": "Zarządzaj",
     "events": "Wydarzenia",
-    "files": "Pliki"
+    "files": "Pliki",
+    "new-message": "Nowa wiadomość"
   },
   "messages": {
     "title": "Wiadomości",
@@ -71,16 +72,21 @@
     "add-event": "Nowe wydarzenie",
     "prev": "Poprzedni",
     "next": "Następny",
-    "page": "Strona"
+    "page": "Strona",
+    "placeholder": "Szukaj po nazwie, lokalizacji, opisie...",
+    "search": "Szukaj",
+    "edit": "Edytuj"
   },
   "files": {
     "title": "Pliki",
-    "no-files": "Brak plików dla wybranej grupy",
+    "no-files": "Brak plików",
     "download": "Pobierz",
     "add-file": "Nowy plik",
-    "search-placeholder": "Wyszukaj pliki…"
+    "placeholder": "Wyszukaj pliki po tytule lub ścieżce…",
+    "search": "Szukaj",
+    "loading": "Ładowanie plików..."
   },
-  "manage-groups": {
+  "manage-group": {
     "title": "Zarządzaj grupą",
     "group-name": "Nazwa grupy",
     "group-description": "Opis grupy",
@@ -97,7 +103,31 @@
     "search-placeholder": "Wyszukaj użytkowników…",
     "cancel-filter": "Usuń filtr",
     "messages": "Wiadomości",
-    "send-messages": "Nowa wiadomość",
+    "new-message": "Nowa wiadomość",
+    "page": "Strona",
+    "search": "Szukaj",
+    "loading": "Ładowanie członków grupy..."
+  },
+  "pagination": {
     "page": "Strona"
+  },
+  "new-event": {
+    "title": "Nowe wydarzenie",
+    "name": "Nazwa",
+    "description": "Opis",
+    "place": "Miejsce",
+    "date": "Data",
+    "time": "Godzina",
+    "submit": "Utwórz"
+  },
+  "edit-event": {
+    "title": "Edytuj wydarzenie",
+    "submit": "Edytuj"
+  },
+  "new-message": {
+    "title": "Nowa wiadomość",
+    "message-title": "Tytuł",
+    "content": "Treść",
+    "submit": "Wyślij"
   }
 }
