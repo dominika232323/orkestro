@@ -47,50 +47,72 @@ export default function MessageComponent({message_recipient}: Params) {
           : "bg-yellow-50 border-yellow-300 hover:shadow-lg"
       }`}
     >
-      {!isExpanded && (
-      <div className="flex flex-col">
-        <p className="text-gray-700 font-medium">
-          <span className="mr-2 text-blue-500">
-            <FontAwesomeIcon icon={faUser} />
-          </span>
-          {t("message.from")}:{" "}
-          {message_recipient.message_details.user_details.name}{" "}
-          {message_recipient.message_details.user_details.surname}
-        </p>
-        <p className="text-gray-700 font-medium">
-          <span className="mr-2 text-green-500">
-            <FontAwesomeIcon icon={faUsers} />
-          </span>
-          {t("message.group")}:{" "}
-          {message_recipient.message_details.group_details.name}
-        </p>
-        <p className="text-gray-700 font-medium">
-          <span className="mr-2 text-gray-500">
-            <FontAwesomeIcon icon={faCalendarAlt} />
-          </span>
-          {t("message.date")}:{" "}
-          {message_recipient.message_details.date.toLocaleDateString("pl-PL", {
-            day: "2-digit",
-            month: "2-digit",
-            year: "numeric",
-          })}
-        </p>
-        <p className="text-gray-700 font-medium">
-          <span className="mr-2 text-gray-500">
-            <FontAwesomeIcon icon={faClock} />
-          </span>
-          {t("message.hour")}:{" "}
-          {message_recipient.message_details.date.toLocaleTimeString("pl-PL")}
-        </p>
-        <p className="text-gray-700 font-bold mt-2">
-          {message_recipient.message_details.title}
-        </p>
-
+      {!isExpanded ?
+        <div className="flex justify-between text-gray-700">
+          <div>
+            <p>
+              {message_recipient.message_details.user_details.name}{" "}
+              {message_recipient.message_details.user_details.surname}
+              {" → "}
+              {message_recipient.message_details.group_details.name}
+            </p>
+            <p className="font-bold">
+              {message_recipient.message_details.title}
+            </p>
+          </div>
+          <div>
+            {message_recipient.message_details.date.toLocaleDateString("pl-PL", {
+              day: "2-digit",
+              month: "2-digit",
+              year: "numeric",
+            })}
+            {" "}
+            {message_recipient.message_details.date.toLocaleTimeString("pl-PL")}
+          </div>
+        </div>
+        :
+        <div className="flex flex-col">
+          <p className="text-gray-700 font-medium">
+            <span className="mr-2 text-blue-500">
+              <FontAwesomeIcon icon={faUser} />
+            </span>
+            {t("message.from")}:{" "}
+            {message_recipient.message_details.user_details.name}{" "}
+            {message_recipient.message_details.user_details.surname}
+          </p>
+          <p className="text-gray-700 font-medium">
+            <span className="mr-2 text-green-500">
+              <FontAwesomeIcon icon={faUsers} />
+            </span>
+            {t("message.group")}:{" "}
+            {message_recipient.message_details.group_details.name}
+          </p>
+          <p className="text-gray-700 font-medium">
+            <span className="mr-2 text-gray-500">
+              <FontAwesomeIcon icon={faCalendarAlt} />
+            </span>
+            {t("message.date")}:{" "}
+            {message_recipient.message_details.date.toLocaleDateString("pl-PL", {
+              day: "2-digit",
+              month: "2-digit",
+              year: "numeric",
+            })}
+          </p>
+          <p className="text-gray-700 font-medium">
+            <span className="mr-2 text-gray-500">
+              <FontAwesomeIcon icon={faClock} />
+            </span>
+            {t("message.hour")}:{" "}
+            {message_recipient.message_details.date.toLocaleTimeString("pl-PL")}
+          </p>
+          <p className="text-gray-700 font-bold mt-2">
+            {message_recipient.message_details.title}
+          </p>
           <p className="mt-4 text-gray-600 leading-relaxed">
             {message_recipient.message_details.content}
           </p>
         </div>
-      )}
+      }
     </li>
   );
 }
