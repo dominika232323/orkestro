@@ -68,6 +68,12 @@ export default function Messages() {
     fetchMessages();
   };
 
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      handleSearch();
+    }
+  };
+
   return (
     <div className="bg-gray-200 p-6 rounded-lg max-w-4xl mx-auto mt-8">
       <h1 className="text-2xl font-bold text-center mb-4">
@@ -80,6 +86,7 @@ export default function Messages() {
           onChange={(e) => {
             setSearchQuery(e.target.value);
           }}
+          onKeyDown={handleKeyDown}
           className="flex-1 p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           placeholder={t("messages.placeholder")}
         />
