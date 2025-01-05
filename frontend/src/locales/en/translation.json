@@ -28,7 +28,11 @@
   },
   "messages": {
     "title": "Messages",
-    "no-messages": "No messages"
+    "no-messages": "No messages",
+    "loading": "Messages loading...",
+    "placeholder": "Search by title, sender, group…",
+    "search": "Search",
+    "page": "Page"
   },
   "message": {
     "from": "From",

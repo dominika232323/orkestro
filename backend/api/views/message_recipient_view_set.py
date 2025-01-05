@@ -55,9 +55,27 @@ class MessageRecipientViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=["get"])
     def me(self, request):
-        received_messages = MessageRecipient.objects.select_related("message", "user", "message__group").order_by('-message__date').filter(
-            (Q(message__user__name__icontains=request.GET.get("sender") or "") | Q(message__user__surname__icontains=request.GET.get("sender") or "")),
-            user=request.user, message__title__icontains=request.GET.get("title") or "", message__group__name__icontains=request.GET.get("group") or "")
-        page = Paginator(received_messages, 20).get_page(request.GET.get("page"))
+        search_query = request.GET.get("search", "")
+        search_terms = search_query.split()
+
+        query = Q()
+        for term in search_terms:
+            query |= Q(message__user__name__icontains=term) | \
+                     Q(message__user__surname__icontains=term) | \
+                     Q(message__title__icontains=term) | \
+                     Q(message__group__name__icontains=term)
+
+        received_messages = MessageRecipient.objects.select_related("message", "user", "message__group") \
+            .filter(query, user=request.user) \
+            .order_by("-message__date")
+
+        paginator = Paginator(received_messages, 20)
+        page = paginator.get_page(request.GET.get("page", 1))
+
         serializer = self.get_serializer(page, many=True)
-        return Response(serializer.data)
+
+        return Response({
+            "messages": serializer.data,
+            "page_number": page.number,
+            "total_pages": paginator.num_pages
+        })

@@ -7,8 +7,6 @@ import {
 import { useLanguage } from "../LanguageContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
-import HoverText from "./HoverText";
-import { faCheck } from "@fortawesome/free-solid-svg-icons";
 import {axiosInstance as axios} from "../auth";
 import {MessageRecipient} from "../interfaces";
 
@@ -20,72 +18,101 @@ interface Params {
 export default function MessageComponent({message_recipient}: Params) {
   const { t } = useLanguage();
   const [isRead, setIsRead] = useState(message_recipient.is_read);
+  const [isExpanded, setIsExpanded] = useState(false);
 
-  const handleConfirm = async () => {
-    setIsRead(true);
-    await axios.post(`/api/message-recipients/${message_recipient.message_recipient_id}/mark_as_read/`)
-    .then(() => console.log(`Successfully confirmed message recipient ${message_recipient.message_recipient_id}`))
-    .catch((error) => console.error(`Error confirming message recipient ${message_recipient.message_recipient_id}:`, error));
+  const handleToggle = async () => {
+    if (!isRead) {
+      setIsRead(true);
+      await axios
+        .post(
+          `/api/message-recipients/${message_recipient.message_recipient_id}/mark_as_read/`
+        )
+        .catch((error) =>
+          console.error(
+            `Error confirming message recipient ${message_recipient.message_recipient_id}:`,
+            error
+          )
+        );
+    }
+    setIsExpanded(!isExpanded);
   };
 
   return (
     <li
       id={String(message_recipient.message_recipient_id)}
-      className={`p-6 rounded-lg shadow-md mb-4 border transition-shadow ${isRead ? "bg-white border-gray-200 hover:shadow-lg" : "bg-yellow-50 border-yellow-300 hover:shadow-lg"}`}
+      onClick={handleToggle}
+      className={`p-4 rounded-lg shadow-md mb-4 border transition-shadow cursor-pointer ${
+        isRead
+          ? "bg-white border-gray-200 hover:shadow-lg"
+          : "bg-yellow-50 border-yellow-300 hover:shadow-lg"
+      }`}
     >
-      <div className="mb-4">
-        <p className="flex items-center text-gray-700 font-medium">
-          <span className="mr-2 text-blue-500">
-            <FontAwesomeIcon icon={faUser} />
-          </span>
-          {t("message.from")}:{" "}
-          <span className="ml-1 font-semibold">{message_recipient.message_details.user_details.name + " " + message_recipient.message_details.user_details.surname}</span>
-        </p>
-        <p className="flex items-center text-gray-700 font-medium mt-2">
-          <span className="mr-2 text-green-500">
-            <FontAwesomeIcon icon={faUsers} />
-          </span>
-          {t("message.group")}:{" "}
-          <span className="ml-1 font-semibold">{message_recipient.message_details.group_details.name}</span>
-        </p>
-        <p className="flex items-center text-gray-700 font-medium mt-2">
-          <span className="mr-2 text-gray-500">
-            <FontAwesomeIcon icon={faCalendarAlt} />
-          </span>
-          {t("message.date")}:{" "}
-          <span
-            className="ml-1 font-semibold"
-          >
-            {message_recipient.message_details.date.toLocaleDateString(
-              "pl-PL",
-              {day: "2-digit", month: "2-digit", year: "numeric"}
-            )}
-          </span>
-        </p>
-        <p className="flex items-center text-gray-700 font-medium mt-2">
-          <span className="mr-2 text-gray-500">
-            <FontAwesomeIcon icon={faClock} />
-          </span>
-          {t("message.hour")}:{" "}
-          <span
-            className="ml-1 font-semibold"
-          >
+      {!isExpanded ?
+        <div className="flex justify-between text-gray-700">
+          <div>
+            <p>
+              {message_recipient.message_details.user_details.name}{" "}
+              {message_recipient.message_details.user_details.surname}
+              {" → "}
+              {message_recipient.message_details.group_details.name}
+            </p>
+            <p className="font-bold">
+              {message_recipient.message_details.title}
+            </p>
+          </div>
+          <div>
+            {message_recipient.message_details.date.toLocaleDateString("pl-PL", {
+              day: "2-digit",
+              month: "2-digit",
+              year: "numeric",
+            })}
+            {" "}
             {message_recipient.message_details.date.toLocaleTimeString("pl-PL")}
-          </span>
-        </p>
-      </div>
-      <p className="text-gray-700 font-bold mb-2">{message_recipient.message_details.title}</p>
-      <p className="text-gray-600 leading-relaxed">{message_recipient.message_details.content}</p>
-      {!isRead && (
-        <button
-          onClick={handleConfirm}
-          className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
-        >
-          <HoverText textToShow={t("message.hover-text")}>
-            <FontAwesomeIcon icon={faCheck} />
-          </HoverText>
-        </button>
-      )}
+          </div>
+        </div>
+        :
+        <div className="flex flex-col">
+          <p className="text-gray-700 font-medium">
+            <span className="mr-2 text-blue-500">
+              <FontAwesomeIcon icon={faUser} />
+            </span>
+            {t("message.from")}:{" "}
+            {message_recipient.message_details.user_details.name}{" "}
+            {message_recipient.message_details.user_details.surname}
+          </p>
+          <p className="text-gray-700 font-medium">
+            <span className="mr-2 text-green-500">
+              <FontAwesomeIcon icon={faUsers} />
+            </span>
+            {t("message.group")}:{" "}
+            {message_recipient.message_details.group_details.name}
+          </p>
+          <p className="text-gray-700 font-medium">
+            <span className="mr-2 text-gray-500">
+              <FontAwesomeIcon icon={faCalendarAlt} />
+            </span>
+            {t("message.date")}:{" "}
+            {message_recipient.message_details.date.toLocaleDateString("pl-PL", {
+              day: "2-digit",
+              month: "2-digit",
+              year: "numeric",
+            })}
+          </p>
+          <p className="text-gray-700 font-medium">
+            <span className="mr-2 text-gray-500">
+              <FontAwesomeIcon icon={faClock} />
+            </span>
+            {t("message.hour")}:{" "}
+            {message_recipient.message_details.date.toLocaleTimeString("pl-PL")}
+          </p>
+          <p className="text-gray-700 font-bold mt-2">
+            {message_recipient.message_details.title}
+          </p>
+          <p className="mt-4 text-gray-600 leading-relaxed">
+            {message_recipient.message_details.content}
+          </p>
+        </div>
+      }
     </li>
   );
 }
