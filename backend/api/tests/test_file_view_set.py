@@ -205,16 +205,86 @@ class FileViewSetTestCase(TestCase):
         EventTrack.objects.create(track=self.track_2, event=event_2)
 
         test_cases = [
-            {"user": self.staff, "event": event_1, "expected_status": 200, "expected_count": 0},
-            {"user": self.manager, "event": event_1, "expected_status": 200, "expected_count": 0},
-            {"user": self.moderator, "event": event_1, "expected_status": 200, "expected_count": 2},
-            {"user": self.musician, "event": event_1, "expected_status": 200, "expected_count": 3},
-            {"user": self.outsider, "event": event_1, "expected_status": 200, "expected_count": 0},
-            {"user": self.staff, "event": event_2, "expected_status": 200, "expected_count": 0},
-            {"user": self.manager, "event": event_2, "expected_status": 200, "expected_count": 0},
-            {"user": self.moderator, "event": event_2, "expected_status": 200, "expected_count": 0},
-            {"user": self.musician, "event": event_2, "expected_status": 200, "expected_count": 2},
-            {"user": self.outsider, "event": event_2, "expected_status": 200, "expected_count": 0},
+            {
+                "user": self.staff,
+                "event": event_1,
+                "expected_status": 200,
+                "expected_count": 0,
+                "expected_pages_number": 1,
+                "expected_total_pages": 1
+            },
+            {
+                "user": self.manager,
+                "event": event_1,
+                "expected_status": 200,
+                "expected_count": 0,
+                "expected_pages_number": 1,
+                "expected_total_pages": 1
+            },
+            {
+                "user": self.moderator,
+                "event": event_1,
+                "expected_status": 200,
+                "expected_count": 2,
+                "expected_pages_number": 1,
+                "expected_total_pages": 1
+            },
+            {
+                "user": self.musician,
+                "event": event_1,
+                "expected_status": 200,
+                "expected_count": 3,
+                "expected_pages_number": 1,
+                "expected_total_pages": 1
+            },
+            {
+                "user": self.outsider,
+                "event": event_1,
+                "expected_status": 200,
+                "expected_count": 0,
+                "expected_pages_number": 1,
+                "expected_total_pages": 1
+            },
+            {
+                "user": self.staff,
+                "event": event_2,
+                "expected_status": 200,
+                "expected_count": 0,
+                "expected_pages_number": 1,
+                "expected_total_pages": 1
+            },
+            {
+                "user": self.manager,
+                "event": event_2,
+                "expected_status": 200,
+                "expected_count": 0,
+                "expected_pages_number": 1,
+                "expected_total_pages": 1
+            },
+            {
+                "user": self.moderator,
+                "event": event_2,
+                "expected_status": 200,
+                "expected_count": 0,
+                "expected_pages_number": 1,
+                "expected_total_pages": 1
+            },
+            {
+                "user": self.musician,
+                "event": event_2,
+                "expected_status": 200,
+                "expected_count": 2,
+                "expected_pages_number": 1,
+                "expected_total_pages": 1
+            },
+            {
+                "user": self.outsider,
+                "event": event_2,
+                "expected_status": 200,
+                "expected_count": 0,
+                "expected_pages_number": 1,
+                "expected_total_pages": 1
+            },
         ]
 
         for case in test_cases:
@@ -229,7 +299,9 @@ class FileViewSetTestCase(TestCase):
 
                 # Assertions
                 self.assertEqual(response.status_code, case["expected_status"])
-                self.assertEqual(len(response.data), case["expected_count"])
+                self.assertEqual(len(response.data["files"]), case["expected_count"])
+                self.assertEqual(response.data["page_number"], case["expected_pages_number"])
+                self.assertEqual(response.data["total_pages"], case["expected_total_pages"])
 
     def tearDown(self):
         self.file_allowed_member_1.delete()
