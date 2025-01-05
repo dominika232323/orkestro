@@ -55,73 +55,71 @@ export default function NewEventPage() {
       <h1 className="text-2xl font-bold text-center mb-4">
         {t("new-event.title")}
       </h1>
-      <form onSubmit={handleSubmit}>
-        <label>
-          {t("new-event.name")}
-          <input
-            type="text"
-            name="name"
-            value={formData.name}
-            onChange={handleTextChange}
-            className="block w-full p-2 border mb-2"
-            required
-          />
-        </label>
-        <label>
-          {t("new-event.description")}
-          <input
-            type="text"
-            name="description"
-            value={formData.description}
-            onChange={handleTextChange}
-            className="block w-full p-2 border mb-2"
-            required
-          />
-        </label>
-        <label>
-          {t("new-event.place")}
-          <input
-            type="text"
-            name="place"
-            value={formData.place}
-            onChange={handleTextChange}
-            className="block w-full p-2 border mb-2"
-            required
-          />
-        </label>
-        <label>
-          {t("new-event.date")}
-          <input
-            type="date"
-            name="date"
-            value={formData.date?.toISOString().split("T")[0] || ""}
-            onChange={handleDateChange}
-            className="block w-full p-2 border mb-2"
-            required
-          />
-        </label>
-        <label>
-          {t("new-event.time")}
-          <input
-            type="time"
-            name="time"
-            value={
-              formData.date
-                ? formData.date.toTimeString().split(":").slice(0, 2).join(":")
-                : ""
-            }
-            onChange={handleTimeChange}
-            className="block w-full p-2 border mb-2"
-            required
-          />
-        </label>
-        <button
-          type="submit"
-          className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600"
-        >
-          {t("new-event.submit")}
-        </button>
-      </form>
+      <label>
+        {t("new-event.name")}
+        <input
+          type="text"
+          name="name"
+          value={formData.name}
+          onChange={handleTextChange}
+          className="block w-full p-2 border mb-2"
+          required
+        />
+      </label>
+      <label>
+        {t("new-event.description")}
+        <input
+          type="text"
+          name="description"
+          value={formData.description}
+          onChange={handleTextChange}
+          className="block w-full p-2 border mb-2"
+          required
+        />
+      </label>
+      <label>
+        {t("new-event.place")}
+        <input
+          type="text"
+          name="place"
+          value={formData.place}
+          onChange={handleTextChange}
+          className="block w-full p-2 border mb-2"
+          required
+        />
+      </label>
+      <label>
+        {t("new-event.date")}
+        <input
+          type="date"
+          name="date"
+          value={formData.date?.toISOString().split("T")[0] || ""}
+          onChange={handleDateChange}
+          className="block w-full p-2 border mb-2"
+          required
+        />
+      </label>
+      <label>
+        {t("new-event.time")}
+        <input
+          type="time"
+          name="time"
+          value={
+            formData.date
+              ? formData.date.toTimeString().split(":").slice(0, 2).join(":")
+              : ""
+          }
+          onChange={handleTimeChange}
+          className="block w-full p-2 border mb-2"
+          required
+        />
+      </label>
+      <button
+        onClick={handleSubmit}
+        className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600"
+      >
+        {t("new-event.submit")}
+      </button>
     </div>
   );
 }
