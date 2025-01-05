@@ -91,7 +91,7 @@ export default function Messages() {
         </button>
       </div>
       {messages.length > 0 ? (
-        <ul className="space-y-4">
+        <ul className="mt-4 space-y-4">
           {messages.map((msg) => (
             <MessageComponent
               key={msg.message_recipient_id}
