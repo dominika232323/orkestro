@@ -14,6 +14,14 @@ class UserInstrumentModelTests(TestCase):
         self.assertEqual(self.user_instrument.instrument, self.instrument)
         self.assertEqual(self.user_instrument.user, self.musician)
 
+    def test_user_instrument_creation_with_invalid_instrument(self):
+        with self.assertRaises(Exception):
+            UserInstrument.objects.create(user=self.musician, instrument="Instrument")
+
+    def test_user_instrument_creation_with_invalid_user(self):
+        with self.assertRaises(Exception):
+            UserInstrument.objects.create(user="User", instrument=self.instrument)
+
     def test_string_representation(self):
         self.assertEqual(str(self.user_instrument), f"{self.musician} → {self.instrument.name_pl}/{self.instrument.name_en} ({self.user_instrument.user_instrument_id})")
 
