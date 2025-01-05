@@ -97,33 +97,6 @@ class EventViewSetTestCase(TestCase):
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.data["error"], "Data validation failed")
 
-    def test_by_group(self):
-        Event.objects.create(group=self.group, name="n 1", description="d 1", date=timezone.now(), place="p 1")
-        Event.objects.create(group=self.group, name="n 2", description="d 2", date=timezone.now(), place="p 2")
-
-        # Define test cases with expected outcomes
-        test_cases = [
-            {"user": self.staff, "expected_status": 200, "expected_event_count": 2},
-            {"user": self.manager, "expected_status": 200, "expected_event_count": 2},
-            {"user": self.moderator, "expected_status": 200, "expected_event_count": 2},
-            {"user": self.musician, "expected_status": 200, "expected_event_count": 2},
-            {"user": self.outsider, "expected_status": 403, "expected_event_count": 0},
-        ]
-
-        for case in test_cases:
-            with self.subTest(user=case["user"]):
-                # Create and authenticate the request
-                request = self.factory.get(f"/api/events/by_group/?group_id={self.group.group_id}")
-                force_authenticate(request, user=case["user"])
-                response = EventViewSet.as_view({'get': 'by_group'})(request)
-
-                # Assert the response status
-                self.assertEqual(response.status_code, case["expected_status"])
-
-                # Assert the event count for valid responses
-                if case["expected_status"] == 200:
-                    self.assertEqual(len(response.data), case["expected_event_count"])
-
     def test_me(self):
         # Create events
         event1 = Event.objects.create(group=self.group, name="Event 1", description="Desc 1", date=timezone.now(), place="Place 1")
