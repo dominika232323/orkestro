@@ -14,6 +14,14 @@ class InvitationModelTests(TestCase):
         self.assertEqual(self.invitation.user, self.outsider)
         self.assertEqual(self.invitation.permission_level, "C")
 
+    def test_invitation_creation_with_invalid_group(self):
+        with self.assertRaises(Exception):
+            Invitation.objects.create(group="Group", user=self.outsider, permission_level="C")
+
+    def test_invitation_creation_with_invalid_user(self):
+        with self.assertRaises(Exception):
+            Invitation.objects.create(group=self.group, user="User", permission_level="C")
+
     def test_string_representation(self):
         self.assertEqual(str(self.invitation), f"{self.group.name} → {self.outsider} ({self.invitation.invitation_id})")
 
