@@ -25,7 +25,7 @@ export default function TopBar() {
   };
 
   return (
-    <div className="flex items-center justify-between bg-gray-100 p-4 shadow-md">
+    <div className="relative bg-gray-100 p-4 shadow-md flex items-center">
       {/* Left Section - Icons */}
       <div className="flex items-center space-x-4">
         <HoverText textToShow={t("top-bar.messages")}>
@@ -36,18 +36,16 @@ export default function TopBar() {
         </HoverText>
       </div>
 
-      {/* Center Section - Navigation */}
-      <div className="flex items-center space-x-6 text-sm">
-        <button
-          className="hover:text-gray-700 font-medium"
-          onClick={() => navigate("/invitations-and-groups/")}
-        >
-          {t("top-bar.invitations-and-groups")}
-        </button>
-      </div>
+      {/* Center Section - Orkestro Title */}
+      <button
+        onClick={() => navigate("/invitations-and-groups/")}
+        className="absolute left-1/2 transform -translate-x-1/2 text-4xl font-bold text-gray-800 hover:text-gray-600 transition-colors"
+      >
+        Orkestro
+      </button>
 
       {/* Right Section - Controls */}
-      <div className="flex items-center space-x-4">
+      <div className="flex items-center space-x-4 ml-auto">
         <div className="relative">
           <LanguageSelector />
         </div>

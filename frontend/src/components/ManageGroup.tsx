@@ -52,69 +52,54 @@ export default function ManageGroup() {
 
   return (
     <div className="bg-gray-200 p-6 rounded-lg max-w-4xl mx-auto mt-8">
-      <h1 className="text-2xl font-bold text-center mb-4">
+      <h1 className="text-2xl font-bold text-center mb-6">
         {t("manage-group.title")}
       </h1>
 
-      <div className="mb-4 flex items-center space-x-4 justify-between">
-        <div className="flex">
+      {/* Search Bar */}
+      <div className="mb-6 flex items-center justify-between space-x-4">
+        <div className="flex flex-1 items-center bg-white rounded-lg shadow-md overflow-hidden">
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder={t("manage-group.search-placeholder")}
-            className="flex-1 p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="flex-1 px-4 py-2 text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <button
             onClick={fetchMembers}
-            className="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+            className="px-4 py-2 bg-blue-500 text-white font-medium hover:bg-blue-600 transition-colors"
           >
             {t("manage-group.search")}
           </button>
         </div>
-        <div className="flex space-x-4">
-          <button
-            className={`py-2 px-4 rounded-lg font-medium ${
-              roleFilter === "manager"
-                ? "bg-red-500 text-white"
-                : "bg-gray-300 text-gray-800 hover:bg-gray-400"
-            }`}
-            onClick={() => toggleRoleFilter("manager")}
-          >
-            {roleFilter === "manager"
-              ? t("manage-group.cancel-filter")
-              : t("manage-group.roles.manager")}
-          </button>
-          <button
-            className={`py-2 px-4 rounded-lg font-medium ${
-              roleFilter === "musician"
-                ? "bg-red-500 text-white"
-                : "bg-gray-300 text-gray-800 hover:bg-gray-400"
-            }`}
-            onClick={() => toggleRoleFilter("musician")}
-          >
-            {roleFilter === "musician"
-              ? t("manage-group.cancel-filter")
-              : t("manage-group.roles.musician")}
-          </button>
-          <button
-            className={`py-2 px-4 rounded-lg font-medium ${
-              roleFilter === "moderator"
-                ? "bg-red-500 text-white"
-                : "bg-gray-300 text-gray-800 hover:bg-gray-400"
-            }`}
-            onClick={() => toggleRoleFilter("moderator")}
-          >
-            {roleFilter === "moderator"
-              ? t("manage-group.cancel-filter")
-              : t("manage-group.roles.moderator")}
-          </button>
-        </div>
       </div>
 
+      {/* Role Filter Buttons */}
+      <div className="flex justify-center space-x-4 mb-6">
+        {["manager", "musician", "moderator"].map((role) => (
+          <button
+            key={role}
+            className={`py-2 px-6 rounded-lg font-medium transition-colors ${
+              roleFilter === role
+                ? "bg-red-500 text-white"
+                : "bg-gray-300 text-gray-800 hover:bg-gray-400"
+            }`}
+            onClick={() => toggleRoleFilter(role)}
+          >
+            {roleFilter === role
+              ? t("manage-group.cancel-filter")
+              : t(`manage-group.roles.${role}`)}
+          </button>
+        ))}
+      </div>
+
+      {/* Members List or Loading State */}
       {members.length > 0 ? (
-        members.map((member) => <ManageMember member={member} />)
+        members.map((member) => (
+          <ManageMember key={member.user_id} member={member} />
+        ))
       ) : loading ? (
         <p className="text-gray-600 text-center">{t("manage-group.loading")}</p>
       ) : (
@@ -122,6 +107,8 @@ export default function ManageGroup() {
           {t("manage-group.no-members")}
         </p>
       )}
+
+      {/* Pagination */}
       <Pagination
         currentPage={currentPage}
         totalPages={totalPages}

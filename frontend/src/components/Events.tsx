@@ -51,108 +51,111 @@ export default function Events() {
 
   return (
     <div className="bg-gray-200 p-6 rounded-lg max-w-4xl mx-auto mt-8">
-      <h1 className="text-2xl font-bold text-center mb-4">
+      <h1 className="text-2xl font-bold text-center mb-6">
         {t("events.title")}
       </h1>
 
-      <div className="flex mb-4">
+      {/* Search Bar */}
+      <div className="flex items-center mb-6 bg-white shadow-md rounded-lg overflow-hidden">
         <input
           type="text"
           value={searchQuery}
-          onChange={(e) => {
-            setSearchQuery(e.target.value);
-          }}
+          onChange={(e) => setSearchQuery(e.target.value)}
           onKeyDown={handleKeyDown}
-          className="flex-1 p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           placeholder={t("events.placeholder")}
+          className="flex-1 px-4 py-2 text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
         <button
           onClick={handleSearch}
-          className="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+          className="px-6 py-2 bg-blue-500 text-white font-medium hover:bg-blue-600 transition-colors"
         >
           {t("events.search")}
         </button>
       </div>
 
+      {/* Event List */}
       {events.length > 0 ? (
-        <ul className="space-y-4">
+        <ul className="space-y-6">
           {events.map((event) => (
-            <li key={event.event_id}>
-              <div className="bg-white p-6 rounded-lg shadow-md mt-6">
-                <h2 className="text-lg font-bold mb-4">{event.name}</h2>
-                <p>
-                  <strong>
-                    <FontAwesomeIcon
-                      icon={faCalendarAlt}
-                      className="mr-2 text-gray-500"
-                    />
-                    {t("events.date")}:
-                  </strong>{" "}
-                  {event.date.toLocaleDateString(currentLanguage)}
-                </p>
-                <p>
-                  <strong>
-                    <FontAwesomeIcon
-                      icon={faClock}
-                      className="mr-2 text-gray-500"
-                    />
-                    {t("events.time")}:
-                  </strong>{" "}
-                  {event.date.toLocaleTimeString(currentLanguage)}
-                </p>
-                <p>
-                  <strong>
-                    <FontAwesomeIcon
-                      icon={faPen}
-                      className="mr-2 text-gray-500"
-                    />
-                    {t("events.description")}:
-                  </strong>{" "}
-                  {event.description}
-                </p>
-                <p>
-                  <strong>
-                    <FontAwesomeIcon
-                      icon={faLocationDot}
-                      className="mr-2 text-gray-500"
-                    />
-                    {t("events.address")}:
-                  </strong>{" "}
-                  {event.place}
-                </p>
+            <li
+              key={event.event_id}
+              className="bg-white p-6 rounded-lg shadow-md"
+            >
+              <h2 className="text-lg font-bold mb-4">{event.name}</h2>
+              <p>
+                <strong>
+                  <FontAwesomeIcon
+                    icon={faCalendarAlt}
+                    className="mr-2 text-gray-500"
+                  />
+                  {t("events.date")}:
+                </strong>{" "}
+                {event.date.toLocaleDateString(currentLanguage)}
+              </p>
+              <p>
+                <strong>
+                  <FontAwesomeIcon
+                    icon={faClock}
+                    className="mr-2 text-gray-500"
+                  />
+                  {t("events.time")}:
+                </strong>{" "}
+                {event.date.toLocaleTimeString(currentLanguage)}
+              </p>
+              <p>
+                <strong>
+                  <FontAwesomeIcon
+                    icon={faPen}
+                    className="mr-2 text-gray-500"
+                  />
+                  {t("events.description")}:
+                </strong>{" "}
+                {event.description}
+              </p>
+              <p>
+                <strong>
+                  <FontAwesomeIcon
+                    icon={faLocationDot}
+                    className="mr-2 text-gray-500"
+                  />
+                  {t("events.address")}:
+                </strong>{" "}
+                {event.place}
+              </p>
+              <div className="flex justify-end space-x-4 mt-4">
+                <button
+                  onClick={() => navigate(`/edit-event/${event.event_id}`)}
+                  className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 font-medium transition-colors"
+                >
+                  {t("events.edit")}
+                </button>
+                <button
+                  className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 font-medium transition-colors"
+                  onClick={handleDelete}
+                >
+                  <FontAwesomeIcon icon={faTimes} />
+                  {t("events.delete")}
+                </button>
               </div>
-              <button
-                onClick={() => {
-                  navigate(`/edit-event/${event.event_id}`);
-                }}
-              >
-                {t("events.edit")}
-              </button>
-              <button
-                className="p-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
-                onClick={handleDelete}
-              >
-                <FontAwesomeIcon icon={faTimes} />
-              </button>
             </li>
           ))}
         </ul>
       ) : loading ? (
-        <p>{t("events.loading")}</p>
+        <p className="text-gray-600 text-center">{t("events.loading")}</p>
       ) : (
-        <p>{t("events.no-events")}</p>
+        <p className="text-gray-600 text-center">{t("events.no-events")}</p>
       )}
 
+      {/* Add Event Button */}
       <button
-        className="w-full py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 font-medium"
-        onClick={() => {
-          navigate(`/new-event/${groupId}`);
-        }}
+        className="w-full py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 font-medium flex items-center justify-center mt-6"
+        onClick={() => navigate(`/new-event/${groupId}`)}
       >
         <FontAwesomeIcon icon={faPlus} className="mr-2" />
         {t("events.add-event")}
       </button>
 
+      {/* Pagination */}
       <Pagination
         currentPage={currentPage}
         totalPages={totalPages}
