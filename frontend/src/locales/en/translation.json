@@ -30,9 +30,9 @@
     "title": "Messages",
     "no-messages": "No messages",
     "loading": "Messages loading...",
-    "placeholder": "Search for topic, sender, group...",
-    "page": "Page",
-    "search": "Search"
+    "placeholder": "Search by title, sender, group…",
+    "search": "Search",
+    "page": "Page"
   },
   "message": {
     "from": "From",

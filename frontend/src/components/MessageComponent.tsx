@@ -47,7 +47,7 @@ export default function MessageComponent({message_recipient}: Params) {
           : "bg-yellow-50 border-yellow-300 hover:shadow-lg"
       }`}
     >
-      {/* Compact View */}
+      {!isExpanded && (
       <div className="flex flex-col">
         <p className="text-gray-700 font-medium">
           <span className="mr-2 text-blue-500">
@@ -85,12 +85,8 @@ export default function MessageComponent({message_recipient}: Params) {
         <p className="text-gray-700 font-bold mt-2">
           {message_recipient.message_details.title}
         </p>
-      </div>
 
-      {/* Expanded View */}
-      {isExpanded && (
-        <div className="mt-4">
-          <p className="text-gray-600 leading-relaxed">
+          <p className="mt-4 text-gray-600 leading-relaxed">
             {message_recipient.message_details.content}
           </p>
         </div>
