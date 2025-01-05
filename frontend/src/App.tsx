@@ -39,7 +39,7 @@ export default function App() {
         { path: "/files/:groupId", element: <Files /> },
         { path: "/settings/", element: <Settings /> },
         { path: "/edit-event/:eventId", element: <EditEventPage /> },
-        { path: "/new-event/", element: <NewEventPage /> },
+        { path: "/new-event/:groupId", element: <NewEventPage /> },
       ],
     },
     {

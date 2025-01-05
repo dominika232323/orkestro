@@ -105,5 +105,8 @@
   },
   "pagination": {
     "page": "Strona"
+  },
+  "new-event": {
+    "title": "Nowe wydarzenie"
   }
 }

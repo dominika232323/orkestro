@@ -65,7 +65,7 @@ export interface MessageRecipient {
 
 export interface Event {
   event_id: number;
-  group: number;
+  group_id: number;
   name: string;
   description: string;
   date: Date;

@@ -146,7 +146,7 @@ export default function Events() {
       <button
         className="w-full py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 font-medium"
         onClick={() => {
-          navigate(`/new-event/`);
+          navigate(`/new-event/${groupId}`);
         }}
       >
         <FontAwesomeIcon icon={faPlus} className="mr-2" />
