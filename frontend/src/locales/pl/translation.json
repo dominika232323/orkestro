@@ -107,6 +107,16 @@
     "page": "Strona"
   },
   "new-event": {
-    "title": "Nowe wydarzenie"
+    "title": "Nowe wydarzenie",
+    "name": "Nazwa",
+    "description": "Opis",
+    "place": "Miejsce",
+    "date": "Data",
+    "time": "Godzina",
+    "submit": "Utwórz"
+  },
+  "edit-event": {
+    "title": "Edytuj wydarzenie",
+    "submit": "Edytuj"
   }
 }

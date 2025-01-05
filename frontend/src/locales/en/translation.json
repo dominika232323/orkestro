@@ -107,6 +107,16 @@
     "page": "Page"
   },
   "new-event": {
-    "title": "New event"
+    "title": "New event",
+    "name": "Name",
+    "description": "Description",
+    "place": "Place",
+    "date": "Date",
+    "time": "Time",
+    "submit": "Create"
+  },
+  "edit-event": {
+    "title": "Edit event",
+    "submit": "Edit"
   }
 }

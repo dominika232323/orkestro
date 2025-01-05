@@ -6,6 +6,7 @@ import { useParams } from "react-router-dom";
 export default function NewEventPage() {
   const { t } = useLanguage();
   const { groupId } = useParams<{ groupId: string }>();
+  const [loading, setLoading] = useState(false);
 
   const parsedGroupId = groupId ? parseInt(groupId, 10) : undefined;
 
@@ -47,7 +48,9 @@ export default function NewEventPage() {
   };
 
   const handleSubmit = () => {
+    setLoading(true);
     console.log(formData);
+    setLoading(false);
   };
 
   return (
@@ -116,6 +119,7 @@ export default function NewEventPage() {
       </label>
       <button
         onClick={handleSubmit}
+        disabled={loading}
         className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600"
       >
         {t("new-event.submit")}
