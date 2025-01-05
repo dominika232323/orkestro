@@ -47,7 +47,7 @@ export interface Message {
   message_id: number;
   user_id: number;
   user_details: User;
-  group_id: number;
+  group: number;
   group_details: Group;
   title: string;
   content: string;
@@ -74,11 +74,9 @@ export interface Event {
 
 export interface Member {
   member_id: number;
-  group_id: number;
-  user_id: number;
-  name: string;
-  surname: string;
-  role: string;
+  group: number;
+  user: number;
+  permission_level: string;
 }
 
 export interface File {

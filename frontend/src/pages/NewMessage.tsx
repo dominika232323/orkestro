@@ -15,7 +15,7 @@ export default function NewMessage() {
   }
 
   const [formData, setFormData] = useState<Partial<Message>>({
-    group_id: parsedGroupId,
+    group: parsedGroupId,
     date: new Date(),
     // user_id trzeba skądś wziąć
   });

@@ -26,10 +26,9 @@ export default function Messages() {
 
     await axios
       .get<MessageRecipientPaged>(
-        searchQuery ?
-          `/api/message-recipients/me/?page=${currentPage}&search=${searchQuery}`
-          :
-          `/api/message-recipients/me/?page=${currentPage}`
+        searchQuery
+          ? `/api/message-recipients/me/?page=${currentPage}&search=${searchQuery}`
+          : `/api/message-recipients/me/?page=${currentPage}`
       )
       .then((response) => {
         const parsedMessages = response.data.messages.map((msg_recipient) => ({
@@ -73,6 +72,8 @@ export default function Messages() {
       handleSearch();
     }
   };
+
+  console.log(messages);
 
   return (
     <div className="bg-gray-200 p-6 rounded-lg max-w-4xl mx-auto mt-8">

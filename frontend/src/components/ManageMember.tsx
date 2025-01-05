@@ -17,13 +17,13 @@ export default function ManageMember({ member }: ManageMemberProps) {
 
   return (
     <div
-      key={member.user_id}
+      key={member.user}
       className="flex items-center justify-between bg-white p-4 rounded-lg shadow border border-gray-200 mb-2"
     >
-      <p>{member.name}</p>
+      <p>{member.member_id}</p>
       <div className="flex items-center space-x-4">
         <select
-          value={member.role}
+          value={member.permission_level}
           onSelect={handleRoleChange}
           className="p-2 border border-gray-300 rounded-lg"
         >
