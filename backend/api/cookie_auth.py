@@ -4,11 +4,12 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.tokens import UntypedToken
 
 
-class CookieMiddleware(MiddlewareMixin):
+class JWTCookieMiddleware(MiddlewareMixin):
+    """
+    Authenticate user based on the JWT present in cookies (for admin panel)
+    """
+
     def process_request(self, request):
-        """
-        Authenticate user based on the JWT present in cookies.
-        """
         jwt_token = request.COOKIES.get("access_token")
         if jwt_token:
             try:
@@ -21,7 +22,11 @@ class CookieMiddleware(MiddlewareMixin):
                 pass  # invalid token; user remains unauthenticated
 
 
-class CookieAuth(JWTAuthentication):
+class JWTCookieAuth(JWTAuthentication):
+    """
+    Authenticate user based on the JWT present in cookies (for API requests)
+    """
+
     def authenticate(self, request):
         jwt_token = request.COOKIES.get("access_token")
         if not jwt_token:
