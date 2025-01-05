@@ -1,12 +1,13 @@
 """
 Handles API requests regarding file data:
 - creation, deletion (requires being a manager of the group with the file)
-- getting all files shared with the calling user for a track and adding search criteria: name, instrument
+- searching files shared with the calling user for a track
 - getting all files shared with the calling user for an event
 Staff users can do all of the above + list all files or a specific one.
 """
 import io
 
+from django.core.paginator import Paginator
 from django.http import FileResponse
 
 from rest_framework import viewsets, status
@@ -45,20 +46,39 @@ class FileViewSet(viewsets.ModelViewSet):
     def search(self, request):
         files_for_me = (FileAllowedMember.objects.select_related("file", "file__track").defer('file__content')
             .filter(user_id=request.user, file__track__track_id=request.GET.get("track_id"),
-                    file__name__icontains=request.GET.get("name") or ""))
+                    file__name__icontains=request.GET.get("name", "")))
         files = [ffm.file for ffm in files_for_me]
-        if len(request.GET.getlist("instrument_id")) != 0:
+
+        if request.GET.get("instrument_id"):
             file_instruments = (FileInstrument.objects.select_related("file").defer('file__content')
-                .filter(file__in=files, instrument_id__in=request.GET.getlist("instrument_id")))
+                .filter(file__in=files, instrument_id__in=request.GET.get("instrument_id").split()))
             files = set([fi.file for fi in file_instruments])
-        serializer = self.get_serializer(files, many=True)
-        return Response(serializer.data)
+        files = sorted(files, key=lambda file: file.name)
+
+        paginator = Paginator(files, 20)
+        page = paginator.get_page(request.GET.get("page", 1))
+        serializer = self.get_serializer(page, many=True)
+
+        return Response({
+            "files": serializer.data,
+            "page_number": page.number,
+            "total_pages": paginator.num_pages
+        })
 
     @action(detail=False, methods=["get"])
     def me_by_event(self, request):
-        files_for_me = FileAllowedMember.objects.filter(user=request.user).select_related("file", "file__track").defer('file__content')
+        files_for_me = (FileAllowedMember.objects.select_related("file", "file__track").defer('file__content')
+                        .order_by("file__name").filter(user=request.user))
         event_tracks = EventTrack.objects.filter(event_id=request.GET.get("event_id")).select_related("track")
         track_ids = [et.track_id for et in event_tracks]
         files = [ffm.file for ffm in files_for_me if ffm.file.track_id in track_ids]
-        serializer = self.get_serializer(files, many=True)
-        return Response(serializer.data)
+
+        paginator = Paginator(files, 20)
+        page = paginator.get_page(request.GET.get("page", 1))
+        serializer = self.get_serializer(page, many=True)
+
+        return Response({
+            "files": serializer.data,
+            "page_number": page.number,
+            "total_pages": paginator.num_pages
+        })

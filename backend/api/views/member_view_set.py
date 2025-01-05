@@ -1,18 +1,20 @@
 """
 Handles API requests regarding group membership data:
 - changing permissions, deletion (requires being the manager of the group, can't demote/remove the last manager)
-- getting all members of a group (requires being a member of that group)
+- searching members in a group (requires being a member of that group)
 Adding members is normally done by invitations (or group creation - adds the creator).
 Staff users can do all of the above + create members and list all/one.
 """
+from django.core.paginator import Paginator
+from django.db.models import Q
+
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 
 from api.models import Member
 from api.serializers import MemberSerializer, MemberCreateSerializer
-from rest_framework.response import Response
-
 from api.permissions.member_permissions import CanViewCreateMember, CanEditDeleteMember
 
 
@@ -52,7 +54,21 @@ class MemberViewSet(viewsets.ModelViewSet):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(detail=False, methods=["get"])
-    def by_group(self, request):
-        members = Member.objects.filter(group_id=request.GET.get("group_id")).select_related("user")
-        serializer = self.get_serializer(members, many=True)
-        return Response(serializer.data)
+    def search(self, request):
+        name_query = Q()
+        for term in request.GET.get("name", "").split():
+            name_query |= Q(user__name__icontains=term) | Q(user__surname__icontains=term)
+        permission_level_query = Q(permission_level__icontains=request.GET.get("permission_level", ""))
+
+        members = (Member.objects.select_related("user").order_by("user__name")
+            .filter(name_query, permission_level_query, group_id=request.GET.get("group_id")))
+
+        paginator = Paginator(members, 20)
+        page = paginator.get_page(request.GET.get("page", 1))
+        serializer = self.get_serializer(page, many=True)
+
+        return Response({
+            "members": serializer.data,
+            "page_number": page.number,
+            "total_pages": paginator.num_pages
+        })

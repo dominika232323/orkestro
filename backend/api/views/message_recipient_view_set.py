@@ -3,7 +3,7 @@ Handles API requests regarding message recipient data:
 - creating entries - adding another recipient to the message (requires being the manager or the moderator of the group)
 - sending a copy of the message to the recipient's e-mail()
 - marking a message as read (requires being the recipient)
-- getting all messages sent to the calling user
+- searching messages sent to the calling user
 Staff users can do all of the above + list all message recipients or a specific one.
 """
 from django.core.mail import send_mail

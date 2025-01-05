@@ -1,10 +1,13 @@
 """
 Handles API requests regarding event data:
 - creation, edition, deletion (requires being the manager of the group with the event)
-- getting all events in a group (requires being a member of that group)
+- searching events in a group (requires being a member of that group)
 - getting all events regarding the calling user
 Staff users can do all of the above + list all events or a specific one.
 """
+from django.core.paginator import Paginator
+from django.db.models import Q
+
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
@@ -29,10 +32,22 @@ class EventViewSet(viewsets.ModelViewSet):
         return Response(data=serializer.data, status=status.HTTP_201_CREATED)
 
     @action(detail=False, methods=["get"])
-    def by_group(self, request):
-        events = Event.objects.filter(group=request.GET.get("group_id"))
-        serializer = self.get_serializer(events, many=True)
-        return Response(serializer.data)
+    def search(self, request):
+        query = Q()
+        for term in request.GET.get("search", "").split():
+            query |= Q(name__icontains=term) | Q(place__icontains=term) | Q(description__icontains=term)
+
+        events = Event.objects.filter(query, group_id=request.GET.get("group_id")).order_by("-date")
+
+        paginator = Paginator(events, 20)
+        page = paginator.get_page(request.GET.get("page", 1))
+        serializer = self.get_serializer(page, many=True)
+
+        return Response({
+            "events": serializer.data,
+            "page_number": page.number,
+            "total_pages": paginator.num_pages
+        })
 
     @action(detail=False, methods=["get"])
     def me(self, request):

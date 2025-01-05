@@ -10,7 +10,7 @@ class CanViewCreateMember(BasePermission):
     def has_permission(self, request, view):
         if request.method not in ["GET", "POST"] or request.user.is_staff:
             return True
-        if request.method != "GET" or view.action != "by_group":
+        if request.method != "GET" or view.action != "search":
             return False
         return is_member(request, request.GET.get("group_id"))
 
