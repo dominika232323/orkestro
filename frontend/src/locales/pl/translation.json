@@ -67,7 +67,10 @@
     "add-event": "Nowe wydarzenie",
     "prev": "Poprzedni",
     "next": "Następny",
-    "page": "Strona"
+    "page": "Strona",
+    "placeholder": "Szukaj po nazwie, lokalizacji, opisie...",
+    "search": "Szukaj",
+    "edit": "Edytuj"
   },
   "files": {
     "title": "Pliki",

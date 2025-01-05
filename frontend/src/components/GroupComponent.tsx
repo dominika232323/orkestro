@@ -26,10 +26,20 @@ export default function GroupComponent({ group }: Params) {
           >
             {t("group.manage")}
           </button>
-          <button className="text-sm text-blue-500 hover:text-blue-700">
+          <button
+            className="text-sm text-blue-500 hover:text-blue-700"
+            onClick={() => {
+              navigate(`/events/${group.group_id}`);
+            }}
+          >
             {t("group.events")}
           </button>
-          <button className="text-sm text-blue-500 hover:text-blue-700">
+          <button
+            className="text-sm text-blue-500 hover:text-blue-700"
+            onClick={() => {
+              navigate(`/files/${group.group_id}`);
+            }}
+          >
             {t("group.files")}
           </button>
         </div>

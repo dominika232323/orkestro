@@ -44,18 +44,6 @@ export default function TopBar() {
         >
           {t("top-bar.invitations-and-groups")}
         </button>
-        <button
-          className="hover:text-gray-700 font-medium"
-          onClick={() => navigate("/events/")}
-        >
-          {t("top-bar.events")}
-        </button>
-        <button
-          className="hover:text-gray-700 font-medium"
-          onClick={() => navigate("/files/")}
-        >
-          {t("top-bar.files")}
-        </button>
       </div>
 
       {/* Right Section - Controls */}

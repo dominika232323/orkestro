@@ -67,7 +67,10 @@
     "add-event": "New event",
     "prev": "Previous",
     "next": "Next",
-    "page": "Page"
+    "page": "Page",
+    "placeholder": "Search for name, place, description...",
+    "search": "Search",
+    "edit": "Edit"
   },
   "files": {
     "title": "Files",

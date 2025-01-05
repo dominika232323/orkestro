@@ -4,19 +4,19 @@ import { useLanguage } from "../LanguageContext";
 
 interface PaginationProps {
   currentPage: number;
-  maxPage: number;
+  totalPages: number;
   onPageChange: (page: number) => void;
 }
 
 export default function Pagination({
   currentPage,
-  maxPage,
+  totalPages,
   onPageChange,
 }: PaginationProps) {
   const { t } = useLanguage();
 
   const handleNextPage = () => {
-    if (currentPage < maxPage) {
+    if (currentPage < totalPages) {
       onPageChange(currentPage + 1);
     }
   };
@@ -37,12 +37,12 @@ export default function Pagination({
         <FontAwesomeIcon icon={faArrowLeft} />
       </button>
       <span className="self-center font-medium">
-        {t("pagination.page")} {currentPage} / {maxPage}
+        {t("pagination.page")} {currentPage} / {totalPages}
       </span>
       <button
         className="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
         onClick={handleNextPage}
-        disabled={currentPage >= maxPage}
+        disabled={currentPage >= totalPages}
       >
         <FontAwesomeIcon icon={faArrowRight} />
       </button>

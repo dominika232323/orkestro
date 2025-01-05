@@ -14,14 +14,14 @@ export default function ManageGroup() {
   const [searchQuery, setSearchQuery] = useState("");
   const [roleFilter, setRoleFilter] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [maxPage, setMaxPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   const fetchMembers = () => {
     setLoading(true);
     // TO DO
     // use groupId, searchString, currentPage and roleFilter, return list of IMembers (concatenate information from User class and Member class)
     // members can be searched by searchstring OR ROLE
-    // use setMaxPage() to set amount of pages received from API
+    // use setTotalPages() to set amount of pages received from API
     setLoading(false);
   };
 
@@ -35,7 +35,18 @@ export default function ManageGroup() {
     } else {
       setRoleFilter(newFilter);
     }
+    handleSearch();
+  };
+
+  const handleSearch = () => {
+    setCurrentPage(1);
     fetchMembers();
+  };
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      handleSearch();
+    }
   };
 
   return (
@@ -50,6 +61,7 @@ export default function ManageGroup() {
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyDown={handleKeyDown}
             placeholder={t("manage-group.search-placeholder")}
             className="flex-1 p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           />
@@ -111,7 +123,7 @@ export default function ManageGroup() {
       )}
       <Pagination
         currentPage={currentPage}
-        maxPage={maxPage}
+        totalPages={totalPages}
         onPageChange={(page) => setCurrentPage(page)}
       />
     </div>
