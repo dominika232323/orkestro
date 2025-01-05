@@ -7,29 +7,32 @@ import MessageComponent from "./MessageComponent";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons";
 
+interface MessageRecipientPaged {
+  messages: MessageRecipient[];
+  page_number: number;
+  total_pages: number;
+}
+
 export default function Messages() {
   const { t } = useLanguage();
   const [loading, setLoading] = useState(false);
   const [messages, setMessages] = useState<MessageRecipient[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [maxPage, setMaxPage] = useState(1);
+  const [totalPages, setTotalPages] = useState<number>(1);
 
   const fetchMessages = async () => {
     setLoading(true);
 
-    const messagesPerPage = 10; // Probably worth to send to API
-    // currentPage definitly sent to API
-
     await axios
-      .get<MessageRecipient[]>(
+      .get<MessageRecipientPaged>(
         searchQuery ?
-          `/api/message-recipients/me/?search=${searchQuery}`
+          `/api/message-recipients/me/?page=${currentPage}&search=${searchQuery}`
           :
-          "/api/message-recipients/me/"
+          `/api/message-recipients/me/?page=${currentPage}`
       )
       .then((response) => {
-        const parsedMessages = response.data.map((msg_recipient) => ({
+        const parsedMessages = response.data.messages.map((msg_recipient) => ({
           ...msg_recipient,
           message_details: {
             ...msg_recipient.message_details,
@@ -38,8 +41,7 @@ export default function Messages() {
         }));
 
         setMessages(parsedMessages);
-
-        setMaxPage(5); // API must return total amount of pages
+        setTotalPages(response.data.total_pages);
       })
       .catch((error) => console.error("Error fetching invitations:", error));
     setLoading(false);
@@ -50,7 +52,7 @@ export default function Messages() {
   }, [currentPage]);
 
   const handleNextPage = () => {
-    if (currentPage <= maxPage - 1) {
+    if (currentPage <= totalPages - 1) {
       setCurrentPage((prevPage) => prevPage + 1);
     }
   };
@@ -110,7 +112,7 @@ export default function Messages() {
           {<FontAwesomeIcon icon={faArrowLeft} />}
         </button>
         <span className="self-center font-medium">
-          {t("messages.page")} {currentPage} / {maxPage}
+          {t("messages.page")} {currentPage} / {totalPages}
         </span>
         <button
           className="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"

@@ -60,12 +60,21 @@ class MessageRecipientViewSet(viewsets.ModelViewSet):
 
         query = Q()
         for term in search_terms:
-            query |= Q(message__user__name__icontains=term) | Q(message__user__surname__icontains=term) | Q(message__title__icontains=term)
+            query |= Q(message__user__name__icontains=term) | \
+                     Q(message__user__surname__icontains=term) | \
+                     Q(message__title__icontains=term)
 
         received_messages = MessageRecipient.objects.select_related("message", "user", "message__group") \
             .filter(query, user=request.user) \
             .order_by("-message__date")
 
-        page = Paginator(received_messages, 20).get_page(request.GET.get("page"))
+        paginator = Paginator(received_messages, 20)
+        page = paginator.get_page(request.GET.get("page", 1))
+
         serializer = self.get_serializer(page, many=True)
-        return Response(serializer.data)
+
+        return Response({
+            "messages": serializer.data,
+            "page_number": page.number,
+            "total_pages": paginator.num_pages
+        })
