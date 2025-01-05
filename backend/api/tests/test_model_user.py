@@ -1,5 +1,3 @@
-from datetime import timedelta
-
 from django.test import TestCase
 from django.utils import timezone
 
@@ -8,16 +6,15 @@ from api.models import User
 
 class UserModelTests(TestCase):
     def setUp(self):
-        self.user = User.objects.create_user(email="testuser@example.com", password="securepassword", name="Test", surname="User")
-        self.superuser = User.objects.create_superuser(email="admin@example.com", password="securepassword", name="Admin", surname="User")
+        self.fixed_date = timezone.now()
+        self.user = User.objects.create_user(email="testuser@example.com", password="securepassword", name="Test", surname="User", date_joined=self.fixed_date)
+        self.superuser = User.objects.create_superuser(email="admin@example.com", password="securepassword", name="Admin", surname="User", date_joined=self.fixed_date)
 
     def test_user_creation(self):
         self.assertEqual(self.user.email, "testuser@example.com")
         self.assertEqual(self.user.name, "Test")
         self.assertEqual(self.user.surname, "User")
-
-        self.assertIsNotNone(self.user.date_joined)
-        self.assertTrue((timezone.now() - self.user.date_joined) < timedelta(minutes=1))
+        self.assertEqual(self.user.date_joined, self.fixed_date)
 
         self.assertTrue(self.user.is_active)
         self.assertFalse(self.user.is_staff)
@@ -38,9 +35,7 @@ class UserModelTests(TestCase):
         self.assertEqual(self.superuser.email, "admin@example.com")
         self.assertEqual(self.superuser.name, "Admin")
         self.assertEqual(self.superuser.surname, "User")
-
-        self.assertIsNotNone(self.superuser.date_joined)
-        self.assertTrue((timezone.now() - self.superuser.date_joined) < timedelta(minutes=1))
+        self.assertEqual(self.superuser.date_joined, self.fixed_date)
 
         self.assertTrue(self.superuser.is_active)
         self.assertTrue(self.superuser.is_staff)
