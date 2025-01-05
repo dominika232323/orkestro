@@ -13,7 +13,16 @@ class MessageRecipientModelTests(TestCase):
 
     def test_message_recipient_creation(self):
         self.assertEqual(self.recipient.message, self.message)
+        self.assertEqual(self.recipient.user, self.musician)
         self.assertFalse(self.recipient.is_read)
+
+    def test_message_recipient_creation_with_invalid_message(self):
+        with self.assertRaises(Exception):
+            MessageRecipient.objects.create(message="Message", user=self.musician, is_read=False)
+
+    def test_message_recipient_creation_with_invalid_user(self):
+        with self.assertRaises(Exception):
+            MessageRecipient.objects.create(message=self.message, user="User", is_read=False)
 
     def test_string_representation(self):
         self.assertEqual(str(self.recipient), f"{self.message.user} → {self.message.group.name} → {self.musician} ({self.recipient.message_recipient_id})")
