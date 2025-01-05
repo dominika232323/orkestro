@@ -7,6 +7,8 @@ Handles API requests regarding message recipient data:
 Staff users can do all of the above + list all message recipients or a specific one.
 """
 from django.core.mail import send_mail
+from django.core.paginator import Paginator
+from django.db.models import Q
 
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
@@ -53,6 +55,9 @@ class MessageRecipientViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=["get"])
     def me(self, request):
-        received_messages = MessageRecipient.objects.filter(user=request.user).select_related("message", "user")
-        serializer = self.get_serializer(received_messages, many=True)
+        received_messages = MessageRecipient.objects.select_related("message", "user", "message__group").order_by('-message__date').filter(
+            (Q(message__user__name__icontains=request.GET.get("sender") or "") | Q(message__user__surname__icontains=request.GET.get("sender") or "")),
+            user=request.user, message__title__icontains=request.GET.get("title") or "", message__group__name__icontains=request.GET.get("group") or "")
+        page = Paginator(received_messages, 20).get_page(request.GET.get("page"))
+        serializer = self.get_serializer(page, many=True)
         return Response(serializer.data)
