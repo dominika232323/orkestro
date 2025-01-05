@@ -15,7 +15,7 @@ interface MessageRecipientPaged {
 
 export default function Messages() {
   const { t } = useLanguage();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [messages, setMessages] = useState<MessageRecipient[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [currentPage, setCurrentPage] = useState<number>(1);
