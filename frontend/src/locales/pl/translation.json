@@ -74,10 +74,12 @@
   },
   "files": {
     "title": "Pliki",
-    "no-files": "Brak plików dla wybranej grupy",
+    "no-files": "Brak plików",
     "download": "Pobierz",
     "add-file": "Nowy plik",
-    "search-placeholder": "Wyszukaj pliki…"
+    "placeholder": "Wyszukaj pliki po tytule lub ścieżce…",
+    "search": "Szukaj",
+    "loading": "Ładowanie plików..."
   },
   "manage-group": {
     "title": "Zarządzaj grupą",

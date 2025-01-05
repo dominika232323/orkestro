@@ -17,9 +17,9 @@ export default function Events() {
   const { t, currentLanguage } = useLanguage();
   const navigate = useNavigate();
   const { groupId } = useParams();
+
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(false);
-
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -55,7 +55,6 @@ export default function Events() {
         {t("events.title")}
       </h1>
 
-      {/* List of Events */}
       <div className="flex mb-4">
         <input
           type="text"
