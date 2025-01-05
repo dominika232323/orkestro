@@ -15,6 +15,14 @@ class FileAllowedMemberModelTests(TestCase):
         self.assertEqual(self.file_allowed_member.file, self.file)
         self.assertEqual(self.file_allowed_member.user, self.moderator)
 
+    def test_file_allowed_member_creation_with_invalid_file(self):
+        with self.assertRaises(Exception):
+            FileAllowedMember.objects.create(file="File", user=self.moderator)
+
+    def test_file_allowed_member_creation_with_invalid_user(self):
+        with self.assertRaises(Exception):
+            FileAllowedMember.objects.create(file=self.file, user="User")
+
     def test_string_representation(self):
         self.assertEqual(str(self.file_allowed_member), f"{self.file.name} → {self.moderator} ({self.file_allowed_member.file_allowed_member_id})")
 
