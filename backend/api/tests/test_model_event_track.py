@@ -16,6 +16,14 @@ class EventTrackModelTests(TestCase):
         self.assertEqual(self.event_track.track, self.track)
         self.assertEqual(self.event_track.event, self.event)
 
+    def test_event_track_creation_with_invalid_track(self):
+        with self.assertRaises(Exception):
+            EventTrack.objects.create(track="Track", event=self.event)
+
+    def test_event_track_creation_with_invalid_user(self):
+        with self.assertRaises(Exception):
+            EventTrack.objects.create(track=self.track, event="Event")
+
     def test_string_representation(self):
         self.assertEqual(str(self.event_track), f"{self.event.name} → {self.track.name} ({self.event_track.event_track_id})")
 
