@@ -68,6 +68,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "api.cookie_auth.JWTCookieMiddleware",
 ]
 
 ROOT_URLCONF = "orkestro.urls"
@@ -156,7 +157,7 @@ REST_USE_JWT = True
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
-        "api.cookie_auth.CookieAuth",
+        "api.cookie_auth.JWTCookieAuth",
     ),
 }
 
