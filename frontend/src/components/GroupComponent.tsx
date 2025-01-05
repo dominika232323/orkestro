@@ -42,6 +42,14 @@ export default function GroupComponent({ group }: Params) {
           >
             {t("group.files")}
           </button>
+          <button
+            className="text-sm text-blue-500 hover:text-blue-700"
+            onClick={() => {
+              navigate(`/new-message/${group.group_id}`);
+            }}
+          >
+            {t("group.new-message")}
+          </button>
         </div>
       </div>
 

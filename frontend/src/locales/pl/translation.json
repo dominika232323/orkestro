@@ -24,7 +24,8 @@
   "group": {
     "manage": "Zarządzaj",
     "events": "Wydarzenia",
-    "files": "Pliki"
+    "files": "Pliki",
+    "new-message": "Nowa wiadomość"
   },
   "messages": {
     "title": "Wiadomości",
@@ -98,7 +99,7 @@
     "search-placeholder": "Wyszukaj użytkowników…",
     "cancel-filter": "Usuń filtr",
     "messages": "Wiadomości",
-    "send-messages": "Nowa wiadomość",
+    "new-message": "Nowa wiadomość",
     "page": "Strona",
     "search": "Szukaj",
     "loading": "Ładowanie członków grupy..."
@@ -118,5 +119,11 @@
   "edit-event": {
     "title": "Edytuj wydarzenie",
     "submit": "Edytuj"
+  },
+  "new-message": {
+    "title": "Nowa wiadomość",
+    "message-title": "Tytuł",
+    "content": "Treść",
+    "submit": "Wyślij"
   }
 }

@@ -16,6 +16,7 @@ import Files from "./components/Files";
 import Settings from "./components/Settings";
 import EditEventPage from "./pages/EditEventPage";
 import NewEventPage from "./pages/NewEventPage";
+import NewMessage from "./pages/NewMessage";
 
 export default function App() {
   const router = createBrowserRouter([
@@ -40,6 +41,7 @@ export default function App() {
         { path: "/settings/", element: <Settings /> },
         { path: "/edit-event/:eventId", element: <EditEventPage /> },
         { path: "/new-event/:groupId", element: <NewEventPage /> },
+        { path: "/new-message/:groupId", element: <NewMessage /> },
       ],
     },
     {

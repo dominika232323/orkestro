@@ -45,9 +45,9 @@ export interface UserInstrument {
 
 export interface Message {
   message_id: number;
-  user: number;
+  user_id: number;
   user_details: User;
-  group: number;
+  group_id: number;
   group_details: Group;
   title: string;
   content: string;

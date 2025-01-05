@@ -24,7 +24,8 @@
   "group": {
     "manage": "Manage",
     "events": "Events",
-    "files": "Files"
+    "files": "Files",
+    "new-message": "New message"
   },
   "messages": {
     "title": "Messages",
@@ -98,7 +99,7 @@
     "search-placeholder": "Search members…",
     "cancel-filter": "Cancel filter",
     "messages": "Messages",
-    "send-messages": "New message",
+    "new-message": "New message",
     "page": "Page",
     "search": "Search",
     "loading": "Members loading..."
@@ -118,5 +119,11 @@
   "edit-event": {
     "title": "Edit event",
     "submit": "Edit"
+  },
+  "new-message": {
+    "title": "New message",
+    "message-title": "Title",
+    "content": "Content",
+    "submit": "Send"
   }
 }

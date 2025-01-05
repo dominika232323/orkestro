@@ -1,16 +1,17 @@
 import { useLanguage } from "../LanguageContext";
 import { useEffect, useState } from "react";
 import ManageMember from "./ManageMember";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Pagination from "./Pagination";
 import { Member } from "../interfaces";
 
 export default function ManageGroup() {
   const { t } = useLanguage();
   const { groupId } = useParams();
+  const navigate = useNavigate();
+
   const [members, setMembers] = useState<Member[]>([]);
   const [loading, setLoading] = useState(false);
-
   const [searchQuery, setSearchQuery] = useState("");
   const [roleFilter, setRoleFilter] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
