@@ -95,7 +95,8 @@
     "messages": "Wiadomości",
     "send-messages": "Nowa wiadomość",
     "page": "Strona",
-    "search": "Szukaj"
+    "search": "Szukaj",
+    "loading": "Ładowanie członków grupy..."
   },
   "pagination": {
     "page": "Strona"

@@ -95,7 +95,8 @@
     "messages": "Messages",
     "send-messages": "New message",
     "page": "Page",
-    "search": "Search"
+    "search": "Search",
+    "loading": "Members loading..."
   },
   "pagination": {
     "page": "Page"

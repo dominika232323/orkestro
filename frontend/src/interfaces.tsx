@@ -74,7 +74,9 @@ export interface Event {
 
 export interface Member {
   member_id: number;
-  group: number;
-  user: number;
-  permission_level: string;
+  group_id: number;
+  user_id: number;
+  name: string;
+  surname: string;
+  role: string;
 }

@@ -6,7 +6,6 @@ import {
   faCog,
   faArrowRightFromBracket,
   faMessage,
-  faUsers,
 } from "@fortawesome/free-solid-svg-icons";
 import HoverText from "./HoverText";
 import TopBarIcon from "./TopBarIcon";
