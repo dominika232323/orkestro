@@ -11,8 +11,8 @@ export default function Messages() {
   const { t } = useLanguage();
   const [loading, setLoading] = useState(false);
   const [messages, setMessages] = useState<MessageRecipient[]>([]);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [currentPage, setCurrentPage] = useState<number>(1);
   const [maxPage, setMaxPage] = useState(1);
 
   const fetchMessages = async () => {
@@ -22,7 +22,12 @@ export default function Messages() {
     // currentPage definitly sent to API
 
     await axios
-      .get<MessageRecipient[]>("/api/message-recipients/me/")
+      .get<MessageRecipient[]>(
+        searchQuery ?
+          `/api/message-recipients/me/?search=${searchQuery}`
+          :
+          "/api/message-recipients/me/"
+      )
       .then((response) => {
         const parsedMessages = response.data.map((msg_recipient) => ({
           ...msg_recipient,
