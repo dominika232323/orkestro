@@ -37,6 +37,8 @@ class EventViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=["get"])
     def me(self, request):
         participations = EventAttendee.objects.filter(user=request.user).select_related("event")
+        if request.GET.get("year") and request.GET.get("month"):
+            participations = participations.filter(event__date__year=request.GET.get("year"), event__date__month=request.GET.get("month"))
         events = [p.event for p in participations]
         serializer = self.get_serializer(events, many=True)
         return Response(serializer.data)
