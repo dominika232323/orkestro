@@ -80,3 +80,9 @@ export interface Member {
   surname: string;
   role: string;
 }
+
+export interface File {
+  file_id: number;
+  track: string;
+  name: string;
+}
