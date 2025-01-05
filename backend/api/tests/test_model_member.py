@@ -14,6 +14,14 @@ class MemberModelTests(TestCase):
         self.assertEqual(self.member.group, self.group)
         self.assertEqual(self.member.permission_level, "C")
 
+    def test_member_creation_with_invalid_group(self):
+        with self.assertRaises(Exception):
+            Member.objects.create(user=self.outsider, group="Group", permission_level="C")
+
+    def test_member_creation_with_invalid_user(self):
+        with self.assertRaises(Exception):
+            Member.objects.create(user="User", group=self.group, permission_level="C")
+
     def test_string_representation(self):
         self.assertEqual(str(self.member), f"{self.group.name} → {self.outsider} ({self.member.member_id})")
 
