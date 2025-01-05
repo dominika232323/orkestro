@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from django.test import TestCase
 from django.utils import timezone
 
@@ -11,8 +13,22 @@ class MessageModelTests(TestCase):
         self.message = Message.objects.create(user=self.moderator, group=self.group, title="Title", content="Content", date=timezone.now())
 
     def test_message_creation(self):
+        self.assertEqual(self.message.user, self.moderator)
+        self.assertEqual(self.message.group, self.group)
+
         self.assertEqual(self.message.title, "Title")
         self.assertEqual(self.message.content, "Content")
+
+        self.assertIsNotNone(self.message.date)
+        self.assertTrue((timezone.now() - self.message.date) < timedelta(minutes=1))
+
+    def test_message_creation_with_invalid_user(self):
+        with self.assertRaises(Exception):
+            Message.objects.create(user="User", group=self.group, title="Title", content="Content", date=timezone.now())
+
+    def test_message_creation_with_invalid_group(self):
+        with self.assertRaises(Exception):
+            Message.objects.create(user=self.moderator, group="Group", title="Title", content="Content", date=timezone.now())
 
     def test_string_representation(self):
         self.assertEqual(str(self.message), f"{self.message.user} → {self.message.group.name} ({self.message.message_id})")
