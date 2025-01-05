@@ -814,12 +814,16 @@ Obowiązkowo określenie metod realizacji: języki programowania, frameworki, ś
 
 W backendzie występuje duża liczba klas, które można podzielić na grupy funkcjonalne - dla lepszej przejrzystości struktura klas zostanie przedstawiona na kilku diagramach dla każdej takiej grupy. Na diagramach pojawią się klasy dostarczone przez Django, ponieważ praca z tym frameworkiem opiera się o pisanie klas pochodnych dostosowujących typowo spotykaną funkcjonalność aplikacji do danego projektu i oferujących dodatkowe funkcje. Wiele z tych klas ma dużą liczbę pól i metod oraz złożony schemat dziedziczenia - dla uproszczenia pokazujemy jedną klasę bazową z własnymi/odziedziczonymi elementami istotnymi dla aplikacji.
 
-Jako argumenty czy zwracane typy funkcji wykorzystywane są dodatkowe klasy Django:
+Jako argumenty czy zwracane typy funkcji wykorzystywane są dodatkowe klasy Django, których struktura nie pojawi się na diagramach:
 \begin{itemize}
-\item request: zapytanie HTTP
+\item request/Request: zapytanie HTTP
 \item Response: odpowiedź HTTP
-\item view/View - funkcja przetwarzająca zapytanie
+\item view/View - funkcja przetwarzająca zapytanie (ma dodatkowe pola w stosunku do tych definiowanych np. w ViewSetach)
 \item QuerySet - dane z zapytania do bazy danych
+\item BaseAuthentication - klasa przeprowadzająca autoryzację użytkownika
+\item Error - wiadomość o błędzie przy operacji na obiekcie typu Model
+\item CharField, AutoField, ForeignKey, BooleanField, DateTimeField, BinaryField, EmailField, URLField - klasy obsługujące poszczególne typy danych w bazie
+\item BaseManager - klasa pobierająca listy rekordów z bazy danych.
 \end{itemize}
 
 "Zbiorczy" diagram klas (poszczególne grupy klas zebrane pod jedną nazwą, zaznaczone związki występują w pewnej formie pomiędzy klasami w grupach):
@@ -832,7 +836,25 @@ Jako argumenty czy zwracane typy funkcji wykorzystywane są dodatkowe klasy Djan
 
 \subsubsection{Model}
 
-\subsubsection{ViewSet}
+Klasy typu Model pośredniczą w wymianie danych z bazą. Na tak zdefiniowanych klasach Django ORM umożliwia m.in. pobieranie wszystkich lub jednego rekordu, modyfikację danych, dostęp do danych w powiązanych tabelach czy filtrowanie wszystkich rekordów po różnych kryteriach. Każdy model jest powiązany z tabelą w bazie, zdefiniowane są właściwości pól i więzy integralności. Zdefiniowane modele mają wyłączoną możliwość zarządzania cyklem życia tabel.
+
+Klasa User wymagała dodatkowych pól i metod, by realizować operacje związane z autoryzacją użytkowników.
+
+\begin{figure} [H]
+    \centering
+    \includegraphics[width=0.95\linewidth]{images/models.png}
+    \caption{Struktura klas typu Permission}
+\end{figure}
+
+\subsubsection{Serializer}
+
+Klasy dziedziczące po \texttt{ModelSerializer} służą do ładowania i zapisywania danych modeli do formatu JSON. Każdy serializator ma przypisany model, listę jego uwzględnianych pól i listę pól tylko do odczytu. Część klas przekazuje przy odczycie również dane z powiązanych tabel w bazie (poprzez dodatkowe pole), aby uniknąć dodatkowych zapytań do API. Jeżeli powiązany \texttt{ViewSet} umożliwia tworzenie i modyfikację danych modelu, tworzy się dwa serializatory - z wyszczególnionymi polami tylko do odczytu i bez nich.
+
+\begin{figure} [H]
+    \centering
+    \includegraphics[width=0.95\linewidth]{images/serializers.png}
+    \caption{Struktura klas typu Serializer}
+\end{figure}
 
 \subsubsection{Permission}
 
@@ -844,7 +866,24 @@ Klasy dziedziczące po \texttt{BasePermission} służą do weryfikacji, czy uży
     \caption{Struktura klas typu Permission}
 \end{figure}
 
+\subsubsection{ViewSet}
+
+Klasy dziedziczące po \texttt{ModelViewSet} zajmują się realizacją zapytań wysyłanych do endpointów - weryfikują uprawnienia użytkownika, przetwarzają dane i wysyłają odpowiedź. Każda niestatyczna metoda z argumentem \texttt{request} odpowiada za pewien endpoint, przy czym niektóre operacje są zablokowane poprzez niewpisanie odpowiedniej metody HTTP do \texttt{http\_method\_names}.
+
+\begin{figure} [H]
+    \centering
+    \includegraphics[width=0.95\linewidth]{images/viewsets.png}
+    \caption{Struktura klas typu ViewSet}
+\end{figure}
+
+\subsubsection{Form, Admin}
+Zdefiniowane klasy modyfikują domyślną funkcjonalność panelu administratora Django - umożliwiają dodanie podrzędnych obiektów podczas przeglądania nadrzędnego, modyfikują zakładkę z danymi użytkownika.
+
 \textcolor{red}{TODO}
+
+\subsubsection{Pozostałe}
+
+\textcolor{red}{TODO} apps, cookie\_auth, views 
 
 \subsection{Statystyki}
 
