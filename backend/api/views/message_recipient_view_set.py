@@ -62,7 +62,8 @@ class MessageRecipientViewSet(viewsets.ModelViewSet):
         for term in search_terms:
             query |= Q(message__user__name__icontains=term) | \
                      Q(message__user__surname__icontains=term) | \
-                     Q(message__title__icontains=term)
+                     Q(message__title__icontains=term) | \
+                     Q(message__group__name__icontains=term)
 
         received_messages = MessageRecipient.objects.select_related("message", "user", "message__group") \
             .filter(query, user=request.user) \
