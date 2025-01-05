@@ -13,8 +13,16 @@ class FileInstrumentModelTests(TestCase):
         self.file_instrument = FileInstrument.objects.create(file=self.file, instrument=self.instrument)
 
     def test_file_instrument_creation(self):
-        self.assertEqual(self.file_instrument.instrument, self.instrument)
         self.assertEqual(self.file_instrument.file, self.file)
+        self.assertEqual(self.file_instrument.instrument, self.instrument)
+
+    def test_file_instrument_creation_with_invalid_file(self):
+        with self.assertRaises(Exception):
+            FileInstrument.objects.create(file="File", instrument=self.instrument)
+
+    def test_file_instrument_creation_with_invalid_instrument(self):
+        with self.assertRaises(Exception):
+            FileInstrument.objects.create(file=self.file, instrument="Instrument")
 
     def test_string_representation(self):
         self.assertEqual(str(self.file_instrument), f"{self.file.name} → {self.instrument.name_pl}/{self.instrument.name_en} ({self.file_instrument.file_instrument_id})")
