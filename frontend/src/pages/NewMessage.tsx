@@ -20,7 +20,7 @@ export default function NewMessage() {
     // user_id trzeba skądś wziąć
   });
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = event.target;
     setFormData((prevData) => ({
       ...prevData,
@@ -48,12 +48,12 @@ export default function NewMessage() {
       </label>
       <label>
         {t("new-message.content")}
-        <input
-          type="text"
+        <textarea
           name="message-content"
           value={formData.content}
           onChange={handleChange}
           className="block w-full p-2 border mb-2"
+          rows={4}
           required
         />
       </label>
