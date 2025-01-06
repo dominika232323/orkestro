@@ -150,6 +150,10 @@ export default function Events() {
                   onClick={() => navigate(`/edit-event/${event.event_id}`)}
                   className="px-3 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 font-medium transition-colors"
                 >
+                  <FontAwesomeIcon
+                    className="mr-2"
+                    icon={faPen}
+                  />
                   {t("events.edit")}
                 </button>
                 <button
