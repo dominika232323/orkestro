@@ -105,7 +105,11 @@ export default function Events() {
                   />
                   {t("events.date")}:
                 </strong>{" "}
-                {event.date.toLocaleDateString(currentLanguage)}
+                {event.date.toLocaleDateString(currentLanguage, {
+                  day: "2-digit",
+                  month: "2-digit",
+                  year: "numeric",
+                })}
               </p>
               <p>
                 <strong>
