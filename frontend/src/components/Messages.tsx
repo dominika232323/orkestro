@@ -2,16 +2,11 @@ import { useEffect, useState } from "react";
 
 import { useLanguage } from "../LanguageContext";
 import { axiosInstance as axios } from "../auth";
-import { MessageRecipient } from "../interfaces";
+import {MessageRecipient, MessageRecipientPaged} from "../interfaces";
 import MessageComponent from "./MessageComponent";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons";
 
-interface MessageRecipientPaged {
-  messages: MessageRecipient[];
-  page_number: number;
-  total_pages: number;
-}
 
 export default function Messages() {
   const { t } = useLanguage();

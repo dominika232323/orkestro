@@ -63,6 +63,12 @@ export interface MessageRecipient {
   is_read: boolean;
 }
 
+export interface MessageRecipientPaged {
+  messages: MessageRecipient[];
+  page_number: number;
+  total_pages: number;
+}
+
 export interface Event {
   event_id: number;
   group: number;
