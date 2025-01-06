@@ -32,7 +32,12 @@ export default function Events() {
   const fetchEvents = async () => {
     setLoading(true);
 
-    await axios.get<EventPaged>(`/api/events/by_group/?page=${currentPage}&group_id=${groupId}`)
+    await axios.get<EventPaged>(
+      searchQuery ?
+        `/api/events/by_group/?page=${currentPage}&group_id=${groupId}&search=${searchQuery}`
+        :
+        `/api/events/by_group/?page=${currentPage}&group_id=${groupId}`
+    )
       .then((response) => {
         const parsedEvents = response.data.events.map((event) => ({
           ...event,
