@@ -73,7 +73,7 @@
     "prev": "Previous",
     "next": "Next",
     "page": "Page",
-    "placeholder": "Search for name, place, description...",
+    "placeholder": "Search by name, place, description…",
     "search": "Search",
     "edit": "Edit",
     "delete": "Delete"
@@ -83,7 +83,7 @@
     "no-files": "No files",
     "download": "Download",
     "add-file": "New file",
-    "placeholder": "Search files by name or track…",
+    "placeholder": "Search by name or track…",
     "search": "Search",
     "loading": "Files loading..."
   },

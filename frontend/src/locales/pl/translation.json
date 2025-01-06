@@ -73,7 +73,7 @@
     "prev": "Poprzedni",
     "next": "Następny",
     "page": "Strona",
-    "placeholder": "Szukaj po nazwie, lokalizacji, opisie...",
+    "placeholder": "Szukaj po nazwie, miejscu, opisie…",
     "search": "Szukaj",
     "edit": "Edytuj",
     "delete": "Usuń"
@@ -83,7 +83,7 @@
     "no-files": "Brak plików",
     "download": "Pobierz",
     "add-file": "Nowy plik",
-    "placeholder": "Wyszukaj pliki po tytule lub ścieżce…",
+    "placeholder": "Szukaj po nazwie lub utworze…",
     "search": "Szukaj",
     "loading": "Ładowanie plików..."
   },
