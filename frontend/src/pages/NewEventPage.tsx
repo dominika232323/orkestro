@@ -15,7 +15,7 @@ export default function NewEventPage() {
   }
 
   const [formData, setFormData] = useState<Partial<Event>>({
-    group_id: parsedGroupId,
+    group: parsedGroupId,
     date: new Date(),
   });
 

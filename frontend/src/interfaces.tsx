@@ -45,7 +45,7 @@ export interface UserInstrument {
 
 export interface Message {
   message_id: number;
-  user_id: number;
+  user: number;
   user_details: User;
   group: number;
   group_details: Group;
@@ -65,7 +65,7 @@ export interface MessageRecipient {
 
 export interface Event {
   event_id: number;
-  group_id: number;
+  group: number;
   name: string;
   description: string;
   date: Date;
@@ -76,11 +76,20 @@ export interface Member {
   member_id: number;
   group: number;
   user: number;
+  user_details: User;
   permission_level: string;
+}
+
+export interface Track {
+  track_id: number;
+  group: number;
+  name: string;
+  artist: string;
 }
 
 export interface File {
   file_id: number;
-  track: string;
+  track: number;
+  track_details: Track;
   name: string;
 }
