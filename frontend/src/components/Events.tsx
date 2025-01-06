@@ -145,7 +145,7 @@ export default function Events() {
                   {event.place}
                 </p>
               </div>
-              <div className="flex flex-col justify-around">
+              <div className="flex flex-col justify-evenly">
                 <button
                   onClick={() => navigate(`/edit-event/${event.event_id}`)}
                   className="px-3 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 font-medium transition-colors"
