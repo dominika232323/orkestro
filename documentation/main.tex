@@ -804,26 +804,36 @@ Repozytorium projektu: \href{https://gitlab-stud.elka.pw.edu.pl/zgromadzeni/orke
 
 \subsection{Metody realizacji}
 
-\textcolor{red}{TODO}
+\textcolor{red}{TODO} Obowiązkowo określenie metod realizacji: języki programowania, frameworki, środowisko programowania/ uruchamiania/ wdrażania, środowisko ciągłej integracji]
 
-ii. Lista języków programowania, bibliotek i środowisk
-
-Obowiązkowo określenie metod realizacji: języki programowania, frameworki, środowisko programowania/ uruchamiania/ wdrażania, środowisko ciągłej integracji]
+Wykorzystywane metody realizacji:
+\begin{itemize}
+    \item serwer, load balancer, reverse proxy: NGINX
+    \item technologie frontendowe: framework React.js, framework Tailwind CSS, Typescript, Javascript, CSS, HTML
+    \item technologie backendowe: Django REST Framework, Python
+    \item baza danych: PostgreSQL
+    \item dokumentacja: LaTeX, draw.io, SQL Developer Data Modeler
+    \item praca grupowa, komunikacja: Git, Github, Overleaf, Messenger
+    \item środowiska programowania: PyCharm, gedit
+    \item systemy operacyjne: Windows (10, 11), Linux (Ubuntu 22.04)
+    \item wdrożenie (lokalnie, na chmurę Azure): Docker, Docker Compose, skrypty bashowe
+\end{itemize}
 
 \subsection{Struktura klas}
 
-W backendzie występuje duża liczba klas, które można podzielić na grupy funkcjonalne - dla lepszej przejrzystości struktura klas zostanie przedstawiona na kilku diagramach dla każdej takiej grupy. Na diagramach pojawią się klasy dostarczone przez Django, ponieważ praca z tym frameworkiem opiera się o pisanie klas pochodnych dostosowujących typowo spotykaną funkcjonalność aplikacji do danego projektu i oferujących dodatkowe funkcje. Wiele z tych klas ma dużą liczbę pól i metod oraz złożony schemat dziedziczenia - dla uproszczenia pokazujemy jedną klasę bazową z własnymi/odziedziczonymi elementami istotnymi dla aplikacji.
+W backendzie występuje duża liczba klas, które można podzielić na grupy funkcjonalne - dla lepszej przejrzystości struktura klas zostanie przedstawiona na kilku diagramach dla każdej takiej grupy. Na diagramach pojawią się klasy dostarczone przez Django, ponieważ praca z tym frameworkiem opiera się o pisanie klas pochodnych dostosowujących typowo spotykaną funkcjonalność aplikacji do danego projektu i oferujących dodatkowe funkcje. Wiele z tych klas ma dużą liczbę pól i metod oraz złożony schemat dziedziczenia - dla uproszczenia pokazujemy bezpośrednią nadklasę z własnymi/odziedziczonymi elementami istotnymi dla aplikacji.
 
 Jako argumenty czy zwracane typy funkcji wykorzystywane są dodatkowe klasy Django, których struktura nie pojawi się na diagramach:
 \begin{itemize}
 \item request/Request: zapytanie HTTP
 \item Response: odpowiedź HTTP
-\item view/View - funkcja przetwarzająca zapytanie (ma dodatkowe pola w stosunku do tych definiowanych np. w ViewSetach)
+\item view/View - funkcja przetwarzająca zapytanie
 \item QuerySet - dane z zapytania do bazy danych
 \item BaseAuthentication - klasa przeprowadzająca autoryzację użytkownika
 \item Error - wiadomość o błędzie przy operacji na obiekcie typu Model
 \item CharField, AutoField, ForeignKey, BooleanField, DateTimeField, BinaryField, EmailField, URLField - klasy obsługujące poszczególne typy danych w bazie
-\item BaseManager - klasa pobierająca listy rekordów z bazy danych.
+\item ReadOnlyPasswordHashField - klasa przechowująca hasło w formularzach panelu administratora.
+\item BaseManager - klasa pobierająca listy rekordów z bazy danych
 \end{itemize}
 
 "Zbiorczy" diagram klas (poszczególne grupy klas zebrane pod jedną nazwą, zaznaczone związki występują w pewnej formie pomiędzy klasami w grupach):
@@ -836,14 +846,14 @@ Jako argumenty czy zwracane typy funkcji wykorzystywane są dodatkowe klasy Djan
 
 \subsubsection{Model}
 
-Klasy typu Model pośredniczą w wymianie danych z bazą. Na tak zdefiniowanych klasach Django ORM umożliwia m.in. pobieranie wszystkich lub jednego rekordu, modyfikację danych, dostęp do danych w powiązanych tabelach czy filtrowanie wszystkich rekordów po różnych kryteriach. Każdy model jest powiązany z tabelą w bazie, zdefiniowane są właściwości pól i więzy integralności. Zdefiniowane modele mają wyłączoną możliwość zarządzania cyklem życia tabel.
+Klasy dziedziczące po \texttt{Model} pośredniczą w wymianie danych z bazą. Na tak zdefiniowanych klasach Django ORM umożliwia m.in. pobieranie wszystkich lub jednego rekordu, modyfikację danych, dostęp do danych w powiązanych tabelach czy filtrowanie wszystkich rekordów po różnych kryteriach. Każdy model jest powiązany z tabelą w bazie, zdefiniowane są właściwości pól i więzy integralności. Zdefiniowane modele mają wyłączoną możliwość zarządzania cyklem życia tabel.
 
 Klasa User wymagała dodatkowych pól i metod, by realizować operacje związane z autoryzacją użytkowników.
 
 \begin{figure} [H]
     \centering
     \includegraphics[width=0.95\linewidth]{images/models.png}
-    \caption{Struktura klas typu Permission}
+    \caption{Struktura klas typu Model}
 \end{figure}
 
 \subsubsection{Serializer}
@@ -879,11 +889,20 @@ Klasy dziedziczące po \texttt{ModelViewSet} zajmują się realizacją zapytań 
 \subsubsection{Form, Admin}
 Zdefiniowane klasy modyfikują domyślną funkcjonalność panelu administratora Django - umożliwiają dodanie podrzędnych obiektów podczas przeglądania nadrzędnego, modyfikują zakładkę z danymi użytkownika.
 
-\textcolor{red}{TODO}
+\begin{figure} [H]
+    \centering
+    \includegraphics[width=0.95\linewidth]{images/forms_admin.png}
+    \caption{Struktura klas typu Form/Admin}
+\end{figure}
 
 \subsubsection{Pozostałe}
 
-\textcolor{red}{TODO} apps, cookie\_auth, views 
+Klasy nieujęte w pozostałych grupach:
+\begin{itemize}
+    \item \texttt{ApiConfig} - dziedziczy po \texttt{AppConfig}, ustawia niektóre pola w domyślnej konfiguracji aplikacji.
+    \item \texttt{CookieAuth} - dziedziczy po \texttt{JWTAuthentication}, nadpisuje metodę autoryzującą użytkownika.
+    \item \texttt{GoogleLoginView} - dziedziczy po \texttt{APIView}, (\texttt{View} - uproszczona wersja \texttt{ViewSet}, gdzie większa część kodu jest do samodzielnego napisania); umożliwia logowanie się kontem Google
+\end{itemize}
 
 \subsection{Statystyki}
 
@@ -935,11 +954,33 @@ System zostanie wdrożony na maszynach wirtualnych zapewnionych przez Azure. Kor
 
 \section{Bezpieczeństwo}
 
-\textcolor{red}{TODO}
+W celu zapewnienia bezpieczeństwa (przed włamaniami, nieuprawnionym dostępem do danych, utratą danych, ...) system jest wyposażony w następujące zabezpieczenia:
+\begin{itemize}
+    \item System wdrożony na chmurze Azure funkcjonuje w większości w sieci lokalnej - jedyną maszyną dostępną bezpośrednio z zewnątrz jest ta serwująca aplikację poprzez NGINX.
+    \item System wdrożony na chmurze Azure ma skonfigurowanego firewalla - dla zewnętrznych maszyn dostępny jest tylko port SSH i ten, na którym serwowana jest aplikacja. Dalsze połączenia odbywają się poprzez reverse proxy.
+    \item Dostęp do maszyn systemu wymaga posiadania kluczy SSH wygenerowanych przy jego wdrożeniu.
+    \item Korzystanie z aplikacji wymaga logowania; odbywa się to poprzez konto Google, w którym można skorzystać z uwierzytelniania wieloskładnikowego.
+    \item Zaimplementowany jest system uprawnień - przed udzieleniem dostępu do zasobu sprawdzane jest, czy użytkownik ma prawo wykonać daną akcję.
+    \item Dostęp do aplikacji odbywa się poprzez HTTPS.
+    \item System funkcjonuje zgodnie z przepisami RODO.
+    \item System umożliwia wykonanie zrzutu danych oraz odtworzenie systemu z zadaną kopią danych.
+\end{itemize}
+
+\textcolor{red}{TODO} zweryfikować przed piątkiem, ile faktycznie jest
 
 \section{Podręcznik użytkownika}
 
-\textcolor{red}{TODO} [instrukcja użycia funkcjonalności systemu]
+Korzystanie z funkcjonalności systemu jest szeroko opisane poprzez listę przypadków użycia - ten rozdział streszcza przekazane tam informacje.
+
+Korzystanie z aplikacji wymaga zalogowania się - należy wybrać opcję logowania kontem Google. Przed logowaniem można zmienić język, w którym wyświetlany jest interfejs aplikacji.
+
+Po zalogowaniu pokaże się lista (pod)grup, których jest się członkiem, oraz zaproszeń do kolejnych (jeżeli są). Można przyjmować i odrzucać zaproszenia, przechodzić do grup lub utworzyć nową. Aby otrzymać zaproszenie do czyjejś grupy, trzeba skontaktować się poza aplikacją z kierownikiem tej grupy i podać mu adres e-mail konta, którego użyto przy logowaniu - jest potrzebny do wysyłania zaproszeń.
+
+W górnym panelu można wybrać obecną zakładkę z grupami, zakładkę ze wszystkimi otrzymanymi przez użytkownika wiadomościami (można je wyszukiwać, przeglądać i oznaczać jako przeczytane), zakładkę z kalendarzem wydarzeń odbywających się w uczęszczanych grupach (można je przeglądać i przechodzić do wybranych wydarzeń) i zakładkę z ustawieniami (można przeglądać konto, zsynchronizować swój Google Calendar, cofać synchronizację poprzez usunięcie ID i modyfikować listę instrumentów, na których potrafi się grać). Można też zmienić język aplikacji i wylogować się.
+
+Po przejściu do grupy dostępne są sekcje: z wydarzeniami, z utworami (tutaj można też podpinać utwory pod wydarzenia, dzielić się plikami i podpinać pod nie instrumenty) i do zarządzania grupą (członkowie, ich uprawnienia, wysyłanie i przeglądanie wiadomości). Jako użytkownik można przeglądać wszystkie dane grupy oprócz wiadomości i plików, których nie jest się adresatem. Moderator może dodatkowo wysyłać wiadomości (istnieje dodatkowo opcja wysłania kopii wiadomości na skrzynki pocztowe adresatów). Kierownik może przeglądać, dodawać, edytować i usuwać wszelkie dane grupy, w tym samą grupę. Wyjątkiem są pliki i wiadomości nieudostępnione kierownikowi.
+
+\textcolor{red}{TODO} zweryfikować przed piątkiem
 
 \section{Podręcznik administratora}
 
@@ -964,6 +1005,10 @@ System zostanie wdrożony na maszynach wirtualnych zapewnionych przez Azure. Kor
 [Krytyczna analiza osiągniętych wyników, mocne i słabe strony
 
 Możliwe kierunki rozwoju]
+
+l. Podsumowanie – omówienie wyników pracy, zrealizowanego zakresu, jak zarządzano jakością?
+i. Rysunek (1 slajd) podsumowujący projekt do umieszczenia w repozytorium projektów PZSP2
+ii. Możliwe kierunki rozwoju
 
 \section{Bibliografia}
 
