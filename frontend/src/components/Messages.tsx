@@ -21,9 +21,7 @@ export default function Messages() {
 
     await axios
       .get<MessageRecipientPaged>(
-        searchQuery
-          ? `/api/message-recipients/me/?page=${currentPage}&search=${searchQuery}`
-          : `/api/message-recipients/me/?page=${currentPage}`
+        `/api/message-recipients/me/?page=${currentPage}&search=${searchQuery}`
       )
       .then((response) => {
         const parsedMessages = response.data.messages.map((msg_recipient) => ({
