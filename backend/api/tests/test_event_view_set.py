@@ -131,5 +131,39 @@ class EventViewSetTestCase(TestCase):
                     returned_event_names = [event["name"] for event in response.data]
                     self.assertEqual(returned_event_names, case["expected_event_names"])
 
+    def test_me_with_year_and_month(self):
+        # Create events
+        event1 = Event.objects.create(group=self.group, name="Event 1", description="Desc 1", date="2025-10-21T13:00:00Z", place="Place 1")
+        event2 = Event.objects.create(group=self.group, name="Event 2", description="Desc 2", date="2026-10-14T20:00:00Z", place="Place 2")
+        event3 = Event.objects.create(group=self.group, name="Event 3", description="Desc 3", date="2025-05-26T16:16:16Z", place="Place 3")
+
+        # Assign participations
+        EventAttendee.objects.create(user=self.staff, event=event1)
+        EventAttendee.objects.create(user=self.staff, event=event2)
+        EventAttendee.objects.create(user=self.musician, event=event3)
+
+        # Define test cases with expected outcomes
+        test_cases = [
+            {"user": self.staff, "expected_status": 200, "expected_event_names": []},
+            {"user": self.musician, "expected_status": 200, "expected_event_names": ["Event 3"]},
+            {"user": self.manager, "expected_status": 200, "expected_event_names": []},
+            {"user": self.outsider, "expected_status": 200, "expected_event_names": []},
+        ]
+
+        for case in test_cases:
+            with self.subTest(user=case["user"]):
+                # Create and authenticate the request
+                request = self.factory.get("/api/events/me?year=2025&month=5")
+                force_authenticate(request, user=case["user"])
+                response = EventViewSet.as_view({'get': 'me'})(request)
+
+                # Assert the response status
+                self.assertEqual(response.status_code, case["expected_status"])
+
+                # Assert the returned event names for valid responses
+                if case["expected_status"] == 200:
+                    returned_event_names = [event["name"] for event in response.data]
+                    self.assertEqual(returned_event_names, case["expected_event_names"])
+
     def tearDown(self):
         basic_setup_teardown(self.group, [self.staff, self.manager, self.moderator, self.musician, self.outsider, self.unauthenticated])
