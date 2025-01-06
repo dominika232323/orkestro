@@ -78,6 +78,12 @@ export interface Event {
   place: string;
 }
 
+export interface EventPaged {
+  events: Event[];
+  page_number: number;
+  total_pages: number;
+}
+
 export interface Member {
   member_id: number;
   group: number;

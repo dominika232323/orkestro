@@ -11,7 +11,7 @@ import {
 import { useLanguage } from "../LanguageContext";
 import { useNavigate, useParams } from "react-router-dom";
 import {axiosInstance as axios, fetchUserOrRedirect} from "../auth";
-import { Event } from "../interfaces";
+import {Event, EventPaged} from "../interfaces";
 import Pagination from "./Pagination";
 
 export default function Events() {
@@ -32,14 +32,15 @@ export default function Events() {
   const fetchEvents = async () => {
     setLoading(true);
 
-    await axios.get<Event[]>(`/api/events/by_group/?group_id=${groupId}`)
+    await axios.get<EventPaged>(`/api/events/by_group/?page=${currentPage}&group_id=${groupId}`)
       .then((response) => {
-        const parsedEvents = response.data.map((event) => ({
+        const parsedEvents = response.data.events.map((event) => ({
           ...event,
           date: new Date(event.date), // parse date
         }));
 
         setEvents(parsedEvents);
+        setTotalPages(response.data.total_pages);
       })
       .catch((error) => console.error("Error fetching events:", error));
 

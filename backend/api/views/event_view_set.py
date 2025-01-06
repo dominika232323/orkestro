@@ -60,6 +60,15 @@ class EventViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=["get"])
     def by_group(self, request):
-        events = Event.objects.filter(group_id=request.GET.get("group_id", default=0))
-        serializer = self.get_serializer(events, many=True)
-        return Response(serializer.data)
+        events = Event.objects.filter(group_id=request.GET.get("group_id", 0))
+
+        paginator = Paginator(events, 20)
+        page = paginator.get_page(request.GET.get("page", 1))
+
+        serializer = self.get_serializer(page, many=True)
+
+        return Response({
+            "events": serializer.data,
+            "page_number": page.number,
+            "total_pages": paginator.num_pages
+        })
