@@ -73,7 +73,7 @@ export default function Messages() {
       <h1 className="text-2xl font-bold text-center mb-4">
         {t("messages.title")}
       </h1>
-      <div className="flex mb-4">
+      <div className="flex items-center mb-6 bg-white shadow-md rounded-lg overflow-hidden">
         <input
           type="text"
           value={searchQuery}
@@ -81,12 +81,12 @@ export default function Messages() {
             setSearchQuery(e.target.value);
           }}
           onKeyDown={handleKeyDown}
-          className="flex-1 p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          className="flex-1 px-4 py-2 text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder={t("messages.placeholder")}
         />
         <button
           onClick={handleSearch}
-          className="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+          className="px-4 py-2 bg-blue-500 text-white font-medium hover:bg-blue-600 transition-colors"
         >
           {t("messages.search")}
         </button>

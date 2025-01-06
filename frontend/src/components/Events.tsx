@@ -84,7 +84,7 @@ export default function Events() {
         />
         <button
           onClick={handleSearch}
-          className="px-6 py-2 bg-blue-500 text-white font-medium hover:bg-blue-600 transition-colors"
+          className="px-4 py-2 bg-blue-500 text-white font-medium hover:bg-blue-600 transition-colors"
         >
           {t("events.search")}
         </button>
@@ -96,65 +96,70 @@ export default function Events() {
           {events.map((event) => (
             <li
               key={event.event_id}
-              className="bg-white p-6 rounded-lg shadow-md"
+              className="flex justify-between bg-white p-6 rounded-lg shadow-md"
             >
-              <h2 className="text-lg font-bold mb-4">{event.name}</h2>
-              <p>
-                <strong>
-                  <FontAwesomeIcon
-                    icon={faCalendarAlt}
-                    className="mr-2 text-gray-500"
-                  />
-                  {t("events.date")}:
-                </strong>{" "}
-                {event.date.toLocaleDateString(currentLanguage, {
-                  day: "2-digit",
-                  month: "2-digit",
-                  year: "numeric",
-                })}
-              </p>
-              <p>
-                <strong>
-                  <FontAwesomeIcon
-                    icon={faClock}
-                    className="mr-2 text-gray-500"
-                  />
-                  {t("events.time")}:
-                </strong>{" "}
-                {event.date.toLocaleTimeString(currentLanguage)}
-              </p>
-              <p>
-                <strong>
-                  <FontAwesomeIcon
-                    icon={faPen}
-                    className="mr-2 text-gray-500"
-                  />
-                  {t("events.description")}:
-                </strong>{" "}
-                {event.description}
-              </p>
-              <p>
-                <strong>
-                  <FontAwesomeIcon
-                    icon={faLocationDot}
-                    className="mr-2 text-gray-500"
-                  />
-                  {t("events.address")}:
-                </strong>{" "}
-                {event.place}
-              </p>
-              <div className="flex justify-end space-x-4 mt-4">
+              <div>
+                <h2 className="text-lg font-bold mb-4">{event.name}</h2>
+                <p>
+                  <strong>
+                    <FontAwesomeIcon
+                      icon={faCalendarAlt}
+                      className="mr-2 text-gray-500"
+                    />
+                    {t("events.date")}:
+                  </strong>{" "}
+                  {event.date.toLocaleDateString(currentLanguage, {
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "numeric",
+                  })}
+                </p>
+                <p>
+                  <strong>
+                    <FontAwesomeIcon
+                      icon={faClock}
+                      className="mr-2 text-gray-500"
+                    />
+                    {t("events.time")}:
+                  </strong>{" "}
+                  {event.date.toLocaleTimeString(currentLanguage)}
+                </p>
+                <p>
+                  <strong>
+                    <FontAwesomeIcon
+                      icon={faPen}
+                      className="mr-2 text-gray-500"
+                    />
+                    {t("events.description")}:
+                  </strong>{" "}
+                  {event.description}
+                </p>
+                <p>
+                  <strong>
+                    <FontAwesomeIcon
+                      icon={faLocationDot}
+                      className="mr-2 text-gray-500"
+                    />
+                    {t("events.address")}:
+                  </strong>{" "}
+                  {event.place}
+                </p>
+              </div>
+              <div className="flex flex-col justify-around">
                 <button
                   onClick={() => navigate(`/edit-event/${event.event_id}`)}
-                  className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 font-medium transition-colors"
+                  className="px-3 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 font-medium transition-colors"
                 >
                   {t("events.edit")}
                 </button>
                 <button
-                  className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 font-medium transition-colors"
+                  className="px-3 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 font-medium transition-colors"
                   onClick={handleDelete}
                 >
-                  <FontAwesomeIcon icon={faTimes} />
+                  <FontAwesomeIcon
+                    className="mr-2"
+                    icon={faTimes}
+                  />
                   {t("events.delete")}
                 </button>
               </div>
