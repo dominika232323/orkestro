@@ -39,7 +39,7 @@ class EventViewSet(viewsets.ModelViewSet):
 
         events = Event.objects.filter(query, group_id=request.GET.get("group_id")).order_by("-date")
 
-        paginator = Paginator(events, 20)
+        paginator = Paginator(events, 5)
         page = paginator.get_page(request.GET.get("page", 1))
         serializer = self.get_serializer(page, many=True)
 
@@ -62,7 +62,7 @@ class EventViewSet(viewsets.ModelViewSet):
     def by_group(self, request):
         events = Event.objects.filter(group_id=request.GET.get("group_id", 0))
 
-        paginator = Paginator(events, 20)
+        paginator = Paginator(events, 5)
         page = paginator.get_page(request.GET.get("page", 1))
 
         serializer = self.get_serializer(page, many=True)

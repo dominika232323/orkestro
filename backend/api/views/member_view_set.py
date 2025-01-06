@@ -63,7 +63,7 @@ class MemberViewSet(viewsets.ModelViewSet):
         members = (Member.objects.select_related("user").order_by("user__name")
             .filter(name_query, permission_level_query, group_id=request.GET.get("group_id")))
 
-        paginator = Paginator(members, 20)
+        paginator = Paginator(members, 10)
         page = paginator.get_page(request.GET.get("page", 1))
         serializer = self.get_serializer(page, many=True)
 
