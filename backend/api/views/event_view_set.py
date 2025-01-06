@@ -57,3 +57,9 @@ class EventViewSet(viewsets.ModelViewSet):
         events = [p.event for p in participations]
         serializer = self.get_serializer(events, many=True)
         return Response(serializer.data)
+
+    @action(detail=False, methods=["get"])
+    def by_group(self, request):
+        events = Event.objects.filter(group_id=request.GET.get("group_id", default=0))
+        serializer = self.get_serializer(events, many=True)
+        return Response(serializer.data)

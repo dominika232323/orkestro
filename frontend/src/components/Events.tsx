@@ -10,6 +10,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { useLanguage } from "../LanguageContext";
 import { useNavigate, useParams } from "react-router-dom";
+import {axiosInstance as axios, fetchUserOrRedirect} from "../auth";
 import { Event } from "../interfaces";
 import Pagination from "./Pagination";
 
@@ -24,10 +25,23 @@ export default function Events() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
+  useEffect(() => {
+    fetchUserOrRedirect(navigate);
+  }, []);
+
   const fetchEvents = async () => {
     setLoading(true);
 
-    // API call
+    await axios.get<Event[]>(`/api/events/by_group/?group_id=${groupId}`)
+      .then((response) => {
+        const parsedEvents = response.data.map((event) => ({
+          ...event,
+          date: new Date(event.date), // parse date
+        }));
+
+        setEvents(parsedEvents);
+      })
+      .catch((error) => console.error("Error fetching events:", error));
 
     setLoading(false);
   };

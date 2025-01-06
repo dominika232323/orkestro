@@ -75,7 +75,8 @@
     "page": "Page",
     "placeholder": "Search for name, place, description...",
     "search": "Search",
-    "edit": "Edit"
+    "edit": "Edit",
+    "delete": "Delete"
   },
   "files": {
     "title": "Files",

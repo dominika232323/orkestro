@@ -75,7 +75,8 @@
     "page": "Strona",
     "placeholder": "Szukaj po nazwie, lokalizacji, opisie...",
     "search": "Szukaj",
-    "edit": "Edytuj"
+    "edit": "Edytuj",
+    "delete": "Usuń"
   },
   "files": {
     "title": "Pliki",
