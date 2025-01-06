@@ -1,5 +1,3 @@
-from collections import Counter
-
 from django.test import TestCase
 from django.utils import timezone
 from rest_framework.test import APIRequestFactory, force_authenticate
@@ -101,37 +99,37 @@ class EventViewSetTestCase(TestCase):
 
     def test_search(self):
         # Create events
-        Event.objects.create(group=self.group, name="Music concert", description="Desc 1", date=timezone.now(), place="NYC")
-        Event.objects.create(group=self.group, name="Christmas Concert", description="Music concert", date=timezone.now(), place="Paris")
-        Event.objects.create(group=self.group, name="Practise", description="Practice for Christmas concert", date=timezone.now(), place="Warsaw")
+        Event.objects.create(group=self.group, name="Music concert", description="Desc 1", date="2025-10-21T13:00:00Z", place="NYC")
+        Event.objects.create(group=self.group, name="Christmas Concert", description="Music concert", date="2026-10-14T20:00:00Z", place="Paris")
+        Event.objects.create(group=self.group, name="Practise", description="Practice for Christmas concert", date="2025-05-26T16:16:16Z", place="Warsaw")
 
         # Define test cases with expected outcomes
         test_cases = [
             {
                 "user": self.staff,
                 "expected_status": 200,
-                "expected_event_names": ["Music concert", "Christmas Concert", "Practise"],
+                "expected_event_names": ["Christmas Concert", "Music concert", "Practise"],
                 "expected_page_number": 1,
                 "expected_total_pages": 1
              },
             {
                 "user": self.moderator,
                 "expected_status": 200,
-                "expected_event_names": ["Music concert", "Christmas Concert", "Practise"],
+                "expected_event_names": ["Christmas Concert", "Music concert", "Practise"],
                 "expected_page_number": 1,
                 "expected_total_pages": 1
              },
             {
                 "user": self.musician,
                 "expected_status": 200,
-                "expected_event_names": ["Music concert", "Christmas Concert", "Practise"],
+                "expected_event_names": ["Christmas Concert", "Music concert", "Practise"],
                 "expected_page_number": 1,
                 "expected_total_pages": 1
              },
             {
                 "user": self.manager,
                 "expected_status": 200,
-                "expected_event_names": ["Music concert", "Christmas Concert", "Practise"],
+                "expected_event_names": ["Christmas Concert", "Music concert", "Practise"],
                 "expected_page_number": 1,
                 "expected_total_pages": 1
              },
@@ -157,9 +155,7 @@ class EventViewSetTestCase(TestCase):
                 # Assert the returned event names for valid responses
                 if case["expected_status"] == 200:
                     returned_event_names = [event["name"] for event in response.data["events"]]
-                    returned_event_names_counter = Counter(returned_event_names)
-
-                    self.assertEqual(returned_event_names_counter, Counter(case["expected_event_names"]))
+                    self.assertEqual(returned_event_names, case["expected_event_names"])
 
                     self.assertEqual(response.data["page_number"], case["expected_page_number"])
                     self.assertEqual(response.data["total_pages"], case["expected_total_pages"])
