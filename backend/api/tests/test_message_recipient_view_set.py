@@ -12,11 +12,41 @@ class MessageRecipientViewSetTestCase(TestCase):
         self.staff, self.manager, self.moderator, self.musician, self.outsider, self.unauthenticated, self.group = basic_setup()
         self.factory = APIRequestFactory()
 
-        self.message_1 = Message.objects.create(user=self.moderator, group=self.group, title="t 1", content="c 1", date=timezone.now())
-        self.message_2 = Message.objects.create(user=self.manager, group=self.group, title="t 2", content="c 2", date=timezone.now())
-        self.message_3 = Message.objects.create(user=self.musician, group=self.group, title="t 3", content="c 3", date=timezone.now())
-        self.message_4 = Message.objects.create(user=self.moderator, group=self.group, title="t 4", content="c 4", date=timezone.now())
-        self.message_5 = Message.objects.create(user=self.manager, group=self.group, title="t 5", content="c 5", date=timezone.now())
+        self.message_1 = Message.objects.create(
+            user=self.moderator,
+            group=self.group,
+            title="Rehearsal",
+            content="Reminder about rehearsal at 2pm, wear formal clothes",
+            date=timezone.now()
+        )
+        self.message_2 = Message.objects.create(
+            user=self.manager,
+            group=self.group,
+            title="Christmas concert update",
+            content="Update: Final setlist confirmed. Be ready to perform!",
+            date=timezone.now()
+        )
+        self.message_3 = Message.objects.create(
+            user=self.musician,
+            group=self.group,
+            title="Concert Attire Guidelines",
+            content="Reminder: Wear black formal attire for the upcoming concert.",
+            date=timezone.now()
+        )
+        self.message_4 = Message.objects.create(
+            user=self.moderator,
+            group=self.group,
+            title="Instrument Tuning Tips",
+            content="Ensure your instrument is tuned before the performance. Let's sound great together!",
+            date=timezone.now()
+        )
+        self.message_5 = Message.objects.create(
+            user=self.manager,
+            group=self.group,
+            title="Sound Check Details",
+            content="Sound check is scheduled for 1pm before rehearsal. Please be punctual.",
+            date=timezone.now()
+        )
 
         self.message_recipient_1 = MessageRecipient.objects.create(message=self.message_1, user=self.musician, is_read=False)
         self.message_recipient_2 = MessageRecipient.objects.create(message=self.message_1, user=self.manager, is_read=False)
@@ -123,6 +153,64 @@ class MessageRecipientViewSetTestCase(TestCase):
             with self.subTest(user=case["user"]):
                 # Create and authenticate the request
                 request = self.factory.get("/api/message-recipients/me/")
+                force_authenticate(request, user=case["user"])
+                response = MessageRecipientViewSet.as_view({'get': 'me'})(request)
+
+                # Assert the response status and count
+                self.assertEqual(response.status_code, case["expected_status"])
+                self.assertEqual(len(response.data["messages"]), case["expected_count"])
+                self.assertEqual(response.data["page_number"], case["expected_page"])
+                self.assertEqual(response.data["total_pages"], case["expected_total_pages"])
+
+    def test_me_with_term(self):
+        # Define test cases with expected outcomes
+        test_cases = [
+            {
+                "user": self.staff,
+                "expected_status": 200,
+                "expected_count": 0,
+                "expected_messages": [],
+                "expected_page": 1,
+                "expected_total_pages": 1
+            },
+            {
+                "user": self.manager,
+                "expected_status": 200,
+                "expected_count": 2,
+                "expected_messages": ["Rehearsal", "Concert Attire Guidelines"],
+                "expected_page": 1,
+                "expected_total_pages": 1
+            },
+            {
+                "user": self.moderator,
+                "expected_status": 200,
+                "expected_count": 2,
+                "expected_messages": ["Concert Attire Guidelines", "Sound Check Details"],
+                "expected_page": 1,
+                "expected_total_pages": 1
+            },
+            {
+                "user": self.musician,
+                "expected_status": 200,
+                "expected_count": 1,
+                "expected_messages": ["Rehearsal"],
+                "expected_page": 1,
+                "expected_total_pages": 1
+            },
+            {
+                "user": self.outsider,
+                "expected_status": 200,
+                "expected_count": 0,
+                "expected_messages": [],
+                "expected_page": 1,
+                "expected_total_pages": 1
+            },
+        ]
+
+        for case in test_cases:
+            with self.subTest(user=case["user"]):
+                # Create and authenticate the request
+                request = self.factory.get("/api/message-recipients/me/", {"search": "rehearsal reminder"})
                 force_authenticate(request, user=case["user"])
                 response = MessageRecipientViewSet.as_view({'get': 'me'})(request)
 
