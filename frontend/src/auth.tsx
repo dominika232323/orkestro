@@ -76,7 +76,7 @@ export const backendLogin = async (credentialResponse: any, setJustLoggedIn: Fun
         console.log("Google login successful:", decoded);
 
         await axios.post(
-            "/api/login-google/",
+            "/api/google-login/",
             {"credential": credential}
         )
         .then((backendResponse) => {
