@@ -74,7 +74,18 @@ export default function Events() {
     }
   };
 
-  const handleDelete = () => {};
+  const handleDelete = async (event_id: number) => {
+    await axios.delete(`/api/events/${event_id}/`)
+    .then(() => {
+      console.log(`Successfully deleted event ${event_id}`);
+      setEvents((prev) => (
+        prev.filter(
+          (event) => event.event_id !== event_id
+        )
+      ))
+    })
+    .catch((error) => console.error(`Error deleting event ${event_id}:`, error));
+  };
 
   return (
     <div className="bg-gray-200 p-6 rounded-lg max-w-4xl mx-auto mt-8">
@@ -172,7 +183,7 @@ export default function Events() {
                   </button>
                   <button
                     className="px-3 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 font-medium transition-colors"
-                    onClick={handleDelete}
+                    onClick={() => handleDelete(event.event_id)}
                   >
                     <FontAwesomeIcon
                       className="mr-2"
