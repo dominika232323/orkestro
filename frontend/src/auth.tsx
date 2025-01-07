@@ -9,7 +9,7 @@ const ACCESS_TOKEN_NAME = "access_token"
 const REFRESH_TOKEN_NAME = "refresh_token"
 
 const ACCESS_TOKEN_LIFETIME: number = 1 / 24  // 1 hour
-const REFRESH_TOKEN_LIFETIME: number = 1  // 1 day
+// const REFRESH_TOKEN_LIFETIME: number = 1  // 1 day
 
 const LOGIN_PAGE: string = "/login/";
 const REDIRECT_AFTER_LOGIN: string = "/invitations-and-groups/";
@@ -19,7 +19,22 @@ export function getAccessToken() {
 }
 
 export function getRefreshToken() {
-    return Cookies.get(REFRESH_TOKEN_NAME)
+    // refresh token is stored in localStorage instead of cookies,
+    // so we need to manually handle token deletion after expiration
+
+    const token = localStorage.getItem(REFRESH_TOKEN_NAME);
+    if (token) {
+        const payload = jwtDecode(token);
+        if (payload?.exp) {
+            const now = Date.now() / 1000; // current time in seconds
+            if (now < payload.exp) {
+                return token; // token is still valid
+            } else {
+                removeTokens(); // token expired
+            }
+        }
+    }
+    return null; // no valid token
 }
 
 export function setAccessToken(access_token: string) {
@@ -27,7 +42,7 @@ export function setAccessToken(access_token: string) {
 }
 
 export function setRefreshToken(refresh_token: string) {
-    Cookies.set(REFRESH_TOKEN_NAME, refresh_token, {expires: REFRESH_TOKEN_LIFETIME});
+    localStorage.setItem(REFRESH_TOKEN_NAME, refresh_token);
 }
 
 export function storeTokens(access_token: string, refresh_token: string) {
@@ -38,7 +53,7 @@ export function storeTokens(access_token: string, refresh_token: string) {
 
 export function removeTokens() {
     Cookies.remove(ACCESS_TOKEN_NAME);
-    Cookies.remove(REFRESH_TOKEN_NAME);
+    localStorage.removeItem(REFRESH_TOKEN_NAME);
 }
 
 // axios instance configured for JWT tokens
