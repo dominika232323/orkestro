@@ -7,12 +7,12 @@ from api.permissions.common_checks import is_member, is_manager
 
 
 class CanViewEvent(BasePermission):
-    def has_permission(self, request, view):
+    def has_object_permission(self, request, view, obj):
         if request.method != "GET" or request.user.is_staff or view.action == "me":
             return True
-        if view.action not in {"search", "by_group"}:
-            return False
-        return is_member(request, request.GET.get("group_id"))
+        if view.action in {"search", "by_group"}:
+            return True
+        return is_member(request, obj.group.group_id)
 
 
 class CanCreateEvent(BasePermission):
