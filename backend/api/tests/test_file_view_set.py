@@ -199,7 +199,7 @@ class FileViewSetTestCase(TestCase):
 
                 # Assertions
                 self.assertEqual(response.status_code, 200)
-                self.assertEqual(len(response.data["files"]), case["expected_count"])
+                self.assertEqual(len(response.data["items"]), case["expected_count"])
                 self.assertEqual(response.data["page_number"], case["expected_page_number"])
                 self.assertEqual(response.data["total_pages"], case["expected_total_pages"])
 
@@ -466,7 +466,7 @@ class FileViewSetTestCase(TestCase):
 
                 # Assertions
                 self.assertEqual(response.status_code, 200)
-                self.assertEqual(len(response.data["files"]), case["expected_count"])
+                self.assertEqual(len(response.data["items"]), case["expected_count"])
                 self.assertEqual(response.data["page_number"], case["expected_page_number"])
                 self.assertEqual(response.data["total_pages"], case["expected_total_pages"])
 
