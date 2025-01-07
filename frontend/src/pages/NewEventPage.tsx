@@ -1,9 +1,11 @@
-import { useState } from "react";
+import {useEffect, useState} from "react";
+import {useNavigate, useParams} from "react-router-dom";
 import { useLanguage } from "../LanguageContext";
+import {axiosInstance as axios, fetchUserOrRedirect} from "../auth";
 import { Event } from "../interfaces";
-import { useParams } from "react-router-dom";
 
 export default function NewEventPage() {
+  const navigate = useNavigate();
   const { t } = useLanguage();
   const { groupId } = useParams<{ groupId: string }>();
   const [loading, setLoading] = useState(false);
@@ -16,7 +18,10 @@ export default function NewEventPage() {
 
   const [formData, setFormData] = useState<Partial<Event>>({
     group: parsedGroupId,
+    name: "",
+    description: "",
     date: new Date(),
+    place: "",
   });
 
   const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -47,11 +52,25 @@ export default function NewEventPage() {
     }));
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     setLoading(true);
-    console.log(formData);
+    const encodedData = {
+      ...formData,
+      date: formData.date?.toISOString(),
+    }
+
+    await axios.post(
+      "/api/events/",
+      encodedData,
+    )
+    .then(() => navigate(`/events/${groupId}`))
+    .catch((error) => console.error("Error adding event:", error));
     setLoading(false);
   };
+
+  useEffect(() => {
+    fetchUserOrRedirect(navigate);
+  }, []);
 
   return (
     <div className="bg-gray-200 p-6 rounded-lg max-w-4xl mx-auto mt-8">
