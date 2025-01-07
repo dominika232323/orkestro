@@ -28,6 +28,7 @@ export function getRefreshToken() {
         if (payload?.exp) {
             const now = Date.now() / 1000; // current time in seconds
             if (now < payload.exp) {
+                console.log(token);
                 return token; // token is still valid
             } else {
                 removeTokens(); // token expired

@@ -60,7 +60,8 @@
     "current-month": "Pokaż obecny miesiąc",
     "events-for": "Wydarzenia dla",
     "no-events": "Brak wydarzeń.",
-    "close": "Zamknij"
+    "close": "Zamknij",
+    "events": "Wydarzeń"
   },
   "events": {
     "title": "Wydarzenia",

@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
 import { useLanguage } from "../LanguageContext";
 import { Event } from "../interfaces";
+import axios from "axios";
 
 export default function Calendar() {
   const { t, currentLanguage } = useLanguage();
 
   const currentYear = new Date().getFullYear();
+  const [loading, setLoading] = useState(false);
   const [year, setYear] = useState(currentYear);
   const [month, setMonth] = useState(new Date().getMonth()); // 0 = January, 11 = December
   const [events, setEvents] = useState<Event[]>([]);
@@ -19,15 +21,18 @@ export default function Calendar() {
     daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
   }
 
-  useEffect(() => {
-    const fetchEvents = () => {
-      try {
-        // get events ONLY FOR SELECTED MONTH
-      } catch (error) {
-        console.error("Error fetching events");
-      }
-    };
+  const fetchEvents = async () => {
+    setLoading(true);
 
+    console.log(year, month);
+    await axios
+      .get<Event[]>(`/api/events/me/?year=${year}&month=${month + 1}`)
+      .then((response) => {
+        setEvents(response.data);
+      });
+  };
+
+  useEffect(() => {
     fetchEvents();
     setSelectedDay(null);
   }, [year, month]);
@@ -118,7 +123,15 @@ export default function Calendar() {
               <div className="text-lg font-bold">{day}</div>
               {dayEvents.length > 0 && (
                 <div className="text-sm text-green-600">
-                  {dayEvents.length} event(s)
+                  {dayEvents.length}{" "}
+                  {currentLanguage === "en"
+                    ? "Event(s)"
+                    : dayEvents.length === 1
+                      ? "Wydarzenie"
+                      : [2, 3, 4].includes(dayEvents.length % 10) &&
+                          ![12, 13, 14].includes(dayEvents.length % 100)
+                        ? "Wydarzenia"
+                        : "Wydarzeń"}
                 </div>
               )}
             </div>

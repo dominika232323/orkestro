@@ -60,7 +60,8 @@
     "current-month": "Show current month",
     "events-for": "Events for",
     "no-events": "No events.",
-    "close": "Close"
+    "close": "Close",
+    "events": "event(s)"
   },
   "events": {
     "title": "Events",

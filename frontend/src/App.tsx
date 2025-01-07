@@ -14,9 +14,9 @@ import InvitationsAndGroups from "./components/InvitationsAndGroups";
 import Events from "./components/Events";
 import Files from "./components/Files";
 import Settings from "./components/Settings";
-import EditEventPage from "./pages/EditEventPage";
-import NewEventPage from "./pages/NewEventPage";
-import NewMessage from "./pages/NewMessage";
+import EventEditPage from "./pages/EventEditPage";
+import EventNewPage from "./pages/EventNewPage";
+import MessageNew from "./pages/MessageNew";
 
 export default function App() {
   const router = createBrowserRouter([
@@ -39,9 +39,9 @@ export default function App() {
         { path: "/events/:groupId", element: <Events /> },
         { path: "/files/:groupId", element: <Files /> },
         { path: "/settings/", element: <Settings /> },
-        { path: "/edit-event/:eventId", element: <EditEventPage /> },
-        { path: "/new-event/:groupId", element: <NewEventPage /> },
-        { path: "/new-message/:groupId", element: <NewMessage /> },
+        { path: "/edit-event/:eventId", element: <EventEditPage /> },
+        { path: "/new-event/:groupId", element: <EventNewPage /> },
+        { path: "/new-message/:groupId", element: <MessageNew /> },
       ],
     },
     {

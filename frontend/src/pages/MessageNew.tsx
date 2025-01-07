@@ -3,7 +3,7 @@ import { useLanguage } from "../LanguageContext";
 import { Message } from "../interfaces";
 import { useState } from "react";
 
-export default function NewMessage() {
+export default function MessageNew() {
   const { t } = useLanguage();
   const { groupId } = useParams<{ groupId: string }>();
   const [loading, setLoading] = useState(false);
@@ -20,7 +20,9 @@ export default function NewMessage() {
     // user_id trzeba skądś wziąć
   });
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = event.target;
     setFormData((prevData) => ({
       ...prevData,
