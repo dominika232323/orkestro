@@ -132,7 +132,10 @@ export default function Events() {
                     />
                     {t("events.time")}:
                   </strong>{" "}
-                  {event.date.toLocaleTimeString(currentLanguage)}
+                  {event.date.toLocaleTimeString(currentLanguage, {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
                 </p>
                 <p>
                   <strong>
