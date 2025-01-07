@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import { useLanguage } from "../LanguageContext";
 import { axiosInstance as axios } from "../auth";
-import {MessageRecipient, MessageRecipientPaged} from "../interfaces";
+import {MessageRecipient, Paged} from "../interfaces";
 import MessageComponent from "./MessageComponent";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons";
@@ -20,11 +20,11 @@ export default function Messages() {
     setLoading(true);
 
     await axios
-      .get<MessageRecipientPaged>(
+      .get<Paged<MessageRecipient>>(
         `/api/message-recipients/me/?page=${currentPage}&search=${searchQuery}`
       )
       .then((response) => {
-        const parsedMessages = response.data.messages.map((msg_recipient) => ({
+        const parsedMessages = response.data.items.map((msg_recipient) => ({
           ...msg_recipient,
           message_details: {
             ...msg_recipient.message_details,

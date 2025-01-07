@@ -60,7 +60,7 @@ class FileViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(page, many=True)
 
         return Response({
-            "files": serializer.data,
+            "items": serializer.data,
             "page_number": page.number,
             "total_pages": paginator.num_pages
         })
@@ -78,7 +78,7 @@ class FileViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(page, many=True)
 
         return Response({
-            "files": serializer.data,
+            "items": serializer.data,
             "page_number": page.number,
             "total_pages": paginator.num_pages
         })

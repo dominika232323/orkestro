@@ -75,7 +75,7 @@ class MessageRecipientViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(page, many=True)
 
         return Response({
-            "messages": serializer.data,
+            "items": serializer.data,
             "page_number": page.number,
             "total_pages": paginator.num_pages
         })

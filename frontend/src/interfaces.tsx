@@ -63,12 +63,6 @@ export interface MessageRecipient {
   is_read: boolean;
 }
 
-export interface MessageRecipientPaged {
-  messages: MessageRecipient[];
-  page_number: number;
-  total_pages: number;
-}
-
 export interface Event {
   event_id: number;
   group: number;
@@ -76,12 +70,6 @@ export interface Event {
   description: string;
   date: Date;
   place: string;
-}
-
-export interface EventPaged {
-  events: Event[];
-  page_number: number;
-  total_pages: number;
 }
 
 export interface Member {
@@ -104,4 +92,10 @@ export interface File {
   track: number;
   track_details: Track;
   name: string;
+}
+
+export interface Paged<T> {
+  items: T[];
+  page_number: number;
+  total_pages: number;
 }
