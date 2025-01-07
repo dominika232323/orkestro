@@ -2,11 +2,11 @@ import { useEffect, useState } from "react";
 
 import { useLanguage } from "../LanguageContext";
 import { axiosInstance as axios } from "../auth";
-import {MessageRecipient, Paged} from "../interfaces";
+import { MessageRecipient, Paged } from "../interfaces";
 import MessageComponent from "./MessageComponent";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons";
-
+import Pagination from "./Pagination";
 
 export default function Messages() {
   const { t } = useLanguage();
@@ -42,18 +42,6 @@ export default function Messages() {
   useEffect(() => {
     fetchMessages();
   }, [currentPage]);
-
-  const handleNextPage = () => {
-    if (currentPage <= totalPages - 1) {
-      setCurrentPage((prevPage) => prevPage + 1);
-    }
-  };
-
-  const handlePrevPage = () => {
-    if (currentPage >= 2) {
-      setCurrentPage((prevPage) => prevPage - 1);
-    }
-  };
 
   const handleSearch = () => {
     setCurrentPage(1);
@@ -105,23 +93,11 @@ export default function Messages() {
       ) : (
         <p>{t("messages.no-messages")}</p>
       )}
-      <div className="flex justify-center mt-4 space-x-4">
-        <button
-          className="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-          onClick={handlePrevPage}
-        >
-          {<FontAwesomeIcon icon={faArrowLeft} />}
-        </button>
-        <span className="self-center font-medium">
-          {t("messages.page")} {currentPage} / {totalPages}
-        </span>
-        <button
-          className="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-          onClick={handleNextPage}
-        >
-          {<FontAwesomeIcon icon={faArrowRight} />}
-        </button>
-      </div>
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={(page) => setCurrentPage(page)}
+      />
     </div>
   );
 }
