@@ -22,6 +22,11 @@ export interface GroupWithSubgroups {
   subgroups: GroupWithSubgroups[];
 }
 
+export interface Role {
+  is_manager: boolean;
+  is_moderator: boolean;
+}
+
 export interface Invitation {
   invitation_id: number;
   group: number;

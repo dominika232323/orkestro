@@ -11,14 +11,14 @@ import {
 import { useLanguage } from "../LanguageContext";
 import { useNavigate, useParams } from "react-router-dom";
 import {axiosInstance as axios, fetchUserOrRedirect} from "../auth";
-import {Event, Paged} from "../interfaces";
+import {Role, Event, Paged} from "../interfaces";
 import Pagination from "./Pagination";
 
 export default function Events() {
   const { t, currentLanguage } = useLanguage();
   const navigate = useNavigate();
   const { groupId } = useParams();
-
+  const [role, setRole] = useState<Role>();
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -27,6 +27,16 @@ export default function Events() {
 
   useEffect(() => {
     fetchUserOrRedirect(navigate);
+  }, []);
+
+  useEffect(() => {
+    const fetchRole = async () => {
+      await axios.get<Role>(`/api/groups/${groupId}/role/`)
+        .then((response) => setRole(response.data))
+        .catch((error) => console.error("Error fetching role:", error));
+    };
+
+    fetchRole();
   }, []);
 
   const fetchEvents = async () => {
@@ -145,28 +155,30 @@ export default function Events() {
                   {event.place}
                 </p>
               </div>
-              <div className="flex flex-col justify-evenly ml-2">
-                <button
-                  onClick={() => navigate(`/edit-event/${event.event_id}`)}
-                  className="px-2 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 font-medium transition-colors whitespace-nowrap"
-                >
-                  <FontAwesomeIcon
-                    className="mr-2"
-                    icon={faPen}
-                  />
-                  <span>{t("events.edit")}</span>
-                </button>
-                <button
-                  className="px-3 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 font-medium transition-colors"
-                  onClick={handleDelete}
-                >
-                  <FontAwesomeIcon
-                    className="mr-2"
-                    icon={faTimes}
-                  />
-                  <span>{t("events.delete")}</span>
-                </button>
-              </div>
+              {role?.is_manager &&
+                <div className="flex flex-col justify-evenly ml-2">
+                  <button
+                    onClick={() => navigate(`/edit-event/${event.event_id}`)}
+                    className="px-2 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 font-medium transition-colors whitespace-nowrap"
+                  >
+                    <FontAwesomeIcon
+                      className="mr-2"
+                      icon={faPen}
+                    />
+                    <span>{t("events.edit")}</span>
+                  </button>
+                  <button
+                    className="px-3 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 font-medium transition-colors"
+                    onClick={handleDelete}
+                  >
+                    <FontAwesomeIcon
+                      className="mr-2"
+                      icon={faTimes}
+                    />
+                    <span>{t("events.delete")}</span>
+                  </button>
+                </div>
+              }
             </li>
           ))}
         </ul>
@@ -177,13 +189,15 @@ export default function Events() {
       )}
 
       {/* Add Event Button */}
-      <button
-        className="w-full py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 font-medium flex items-center justify-center mt-6"
-        onClick={() => navigate(`/new-event/${groupId}`)}
-      >
-        <FontAwesomeIcon icon={faPlus} className="mr-2" />
-        {t("events.add-event")}
-      </button>
+      {role?.is_manager &&
+        <button
+          className="w-full py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 font-medium flex items-center justify-center mt-6"
+          onClick={() => navigate(`/new-event/${groupId}`)}
+        >
+          <FontAwesomeIcon icon={faPlus} className="mr-2" />
+          {t("events.add-event")}
+        </button>
+      }
 
       {/* Pagination */}
       <Pagination
