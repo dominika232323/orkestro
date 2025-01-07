@@ -34,9 +34,10 @@ SECRET_KEY = os.getenv("DJANGO_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True if os.getenv("DJANGO_DEBUG", "0") == "1" else False
 
-ALLOWED_HOSTS = [os.getenv("URL")]
+ALLOWED_HOSTS = ["orkestro.ddns.net", os.getenv("URL")]
 
 CSRF_TRUSTED_ORIGINS = [
+    f"https://orkestro.ddns.net:5000",
     f"http://{os.getenv('URL')}:5000",
 ]
 
