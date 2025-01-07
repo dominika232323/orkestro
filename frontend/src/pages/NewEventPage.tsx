@@ -17,7 +17,7 @@ export default function NewEventPage() {
     throw new Error("Group ID is required and must be a valid number");
   }
 
-  const [formData, setFormData] = useState<Partial<Event>>({
+  const [event, setEvent] = useState<Partial<Event>>({
     group: parsedGroupId,
     name: "",
     description: "",
@@ -25,9 +25,13 @@ export default function NewEventPage() {
     place: "",
   });
 
+  useEffect(() => {
+    fetchUserOrRedirect(navigate);
+  }, []);
+
   const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target; // The value from the "date" input (YYYY-MM-DD)
-    setFormData((prevData) => {
+    setEvent((prevData) => {
       const newDate = prevData.date ? new Date(prevData.date) : new Date();
       const [year, month, day] = value.split("-").map(Number);
       newDate.setFullYear(year, month - 1, day); // Update only the date part
@@ -37,7 +41,7 @@ export default function NewEventPage() {
 
   const handleTimeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target; // The value from the "time" input (HH:MM)
-    setFormData((prevData) => {
+    setEvent((prevData) => {
       const newDate = prevData.date ? new Date(prevData.date) : new Date();
       const [hours, minutes] = value.split(":").map(Number);
       newDate.setHours(hours, minutes, 0, 0); // Update only the time part
@@ -47,7 +51,7 @@ export default function NewEventPage() {
 
   const handleTextChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = event.target;
-    setFormData((prevData) => ({
+    setEvent((prevData) => ({
       ...prevData,
       [name]: value,
     }));
@@ -55,10 +59,10 @@ export default function NewEventPage() {
 
   const handleSubmit = async () => {
     if (
-      !formData.name ||
-      !formData.description ||
-      !formData.place ||
-      !formData.date
+      !event.name ||
+      !event.description ||
+      !event.place ||
+      !event.date
     ) {
       setError(true);
       return;
@@ -67,23 +71,19 @@ export default function NewEventPage() {
     setLoading(true);
     setError(false);
 
-    const encodedData = {
-      ...formData,
-      date: formData.date?.toISOString(),
+    const encodedEvent = {
+      ...event,
+      date: event.date?.toISOString(),
     };
 
     await axios.post(
       "/api/events/",
-      encodedData,
+      encodedEvent,
     )
     .then(() => navigate(`/events/${groupId}`))
     .catch((error) => console.error("Error adding event:", error));
     setLoading(false);
   };
-
-  useEffect(() => {
-    fetchUserOrRedirect(navigate);
-  }, []);
 
   return (
     <div className="bg-gray-200 p-6 rounded-lg max-w-4xl mx-auto mt-8">
@@ -96,7 +96,7 @@ export default function NewEventPage() {
         <input
           type="text"
           name="name"
-          value={formData.name}
+          value={event.name}
           onChange={handleTextChange}
           className="block w-full p-2 border mb-2"
           required
@@ -106,7 +106,7 @@ export default function NewEventPage() {
         {t("new-event.description")}
         <textarea
           name="description"
-          value={formData.description}
+          value={event.description}
           onChange={handleTextChange}
           className="block w-full p-2 border mb-2"
           required
@@ -117,7 +117,7 @@ export default function NewEventPage() {
         <input
           type="text"
           name="place"
-          value={formData.place}
+          value={event.place}
           onChange={handleTextChange}
           className="block w-full p-2 border mb-2"
           required
@@ -128,7 +128,7 @@ export default function NewEventPage() {
         <input
           type="date"
           name="date"
-          value={formData.date?.toISOString().split("T")[0] || ""}
+          value={event.date?.toISOString().split("T")[0] || ""}
           onChange={handleDateChange}
           className="block w-full p-2 border mb-2"
           required
@@ -140,8 +140,8 @@ export default function NewEventPage() {
           type="time"
           name="time"
           value={
-            formData.date
-              ? formData.date.toTimeString().split(":").slice(0, 2).join(":")
+            event.date
+              ? event.date.toTimeString().split(":").slice(0, 2).join(":")
               : ""
           }
           onChange={handleTimeChange}
