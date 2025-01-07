@@ -119,7 +119,8 @@
     "place": "Miejsce",
     "date": "Data",
     "time": "Godzina",
-    "submit": "Utwórz"
+    "submit": "Utwórz",
+    "form-error": "Wszystkie pola są obowiązkowe"
   },
   "edit-event": {
     "title": "Edytuj wydarzenie",

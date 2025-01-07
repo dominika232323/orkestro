@@ -119,7 +119,8 @@
     "place": "Place",
     "date": "Date",
     "time": "Time",
-    "submit": "Create"
+    "submit": "Create",
+    "form-error": "All fields are mandatory"
   },
   "edit-event": {
     "title": "Edit event",

@@ -9,6 +9,7 @@ export default function NewEventPage() {
   const { t } = useLanguage();
   const { groupId } = useParams<{ groupId: string }>();
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<boolean>(false);
 
   const parsedGroupId = groupId ? parseInt(groupId, 10) : undefined;
 
@@ -53,11 +54,23 @@ export default function NewEventPage() {
   };
 
   const handleSubmit = async () => {
+    if (
+      !formData.name ||
+      !formData.description ||
+      !formData.place ||
+      !formData.date
+    ) {
+      setError(true);
+      return;
+    }
+
     setLoading(true);
+    setError(false);
+
     const encodedData = {
       ...formData,
       date: formData.date?.toISOString(),
-    }
+    };
 
     await axios.post(
       "/api/events/",
@@ -77,6 +90,7 @@ export default function NewEventPage() {
       <h1 className="text-2xl font-bold text-center mb-4">
         {t("new-event.title")}
       </h1>
+      {error && <p className="text-red-500 text-center mb-4">{t("new-event.form-error")}</p>}
       <label>
         {t("new-event.name")}
         <input
