@@ -158,7 +158,7 @@ class MessageRecipientViewSetTestCase(TestCase):
 
                 # Assert the response status and count
                 self.assertEqual(response.status_code, case["expected_status"])
-                self.assertEqual(len(response.data["messages"]), case["expected_count"])
+                self.assertEqual(len(response.data["items"]), case["expected_count"])
                 self.assertEqual(response.data["page_number"], case["expected_page"])
                 self.assertEqual(response.data["total_pages"], case["expected_total_pages"])
 
@@ -216,7 +216,7 @@ class MessageRecipientViewSetTestCase(TestCase):
 
                 # Assert the response status and count
                 self.assertEqual(response.status_code, case["expected_status"])
-                self.assertEqual(len(response.data["messages"]), case["expected_count"])
+                self.assertEqual(len(response.data["items"]), case["expected_count"])
                 self.assertEqual(response.data["page_number"], case["expected_page"])
                 self.assertEqual(response.data["total_pages"], case["expected_total_pages"])
 
