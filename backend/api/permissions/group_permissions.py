@@ -9,7 +9,7 @@ from api.permissions.common_checks import is_manager
 
 class CanViewGroup(BasePermission):
     def has_permission(self, request, view):
-        return request.method != "GET" or request.user.is_staff or view.action == "me"
+        return request.method != "GET" or request.user.is_staff or view.action in {"me", "role"}
 
 
 class CanCreateSubgroup(BasePermission):
