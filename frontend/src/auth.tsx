@@ -5,26 +5,29 @@ import {jwtDecode} from "jwt-decode";
 import {User} from "./interfaces";
 
 
-const LOGIN_PAGE: string = "/login/";
-const REDIRECT_AFTER_LOGIN: string = "/invitations-and-groups/";
+const ACCESS_TOKEN_NAME = "access_token"
+const REFRESH_TOKEN_NAME = "refresh_token"
 
 const ACCESS_TOKEN_LIFETIME: number = 1 / 24  // 1 hour
 const REFRESH_TOKEN_LIFETIME: number = 1  // 1 day
 
+const LOGIN_PAGE: string = "/login/";
+const REDIRECT_AFTER_LOGIN: string = "/invitations-and-groups/";
+
 export function getAccessToken() {
-    return Cookies.get("access_token")
+    return Cookies.get(ACCESS_TOKEN_NAME)
 }
 
 export function getRefreshToken() {
-    return Cookies.get("refresh_token")
+    return Cookies.get(REFRESH_TOKEN_NAME)
 }
 
 export function setAccessToken(access_token: string) {
-    Cookies.set("access_token", access_token, {expires: ACCESS_TOKEN_LIFETIME});
+    Cookies.set(ACCESS_TOKEN_NAME, access_token, {expires: ACCESS_TOKEN_LIFETIME});
 }
 
 export function setRefreshToken(refresh_token: string) {
-    Cookies.set("refresh_token", refresh_token, {expires: REFRESH_TOKEN_LIFETIME});
+    Cookies.set(REFRESH_TOKEN_NAME, refresh_token, {expires: REFRESH_TOKEN_LIFETIME});
 }
 
 export function storeTokens(access_token: string, refresh_token: string) {
@@ -34,8 +37,8 @@ export function storeTokens(access_token: string, refresh_token: string) {
 }
 
 export function removeTokens() {
-    Cookies.remove("access_token");
-    Cookies.remove("refresh_token");
+    Cookies.remove(ACCESS_TOKEN_NAME);
+    Cookies.remove(REFRESH_TOKEN_NAME);
 }
 
 // axios instance configured for JWT tokens
