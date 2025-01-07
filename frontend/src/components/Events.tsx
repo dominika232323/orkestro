@@ -145,16 +145,16 @@ export default function Events() {
                   {event.place}
                 </p>
               </div>
-              <div className="flex flex-col justify-evenly">
+              <div className="flex flex-col justify-evenly ml-2">
                 <button
                   onClick={() => navigate(`/edit-event/${event.event_id}`)}
-                  className="px-3 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 font-medium transition-colors"
+                  className="px-2 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 font-medium transition-colors whitespace-nowrap"
                 >
                   <FontAwesomeIcon
                     className="mr-2"
                     icon={faPen}
                   />
-                  {t("events.edit")}
+                  <span>{t("events.edit")}</span>
                 </button>
                 <button
                   className="px-3 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 font-medium transition-colors"
@@ -164,7 +164,7 @@ export default function Events() {
                     className="mr-2"
                     icon={faTimes}
                   />
-                  {t("events.delete")}
+                  <span>{t("events.delete")}</span>
                 </button>
               </div>
             </li>
