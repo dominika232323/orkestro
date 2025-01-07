@@ -82,5 +82,52 @@ class GroupViewSetTestCase(TestCase):
                 self.assertEqual(response.status_code, case["expected_status"])
                 self.assertEqual(len(response.data), case["expected_group_count"])
 
+    def test_role(self):
+        # Define test cases with expected outcomes
+        test_cases = [
+            {
+                "user": self.staff,
+                "expected_status": 200,
+                "expected_is_manager": False,
+                "expected_is_moderator": False
+            },
+            {
+                "user": self.manager,
+                "expected_status": 200,
+                "expected_is_manager": True,
+                "expected_is_moderator": True
+            },
+            {
+                "user": self.moderator,
+                "expected_status": 200,
+                "expected_is_manager": False,
+                "expected_is_moderator": True
+            },
+            {
+                "user": self.musician,
+                "expected_status": 200,
+                "expected_is_manager": False,
+                "expected_is_moderator": False
+            },
+            {
+                "user": self.outsider,
+                "expected_status": 200,
+                "expected_is_manager": False,
+                "expected_is_moderator": False
+            },
+        ]
+
+        for case in test_cases:
+            with self.subTest(user=case["user"]):
+                # Create and authenticate the request
+                request = self.factory.get(f"/api/groups/{self.group.group_id}/role/")
+                force_authenticate(request, user=case["user"])
+                response = GroupViewSet.as_view({'get': 'role'})(request, pk=self.group.group_id)
+
+                # Assert the response status and data
+                self.assertEqual(response.status_code, case["expected_status"])
+                self.assertEqual(response.data["is_manager"], case["expected_is_manager"])
+                self.assertEqual(response.data["is_moderator"], case["expected_is_moderator"])
+
     def tearDown(self):
         basic_setup_teardown(self.group, [self.staff, self.manager, self.moderator, self.musician, self.outsider, self.unauthenticated])
