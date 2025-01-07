@@ -154,7 +154,7 @@ class EventViewSetTestCase(TestCase):
 
                 # Assert the returned event names for valid responses
                 if case["expected_status"] == 200:
-                    returned_event_names = [event["name"] for event in response.data["events"]]
+                    returned_event_names = [event["name"] for event in response.data["items"]]
                     self.assertEqual(returned_event_names, case["expected_event_names"])
 
                     self.assertEqual(response.data["page_number"], case["expected_page_number"])
