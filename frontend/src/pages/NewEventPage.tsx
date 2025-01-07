@@ -45,7 +45,7 @@ export default function NewEventPage() {
     });
   };
 
-  const handleTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleTextChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = event.target;
     setFormData((prevData) => ({
       ...prevData,
@@ -104,8 +104,7 @@ export default function NewEventPage() {
       </label>
       <label>
         {t("new-event.description")}
-        <input
-          type="text"
+        <textarea
           name="description"
           value={formData.description}
           onChange={handleTextChange}
