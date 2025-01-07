@@ -10,7 +10,7 @@ class CanViewEvent(BasePermission):
     def has_permission(self, request, view):
         if request.method != "GET" or request.user.is_staff or view.action == "me":
             return True
-        if view.action != "search":
+        if view.action not in {"search", "by_group"}:
             return False
         return is_member(request, request.GET.get("group_id"))
 

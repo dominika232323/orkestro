@@ -55,12 +55,12 @@ class FileViewSet(viewsets.ModelViewSet):
             files = set([fi.file for fi in file_instruments])
         files = sorted(files, key=lambda file: file.name)
 
-        paginator = Paginator(files, 20)
+        paginator = Paginator(files, 10)
         page = paginator.get_page(request.GET.get("page", 1))
         serializer = self.get_serializer(page, many=True)
 
         return Response({
-            "files": serializer.data,
+            "items": serializer.data,
             "page_number": page.number,
             "total_pages": paginator.num_pages
         })
@@ -73,12 +73,12 @@ class FileViewSet(viewsets.ModelViewSet):
         track_ids = [et.track_id for et in event_tracks]
         files = [ffm.file for ffm in files_for_me if ffm.file.track_id in track_ids]
 
-        paginator = Paginator(files, 20)
+        paginator = Paginator(files, 10)
         page = paginator.get_page(request.GET.get("page", 1))
         serializer = self.get_serializer(page, many=True)
 
         return Response({
-            "files": serializer.data,
+            "items": serializer.data,
             "page_number": page.number,
             "total_pages": paginator.num_pages
         })

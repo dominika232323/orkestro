@@ -5,26 +5,44 @@ import {jwtDecode} from "jwt-decode";
 import {User} from "./interfaces";
 
 
+const ACCESS_TOKEN_NAME = "access_token"
+const REFRESH_TOKEN_NAME = "refresh_token"
+
+const ACCESS_TOKEN_LIFETIME: number = 1 / 24  // 1 hour
+// const REFRESH_TOKEN_LIFETIME: number = 1  // 1 day
+
 const LOGIN_PAGE: string = "/login/";
 const REDIRECT_AFTER_LOGIN: string = "/invitations-and-groups/";
 
-const ACCESS_TOKEN_LIFETIME: number = 1 / 24  // 1 hour
-const REFRESH_TOKEN_LIFETIME: number = 1  // 1 day
-
 export function getAccessToken() {
-    return Cookies.get("access_token")
+    return Cookies.get(ACCESS_TOKEN_NAME)
 }
 
 export function getRefreshToken() {
-    return Cookies.get("refresh_token")
+    // refresh token is stored in localStorage instead of cookies,
+    // so we need to manually handle token deletion after expiration
+
+    const token = localStorage.getItem(REFRESH_TOKEN_NAME);
+    if (token) {
+        const payload = jwtDecode(token);
+        if (payload?.exp) {
+            const now = Date.now() / 1000; // current time in seconds
+            if (now < payload.exp) {
+                return token; // token is still valid
+            } else {
+                removeTokens(); // token expired
+            }
+        }
+    }
+    return null; // no valid token
 }
 
 export function setAccessToken(access_token: string) {
-    Cookies.set("access_token", access_token, {expires: ACCESS_TOKEN_LIFETIME});
+    Cookies.set(ACCESS_TOKEN_NAME, access_token, {expires: ACCESS_TOKEN_LIFETIME});
 }
 
 export function setRefreshToken(refresh_token: string) {
-    Cookies.set("refresh_token", refresh_token, {expires: REFRESH_TOKEN_LIFETIME});
+    localStorage.setItem(REFRESH_TOKEN_NAME, refresh_token);
 }
 
 export function storeTokens(access_token: string, refresh_token: string) {
@@ -34,8 +52,8 @@ export function storeTokens(access_token: string, refresh_token: string) {
 }
 
 export function removeTokens() {
-    Cookies.remove("access_token");
-    Cookies.remove("refresh_token");
+    Cookies.remove(ACCESS_TOKEN_NAME);
+    localStorage.removeItem(REFRESH_TOKEN_NAME);
 }
 
 // axios instance configured for JWT tokens
@@ -76,7 +94,7 @@ export const backendLogin = async (credentialResponse: any, setJustLoggedIn: Fun
         console.log("Google login successful:", decoded);
 
         await axios.post(
-            "/api/login-google/",
+            "/api/google-login/",
             {"credential": credential}
         )
         .then((backendResponse) => {

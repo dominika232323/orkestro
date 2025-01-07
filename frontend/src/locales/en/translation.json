@@ -24,7 +24,8 @@
   "group": {
     "manage": "Manage",
     "events": "Events",
-    "files": "Files"
+    "files": "Files",
+    "new-message": "New message"
   },
   "messages": {
     "title": "Messages",
@@ -71,16 +72,22 @@
     "add-event": "New event",
     "prev": "Previous",
     "next": "Next",
-    "page": "Page"
+    "page": "Page",
+    "placeholder": "Search by name, place, description…",
+    "search": "Search",
+    "edit": "Edit",
+    "delete": "Delete"
   },
   "files": {
     "title": "Files",
-    "no-files": "No files for selected group",
+    "no-files": "No files",
     "download": "Download",
     "add-file": "New file",
-    "search-placeholder": "Search files…"
+    "placeholder": "Search by name or track…",
+    "search": "Search",
+    "loading": "Files loading..."
   },
-  "manage-groups": {
+  "manage-group": {
     "title": "Manage group",
     "group-name": "Group name",
     "group-description": "Description",
@@ -97,7 +104,32 @@
     "search-placeholder": "Search members…",
     "cancel-filter": "Cancel filter",
     "messages": "Messages",
-    "send-messages": "New message",
+    "new-message": "New message",
+    "page": "Page",
+    "search": "Search",
+    "loading": "Members loading..."
+  },
+  "pagination": {
     "page": "Page"
+  },
+  "new-event": {
+    "title": "New event",
+    "name": "Name",
+    "description": "Description",
+    "place": "Place",
+    "date": "Date",
+    "time": "Time",
+    "submit": "Create",
+    "form-error": "All fields are mandatory"
+  },
+  "edit-event": {
+    "title": "Edit event",
+    "submit": "Edit"
+  },
+  "new-message": {
+    "title": "New message",
+    "message-title": "Title",
+    "content": "Content",
+    "submit": "Send"
   }
 }

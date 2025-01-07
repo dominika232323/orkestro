@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faArrowLeft,
-  faArrowRight,
+  faTimes,
   faPlus,
   faCalendarAlt,
   faClock,
@@ -10,220 +9,212 @@ import {
   faLocationDot,
 } from "@fortawesome/free-solid-svg-icons";
 import { useLanguage } from "../LanguageContext";
-
-interface IEvent {
-  id: string;
-  name: string;
-  date: string;
-  time: string;
-  description: string;
-  address: string;
-}
-
-interface IGroup {
-  id: string;
-  name: string;
-  events: IEvent[];
-}
-
-const groups: IGroup[] = [
-  {
-    id: "1",
-    name: "Group A",
-    events: Array.from({ length: 12 }, (_, i) => ({
-      id: `${i + 1}`,
-      name: `Event ${i + 1}`,
-      date: `2024-01-${(i + 1).toString().padStart(2, "0")}`,
-      time: "18:00",
-      description: `Description for Event ${i + 1}`,
-      address: `Location ${i + 1}`,
-    })),
-  },
-  {
-    id: "2",
-    name: "Group B",
-    events: Array.from({ length: 7 }, (_, i) => ({
-      id: `${i + 1}`,
-      name: `Event ${i + 1}`,
-      date: `2024-02-${(i + 1).toString().padStart(2, "0")}`,
-      time: "15:00",
-      description: `Description for Event ${i + 1}`,
-      address: `Location ${i + 1}`,
-    })),
-  },
-  {
-    id: "3",
-    name: "Group C",
-    events: [],
-  },
-];
+import { useNavigate, useParams } from "react-router-dom";
+import {axiosInstance as axios, fetchUserOrRedirect} from "../auth";
+import {Role, Event, Paged} from "../interfaces";
+import Pagination from "./Pagination";
 
 export default function Events() {
-  const { t } = useLanguage();
-
-  // States for managing current group, pagination, and selected event
-  const [currentGroupIndex, setCurrentGroupIndex] = useState(0);
+  const { t, currentLanguage } = useLanguage();
+  const navigate = useNavigate();
+  const { groupId } = useParams();
+  const [role, setRole] = useState<Role>();
+  const [events, setEvents] = useState<Event[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
+  const [totalPages, setTotalPages] = useState(1);
 
-  const eventsPerPage = 5;
+  useEffect(() => {
+    fetchUserOrRedirect(navigate);
+  }, []);
 
-  // Current Group and its events
-  const currentGroup = groups[currentGroupIndex];
-  const totalPages = Math.ceil(currentGroup.events.length / eventsPerPage);
+  useEffect(() => {
+    const fetchRole = async () => {
+      await axios.get<Role>(`/api/groups/${groupId}/role/`)
+        .then((response) => setRole(response.data))
+        .catch((error) => console.error("Error fetching role:", error));
+    };
 
-  // Paginated Events
-  const paginatedEvents = currentGroup.events.slice(
-    (currentPage - 1) * eventsPerPage,
-    currentPage * eventsPerPage
-  );
+    fetchRole();
+  }, []);
 
-  // Selected Event Details
-  const selectedEvent = currentGroup.events.find(
-    (event) => event.id === selectedEventId
-  );
+  const fetchEvents = async () => {
+    setLoading(true);
 
-  // Group Navigation Handlers
-  const handlePrevGroup = () => {
-    setCurrentGroupIndex((prev) => (prev - 1 + groups.length) % groups.length);
-    setCurrentPage(1); // Reset page to 1
-    setSelectedEventId(null); // Reset selected event
+    await axios.get<Paged<Event>>(
+      `/api/events/by_group/?page=${currentPage}&group_id=${groupId}&search=${searchQuery}`
+    )
+      .then((response) => {
+        const parsedEvents = response.data.items.map((event) => ({
+          ...event,
+          date: new Date(event.date), // parse date
+        }));
+
+        setEvents(parsedEvents);
+        setTotalPages(response.data.total_pages);
+      })
+      .catch((error) => console.error("Error fetching events:", error));
+
+    setLoading(false);
   };
 
-  const handleNextGroup = () => {
-    setCurrentGroupIndex((prev) => (prev + 1) % groups.length);
+  useEffect(() => {
+    fetchEvents();
+  }, [currentPage]);
+
+  const handleSearch = () => {
     setCurrentPage(1);
-    setSelectedEventId(null);
+    fetchEvents();
   };
 
-  // Pagination Handlers
-  const handlePrevPage = () => {
-    if (currentPage > 1) setCurrentPage((prev) => prev - 1);
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      handleSearch();
+    }
   };
 
-  const handleNextPage = () => {
-    if (currentPage < totalPages) setCurrentPage((prev) => prev + 1);
+  const handleDelete = async (event_id: number) => {
+    await axios.delete(`/api/events/${event_id}/`)
+    .then(() => {
+      console.log(`Successfully deleted event ${event_id}`);
+      fetchEvents();
+    })
+    .catch((error) => console.error(`Error deleting event ${event_id}:`, error));
   };
 
   return (
     <div className="bg-gray-200 p-6 rounded-lg max-w-4xl mx-auto mt-8">
-      <h1 className="text-2xl font-bold text-center mb-4">
+      <h1 className="text-2xl font-bold text-center mb-6">
         {t("events.title")}
       </h1>
 
-      {/* Group Navigation */}
-      <div className="flex justify-between items-center mb-6">
+      {/* Search Bar */}
+      <div className="flex items-center mb-6 bg-white shadow-md rounded-lg overflow-hidden">
+        <input
+          type="text"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          onKeyDown={handleKeyDown}
+          placeholder={t("events.placeholder")}
+          className="flex-1 px-4 py-2 text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
         <button
-          className="p-2 bg-blue-500 text-white rounded-full hover:bg-blue-600"
-          onClick={handlePrevGroup}
+          onClick={handleSearch}
+          className="px-4 py-2 bg-blue-500 text-white font-medium hover:bg-blue-600 transition-colors"
         >
-          <FontAwesomeIcon icon={faArrowLeft} />
-        </button>
-        <h2 className="text-xl font-bold">{currentGroup.name}</h2>
-        <button
-          className="p-2 bg-blue-500 text-white rounded-full hover:bg-blue-600"
-          onClick={handleNextGroup}
-        >
-          <FontAwesomeIcon icon={faArrowRight} />
+          {t("events.search")}
         </button>
       </div>
 
-      {/* List of Events */}
-      <ul className="space-y-4">
-        {paginatedEvents.length > 0 ? (
-          paginatedEvents.map((event) => (
+      {/* Event List */}
+      {events.length > 0 ? (
+        <ul className="space-y-6">
+          {events.map((event) => (
             <li
-              key={event.id}
-              className={`bg-white p-4 rounded-lg shadow border hover:shadow-lg cursor-pointer ${
-                selectedEventId === event.id
-                  ? "border-blue-500 bg-blue-50"
-                  : "border-gray-200"
-              }`}
-              onClick={() => setSelectedEventId(event.id)}
+              key={event.event_id}
+              className="flex justify-between bg-white p-6 rounded-lg shadow-md"
             >
-              <p className="font-bold">{event.name}</p>
-              <p className="text-gray-600">{event.date}</p>
+              <div>
+                <h2 className="text-lg font-bold mb-4">{event.name}</h2>
+                <p>
+                  <strong>
+                    <FontAwesomeIcon
+                      icon={faCalendarAlt}
+                      className="mr-2 text-gray-500"
+                    />
+                    {t("events.date")}:
+                  </strong>{" "}
+                  {event.date.toLocaleDateString(currentLanguage, {
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "numeric",
+                  })}
+                </p>
+                <p>
+                  <strong>
+                    <FontAwesomeIcon
+                      icon={faClock}
+                      className="mr-2 text-gray-500"
+                    />
+                    {t("events.time")}:
+                  </strong>{" "}
+                  {event.date.toLocaleTimeString(currentLanguage, {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
+                </p>
+                <p>
+                  <strong>
+                    <FontAwesomeIcon
+                      icon={faPen}
+                      className="mr-2 text-gray-500"
+                    />
+                    {t("events.description")}:
+                  </strong>{" "}
+                  {event.description}
+                </p>
+                <p>
+                  <strong>
+                    <FontAwesomeIcon
+                      icon={faLocationDot}
+                      className="mr-2 text-gray-500"
+                    />
+                    {t("events.address")}:
+                  </strong>{" "}
+                  {event.place}
+                </p>
+              </div>
+              {role?.is_manager &&
+                <div className="flex flex-col justify-evenly ml-2">
+                  <button
+                    onClick={() => navigate(`/edit-event/${event.event_id}`)}
+                    className="px-2 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 font-medium transition-colors whitespace-nowrap"
+                  >
+                    <FontAwesomeIcon
+                      className="mr-2"
+                      icon={faPen}
+                    />
+                    <span>{t("events.edit")}</span>
+                  </button>
+                  <button
+                    className="px-3 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 font-medium transition-colors"
+                    onClick={() => handleDelete(event.event_id)}
+                  >
+                    <FontAwesomeIcon
+                      className="mr-2"
+                      icon={faTimes}
+                    />
+                    <span>{t("events.delete")}</span>
+                  </button>
+                </div>
+              }
             </li>
-          ))
-        ) : (
-          <li className="text-center text-gray-600">{t("events.no-events")}</li>
-        )}
-        {/* Add Event Button */}
-        <li>
-          <button className="w-full py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 font-medium">
-            <FontAwesomeIcon icon={faPlus} className="mr-2" />
-            {t("events.add-event")}
-          </button>
-        </li>
-      </ul>
-
-      {/* Pagination Buttons */}
-      {currentGroup.events.length > eventsPerPage && (
-        <div className="flex justify-center gap-4 mt-6">
-          <button
-            className={
-              "p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-            }
-            onClick={handlePrevPage}
-            disabled={currentPage === 1}
-          >
-            {t("events.prev")}
-          </button>
-          <span className="self-center font-medium">
-            {t("events.page")} {currentPage} / {totalPages}
-          </span>
-          <button
-            className={
-              "p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-            }
-            onClick={handleNextPage}
-            disabled={currentPage === totalPages}
-          >
-            {t("events.next")}
-          </button>
-        </div>
+          ))}
+        </ul>
+      ) : loading ? (
+        <p className="text-gray-600 text-center">{t("events.loading")}</p>
+      ) : (
+        <p className="text-gray-600 text-center">{t("events.no-events")}</p>
       )}
 
-      {/* Selected Event Details */}
-      {selectedEvent && (
-        <div className="bg-white p-6 rounded-lg shadow-md mt-6">
-          <h2 className="text-lg font-bold mb-4">{selectedEvent.name}</h2>
-          <p>
-            <strong>
-              <FontAwesomeIcon
-                icon={faCalendarAlt}
-                className="mr-2 text-gray-500"
-              />
-              {t("events.date")}:
-            </strong>{" "}
-            {selectedEvent.date}
-          </p>
-          <p>
-            <strong>
-              <FontAwesomeIcon icon={faClock} className="mr-2 text-gray-500" />
-              {t("events.time")}:
-            </strong>{" "}
-            {selectedEvent.time}
-          </p>
-          <p>
-            <strong>
-              <FontAwesomeIcon icon={faPen} className="mr-2 text-gray-500" />
-              {t("events.description")}:
-            </strong>{" "}
-            {selectedEvent.description}
-          </p>
-          <p>
-            <strong>
-              <FontAwesomeIcon
-                icon={faLocationDot}
-                className="mr-2 text-gray-500"
-              />
-              {t("events.address")}:
-            </strong>{" "}
-            {selectedEvent.address}
-          </p>
-        </div>
-      )}
+      {/* Add Event Button */}
+      {role?.is_manager &&
+        <button
+          className="w-full py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 font-medium flex items-center justify-center mt-6"
+          onClick={() => navigate(`/new-event/${groupId}`)}
+        >
+          <FontAwesomeIcon icon={faPlus} className="mr-2" />
+          {t("events.add-event")}
+        </button>
+      }
+
+      {/* Pagination */}
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={(page) => setCurrentPage(page)}
+      />
     </div>
   );
 }

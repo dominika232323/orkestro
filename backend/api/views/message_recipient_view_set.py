@@ -69,13 +69,13 @@ class MessageRecipientViewSet(viewsets.ModelViewSet):
             .filter(query, user=request.user) \
             .order_by("-message__date")
 
-        paginator = Paginator(received_messages, 20)
+        paginator = Paginator(received_messages, 10)
         page = paginator.get_page(request.GET.get("page", 1))
 
         serializer = self.get_serializer(page, many=True)
 
         return Response({
-            "messages": serializer.data,
+            "items": serializer.data,
             "page_number": page.number,
             "total_pages": paginator.num_pages
         })

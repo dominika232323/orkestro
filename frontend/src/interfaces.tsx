@@ -16,10 +16,15 @@ export interface Group {
 }
 
 export interface GroupWithSubgroups {
-    group_id: number;
-    name: string;
-    description: string;
-    subgroups: GroupWithSubgroups[];
+  group_id: number;
+  name: string;
+  description: string;
+  subgroups: GroupWithSubgroups[];
+}
+
+export interface Role {
+  is_manager: boolean;
+  is_moderator: boolean;
 }
 
 export interface Invitation {
@@ -70,4 +75,32 @@ export interface Event {
   description: string;
   date: Date;
   place: string;
+}
+
+export interface Member {
+  member_id: number;
+  group: number;
+  user: number;
+  user_details: User;
+  permission_level: string;
+}
+
+export interface Track {
+  track_id: number;
+  group: number;
+  name: string;
+  artist: string;
+}
+
+export interface File {
+  file_id: number;
+  track: number;
+  track_details: Track;
+  name: string;
+}
+
+export interface Paged<T> {
+  items: T[];
+  page_number: number;
+  total_pages: number;
 }

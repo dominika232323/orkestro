@@ -39,12 +39,12 @@ class EventViewSet(viewsets.ModelViewSet):
 
         events = Event.objects.filter(query, group_id=request.GET.get("group_id")).order_by("-date")
 
-        paginator = Paginator(events, 20)
+        paginator = Paginator(events, 5)
         page = paginator.get_page(request.GET.get("page", 1))
         serializer = self.get_serializer(page, many=True)
 
         return Response({
-            "events": serializer.data,
+            "items": serializer.data,
             "page_number": page.number,
             "total_pages": paginator.num_pages
         })
@@ -57,3 +57,26 @@ class EventViewSet(viewsets.ModelViewSet):
         events = [p.event for p in participations]
         serializer = self.get_serializer(events, many=True)
         return Response(serializer.data)
+
+    @action(detail=False, methods=["get"])
+    def by_group(self, request):
+        query = Q()
+        for term in request.GET.get("search", "").split():
+            query |= Q(name__icontains=term) | \
+                     Q(place__icontains=term) | \
+                     Q(description__icontains=term)
+
+        events = Event.objects \
+            .filter(query, group_id=request.GET .get("group_id")) \
+            .order_by("-date")
+
+
+        paginator = Paginator(events, 5)
+        page = paginator.get_page(request.GET.get("page", 1))
+        serializer = self.get_serializer(page, many=True)
+
+        return Response({
+            "items": serializer.data,
+            "page_number": page.number,
+            "total_pages": paginator.num_pages
+        })

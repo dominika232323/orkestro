@@ -2,16 +2,11 @@ import { useEffect, useState } from "react";
 
 import { useLanguage } from "../LanguageContext";
 import { axiosInstance as axios } from "../auth";
-import { MessageRecipient } from "../interfaces";
+import {MessageRecipient, Paged} from "../interfaces";
 import MessageComponent from "./MessageComponent";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons";
 
-interface MessageRecipientPaged {
-  messages: MessageRecipient[];
-  page_number: number;
-  total_pages: number;
-}
 
 export default function Messages() {
   const { t } = useLanguage();
@@ -25,14 +20,11 @@ export default function Messages() {
     setLoading(true);
 
     await axios
-      .get<MessageRecipientPaged>(
-        searchQuery ?
-          `/api/message-recipients/me/?page=${currentPage}&search=${searchQuery}`
-          :
-          `/api/message-recipients/me/?page=${currentPage}`
+      .get<Paged<MessageRecipient>>(
+        `/api/message-recipients/me/?page=${currentPage}&search=${searchQuery}`
       )
       .then((response) => {
-        const parsedMessages = response.data.messages.map((msg_recipient) => ({
+        const parsedMessages = response.data.items.map((msg_recipient) => ({
           ...msg_recipient,
           message_details: {
             ...msg_recipient.message_details,
@@ -74,12 +66,14 @@ export default function Messages() {
     }
   };
 
+  console.log(messages);
+
   return (
     <div className="bg-gray-200 p-6 rounded-lg max-w-4xl mx-auto mt-8">
       <h1 className="text-2xl font-bold text-center mb-4">
         {t("messages.title")}
       </h1>
-      <div className="flex mb-4">
+      <div className="flex items-center mb-6 bg-white shadow-md rounded-lg overflow-hidden">
         <input
           type="text"
           value={searchQuery}
@@ -87,12 +81,12 @@ export default function Messages() {
             setSearchQuery(e.target.value);
           }}
           onKeyDown={handleKeyDown}
-          className="flex-1 p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          className="flex-1 px-4 py-2 text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder={t("messages.placeholder")}
         />
         <button
           onClick={handleSearch}
-          className="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+          className="px-4 py-2 bg-blue-500 text-white font-medium hover:bg-blue-600 transition-colors"
         >
           {t("messages.search")}
         </button>
