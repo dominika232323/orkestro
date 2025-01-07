@@ -177,7 +177,7 @@ class MessageRecipientViewSetTestCase(TestCase):
                 "user": self.manager,
                 "expected_status": 200,
                 "expected_count": 2,
-                "expected_messages": ["Rehearsal", "Concert Attire Guidelines"],
+                "expected_messages": ["Concert Attire Guidelines", "Rehearsal"],
                 "expected_page": 1,
                 "expected_total_pages": 1
             },
@@ -185,15 +185,15 @@ class MessageRecipientViewSetTestCase(TestCase):
                 "user": self.moderator,
                 "expected_status": 200,
                 "expected_count": 2,
-                "expected_messages": ["Concert Attire Guidelines", "Sound Check Details"],
+                "expected_messages": ["Concert Attire Guidelines", "Christmas concert update"],
                 "expected_page": 1,
                 "expected_total_pages": 1
             },
             {
                 "user": self.musician,
                 "expected_status": 200,
-                "expected_count": 1,
-                "expected_messages": ["Rehearsal"],
+                "expected_count": 2,
+                "expected_messages": ["Rehearsal", "Christmas concert update"],
                 "expected_page": 1,
                 "expected_total_pages": 1
             },
@@ -210,7 +210,7 @@ class MessageRecipientViewSetTestCase(TestCase):
         for case in test_cases:
             with self.subTest(user=case["user"]):
                 # Create and authenticate the request
-                request = self.factory.get("/api/message-recipients/me/", {"search": "rehearsal reminder"})
+                request = self.factory.get("/api/message-recipients/me/", {"search": "rehearsal concert"})
                 force_authenticate(request, user=case["user"])
                 response = MessageRecipientViewSet.as_view({'get': 'me'})(request)
 
