@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { useLanguage } from "../LanguageContext";
 import { Event } from "../interfaces";
 import axios from "axios";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons";
 
 export default function Calendar() {
   const { t, currentLanguage } = useLanguage();
@@ -46,6 +48,23 @@ export default function Calendar() {
     );
   };
 
+  const nextMonth = () => {
+    if (month === 11) {
+      setMonth(0);
+      setYear((prevYear) => prevYear + 1);
+    } else {
+      setMonth((prevMonth) => prevMonth + 1);
+    }
+  };
+  const prevMonth = () => {
+    if (month === 0) {
+      setMonth(11);
+      setYear((prevYear) => prevYear - 1);
+    } else {
+      setMonth((prevMonth) => prevMonth - 1);
+    }
+  };
+
   const setCurrentMonth = () => {
     setYear(new Date().getFullYear());
     setMonth(new Date().getMonth());
@@ -62,40 +81,62 @@ export default function Calendar() {
       <h1 className="text-2xl font-bold text-center mb-4">
         {t("calendar.title")}
       </h1>
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <select
-            value={year}
-            onChange={(e) => setYear(Number(e.target.value))}
-            className="border border-gray-300 rounded-md p-2 text-sm shadow-sm focus:outline-none focus:ring focus:ring-blue-300"
-          >
-            {yearOptions.map((y) => (
-              <option key={y} value={y}>
-                {y}
-              </option>
-            ))}
-          </select>
-          <select
-            value={month}
-            onChange={(e) => setMonth(Number(e.target.value))}
-            className="border border-gray-300 rounded-md p-2 text-sm shadow-sm focus:outline-none focus:ring focus:ring-blue-300"
-          >
-            {Array.from({ length: 12 }).map((_, index) => (
-              <option key={index} value={index}>
-                {new Date(0, index).toLocaleString(currentLanguage, {
-                  month: "long",
-                })}
-              </option>
-            ))}
-          </select>
-        </div>
+      <div className="flex items-center justify-center space-x-4 mb-6">
+        {/* Previous Month Button */}
         <button
           className="p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+          onClick={prevMonth}
+        >
+          <FontAwesomeIcon icon={faArrowLeft} />
+        </button>
+
+        {/* Year Dropdown */}
+        <select
+          value={year}
+          onChange={(e) => setYear(Number(e.target.value))}
+          className="border border-gray-300 rounded-md p-2 text-sm shadow-sm focus:outline-none focus:ring focus:ring-blue-300"
+        >
+          {yearOptions.map((y) => (
+            <option key={y} value={y}>
+              {y}
+            </option>
+          ))}
+        </select>
+
+        {/* Month Dropdown */}
+        <select
+          value={month}
+          onChange={(e) => setMonth(Number(e.target.value))}
+          className="border border-gray-300 rounded-md p-2 text-sm shadow-sm focus:outline-none focus:ring focus:ring-blue-300"
+        >
+          {Array.from({ length: 12 }).map((_, index) => (
+            <option key={index} value={index}>
+              {new Date(0, index).toLocaleString(currentLanguage, {
+                month: "long",
+              })}
+            </option>
+          ))}
+        </select>
+
+        {/* Next Month Button */}
+        <button
+          className="p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+          onClick={nextMonth}
+        >
+          <FontAwesomeIcon icon={faArrowRight} />
+        </button>
+      </div>
+
+      {/* Show Current Month Button */}
+      <div className="text-center">
+        <button
+          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
           onClick={setCurrentMonth}
         >
           {t("calendar.current-month")}
         </button>
       </div>
+
       <div className="grid grid-cols-7 gap-2 text-center">
         {/* Weekday Headers */}
         {daysOfWeek.map((day) => (
@@ -125,7 +166,9 @@ export default function Calendar() {
                 <div className="text-sm text-green-600">
                   {dayEvents.length}{" "}
                   {currentLanguage === "en"
-                    ? "Event(s)"
+                    ? dayEvents.length === 1
+                      ? "Event"
+                      : "Events"
                     : dayEvents.length === 1
                       ? "Wydarzenie"
                       : [2, 3, 4].includes(dayEvents.length % 10) &&
