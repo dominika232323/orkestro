@@ -196,5 +196,64 @@ class MemberViewSetTestCase(TestCase):
                 if response.status_code == 400:
                     self.assertEqual(response.data["error"], "Can't remove the last manager")
 
+    def test_search(self):
+        # Define test cases with expected outcomes
+        test_cases = [
+            {
+                "user": self.staff,
+                "expected_status": 200,
+                "expected_items": [self.moderator.user_id],
+                "expected_page_number": 1,
+                "expected_total_pages": 1
+            },
+            {
+                "user": self.moderator,
+                "expected_status": 200,
+                "expected_items": [self.moderator.user_id],
+                "expected_page_number": 1,
+                "expected_total_pages": 1
+            },
+            {
+                "user": self.musician,
+                "expected_status": 200,
+                "expected_items": [self.moderator.user_id],
+                "expected_page_number": 1,
+                "expected_total_pages": 1
+            },
+            {
+                "user": self.manager,
+                "expected_status": 200,
+                "expected_items": [self.moderator.user_id],
+                "expected_page_number": 1,
+                "expected_total_pages": 1
+            },
+            {
+                "user": self.outsider,
+                "expected_status": 403,
+                "expected_items": [],
+                "expected_page_number": 1,
+                "expected_total_pages": 1
+            },
+        ]
+
+        for case in test_cases:
+            with self.subTest(user=case["user"]):
+                # Create and authenticate the request
+                request = self.factory.get("/api/members/search/", {"name": "R", "permission_level": "B", "group_id": self.group.group_id})
+                force_authenticate(request, user=case["user"])
+                response = MemberViewSet.as_view({'get': 'search'})(request)
+
+                # Assert the response status
+                self.assertEqual(response.status_code, case["expected_status"])
+
+                # Assert the returned response.data for valid responses
+                if case["expected_status"] == 200:
+                    returned_items = [user["user"] for user in response.data["items"]]
+                    self.assertEqual(returned_items, case["expected_items"])
+
+                    self.assertEqual(response.data["page_number"], case["expected_page_number"])
+                    self.assertEqual(response.data["total_pages"], case["expected_total_pages"])
+
+
     def tearDown(self):
         basic_setup_teardown(self.group, [self.staff, self.manager, self.moderator, self.musician, self.outsider, self.unauthenticated])
