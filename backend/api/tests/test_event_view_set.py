@@ -97,32 +97,69 @@ class EventViewSetTestCase(TestCase):
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.data["error"], "Data validation failed")
 
-    def test_by_group(self):
-        Event.objects.create(group=self.group, name="n 1", description="d 1", date=timezone.now(), place="p 1")
-        Event.objects.create(group=self.group, name="n 2", description="d 2", date=timezone.now(), place="p 2")
+    def test_search(self):
+        # Create events
+        Event.objects.create(group=self.group, name="Music concert", description="Desc 1", date="2025-10-21T13:00:00Z", place="NYC")
+        Event.objects.create(group=self.group, name="Christmas Concert", description="Music concert", date="2026-10-14T20:00:00Z", place="Paris")
+        Event.objects.create(group=self.group, name="Practise", description="Practice for Christmas concert", date="2025-05-26T16:16:16Z", place="Warsaw")
 
         # Define test cases with expected outcomes
         test_cases = [
-            {"user": self.staff, "expected_status": 200, "expected_event_count": 2},
-            {"user": self.manager, "expected_status": 200, "expected_event_count": 2},
-            {"user": self.moderator, "expected_status": 200, "expected_event_count": 2},
-            {"user": self.musician, "expected_status": 200, "expected_event_count": 2},
-            {"user": self.outsider, "expected_status": 403, "expected_event_count": 0},
+            {
+                "user": self.staff,
+                "expected_status": 200,
+                "expected_event_names": ["Christmas Concert", "Music concert", "Practise"],
+                "expected_page_number": 1,
+                "expected_total_pages": 1
+             },
+            {
+                "user": self.moderator,
+                "expected_status": 200,
+                "expected_event_names": ["Christmas Concert", "Music concert", "Practise"],
+                "expected_page_number": 1,
+                "expected_total_pages": 1
+             },
+            {
+                "user": self.musician,
+                "expected_status": 200,
+                "expected_event_names": ["Christmas Concert", "Music concert", "Practise"],
+                "expected_page_number": 1,
+                "expected_total_pages": 1
+             },
+            {
+                "user": self.manager,
+                "expected_status": 200,
+                "expected_event_names": ["Christmas Concert", "Music concert", "Practise"],
+                "expected_page_number": 1,
+                "expected_total_pages": 1
+             },
+            {
+                "user": self.outsider,
+                "expected_status": 403,
+                "expected_event_names": [],
+                "expected_page_number": 1,
+                "expected_total_pages": 1
+             },
         ]
 
         for case in test_cases:
             with self.subTest(user=case["user"]):
                 # Create and authenticate the request
-                request = self.factory.get(f"/api/events/by_group/?group_id={self.group.group_id}")
+                request = self.factory.get("/api/events/search/", {"search": "concert", "group_id": self.group.group_id})
                 force_authenticate(request, user=case["user"])
-                response = EventViewSet.as_view({'get': 'by_group'})(request)
+                response = EventViewSet.as_view({'get': 'search'})(request)
 
                 # Assert the response status
                 self.assertEqual(response.status_code, case["expected_status"])
 
-                # Assert the event count for valid responses
+                # Assert the returned event names for valid responses
                 if case["expected_status"] == 200:
-                    self.assertEqual(len(response.data), case["expected_event_count"])
+                    returned_event_names = [event["name"] for event in response.data["items"]]
+                    self.assertEqual(returned_event_names, case["expected_event_names"])
+
+                    self.assertEqual(response.data["page_number"], case["expected_page_number"])
+                    self.assertEqual(response.data["total_pages"], case["expected_total_pages"])
+
 
     def test_me(self):
         # Create events
@@ -157,6 +194,244 @@ class EventViewSetTestCase(TestCase):
                 if case["expected_status"] == 200:
                     returned_event_names = [event["name"] for event in response.data]
                     self.assertEqual(returned_event_names, case["expected_event_names"])
+
+    def test_me_with_year_and_month(self):
+        # Create events
+        event1 = Event.objects.create(group=self.group, name="Event 1", description="Desc 1", date="2025-10-21T13:00:00Z", place="Place 1")
+        event2 = Event.objects.create(group=self.group, name="Event 2", description="Desc 2", date="2026-10-14T20:00:00Z", place="Place 2")
+        event3 = Event.objects.create(group=self.group, name="Event 3", description="Desc 3", date="2025-05-26T16:16:16Z", place="Place 3")
+
+        # Assign participations
+        EventAttendee.objects.create(user=self.staff, event=event1)
+        EventAttendee.objects.create(user=self.staff, event=event2)
+        EventAttendee.objects.create(user=self.musician, event=event3)
+
+        # Define test cases with expected outcomes
+        test_cases = [
+            {"user": self.staff, "expected_status": 200, "expected_event_names": []},
+            {"user": self.musician, "expected_status": 200, "expected_event_names": ["Event 3"]},
+            {"user": self.manager, "expected_status": 200, "expected_event_names": []},
+            {"user": self.outsider, "expected_status": 200, "expected_event_names": []},
+        ]
+
+        for case in test_cases:
+            with self.subTest(user=case["user"]):
+                # Create and authenticate the request
+                request = self.factory.get("/api/events/me?year=2025&month=5")
+                force_authenticate(request, user=case["user"])
+                response = EventViewSet.as_view({'get': 'me'})(request)
+
+                # Assert the response status
+                self.assertEqual(response.status_code, case["expected_status"])
+
+                # Assert the returned event names for valid responses
+                if case["expected_status"] == 200:
+                    returned_event_names = [event["name"] for event in response.data]
+                    self.assertEqual(returned_event_names, case["expected_event_names"])
+
+    def test_me_with_only_month(self):
+        # Create events
+        event1 = Event.objects.create(group=self.group, name="Event 1", description="Desc 1", date="2025-10-21T13:00:00Z", place="Place 1")
+        event2 = Event.objects.create(group=self.group, name="Event 2", description="Desc 2", date="2026-10-14T20:00:00Z", place="Place 2")
+        event3 = Event.objects.create(group=self.group, name="Event 3", description="Desc 3", date="2025-05-26T16:16:16Z", place="Place 3")
+
+        # Assign participations
+        EventAttendee.objects.create(user=self.staff, event=event1)
+        EventAttendee.objects.create(user=self.staff, event=event2)
+        EventAttendee.objects.create(user=self.musician, event=event3)
+
+        # Define test cases with expected outcomes
+        test_cases = [
+            {"user": self.staff, "expected_status": 200, "expected_event_names": ["Event 1", "Event 2"]},
+            {"user": self.musician, "expected_status": 200, "expected_event_names": ["Event 3"]},
+            {"user": self.manager, "expected_status": 200, "expected_event_names": []},
+            {"user": self.outsider, "expected_status": 200, "expected_event_names": []},
+        ]
+
+        for case in test_cases:
+            with self.subTest(user=case["user"]):
+                # Create and authenticate the request
+                request = self.factory.get("/api/events/me?month=10")
+                force_authenticate(request, user=case["user"])
+                response = EventViewSet.as_view({'get': 'me'})(request)
+
+                # Assert the response status
+                self.assertEqual(response.status_code, case["expected_status"])
+
+                # Assert the returned event names for valid responses
+                if case["expected_status"] == 200:
+                    returned_event_names = [event["name"] for event in response.data]
+                    self.assertEqual(returned_event_names, case["expected_event_names"])
+
+    def test_me_with_only_year(self):
+        # Create events
+        event1 = Event.objects.create(group=self.group, name="Event 1", description="Desc 1", date="2025-10-21T13:00:00Z", place="Place 1")
+        event2 = Event.objects.create(group=self.group, name="Event 2", description="Desc 2", date="2026-10-14T20:00:00Z", place="Place 2")
+        event3 = Event.objects.create(group=self.group, name="Event 3", description="Desc 3", date="2025-05-26T16:16:16Z", place="Place 3")
+
+        # Assign participations
+        EventAttendee.objects.create(user=self.staff, event=event1)
+        EventAttendee.objects.create(user=self.staff, event=event2)
+        EventAttendee.objects.create(user=self.musician, event=event3)
+
+        # Define test cases with expected outcomes
+        test_cases = [
+            {"user": self.staff, "expected_status": 200, "expected_event_names": ["Event 1", "Event 2"]},
+            {"user": self.musician, "expected_status": 200, "expected_event_names": ["Event 3"]},
+            {"user": self.manager, "expected_status": 200, "expected_event_names": []},
+            {"user": self.outsider, "expected_status": 200, "expected_event_names": []},
+        ]
+
+        for case in test_cases:
+            with self.subTest(user=case["user"]):
+                # Create and authenticate the request
+                request = self.factory.get("/api/events/me?year=2026")
+                force_authenticate(request, user=case["user"])
+                response = EventViewSet.as_view({'get': 'me'})(request)
+
+                # Assert the response status
+                self.assertEqual(response.status_code, case["expected_status"])
+
+                # Assert the returned event names for valid responses
+                if case["expected_status"] == 200:
+                    returned_event_names = [event["name"] for event in response.data]
+                    self.assertEqual(returned_event_names, case["expected_event_names"])
+
+    def test_by_group(self):
+        Event.objects.create(group=self.group, name="n 1", description="d 1", date=timezone.now(), place="p 1")
+        Event.objects.create(group=self.group, name="n 2", description="d 2", date=timezone.now(), place="p 2")
+
+        # Define test cases with expected outcomes
+        test_cases = [
+            {
+                "user": self.staff,
+                "expected_status": 200,
+                "expected_event_count": 2,
+                "expected_items": ["n 2", "n 1"],
+                "expected_page_number": 1,
+                "expected_total_pages": 1
+            },
+            {
+                "user": self.manager,
+                "expected_status": 200,
+                "expected_event_count": 2,
+                "expected_items": ["n 2", "n 1"],
+                "expected_page_number": 1,
+                "expected_total_pages": 1
+            },
+            {
+                "user": self.moderator,
+                "expected_status": 200,
+                "expected_event_count": 2,
+                "expected_items": ["n 2", "n 1"],
+                "expected_page_number": 1,
+                "expected_total_pages": 1
+            },
+            {
+                "user": self.musician,
+                "expected_status": 200,
+                "expected_event_count": 2,
+                "expected_items": ["n 2", "n 1"],
+                "expected_page_number": 1,
+                "expected_total_pages": 1
+            },
+            {
+                "user": self.outsider,
+                "expected_status": 403,
+                "expected_event_count": 0,
+                "expected_items": [],
+                "expected_page_number": 1,
+                "expected_total_pages": 1
+            },
+        ]
+
+        for case in test_cases:
+            with self.subTest(user=case["user"]):
+                # Create and authenticate the request
+                request = self.factory.get(f"/api/events/by_group/?group_id={self.group.group_id}")
+                force_authenticate(request, user=case["user"])
+                response = EventViewSet.as_view({'get': 'by_group'})(request)
+
+                # Assert the response status
+                self.assertEqual(response.status_code, case["expected_status"])
+
+                # Assert the event count for valid responses
+                if case["expected_status"] == 200:
+                    self.assertEqual(len(response.data["items"]), case["expected_event_count"])
+
+                    returned_event_names = [event["name"] for event in response.data["items"]]
+                    self.assertEqual(returned_event_names, case["expected_items"])
+
+                    self.assertEqual(response.data["page_number"], case["expected_page_number"])
+                    self.assertEqual(response.data["total_pages"], case["expected_total_pages"])
+
+    def test_by_group_with_terms(self):
+        Event.objects.create(group=self.group, name="Christmas concert", description="Christmas concert for children", date=timezone.now(), place="Paris")
+        Event.objects.create(group=self.group, name="Rehearsal", description="Rehearsal for charity concert", date=timezone.now(), place="Warsaw")
+
+        # Define test cases with expected outcomes
+        test_cases = [
+            {
+                "user": self.staff,
+                "expected_status": 200,
+                "expected_event_count": 2,
+                "expected_items": ["Rehearsal", "Christmas concert"],
+                "expected_page_number": 1,
+                "expected_total_pages": 1
+            },
+            {
+                "user": self.manager,
+                "expected_status": 200,
+                "expected_event_count": 2,
+                "expected_items": ["Rehearsal", "Christmas concert"],
+                "expected_page_number": 1,
+                "expected_total_pages": 1
+            },
+            {
+                "user": self.moderator,
+                "expected_status": 200,
+                "expected_event_count": 2,
+                "expected_items": ["Rehearsal", "Christmas concert"],
+                "expected_page_number": 1,
+                "expected_total_pages": 1
+            },
+            {
+                "user": self.musician,
+                "expected_status": 200,
+                "expected_event_count": 2,
+                "expected_items": ["Rehearsal", "Christmas concert"],
+                "expected_page_number": 1,
+                "expected_total_pages": 1
+            },
+            {
+                "user": self.outsider,
+                "expected_status": 403,
+                "expected_event_count": 0,
+                "expected_items": [],
+                "expected_page_number": 1,
+                "expected_total_pages": 1
+            },
+        ]
+
+        for case in test_cases:
+            with self.subTest(user=case["user"]):
+                # Create and authenticate the request
+                request = self.factory.get(f"/api/events/by_group/", {"search": "concert", "group_id": self.group.group_id})
+                force_authenticate(request, user=case["user"])
+                response = EventViewSet.as_view({'get': 'by_group'})(request)
+
+                # Assert the response status
+                self.assertEqual(response.status_code, case["expected_status"])
+
+                # Assert the event count for valid responses
+                if case["expected_status"] == 200:
+                    self.assertEqual(len(response.data["items"]), case["expected_event_count"])
+
+                    returned_event_names = [event["name"] for event in response.data["items"]]
+                    self.assertEqual(returned_event_names, case["expected_items"])
+
+                    self.assertEqual(response.data["page_number"], case["expected_page_number"])
+                    self.assertEqual(response.data["total_pages"], case["expected_total_pages"])
 
     def tearDown(self):
         basic_setup_teardown(self.group, [self.staff, self.manager, self.moderator, self.musician, self.outsider, self.unauthenticated])
