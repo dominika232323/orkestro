@@ -9,12 +9,14 @@ Przykładowy plik `.env` w katalogu głównym projektu:
 POSTGRES_USER=myuser
 POSTGRES_PASSWORD=[password]
 POSTGRES_DB=orkestrodb
+INCLUDE_TEST_DATA=true # false
 DJANGO_DB_HOST=localhost
 DJANGO_DB_PORT=5432
 DJANGO_KEY=[key]
 DJANGO_DEBUG=1
 REACT_APP_GOOGLE_CLIENT_ID=[Google API client ID]
 BROWSER=none
+URL=localhost
 ```
 
 

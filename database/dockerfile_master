@@ -1,0 +1,7 @@
+FROM postgres:17-alpine
+ARG INCLUDE_TEST_DATA
+COPY ./database/tables.sql /docker-entrypoint-initdb.d/1.sql
+COPY ./database/data.sql /docker-entrypoint-initdb.d/2.sql
+COPY ./database/tables_test.sql /docker-entrypoint-initdb.d/3.sql
+RUN if [ "$INCLUDE_TEST_DATA" == "false" ] ; then rm /docker-entrypoint-initdb.d/2.sql ; fi
+
