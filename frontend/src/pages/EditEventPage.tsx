@@ -1,17 +1,38 @@
-import { useParams } from "react-router-dom";
+import {useEffect, useState} from "react";
+import {useNavigate, useParams} from "react-router-dom";
 import { useLanguage } from "../LanguageContext";
-import { useEffect, useState } from "react";
+import {axiosInstance as axios, fetchUserOrRedirect} from "../auth";
 import { Event } from "../interfaces";
 
 export default function EditEventPage() {
+  const navigate = useNavigate();
   const { t } = useLanguage();
   const { eventId } = useParams<{ eventId: string }>();
-  const [formData, setFormData] = useState<Partial<Event>>({});
+  const [event, setEvent] = useState<Partial<Event>>({});
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<boolean>(false);
 
-  const fetchEvent = () => {
+  const parsedEventId = eventId ? parseInt(eventId, 10) : undefined;
+
+  if (!parsedEventId) {
+    throw new Error("Event ID is required and must be a valid number");
+  }
+
+  useEffect(() => {
+    fetchUserOrRedirect(navigate);
+  }, []);
+
+  const fetchEvent = async () => {
     setLoading(true);
-    setFormData({});
+    await axios.get<Event>(`/api/events/${eventId}/`)
+      .then((response) => {
+        const parsedEvent = {
+          ...response.data,
+          date: new Date(response.data.date), // parse date
+        };
+        setEvent(parsedEvent);
+      })
+      .catch((error) => console.error("Error fetching event:", error));
     setLoading(false);
   };
 
@@ -21,7 +42,7 @@ export default function EditEventPage() {
 
   const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target; // The value from the "date" input (YYYY-MM-DD)
-    setFormData((prevData) => {
+    setEvent((prevData) => {
       const newDate = prevData.date ? new Date(prevData.date) : new Date();
       const [year, month, day] = value.split("-").map(Number);
       newDate.setFullYear(year, month - 1, day); // Update only the date part
@@ -31,7 +52,7 @@ export default function EditEventPage() {
 
   const handleTimeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target; // The value from the "time" input (HH:MM)
-    setFormData((prevData) => {
+    setEvent((prevData) => {
       const newDate = prevData.date ? new Date(prevData.date) : new Date();
       const [hours, minutes] = value.split(":").map(Number);
       newDate.setHours(hours, minutes, 0, 0); // Update only the time part
@@ -39,35 +60,57 @@ export default function EditEventPage() {
     });
   };
 
-  const handleTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleTextChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = event.target;
-    setFormData((prevData) => ({
+    setEvent((prevData) => ({
       ...prevData,
       [name]: value,
     }));
   };
 
-  const handleSubmit = () => {
-    console.log(formData);
+  const handleSubmit = async () => {
+    if (
+      !event.name ||
+      !event.description ||
+      !event.place ||
+      !event.date
+    ) {
+      setError(true);
+      return;
+    }
+
+    setLoading(true);
+    setError(false);
+
+    const encodedEvent = {
+      ...event,
+      date: event.date?.toISOString(),
+    };
+
+    await axios.put(
+      `/api/events/${eventId}/`,
+      encodedEvent,
+    )
+    .then(() => {
+      console.log("Successfully edited event")
+      navigate(-1);
+    })
+    .catch((error) => console.error("Error adding event:", error));
+    setLoading(false);
   };
-
-  const parsedEventId = eventId ? parseInt(eventId, 10) : undefined;
-
-  if (!parsedEventId) {
-    throw new Error("Event ID is required and must be a valid number");
-  }
 
   return (
     <div className="bg-gray-200 p-6 rounded-lg max-w-4xl mx-auto mt-8">
       <h1 className="text-2xl font-bold text-center mb-4">
         {t("edit-event.title")}
       </h1>
+      {error && <p className="text-red-500 text-center mb-4">{t("new-event.form-error")}</p>}
       <label>
         {t("new-event.name")}
         <input
           type="text"
           name="name"
-          value={formData.name}
+          value={event.name}
           onChange={handleTextChange}
           className="block w-full p-2 border mb-2"
           required
@@ -75,10 +118,9 @@ export default function EditEventPage() {
       </label>
       <label>
         {t("new-event.description")}
-        <input
-          type="text"
+        <textarea
           name="description"
-          value={formData.description}
+          value={event.description}
           onChange={handleTextChange}
           className="block w-full p-2 border mb-2"
           required
@@ -89,7 +131,7 @@ export default function EditEventPage() {
         <input
           type="text"
           name="place"
-          value={formData.place}
+          value={event.place}
           onChange={handleTextChange}
           className="block w-full p-2 border mb-2"
           required
@@ -100,7 +142,7 @@ export default function EditEventPage() {
         <input
           type="date"
           name="date"
-          value={formData.date?.toISOString().split("T")[0] || ""}
+          value={event.date?.toISOString().split("T")[0] || ""}
           onChange={handleDateChange}
           className="block w-full p-2 border mb-2"
           required
@@ -112,8 +154,8 @@ export default function EditEventPage() {
           type="time"
           name="time"
           value={
-            formData.date
-              ? formData.date.toTimeString().split(":").slice(0, 2).join(":")
+            event.date
+              ? event.date.toTimeString().split(":").slice(0, 2).join(":")
               : ""
           }
           onChange={handleTimeChange}
