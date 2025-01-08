@@ -2,12 +2,16 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useLanguage } from "../LanguageContext";
 import { axiosInstance as axios, fetchUserOrRedirect } from "../auth";
-import { Event } from "../interfaces";
+import { Event , Member } from "../interfaces";
+import Select, { MultiValue } from "react-select";
+
 
 export default function EventNewPage() {
   const navigate = useNavigate();
   const { t } = useLanguage();
   const { groupId } = useParams<{ groupId: string }>();
+  const [members, setMembers] = useState<Member[]>([]);
+  const [selectedUserIds, setSelectedUserIds] = useState<number[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<boolean>(false);
 
@@ -28,6 +32,19 @@ export default function EventNewPage() {
   useEffect(() => {
     fetchUserOrRedirect(navigate);
   }, []);
+
+  useEffect(() => {
+    const fetchMembers = async () => {
+      await axios.get(`/api/members/by_group/?group_id=${parsedGroupId}`)
+      .then((response) => {
+        setMembers(response.data);
+        setSelectedUserIds(response.data.map((member: Member) => member.user_details.user_id));
+      })
+      .catch((error) => console.error("Error fetching members:", error));
+    };
+
+    fetchMembers();
+  }, [parsedGroupId]);
 
   const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target; // The value from the "date" input (YYYY-MM-DD)
@@ -59,6 +76,12 @@ export default function EventNewPage() {
     }));
   };
 
+  const handleUserSelectionChange = (
+    selectedOptions: MultiValue<{ label: string; value: number }>
+  ) => {
+    setSelectedUserIds(selectedOptions.map((option) => option.value));
+  };
+
   const handleSubmit = async () => {
     if (!event.name || !event.description || !event.place || !event.date) {
       setError(true);
@@ -73,8 +96,11 @@ export default function EventNewPage() {
       date: event.date?.toISOString(),
     };
 
+    const userIdsQuery = selectedUserIds.map((id) => `id=${id}`).join("&");
+    const url = `/api/events/?${userIdsQuery}`;
+
     await axios
-      .post("/api/events/", encodedEvent)
+      .post(url, encodedEvent)
       .then(() => navigate(`/events/${groupId}`))
       .catch((error) => console.error("Error adding event:", error));
     setLoading(false);
@@ -85,11 +111,36 @@ export default function EventNewPage() {
       <h1 className="text-2xl font-bold text-center mb-4">
         {t("new-event.title")}
       </h1>
+
       {error && (
         <p className="text-red-500 text-center mb-4">
           {t("new-event.form-error")}
         </p>
       )}
+
+      <label className="block mb-4">
+        {t("new-message.recipients")}
+        <Select
+          options={members.map((member) => ({
+            label: `${member.user_details.name} ${member.user_details.surname}`,
+            value: member.user_details.user_id,
+          }))}
+          value={selectedUserIds.map((id) => ({
+            label: (
+              members.find((member) => member.user_details.user_id === id)?.user_details.name
+                + " "
+                + members.find((member) => member.user_details.user_id === id)?.user_details.surname
+                || ""
+            ),
+            value: id,
+          }))}
+          onChange={handleUserSelectionChange}
+          isMulti
+          className="react-select-container"
+          classNamePrefix="react-select"
+        />
+      </label>
+
       <label>
         {t("new-event.name")}
         <input
@@ -101,6 +152,7 @@ export default function EventNewPage() {
           required
         />
       </label>
+
       <label>
         {t("new-event.description")}
         <textarea
@@ -111,6 +163,7 @@ export default function EventNewPage() {
           required
         />
       </label>
+
       <label>
         {t("new-event.place")}
         <input
@@ -122,6 +175,7 @@ export default function EventNewPage() {
           required
         />
       </label>
+
       <label>
         {t("new-event.date")}
         <input
@@ -133,6 +187,7 @@ export default function EventNewPage() {
           required
         />
       </label>
+
       <label>
         {t("new-event.time")}
         <input
@@ -148,6 +203,7 @@ export default function EventNewPage() {
           required
         />
       </label>
+
       <button
         onClick={handleSubmit}
         disabled={loading}

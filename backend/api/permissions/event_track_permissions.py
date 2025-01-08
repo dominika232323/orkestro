@@ -3,16 +3,16 @@ Verifies permission to interact with event track data (see event_track_view_set.
 """
 from rest_framework.permissions import BasePermission
 
-from api.permissions.common_checks import is_member, is_manager, get_group_by_track_id
+from api.permissions.common_checks import get_group_by_event_id, is_member, is_manager, get_group_by_track_id
 
 
 class CanViewEventTrack(BasePermission):
     def has_permission(self, request, view):
         if request.method != "GET" or request.user.is_staff:
             return True
-        if view.action != "by_track":
+        if view.action not in {"by_track", "by_event"}:
             return False
-        return is_member(request, get_group_by_track_id(request.GET.get("track")))
+        return is_member(request, get_group_by_track_id(request.GET.get("track_id"))) or is_member(request, get_group_by_event_id(request.GET.get("event_id")))
 
 
 class CanCreateEventTrack(BasePermission):
