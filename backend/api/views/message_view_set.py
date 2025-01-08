@@ -9,7 +9,7 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from api.models import Message, MessageRecipient, User
+from api.models import Message, MessageRecipient, Member, User
 from api.serializers import MessageSerializer
 from api.permissions.message_permissions import CanViewMessage, CanCreateMessage
 
@@ -27,19 +27,25 @@ class MessageViewSet(viewsets.ModelViewSet):
                 raise Exception("Data validation failed")
             message = serializer.save()
 
-            recipients = request.GET.getlist("id")
+            recipient_ids = [int(user_id) for user_id in request.GET.getlist("id")]
+            recipients = [User.objects.get(user_id=user_id) for user_id in recipient_ids]
             if len(recipients) == 0:
                 raise Exception("Message must have at least one recipient")
 
-            for user_id in map(int, recipients):
+            # check if all recipients are group members, otherwise throws exception
+            for user in recipients:
+                Member.objects.get(group=message.group, user=user)
+
+            for user in recipients:
                 recipient = MessageRecipient.objects.create(
                     message=message,
-                    user=User.objects.get(user_id=user_id),
+                    user=user,
                     is_read=False,
                 )
                 recipient.save()
 
             return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+
         except Exception as e:
             return Response(data={"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
