@@ -60,8 +60,6 @@ export default function Tracks() {
     fetchTracks();
   };
 
-  console.log(tracks);
-
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
       handleSearch();

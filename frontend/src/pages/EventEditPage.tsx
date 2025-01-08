@@ -8,6 +8,7 @@ export default function EventEditPage() {
   const navigate = useNavigate();
   const { t } = useLanguage();
   const { eventId } = useParams<{ eventId: string }>();
+
   const [event, setEvent] = useState<Partial<Event>>({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<boolean>(false);
@@ -207,6 +208,13 @@ export default function EventEditPage() {
           required
         />
       </label>
+      <button
+        onClick={handleSubmit}
+        disabled={loading}
+        className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600"
+      >
+        {t("edit-event.submit")}
+      </button>
 
       {/* Lista utworów */}
       <h2 className="text-xl font-bold mt-4">{t("edit-event.tracks")}</h2>
@@ -285,14 +293,6 @@ export default function EventEditPage() {
           </div>
         </div>
       )}
-
-      <button
-        onClick={handleSubmit}
-        disabled={loading}
-        className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600"
-      >
-        {t("edit-event.submit")}
-      </button>
     </div>
   );
 }

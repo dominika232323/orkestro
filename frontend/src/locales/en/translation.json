@@ -152,6 +152,18 @@
     "edit": "Edit"
   },
   "track-details": {
-    "fetching": "Fetching..."
+    "fetching": "Fetching...",
+    "artist": "Artist",
+    "edit": "Edit"
+  },
+  "edit-track": {
+    "title": "Edit track",
+    "name": "Name",
+    "artist": "Artist",
+    "files": "Files",
+    "no-files": "No files",
+    "submit": "Edit",
+    "remove-file": "Remove file",
+    "add-file": "Add files"
   }
 }
