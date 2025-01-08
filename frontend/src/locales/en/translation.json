@@ -147,6 +147,7 @@
   },
   "event-details": {
     "fetching": "Fetching...",
-    "tracks": "Tracks"
+    "tracks": "Tracks",
+    "no-tracks": "No tracks"
   }
 }

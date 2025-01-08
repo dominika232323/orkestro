@@ -17,6 +17,11 @@ export default function EventDetailsPage() {
   const [event, setEvent] = useState<Event | null>(null);
   const [tracks, setTracks] = useState<Track[]>([]);
 
+  useEffect(() => {
+    fetchEvent();
+    fetchTracks();
+  }, []);
+
   const fetchEvent = async () => {
     await axios
       .get<Event>(`/api/events/${eventId}/`)
@@ -28,9 +33,9 @@ export default function EventDetailsPage() {
       .catch((error) => console.error("Error fetching event:", error));
   };
 
-  useEffect(() => {
-    fetchEvent();
-  }, []);
+  const fetchTracks = async () => {
+    // fetching tracks for event
+  };
 
   console.log(event);
 
@@ -79,11 +84,22 @@ export default function EventDetailsPage() {
           </strong>{" "}
           {event.description}
         </p>
-        <h3>{t("event-details.tracks")}</h3>
-        <ul>
-          {tracks.map((track) => (
-            <li></li>
-          ))}
+
+        {/* Lista utworów */}
+        <h2 className="text-xl font-bold mt-4">{t("edit-event.tracks")}</h2>
+        <ul className="list-disc pl-5">
+          {tracks.length > 0 ? (
+            tracks.map((track) => (
+              <li
+                key={track.track_id}
+                className="flex justify-between items-center"
+              >
+                <span>{track.name}</span>
+              </li>
+            ))
+          ) : (
+            <p>{t("event-details.no-tracks")}</p>
+          )}
         </ul>
       </div>
     );

@@ -59,11 +59,6 @@ export default function EventEditPage() {
 
   const [showAddTracksModal, setShowAddTracksModal] = useState(false);
 
-  const handleRemoveTrack = (trackId: number) => {
-    // API call to remove event_track object
-    reloadPage();
-  };
-
   const toggleTrackSelection = (track: Track) => {
     // Adding or removing availableTracks from toAdd list
     if (tracksToAdd.some((t) => t.track_id === track.track_id)) {
@@ -80,6 +75,11 @@ export default function EventEditPage() {
 
     setTracksToAdd([]);
     setShowAddTracksModal(false);
+    reloadPage();
+  };
+
+  const handleRemoveTrack = (trackId: number) => {
+    // API call to remove event_track object
     reloadPage();
   };
 

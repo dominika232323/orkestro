@@ -148,6 +148,7 @@
   },
   "event-details": {
     "fetching": "Pobieranie...",
-    "tracks": "Utwory"
+    "tracks": "Utwory",
+    "no-tracks": "Brak utworów"
   }
 }
