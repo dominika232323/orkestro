@@ -19,7 +19,7 @@ class CanCreateFileInstrument(BasePermission):
     def has_permission(self, request, view):
         if request.method != "POST" or request.user.is_staff:
             return True
-        return is_manager(request, get_group_by_file_id(request.data.get("file_id")))
+        return is_manager(request, get_group_by_file_id(request.data.get("file")))
 
 
 class CanDeleteFileInstrument(BasePermission):
