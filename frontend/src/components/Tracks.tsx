@@ -1,0 +1,161 @@
+import { useLanguage } from "../LanguageContext";
+import { useEffect, useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faTimes,
+  faBars,
+  faPlus,
+  faPen,
+} from "@fortawesome/free-solid-svg-icons";
+import { useNavigate, useParams } from "react-router-dom";
+import { Role, Track } from "../interfaces";
+import Pagination from "./Pagination";
+import axios from "axios";
+import { fetchUserOrRedirect } from "../auth";
+
+export default function Tracks() {
+  const { t } = useLanguage();
+  const { groupId } = useParams();
+  const navigate = useNavigate();
+
+  const [role, setRole] = useState<Role>();
+  const [tracks, setTracks] = useState<Track[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [loading, setLoading] = useState(false);
+
+  const fetchTracks = async () => {
+    setLoading(true);
+
+    await axios
+      .get(`/api/tracks/?groupId=${groupId}`)
+      .then((response) => setTracks(response.data))
+      .catch((error) => console.error(error));
+
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    fetchTracks();
+  }, [currentPage]);
+
+  useEffect(() => {
+    fetchUserOrRedirect(navigate);
+  }, []);
+
+  useEffect(() => {
+    const fetchRole = async () => {
+      await axios
+        .get<Role>(`/api/groups/${groupId}/role/`)
+        .then((response) => setRole(response.data))
+        .catch((error) => console.error("Error fetching role:", error));
+    };
+
+    fetchRole();
+  }, []);
+
+  const handleSearch = () => {
+    setCurrentPage(1);
+    fetchTracks();
+  };
+
+  console.log(tracks);
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      handleSearch();
+    }
+  };
+
+  const handleNewTrack = () => {};
+
+  const handleDelete = (track_id: number) => {};
+
+  return (
+    <div className="bg-gray-200 p-6 rounded-lg max-w-4xl mx-auto mt-8">
+      <h1 className="text-2xl font-bold text-center mb-6">
+        {t("tracks.title")}
+      </h1>
+
+      {/* Search Bar */}
+      <div className="flex items-center mb-6 bg-white shadow-md rounded-lg overflow-hidden">
+        <input
+          type="text"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          onKeyDown={handleKeyDown}
+          placeholder={t("tracks.placeholder")}
+          className="flex-1 px-4 py-2 text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+        <button
+          onClick={handleSearch}
+          className="px-6 py-2 bg-blue-500 text-white font-medium hover:bg-blue-600 transition-colors"
+        >
+          {t("tracks.search")}
+        </button>
+      </div>
+
+      {/* Track List or Loading/Empty State */}
+      {tracks.length > 0 ? (
+        <ul className="space-y-4">
+          {tracks.map((track) => (
+            <li
+              key={track.track_id}
+              className="bg-white p-4 rounded-lg shadow-md flex justify-between items-center"
+            >
+              <div className="flex flex-col">
+                <h2 className="text-lg font-bold">{track.name}</h2>
+                <p>{track.artist}</p>
+              </div>
+              <div className="flex flex-col justify-evenly ml-2">
+                <button
+                  onClick={() => navigate(`/track-details/${track.track_id}`)}
+                  className="px-2 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 font-medium transition-colors whitespace-nowrap"
+                >
+                  <FontAwesomeIcon className="mr-2" icon={faBars} />
+                  <span>{t("events.details")}</span>
+                </button>
+                {role?.is_manager && (
+                  <>
+                    <button
+                      onClick={() => navigate(`/edit-track/${track.track_id}`)}
+                      className="px-2 py-2 my-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600 font-medium transition-colors whitespace-nowrap"
+                    >
+                      <FontAwesomeIcon className="mr-2" icon={faPen} />
+                      <span>{t("tracks.edit")}</span>
+                    </button>
+                    <button
+                      className="px-3 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 font-medium transition-colors"
+                      onClick={() => handleDelete(track.track_id)}
+                    >
+                      <FontAwesomeIcon className="mr-2" icon={faTimes} />
+                      <span>{t("tracks.delete")}</span>
+                    </button>
+                  </>
+                )}
+              </div>
+            </li>
+          ))}
+        </ul>
+      ) : loading ? (
+        <p className="text-gray-600 text-center">{t("tracks.loading")}</p>
+      ) : (
+        <p className="text-gray-600 text-center">{t("tracks.no-tracks")}</p>
+      )}
+
+      {/* Add Track Button */}
+      <button className="w-full py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 font-medium flex items-center justify-center mt-6">
+        <FontAwesomeIcon icon={faPlus} className="mr-2" />
+        {t("tracks.add-track")}
+      </button>
+
+      {/* Pagination */}
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={(page) => setCurrentPage(page)}
+      />
+    </div>
+  );
+}

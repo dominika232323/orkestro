@@ -24,7 +24,7 @@
   "group": {
     "manage": "Zarządzaj",
     "events": "Wydarzenia",
-    "files": "Pliki",
+    "tracks": "Utwory",
     "new-message": "Nowa wiadomość"
   },
   "messages": {
@@ -77,16 +77,21 @@
     "placeholder": "Szukaj po nazwie, miejscu, opisie…",
     "search": "Szukaj",
     "edit": "Edytuj",
-    "delete": "Usuń"
+    "delete": "Usuń",
+    "details": "Szczegóły"
   },
-  "files": {
-    "title": "Pliki",
-    "no-files": "Brak plików",
+  "tracks": {
+    "title": "Utwory",
+    "no-tracks": "Brak utworów",
     "download": "Pobierz",
-    "add-file": "Nowy plik",
-    "placeholder": "Szukaj po nazwie lub utworze…",
+    "add-track": "Nowy utwór",
+    "placeholder": "Szukaj po tytule lub autorze...",
     "search": "Szukaj",
-    "loading": "Ładowanie plików..."
+    "loading": "Ładowanie utworów...",
+    "delete": "Usuń",
+    "edit": "Edytuj",
+    "files": "Pliki",
+    "tracks": "Utwory"
   },
   "manage-group": {
     "title": "Zarządzaj grupą",
@@ -132,5 +137,9 @@
     "message-title": "Tytuł",
     "content": "Treść",
     "submit": "Wyślij"
+  },
+  "event-details": {
+    "fetching": "Pobieranie...",
+    "tracks": "Utwory"
   }
 }

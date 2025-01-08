@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useLanguage } from "../LanguageContext";
 import { axiosInstance as axios, fetchUserOrRedirect } from "../auth";
-import { Event } from "../interfaces";
+import { Event, Track } from "../interfaces";
 
 export default function EventEditPage() {
   const navigate = useNavigate();
@@ -11,6 +11,8 @@ export default function EventEditPage() {
   const [event, setEvent] = useState<Partial<Event>>({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<boolean>(false);
+  const [tracks, setTracks] = useState<Track[]>([]);
+  const [tracksToAdd, setTracksToAdd] = useState<Track[]>([]);
 
   const parsedEventId = eventId ? parseInt(eventId, 10) : undefined;
 
@@ -37,8 +39,13 @@ export default function EventEditPage() {
     setLoading(false);
   };
 
+  const fetchTracks = async () => {
+    // TBC
+  };
+
   useEffect(() => {
     fetchEvent();
+    fetchTracks();
   }, []);
 
   const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -163,6 +170,7 @@ export default function EventEditPage() {
           required
         />
       </label>
+      <label>{t("event.tracks")} </label>
       <button
         onClick={handleSubmit}
         disabled={loading}
