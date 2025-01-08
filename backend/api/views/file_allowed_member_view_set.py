@@ -27,6 +27,17 @@ class FileAllowedMemberViewSet(viewsets.ModelViewSet):
         managers = [m for m in managers if m.user_id in [f.user_id for f in file_allowed_members]]
         return len(managers) == 1 and managers[0].user_id == file_allowed_member.user_id
 
+    @action(detail=False, methods=["post"])
+    def mass_create(self, request, *args, **kwargs):
+        response_data = []
+        for member_data in request.data:
+            serializer = self.get_serializer(data=member_data)
+            if not serializer.is_valid():
+                return Response({"error": "Data validation failed"}, status=status.HTTP_400_BAD_REQUEST)
+            serializer.save()
+            response_data.append(serializer.data)
+        return Response(data=response_data, status=status.HTTP_201_CREATED)
+
     def destroy(self, request, pk=None, *args, **kwargs):
         file_allowed_member = self.get_object()
         if self.is_last_manager_with_access(file_allowed_member):
