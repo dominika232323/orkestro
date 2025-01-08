@@ -54,7 +54,21 @@ export default function TrackEditPage() {
       .catch((error) => console.error("Error fetching files: ", error));
   };
 
-  const handleSubmit = async () => {};
+  const handleSubmit = async () => {
+    if (!track.name || !track.artist) {
+      return;
+    }
+
+    //loading
+
+    await axios
+      .put(`/api/tracks/${trackId}/`, track)
+      .then(() => {
+        console.log("Successfully edited event");
+        navigate(-1);
+      })
+      .catch((error) => console.error("Error adding event:", error));
+  };
 
   const handleTextChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -66,7 +80,10 @@ export default function TrackEditPage() {
     }));
   };
 
-  const handleRemoveFile = async (file_id: number) => {};
+  const handleRemoveFile = async (file_id: number) => {
+    await axios.delete(`/api/files/${file_id}/`);
+    fetchFiles();
+  };
 
   const handleAddFile = async () => {};
 
@@ -76,37 +93,42 @@ export default function TrackEditPage() {
         <h1 className="text-2xl font-bold text-center mb-6">
           {t("edit-track.title")}
         </h1>
-        <form onSubmit={handleSubmit}>
-          <label>
-            {t("edit-track.name")}
-            <input
-              type="text"
-              name="name"
-              value={track.name}
-              onChange={handleTextChange}
-              className="block w-full p-2 border mb-2"
-              required
-            />
-          </label>
-          <label>
-            {t("edit-track.artist")}
-            <input
-              type="text"
-              name="artist"
-              value={track.artist}
-              onChange={handleTextChange}
-              className="block w-full p-2 border mb-2"
-              required
-            />
-          </label>
+        <label>
+          {t("edit-track.name")}
+          <input
+            type="text"
+            name="name"
+            value={track.name}
+            onChange={handleTextChange}
+            className="block w-full p-2 border mb-2"
+            required
+          />
+        </label>
+        <label>
+          {t("edit-track.artist")}
+          <input
+            type="text"
+            name="artist"
+            value={track.artist}
+            onChange={handleTextChange}
+            className="block w-full p-2 border mb-2"
+            required
+          />
+        </label>
+        <div className="flex justify-between">
           <button
             onClick={handleSubmit}
-            type="submit"
             className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600"
           >
             {t("edit-track.submit")}
           </button>
-        </form>
+          <button
+            onClick={() => navigate(-1)}
+            className="bg-red-500 text-white p-2 rounded-lg hover:bg-red-600"
+          >
+            {t("edit-track.back")}
+          </button>
+        </div>
 
         {/* Lista plików */}
         <h2 className="text-xl font-bold mt-4">{t("edit-track.files")}</h2>

@@ -90,7 +90,7 @@ export default function EventEditPage() {
 
   const handleRemoveTrack = async (event_track_id: number) => {
     await axios.delete(`/api/event-tracks/${event_track_id}/`);
-    reloadPage();
+    fetchTracks();
   };
 
   // Editing event fields

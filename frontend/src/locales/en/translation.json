@@ -166,6 +166,7 @@
     "no-files": "No files",
     "submit": "Edit",
     "remove-file": "Remove file",
-    "add-file": "Add files"
+    "add-file": "Add files",
+    "back": "Go back"
   }
 }
