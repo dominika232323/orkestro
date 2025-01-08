@@ -1,7 +1,7 @@
 """
 Handles API requests regarding event data:
 - creation, edition, deletion (requires being the manager of the group with the event)
-- searching events in a group (requires being a member of that group)
+- searching events in a group, retrieving one of the results (requires being a member of that group)
 - getting all events regarding the calling user
 Staff users can do all of the above + list all events or a specific one.
 """
