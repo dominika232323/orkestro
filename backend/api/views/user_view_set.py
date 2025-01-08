@@ -2,6 +2,7 @@
 Handles API requests regarding user data:
 - viewing and editing one's own data (some administrative columns are hidden from this viewset - see the serializer)
 - viewing users in a group (requires being a member of that group)
+- getting users that aren't added to an event/file (requires being a member of the related group)
 - getting the ID of the user with given e-mail address (allows sending invitations without leaking everyone's full data)
 Staff members can do all of the above + list all users or a specific one.
 """
