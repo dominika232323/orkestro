@@ -15,12 +15,7 @@ class CanCreateMessageRecipient(BasePermission):
     def has_permission(self, request, view):
         if request.method != "POST" or request.user.is_staff or view.action in ["mark_as_read", "send_email"]:
             return True
-
-        recipients = [request.data] if type(request.data) == dict else request.data
-        for recipient in recipients:
-            if not is_author(request, recipient["message"]):
-                return False
-        return True
+        return is_author(request, request.data.get("message"))
 
 
 class CanMarkAsRead(BasePermission):

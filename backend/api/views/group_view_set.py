@@ -3,7 +3,6 @@ Handles API requests regarding group data:
 - creation (if it's a subgroup - requires being the manager of the supergroup), also adds the creator as its member-manager
 - edition, deletion (requires being the manager of the group)
 - getting all groups that the calling user is a part of
-- checking if the calling user is a manager/moderator of the group
 Staff users can do all of the above + list all groups or a specific one.
 """
 from rest_framework import viewsets, status

@@ -27,28 +27,17 @@ class MessageRecipientViewSet(viewsets.ModelViewSet):
     http_method_names = ["get", "post", "head"]
 
     @staticmethod
-    def is_member(data):
-        message = Message.objects.get(message_id=data["message"])
-        user = User.objects.get(user_id=data["user"])
+    def is_member(request):
+        message = Message.objects.get(message_id=request.data.get("message"))
+        user = User.objects.get(user_id=request.data.get("user"))
         return user.group_memberships.filter(group_id=message.group_id).exists()
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
-        if not serializer.is_valid() or not self.is_member(request.data) or request.data.get("is_read") is not False:
+        if not serializer.is_valid() or not self.is_member(request) or request.data.get("is_read") is not False:
             return Response({"error": "Data validation failed"}, status=status.HTTP_400_BAD_REQUEST)
         serializer.save()
         return Response(data=serializer.data, status=status.HTTP_201_CREATED)
-
-    @action(detail=False, methods=["post"])
-    def mass_create(self, request, *args, **kwargs):
-        response_data = []
-        for recipient_data in request.data:
-            serializer = self.get_serializer(data=recipient_data)
-            if not serializer.is_valid() or not self.is_member(recipient_data) or recipient_data.get("is_read") is not False:
-                return Response({"error": "Data validation failed"}, status=status.HTTP_400_BAD_REQUEST)
-            serializer.save()
-            response_data.append(serializer.data)
-        return Response(data=response_data, status=status.HTTP_201_CREATED)
 
     @action(detail=True, methods=["post"])
     def send_email(self, request, pk=None):

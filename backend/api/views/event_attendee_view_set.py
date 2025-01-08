@@ -22,30 +22,19 @@ class EventAttendeeViewSet(viewsets.ModelViewSet):
     http_method_names = ["get", "post", "delete", "head"]
 
     @staticmethod
-    def is_member(data):
-        event = Event.objects.get(event_id=data["event"])
-        user = User.objects.get(user_id=data["user"])
+    def is_member(request):
+        event = Event.objects.get(event_id=request.data.get("event"))
+        user = User.objects.get(user_id=request.data.get("user"))
         return user.group_memberships.filter(group_id=event.group_id).exists()
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
-        if not serializer.is_valid() or not self.is_member(request.data):
+        if not serializer.is_valid() or not self.is_member(request):
             return Response({"error": "Data validation failed"}, status=status.HTTP_400_BAD_REQUEST)
         serializer.save()
         # TODO: when Google Calendar is implemented - handle event creation in this method
         # TODO: handle event deletion in event_attendee, event, group destroy methods (need to overwrite defaults)
         return Response(data=serializer.data, status=status.HTTP_201_CREATED)
-
-    @action(detail=False, methods=["post"])
-    def mass_create(self, request, *args, **kwargs):
-        response_data = []
-        for attendee_data in request.data:
-            serializer = self.get_serializer(data=attendee_data)
-            if not serializer.is_valid() or not self.is_member(attendee_data):
-                return Response({"error": "Data validation failed"}, status=status.HTTP_400_BAD_REQUEST)
-            serializer.save()
-            response_data.append(serializer.data)
-        return Response(data=response_data, status=status.HTTP_201_CREATED)
 
     @action(detail=False, methods=["get"])
     def by_event(self, request):

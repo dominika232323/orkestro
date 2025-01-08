@@ -19,12 +19,7 @@ class CanCreateFileAllowedMember(BasePermission):
     def has_permission(self, request, view):
         if request.method != "POST" or request.user.is_staff:
             return True
-
-        members = [request.data] if type(request.data) == dict else request.data
-        for member in members:
-            if not is_manager(request, get_group_by_file_id(member["file"])):
-                return False
-        return True
+        return is_manager(request, get_group_by_file_id(request.data.get("file_id")))
 
 
 class CanDeleteFileAllowedMember(BasePermission):
