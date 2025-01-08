@@ -14,7 +14,6 @@ from api.serializers import MessageSerializer
 from api.permissions.message_permissions import CanViewMessage, CanCreateMessage
 
 
-
 class MessageViewSet(viewsets.ModelViewSet):
     queryset = Message.objects.all().select_related("group", "user")
     serializer_class = MessageSerializer
@@ -28,7 +27,11 @@ class MessageViewSet(viewsets.ModelViewSet):
                 raise Exception("Data validation failed")
             message = serializer.save()
 
-            for user_id in map(int, request.GET.getlist("id")):
+            recipients = request.GET.getlist("id")
+            if len(recipients) == 0:
+                raise Exception("Message must have at least one recipient")
+
+            for user_id in map(int, recipients):
                 recipient = MessageRecipient.objects.create(
                     message=message,
                     user=User.objects.get(user_id=user_id),
