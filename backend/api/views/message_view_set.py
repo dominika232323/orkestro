@@ -9,10 +9,9 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from api.models import Message, MessageRecipient
+from api.models import Message, MessageRecipient, Member, User
 from api.serializers import MessageSerializer
 from api.permissions.message_permissions import CanViewMessage, CanCreateMessage
-
 
 
 class MessageViewSet(viewsets.ModelViewSet):
@@ -23,10 +22,32 @@ class MessageViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
-        if not serializer.is_valid() or str(request.user.user_id) != str(request.data.get("user")):
-            return Response(data={"error": "Data validation failed"}, status=status.HTTP_400_BAD_REQUEST)
-        serializer.save()
-        return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+        try:
+            if not serializer.is_valid() or str(request.user.user_id) != str(request.data.get("user")):
+                raise Exception("Data validation failed")
+            message = serializer.save()
+
+            recipient_ids = [int(user_id) for user_id in request.GET.getlist("id")]
+            recipients = [User.objects.get(user_id=user_id) for user_id in recipient_ids]
+            if len(recipients) == 0:
+                raise Exception("Message must have at least one recipient")
+
+            # check if all recipients are group members, otherwise throws exception
+            for user in recipients:
+                Member.objects.get(group=message.group, user=user)
+
+            for user in recipients:
+                recipient = MessageRecipient.objects.create(
+                    message=message,
+                    user=user,
+                    is_read=False,
+                )
+                recipient.save()
+
+            return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+
+        except Exception as e:
+            return Response(data={"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
     @action(detail=False, methods=["get"])
     def by_group(self, request):

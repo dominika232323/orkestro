@@ -129,6 +129,7 @@
   },
   "new-message": {
     "title": "New message",
+    "recipients": "Odbiorcy",
     "message-title": "Title",
     "content": "Content",
     "submit": "Send"
