@@ -19,7 +19,7 @@ class CanCreateEventAttendee(BasePermission):
     def has_permission(self, request, view):
         if request.method != "POST" or request.user.is_staff:
             return True
-        return is_manager(request, get_group_by_event_id(request.data.get("event_id")))
+        return is_manager(request, get_group_by_event_id(request.data.get("event")))
 
 
 class CanDeleteEventAttendee(BasePermission):

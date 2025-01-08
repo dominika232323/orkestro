@@ -297,7 +297,7 @@ class EventViewSetTestCase(TestCase):
                     returned_event_names = [event["name"] for event in response.data]
                     self.assertEqual(returned_event_names, case["expected_event_names"])
 
-    def test_by_group(self):
+    def test_search_by_group(self):
         Event.objects.create(group=self.group, name="n 1", description="d 1", date=timezone.now(), place="p 1")
         Event.objects.create(group=self.group, name="n 2", description="d 2", date=timezone.now(), place="p 2")
 
@@ -348,9 +348,9 @@ class EventViewSetTestCase(TestCase):
         for case in test_cases:
             with self.subTest(user=case["user"]):
                 # Create and authenticate the request
-                request = self.factory.get(f"/api/events/by_group/?group_id={self.group.group_id}")
+                request = self.factory.get(f"/api/events/search/?group_id={self.group.group_id}")
                 force_authenticate(request, user=case["user"])
-                response = EventViewSet.as_view({'get': 'by_group'})(request)
+                response = EventViewSet.as_view({'get': 'search'})(request)
 
                 # Assert the response status
                 self.assertEqual(response.status_code, case["expected_status"])
@@ -365,7 +365,7 @@ class EventViewSetTestCase(TestCase):
                     self.assertEqual(response.data["page_number"], case["expected_page_number"])
                     self.assertEqual(response.data["total_pages"], case["expected_total_pages"])
 
-    def test_by_group_with_terms(self):
+    def test_search_with_terms(self):
         Event.objects.create(group=self.group, name="Christmas concert", description="Christmas concert for children", date=timezone.now(), place="Paris")
         Event.objects.create(group=self.group, name="Rehearsal", description="Rehearsal for charity concert", date=timezone.now(), place="Warsaw")
 
@@ -416,9 +416,9 @@ class EventViewSetTestCase(TestCase):
         for case in test_cases:
             with self.subTest(user=case["user"]):
                 # Create and authenticate the request
-                request = self.factory.get(f"/api/events/by_group/", {"search": "concert", "group_id": self.group.group_id})
+                request = self.factory.get(f"/api/events/search/", {"search": "concert", "group_id": self.group.group_id})
                 force_authenticate(request, user=case["user"])
-                response = EventViewSet.as_view({'get': 'by_group'})(request)
+                response = EventViewSet.as_view({'get': 'search'})(request)
 
                 # Assert the response status
                 self.assertEqual(response.status_code, case["expected_status"])

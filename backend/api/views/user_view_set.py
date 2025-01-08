@@ -2,6 +2,7 @@
 Handles API requests regarding user data:
 - viewing and editing one's own data (some administrative columns are hidden from this viewset - see the serializer)
 - viewing users in a group (requires being a member of that group)
+- getting users that aren't added to an event/file (requires being a member of the related group)
 - getting the ID of the user with given e-mail address (allows sending invitations without leaking everyone's full data)
 Staff members can do all of the above + list all users or a specific one.
 """
@@ -10,7 +11,7 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from api.models import User, Member
+from api.models import User, Member, EventAttendee, FileAllowedMember
 from api.serializers import UserSerializer
 from api.permissions.user_permissions import CanViewUser, CanEditUser
 
@@ -36,6 +37,22 @@ class UserViewSet(viewsets.ModelViewSet):
         user = serializer.save()
         self.update_google_calendar_id(user)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+    @action(detail=False, methods=["get"])
+    def leftover(self, request):
+        if request.GET.get("event_id"):
+            banned = (EventAttendee.objects.select_related("event", "user")
+                .filter(event_id=request.GET.get("event_id"), event__group_id=request.GET.get("group_id")))
+        else:
+            banned = (FileAllowedMember.objects.select_related("file", "file__track", "user")
+                .filter(file_id=request.GET.get("file_id"), file__track__group_id=request.GET.get("group_id")))
+        banned = [b.user for b in banned]
+
+        users = Member.objects.filter(group_id=request.GET.get("group_id")).select_related("user")
+        users = [u.user for u in users if u.user not in banned]
+
+        serializer = self.get_serializer(users, many=True)
+        return Response(serializer.data)
 
     @action(detail=False, methods=["get"])
     def me(self, request):

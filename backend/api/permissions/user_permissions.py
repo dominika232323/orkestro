@@ -10,7 +10,7 @@ class CanViewUser(BasePermission):
     def has_permission(self, request, view):
         if request.method != "GET" or request.user.is_staff or view.action in ["me", "by_email"]:
             return True
-        if view.action != "by_group":
+        if view.action not in ["by_group", "leftover"]:
             return False
         return is_member(request, request.GET.get("group_id"))
 
