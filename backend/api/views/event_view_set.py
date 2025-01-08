@@ -13,7 +13,7 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from api.models import Event, EventAttendee, User
+from api.models import Event, EventAttendee, Member, User
 from api.serializers import EventSerializer, EventCreateSerializer
 from api.permissions.event_permissions import CanViewEvent, CanEditDeleteEvent, CanCreateEvent
 
@@ -31,18 +31,24 @@ class EventViewSet(viewsets.ModelViewSet):
                 raise Exception("Data validation failed")
             event = serializer.save()
 
-            attendees = request.GET.getlist("id")
+            attendee_ids = request.GET.getlist("id")
+            attendees = [User.objects.get(user_id=user_id) for user_id in attendee_ids]
             if len(attendees) == 0:
                 raise Exception("Event must have at least one attendee")
 
-            for user_id in map(int, attendees):
+            # check if all attendees are group members, otherwise throws exception
+            for user in attendees:
+                Member.objects.get(group=event.group, user=user)
+
+            for user in attendees:
                 attendee = EventAttendee.objects.create(
                     event=event,
-                    user=User.objects.get(user_id=user_id),
+                    user=user,
                 )
                 attendee.save()
 
             return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+
         except Exception as e:
             return Response(data={"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
