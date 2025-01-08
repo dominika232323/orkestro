@@ -137,7 +137,8 @@
     "confirm": "Confirm",
     "submit-tracks": "Add tracks",
     "tracks": "Tracks",
-    "no-tracks": "No tracks"
+    "no-tracks": "No tracks",
+    "back": "Go back"
   },
   "new-message": {
     "title": "New message",

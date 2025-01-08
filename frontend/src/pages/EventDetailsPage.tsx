@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useLanguage } from "../LanguageContext";
-import { Event, Track } from "../interfaces";
+import { Event, Track, TrackEvent } from "../interfaces";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -17,7 +17,7 @@ export default function EventDetailsPage() {
   const { eventId } = useParams<{ eventId: string }>();
 
   const [event, setEvent] = useState<Event | null>(null);
-  const [tracks, setTracks] = useState<Track[]>([]);
+  const [tracks, setTracks] = useState<TrackEvent[]>([]);
 
   useEffect(() => {
     fetchEvent();
@@ -36,7 +36,14 @@ export default function EventDetailsPage() {
   };
 
   const fetchTracks = async () => {
-    // fetching tracks for event
+    await axios
+      .get(`/api/event-tracks/by_event/?event_id=${eventId}`)
+      .then((response) => {
+        setTracks(response.data);
+      })
+      .catch((error) =>
+        console.error("Fetching tracks for event failed: ", error)
+      );
   };
 
   if (event) {
@@ -97,11 +104,11 @@ export default function EventDetailsPage() {
           {tracks.length > 0 ? (
             tracks.map((track) => (
               <li
-                key={track.track_id}
+                key={track.event_track_id}
                 className="flex justify-between items-center"
-                onClick={() => navigate(`/track-details/${track.track_id}`)}
+                onClick={() => navigate(`/track-details/${track.track}`)}
               >
-                <span>{track.name}</span>
+                <p>{track.track_details.name}</p>
               </li>
             ))
           ) : (

@@ -104,3 +104,11 @@ export interface Paged<T> {
   page_number: number;
   total_pages: number;
 }
+
+export interface TrackEvent {
+  event: number;
+  event_details: Event;
+  event_track_id: number;
+  track: number;
+  track_details: Track;
+}

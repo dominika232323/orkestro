@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useLanguage } from "../LanguageContext";
 import { axiosInstance as axios, fetchUserOrRedirect } from "../auth";
-import { Event, Track } from "../interfaces";
+import { Event, Track, TrackEvent } from "../interfaces";
 
 export default function EventEditPage() {
   const navigate = useNavigate();
@@ -12,7 +12,7 @@ export default function EventEditPage() {
   const [event, setEvent] = useState<Partial<Event>>({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<boolean>(false);
-  const [tracks, setTracks] = useState<Track[]>([]);
+  const [tracks, setTracks] = useState<TrackEvent[]>([]);
   const [tracksToAdd, setTracksToAdd] = useState<Track[]>([]);
   const [availableTracks, setAvailableTracks] = useState<Track[]>([]);
 
@@ -51,7 +51,16 @@ export default function EventEditPage() {
   };
 
   // Fetch tracks that are in event
-  const fetchTracks = () => {};
+  const fetchTracks = async () => {
+    await axios
+      .get(`/api/event-tracks/by_event/?event_id=${eventId}`)
+      .then((response) => {
+        setTracks(response.data);
+      })
+      .catch((error) =>
+        console.error("Fetching tracks for event failed: ", error)
+      );
+  };
 
   // Fetch availableTracks (tracks that can be added)
   const fetchAvailableTracks = async () => {
@@ -79,8 +88,8 @@ export default function EventEditPage() {
     reloadPage();
   };
 
-  const handleRemoveTrack = (trackId: number) => {
-    // API call to remove event_track object
+  const handleRemoveTrack = async (event_track_id: number) => {
+    await axios.delete(`/api/event-tracks/${event_track_id}/`);
     reloadPage();
   };
 
@@ -208,26 +217,38 @@ export default function EventEditPage() {
           required
         />
       </label>
-      <button
-        onClick={handleSubmit}
-        disabled={loading}
-        className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600"
-      >
-        {t("edit-event.submit")}
-      </button>
+      <div className="flex justify-between">
+        <button
+          onClick={handleSubmit}
+          disabled={loading}
+          className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600"
+        >
+          {t("edit-event.submit")}
+        </button>
+        <button
+          onClick={() => navigate(-1)}
+          className="bg-red-500 text-white p-2 rounded-lg hover:bg-red-600"
+        >
+          {t("edit-event.back")}
+        </button>
+      </div>
 
       {/* Lista utworów */}
       <h2 className="text-xl font-bold mt-4">{t("edit-event.tracks")}</h2>
       <ul className="list-disc pl-5">
         {tracks.length > 0 ? (
-          tracks.map((track) => (
+          tracks.map((event_track) => (
             <li
-              key={track.track_id}
+              key={event_track.event_track_id}
               className="flex justify-between items-center"
             >
-              <span>{track.name}</span>
+              <span
+                onClick={() => navigate(`/track-details/${event_track.track}`)}
+              >
+                {event_track.track_details.name}
+              </span>
               <button
-                onClick={() => handleRemoveTrack(track.track_id)}
+                onClick={() => handleRemoveTrack(event_track.event_track_id)}
                 className="text-red-500 hover:underline"
               >
                 {t("edit-event.remove-track")}

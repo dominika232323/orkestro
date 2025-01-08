@@ -138,7 +138,8 @@
     "confirm": "Dodaj",
     "submit-tracks": "Dodaj utwory",
     "tracks": "Utwory",
-    "no-tracks": "Brak utworów"
+    "no-tracks": "Brak utworów",
+    "back": "Powrót"
   },
   "new-message": {
     "title": "Nowa wiadomość",
