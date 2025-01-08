@@ -149,6 +149,10 @@
   "event-details": {
     "fetching": "Pobieranie...",
     "tracks": "Utwory",
-    "no-tracks": "Brak utworów"
+    "no-tracks": "Brak utworów",
+    "edit": "Edytuj"
+  },
+  "track-details": {
+    "fetching": "Pobieranie..."
   }
 }

@@ -71,9 +71,14 @@ export default function Calendar() {
     setSelectedDay(null);
   };
 
+  const startYear = 2020;
+  const endYear = new Date().getFullYear() + 2;
+
   const yearOptions = Array.from(
-    { length: 101 },
-    (_, i) => currentYear - 50 + i
+    {
+      length: endYear - startYear + 1,
+    },
+    (_, i) => startYear + i
   );
 
   return (

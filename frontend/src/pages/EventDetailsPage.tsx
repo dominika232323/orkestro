@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useLanguage } from "../LanguageContext";
 import { Event, Track } from "../interfaces";
 import axios from "axios";
@@ -13,7 +13,9 @@ import {
 
 export default function EventDetailsPage() {
   const { t, currentLanguage } = useLanguage();
+  const navigate = useNavigate();
   const { eventId } = useParams<{ eventId: string }>();
+
   const [event, setEvent] = useState<Event | null>(null);
   const [tracks, setTracks] = useState<Track[]>([]);
 
@@ -37,12 +39,16 @@ export default function EventDetailsPage() {
     // fetching tracks for event
   };
 
-  console.log(event);
-
   if (event) {
     return (
       <div className="bg-gray-200 p-6 rounded-lg max-w-4xl mx-auto mt-8">
         <h1 className="text-2xl font-bold text-center mb-6">{event.name}</h1>
+        <button
+          className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600"
+          onClick={() => navigate(`/edit-event/${event.event_id}`)}
+        >
+          {t("event-details.edit")}
+        </button>
         <p>
           <strong>
             <FontAwesomeIcon
@@ -93,6 +99,7 @@ export default function EventDetailsPage() {
               <li
                 key={track.track_id}
                 className="flex justify-between items-center"
+                onClick={() => navigate(`/track-details/${track.track_id}`)}
               >
                 <span>{track.name}</span>
               </li>
