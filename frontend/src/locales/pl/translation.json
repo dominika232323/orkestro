@@ -130,7 +130,15 @@
   },
   "edit-event": {
     "title": "Edytuj wydarzenie",
-    "submit": "Edytuj"
+    "submit": "Zapisz",
+    "remove-track": "Usuń utwór",
+    "add-tracks": "Dodaj utwory",
+    "select-tracks": "Wybierz utwory do dodania",
+    "cancel": "Anuluj",
+    "confirm": "Dodaj",
+    "submit-tracks": "Dodaj utwory",
+    "tracks": "Utwory",
+    "no-tracks": "Brak utworów"
   },
   "new-message": {
     "title": "Nowa wiadomość",

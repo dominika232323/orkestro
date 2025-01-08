@@ -132,10 +132,12 @@
     "submit": "Edit",
     "remove-track": "Remove Track",
     "add-tracks": "Add Tracks",
-    "select-tracks": "Wybierz utwory do dodania",
-    "cancel": "Anuluj",
-    "confirm": "Zatwierdź",
-    "submit": "Zapisz zmiany"
+    "select-tracks": "Select tracks to add",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "submit-tracks": "Add tracks",
+    "tracks": "Tracks",
+    "no-tracks": "No tracks"
   },
   "new-message": {
     "title": "New message",

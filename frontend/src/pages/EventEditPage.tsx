@@ -13,6 +13,7 @@ export default function EventEditPage() {
   const [error, setError] = useState<boolean>(false);
   const [tracks, setTracks] = useState<Track[]>([]);
   const [tracksToAdd, setTracksToAdd] = useState<Track[]>([]);
+  const [availableTracks, setAvailableTracks] = useState<Track[]>([]);
 
   const parsedEventId = eventId ? parseInt(eventId, 10) : undefined;
 
@@ -22,7 +23,16 @@ export default function EventEditPage() {
 
   useEffect(() => {
     fetchUserOrRedirect(navigate);
+    reloadPage();
   }, []);
+
+  const reloadPage = () => {
+    fetchEvent();
+    fetchTracks();
+    fetchAvailableTracks();
+  };
+
+  // FETCHING
 
   const fetchEvent = async () => {
     setLoading(true);
@@ -39,14 +49,41 @@ export default function EventEditPage() {
     setLoading(false);
   };
 
-  const fetchTracks = async () => {
+  // Fetch tracks that are in event
+  const fetchTracks = () => {};
+
+  // Fetch availableTracks (tracks that can be added)
+  const fetchAvailableTracks = async () => {
     // TBC
   };
 
-  useEffect(() => {
-    fetchEvent();
-    fetchTracks();
-  }, []);
+  const [showAddTracksModal, setShowAddTracksModal] = useState(false);
+
+  const handleRemoveTrack = (trackId: number) => {
+    // API call to remove event_track object
+    reloadPage();
+  };
+
+  const toggleTrackSelection = (track: Track) => {
+    // Adding or removing availableTracks from toAdd list
+    if (tracksToAdd.some((t) => t.track_id === track.track_id)) {
+      setTracksToAdd((prev) =>
+        prev.filter((t) => t.track_id !== track.track_id)
+      );
+    } else {
+      setTracksToAdd((prev) => [...prev, track]);
+    }
+  };
+
+  const handleAddTracks = () => {
+    // API call to add event_track object for every track in tracksToAdd
+
+    setTracksToAdd([]);
+    setShowAddTracksModal(false);
+    reloadPage();
+  };
+
+  // Editing event fields
 
   const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target; // The value from the "date" input (YYYY-MM-DD)
@@ -170,7 +207,85 @@ export default function EventEditPage() {
           required
         />
       </label>
-      <label>{t("event.tracks")} </label>
+
+      {/* Lista utworów */}
+      <h2 className="text-xl font-bold mt-4">{t("edit-event.tracks")}</h2>
+      <ul className="list-disc pl-5">
+        {tracks.length > 0 ? (
+          tracks.map((track) => (
+            <li
+              key={track.track_id}
+              className="flex justify-between items-center"
+            >
+              <span>{track.name}</span>
+              <button
+                onClick={() => handleRemoveTrack(track.track_id)}
+                className="text-red-500 hover:underline"
+              >
+                {t("edit-event.remove-track")}
+              </button>
+            </li>
+          ))
+        ) : (
+          <p>{t("edit-event.no-tracks")}</p>
+        )}
+      </ul>
+
+      {/* Przycisk do dodawania utworów */}
+      <button
+        onClick={() => setShowAddTracksModal(true)}
+        className="mt-4 bg-green-500 text-white p-2 rounded-lg hover:bg-green-600"
+      >
+        {t("edit-event.add-tracks")}
+      </button>
+
+      {/* Okienko (modal) do dodawania utworów */}
+      {showAddTracksModal && (
+        <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center">
+          <div className="bg-white p-6 rounded-lg max-w-lg w-full">
+            <h2 className="text-lg font-bold mb-4">
+              {t("edit-event.select-tracks")}
+            </h2>
+            <ul className="list-disc pl-5">
+              {availableTracks.length > 0 ? (
+                availableTracks.map((track) => (
+                  <li key={track.track_id} className="flex items-center mb-2">
+                    <input
+                      type="checkbox"
+                      id={`track-${track.track_id}`}
+                      checked={tracksToAdd.some(
+                        (t) => t.track_id === track.track_id
+                      )}
+                      onChange={() => toggleTrackSelection(track)}
+                      className="mr-2"
+                    />
+                    <label htmlFor={`track-${track.track_id}`}>
+                      {track.name} - {track.artist}
+                    </label>
+                  </li>
+                ))
+              ) : (
+                <p>{t("edit-event.no-tracks")}</p>
+              )}
+            </ul>
+            <div className="flex justify-end space-x-2 mt-4">
+              <button
+                onClick={() => setShowAddTracksModal(false)}
+                className="bg-gray-500 text-white p-2 rounded-lg hover:bg-gray-600"
+              >
+                {t("edit-event.cancel")}
+              </button>
+              <button
+                onClick={handleAddTracks}
+                className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600"
+              >
+                {t("edit-event.confirm")}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <button
         onClick={handleSubmit}
         disabled={loading}
