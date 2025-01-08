@@ -129,6 +129,7 @@
   },
   "new-message": {
     "title": "Nowa wiadomość",
+    "recipients": "Odbiorcy",
     "message-title": "Tytuł",
     "content": "Treść",
     "submit": "Wyślij"

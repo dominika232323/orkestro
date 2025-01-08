@@ -1,9 +1,10 @@
 import { useParams } from "react-router-dom";
 import { useLanguage } from "../LanguageContext";
-import {User, Message} from "../interfaces";
+import {User, Message, Member} from "../interfaces";
 import {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {axiosInstance as axios, fetchUserOrRedirect} from "../auth";
+import Select, { MultiValue } from "react-select";
 
 
 export default function MessageNew() {
@@ -15,6 +16,8 @@ export default function MessageNew() {
     title: "",
     content: "",
   });
+  const [members, setMembers] = useState<Member[]>([]);
+  const [selectedUserIds, setSelectedUserIds] = useState<number[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<boolean>(false);
 
@@ -37,6 +40,18 @@ export default function MessageNew() {
     });
   }, [user]);
 
+  useEffect(() => {
+    const fetchMembers = async () => {
+      await axios.get(`/api/members/by_group/?group_id=${parsedGroupId}`)
+      .then((response) => {
+        setMembers(response.data);
+        setSelectedUserIds(response.data.map((member: Member) => member.user_details.user_id));
+      })
+      .catch((error) => console.error("Error fetching members:", error));
+    };
+
+    fetchMembers();
+  }, [parsedGroupId]);
 
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -46,6 +61,12 @@ export default function MessageNew() {
       ...prevData,
       [name]: value,
     }));
+  };
+
+  const handleUserSelectionChange = (
+    selectedOptions: MultiValue<{ label: string; value: number }>
+  ) => {
+    setSelectedUserIds(selectedOptions.map((option) => option.value));
   };
 
   const handleSubmit = async () => {
@@ -59,10 +80,13 @@ export default function MessageNew() {
       date: new Date().toISOString(),
     };
 
-    await axios
-    .post("/api/messages/", encodedMessage)
+    const userIdsQuery = selectedUserIds.map((id) => `id=${id}`).join("&");
+    const url = `/api/messages/?${userIdsQuery}`;
+
+    await axios.post(url, encodedMessage)
     .then(() => navigate("/messages/"))
     .catch((error) => console.error("Error sending message:", error));
+
     setLoading(false);
   };
 
@@ -71,11 +95,36 @@ export default function MessageNew() {
       <h1 className="text-2xl font-bold text-center mb-4">
         {t("new-message.title")}
       </h1>
+
       {error && (
         <p className="text-red-500 text-center mb-4">
           {t("new-event.form-error")}
         </p>
       )}
+
+      <label className="block mb-4">
+        {t("new-message.recipients")}
+        <Select
+          options={members.map((member) => ({
+            label: `${member.user_details.name} ${member.user_details.surname}`,
+            value: member.user_details.user_id,
+          }))}
+          value={selectedUserIds.map((id) => ({
+            label: (
+              members.find((member) => member.user_details.user_id === id)?.user_details.name
+                + " "
+                + members.find((member) => member.user_details.user_id === id)?.user_details.surname
+                || ""
+            ),
+            value: id,
+          }))}
+          onChange={handleUserSelectionChange}
+          isMulti
+          className="react-select-container"
+          classNamePrefix="react-select"
+        />
+      </label>
+
       <label>
         {t("new-message.message-title")}
         <input
@@ -87,6 +136,7 @@ export default function MessageNew() {
           required
         />
       </label>
+
       <label>
         {t("new-message.content")}
         <textarea
@@ -98,6 +148,7 @@ export default function MessageNew() {
           required
         />
       </label>
+
       <button
         onClick={handleSubmit}
         disabled={loading}
