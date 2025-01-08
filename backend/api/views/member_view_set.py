@@ -72,3 +72,10 @@ class MemberViewSet(viewsets.ModelViewSet):
             "page_number": page.number,
             "total_pages": paginator.num_pages
         })
+
+    @action(detail=False, methods=["get"])
+    def by_group(self, request):
+        members = (Member.objects.select_related("user").order_by("user__name")
+            .filter(group_id=request.GET.get("group_id")))
+        serializer = self.get_serializer(members, many=True)
+        return Response(serializer.data)
