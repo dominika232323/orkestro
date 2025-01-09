@@ -29,11 +29,66 @@ class MessageViewSetTestCase(TestCase):
 
     def test_create_access(self):
         test_cases = [
-            {"user": self.staff, "expected_status": 201},
-            {"user": self.manager, "expected_status": 201},
-            {"user": self.moderator, "expected_status": 201},
-            {"user": self.musician, "expected_status": 403},
-            {"user": self.outsider, "expected_status": 403},
+            {
+                "user": self.staff,
+                "data": {
+                    "user": self.staff.user_id,
+                    "group": self.group.group_id,
+                    "title": "Message title",
+                    "content": "Message content",
+                    "date": timezone.now(),
+                },
+                "recipients": [self.musician.user_id],
+                "expected_status": 201
+            },
+            {
+                "user": self.manager,
+                "data": {
+                    "user": self.manager.user_id,
+                    "group": self.group.group_id,
+                    "title": "Message title",
+                    "content": "Message content",
+                    "date": timezone.now(),
+                },
+                "recipients": [self.musician.user_id],
+                "expected_status": 201
+            },
+            {
+                "user": self.moderator,
+                "data": {
+                    "user": self.moderator.user_id,
+                    "group": self.group.group_id,
+                    "title": "Message title",
+                    "content": "Message content",
+                    "date": timezone.now(),
+                },
+                "recipients": [self.musician.user_id],
+                "expected_status": 201
+            },
+            {
+                "user": self.musician,
+                "data": {
+                    "user": self.musician.user_id,
+                    "group": self.group.group_id,
+                    "title": "Message title",
+                    "content": "Message content",
+                    "date": timezone.now(),
+                },
+                "recipients": [self.musician.user_id],
+                "expected_status": 403
+            },
+            {
+                "user": self.outsider,
+                "data": {
+                    "user": self.outsider.user_id,
+                    "group": self.group.group_id,
+                    "title": "Message title",
+                    "content": "Message content",
+                    "date": timezone.now(),
+                },
+                "recipients": [self.musician.user_id],
+                "expected_status": 403
+            },
         ]
 
         for case in test_cases:
@@ -45,10 +100,15 @@ class MessageViewSetTestCase(TestCase):
                     "title": "Message title",
                     "content": "Message content",
                     "date": timezone.now(),
+                    "id": [self.musician.user_id]
                 }
 
                 # Create a request
-                request = self.factory.post("/api/messages/", message_data, format="json")
+                request = self.factory.post(
+                    f"/api/messages/?id={','.join(map(str, case['recipients']))}",
+                    data=case["data"],
+                    format="json"
+                )
                 force_authenticate(request, user=case["user"])
 
                 # Instantiate the view and call the create method
