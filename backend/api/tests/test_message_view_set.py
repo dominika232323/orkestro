@@ -119,6 +119,28 @@ class MessageViewSetTestCase(TestCase):
     def test_create_invalid_data(self):
         # Prepare invalid data
         message_data = {
+            "user": self.manager.user_id,
+            "group": self.group.group_id,
+            "title": "Message title",
+            "content": "Message content",
+            "date": timezone.now(),
+        }
+
+        # Create a request
+        request = self.factory.post("/api/messages/", message_data, format="json")
+        force_authenticate(request, user=self.manager)
+
+        # Instantiate the view and call the create method
+        view = MessageViewSet.as_view({"post": "create"})
+        response = view(request)
+
+        # Assertions
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.data["error"], "Message must have at least one recipient")
+
+    def test_create_zero_recipients(self):
+        # Prepare invalid data
+        message_data = {
             "user": self.staff.user_id,
             "title": "Message title",
             "content": "Message content",
