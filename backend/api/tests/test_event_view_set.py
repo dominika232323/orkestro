@@ -122,6 +122,31 @@ class EventViewSetTestCase(TestCase):
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.data["error"], "Data validation failed")
 
+    def test_create_zero_attendees(self):
+        # Prepare valid event data
+        event_data = {
+            "name": "Test Event",
+            "description": "Event Description",
+            "date": timezone.now(),
+            "place": "Event Place",
+            "group": self.group.group_id,
+        }
+
+        # Prepare the request
+        request = self.factory.post(
+            f"/api/events/",
+            data=event_data,
+            format="json"
+        )
+        force_authenticate(request, user=self.staff)
+
+        # Execute the request
+        response = EventViewSet.as_view({"post": "create"})(request)
+
+        # Assertions
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.data["error"], "Event must have at least one attendee")
+
     def test_search(self):
         # Create events
         Event.objects.create(group=self.group, name="Music concert", description="Desc 1", date="2025-10-21T13:00:00Z", place="NYC")
