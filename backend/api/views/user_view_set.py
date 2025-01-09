@@ -41,15 +41,15 @@ class UserViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=["get"])
     def leftover(self, request):
         if request.GET.get("event_id"):
-            banned = (EventAttendee.objects.select_related("event", "user")
+            chosen = (EventAttendee.objects.select_related("event", "user")
                 .filter(event_id=request.GET.get("event_id"), event__group_id=request.GET.get("group_id")))
         else:
-            banned = (FileAllowedMember.objects.select_related("file", "file__track", "user")
+            chosen = (FileAllowedMember.objects.select_related("file", "file__track", "user")
                 .filter(file_id=request.GET.get("file_id"), file__track__group_id=request.GET.get("group_id")))
-        banned = [b.user for b in banned]
+        chosen_users = [c.user for c in chosen]
 
         users = Member.objects.filter(group_id=request.GET.get("group_id")).select_related("user")
-        users = [u.user for u in users if u.user not in banned]
+        users = [u.user for u in users if u.user not in chosen_users]
 
         serializer = self.get_serializer(users, many=True)
         return Response(serializer.data)

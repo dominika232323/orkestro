@@ -23,14 +23,14 @@ class InstrumentViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=["get"])
     def leftover(self, request):
         if request.GET.get("file_id"):
-            banned = (FileInstrument.objects.filter(file_id=request.GET.get("file_id"))).select_related("instrument")
+            chosen = (FileInstrument.objects.filter(file_id=request.GET.get("file_id"))).select_related("instrument")
         elif request.GET.get("user_id"):
-            banned = (UserInstrument.objects.filter(user_id=request.GET.get("user_id"))).select_related("instrument")
+            chosen = (UserInstrument.objects.filter(user_id=request.GET.get("user_id"))).select_related("instrument")
         else:
-            banned = (UserInstrument.objects.filter(user_id=request.user.user_id)).select_related("instrument")
-        banned = [b.instrument for b in banned]
+            chosen = (UserInstrument.objects.filter(user_id=request.user.user_id)).select_related("instrument")
+        chosen_instruments = [c.instrument for c in chosen]
 
-        instruments = [i for i in Instrument.objects.all() if i not in banned]
+        instruments = [i for i in Instrument.objects.all() if i not in chosen_instruments]
 
         serializer = self.get_serializer(instruments, many=True)
         return Response(serializer.data)
