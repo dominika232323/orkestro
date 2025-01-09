@@ -34,10 +34,13 @@ SECRET_KEY = os.getenv("DJANGO_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True if os.getenv("DJANGO_DEBUG", "0") == "1" else False
 
-ALLOWED_HOSTS = ["orkestro.ddns.net", os.getenv("URL")]
+ALLOWED_HOSTS = ["orkestro.ddns.net", "localhost", "127.0.0.1", os.getenv("URL")]
 
 CSRF_TRUSTED_ORIGINS = [
-    f"https://orkestro.ddns.net:5000",
+    "https://orkestro.ddns.net:5000",
+    "https://localhost:5000",
+    "http://localhost:5000",
+    f"https://{os.getenv('URL')}:5000",
     f"http://{os.getenv('URL')}:5000",
 ]
 
@@ -143,6 +146,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = "static-django/"
+
+STATIC_ROOT=os.path.join(BASE_DIR, 'static-django')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field

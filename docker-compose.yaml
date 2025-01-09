@@ -1,9 +1,11 @@
-version: "3.3"
-
 services:
   orkestro-db-master:
     container_name: orkestro-db-master
-    network_mode: host
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - "5432:5432"
     build:
       context: .
       dockerfile: database/dockerfile_master
@@ -11,64 +13,38 @@ services:
         - POSTGRES_USER=$POSTGRES_USER
         - POSTGRES_DB=$POSTGRES_DB
         - INCLUDE_TEST_DATA=$INCLUDE_TEST_DATA
-    env_file:
-      - .env
-    ports:
-      - "5432:5432"
     volumes:
       - "pgdata_volume:/var/lib/postgresql/data"
-    restart: always
+
       
-  orkestro-db-slave:
-    container_name: orkestro-db-slave
-    network_mode: host
-    build:
-      context: .
-      dockerfile: database/dockerfile_slave
-      args:
-        - POSTGRES_USER=$POSTGRES_USER
-        - POSTGRES_DB=$POSTGRES_DB
-        - INCLUDE_TEST_DATA=$INCLUDE_TEST_DATA
-    env_file:
-      - .env
-    ports:
-      - "5433:5432"
-    volumes:
-      - "pgdata_slave_volume:/var/lib/postgresql/data"
-    restart: always
-
-  orkestro-frontend:
-    container_name: orkestro-frontend
-    network_mode: host
-    build: ./frontend
-    ports:
-      - "3000:3000"
-    env_file:
-      - .env
-    restart: always
-
-  orkestro-nginx:
-    image: "nginx:1.27-alpine"
-    container_name: orkestro-nginx
-    network_mode: host
-    ports:
-      - "5000:5000"
-    env_file:
-      - .env
-    volumes:
-      - ./nginx/chain.pem:/etc/nginx/conf.d/chain.pem:ro
-      - ./nginx/privkey.pem:/etc/nginx/conf.d/privkey.pem:ro
-      - ./nginx/fullchain.pem:/etc/nginx/conf.d/fullchain.pem:ro
-      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    restart: always
-    depends_on:
-      - orkestro-frontend
+#  orkestro-db-slave:
+#    container_name: orkestro-db-slave
+#    restart: always
+#    env_file:
+#      - .env
+#    ports:
+#      - "5433:5432"
+#    extra_hosts:
+#      - "host.docker.internal:host-gateway"
+#    build:
+#      context: .
+#      dockerfile: database/dockerfile_slave
+#      args:
+#        - POSTGRES_USER=$POSTGRES_USER
+#        - POSTGRES_DB=$POSTGRES_DB
+#        - INCLUDE_TEST_DATA=$INCLUDE_TEST_DATA
+#    volumes:
+#      - "pgdata_slave_volume:/var/lib/postgresql/data"
+#    depends_on:
+#      - orkestro-db-master
 
   orkestro-backend:
     container_name: orkestro-backend
-    network_mode: host
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
     build:
       context: ./backend
       args:
@@ -80,11 +56,59 @@ services:
         - DJANGO_KEY=$DJANGO_KEY
         - DJANGO_DEBUG=$DJANGO_DEBUG
         - REACT_APP_GOOGLE_CLIENT_ID=$REACT_APP_GOOGLE_CLIENT_ID
+    depends_on:
+      - orkestro-db-master
+
+  orkestro-frontend:
+    container_name: orkestro-frontend
+    restart: always
     env_file:
       - .env
     ports:
-      - "8000:8000"
+      - "3000:3000"
+    build: ./frontend
+    depends_on:
+      - orkestro-backend
+
+  orkestro-nginx:
+    container_name: orkestro-nginx
     restart: always
+    env_file:
+      - .env
+    ports:
+      - "5000:5000"
+    build:
+      context: .
+      dockerfile: nginx/Dockerfile
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ./nginx/chain.pem:/etc/nginx/conf.d/chain.pem:ro
+      - ./nginx/privkey.pem:/etc/nginx/conf.d/privkey.pem:ro
+      - ./nginx/fullchain.pem:/etc/nginx/conf.d/fullchain.pem:ro
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - orkestro-frontend
+
+#  orkestro-frontend:
+#    container_name: orkestro-frontend
+#    restart: always
+#    env_file:
+#      - .env
+#    ports:
+#      - "5000:5000"
+#    build:
+#      context: .
+#      dockerfile: nginx/Dockerfile
+#    extra_hosts:
+#      - "host.docker.internal:host-gateway"
+#    volumes:
+#      - ./nginx/chain.pem:/etc/nginx/conf.d/chain.pem:ro
+#      - ./nginx/privkey.pem:/etc/nginx/conf.d/privkey.pem:ro
+#      - ./nginx/fullchain.pem:/etc/nginx/conf.d/fullchain.pem:ro
+#      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+#    depends_on:
+#      - orkestro-backend
 
 volumes:
   pgdata_volume: {}

@@ -2,3 +2,4 @@
 .vscode/
 .env
 backend/http_requests/
+*.pem
