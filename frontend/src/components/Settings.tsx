@@ -49,6 +49,7 @@ export default function Settings() {
   }, [user]);
 
   const handleAddInstrument = async () => {
+    console.log("AA", newInstrument);
     if (newInstrument.trim() !== "") {
       await axios.post(
         "/api/user-instruments/",
@@ -151,11 +152,19 @@ export default function Settings() {
             value={newInstrument}
             onChange={(e) => setNewInstrument(e.target.value)}
           >
-            {instruments.map((instrument) => (
-              <option key={instrument.instrument_id} value={instrument.instrument_id}>
-                {instrumentName(instrument, currentLanguage)}
-              </option>
-            ))}
+            <option value="">{t("settings.select-instrument")}</option>
+            {instruments
+              .filter(
+                (instrument) =>
+                  !userInstruments.some(
+                    (userInstrument) => userInstrument.instrument === instrument.instrument_id
+                  )
+              )
+              .map((instrument) => (
+                <option key={instrument.instrument_id} value={instrument.instrument_id}>
+                  {instrumentName(instrument, currentLanguage)}
+                </option>
+              ))}
           </select>
           <button
             className="p-2 bg-green-500 text-white rounded-lg hover:bg-green-600"

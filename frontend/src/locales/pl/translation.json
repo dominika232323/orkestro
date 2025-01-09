@@ -53,7 +53,8 @@
     "connected": "Połączony",
     "unconnected": "Niepołączony",
     "user-instruments": "Instrumenty",
-    "add-instrument": "Dodaj instrument"
+    "add-instrument": "Dodaj instrument",
+    "select-instrument": "Wybierz instrument"
   },
   "calendar": {
     "title": "Kalendarz",
