@@ -215,6 +215,12 @@ class InstrumentViewSetTestCase(TestCase):
         self.assertEqual(len(response.data), 0)
 
     def tearDown(self):
+        self.file_instrument_1.delete()
+        self.file_instrument_2.delete()
+
+        self.file.delete()
+        self.track.delete()
+
         self.user_instrument_1.delete()
         self.user_instrument_2.delete()
         self.user_instrument_3.delete()
