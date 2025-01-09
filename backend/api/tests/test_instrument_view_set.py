@@ -70,6 +70,53 @@ class InstrumentViewSetTestCase(TestCase):
                 received_instruments = [instrument["instrument_id"] for instrument in response.data]
                 self.assertEqual(received_instruments, case["expected_items"])
 
+    def test_leftover_with_user_id(self):
+        test_cases = [
+            {
+                "user": self.staff,
+                "expected_status": 200,
+                "expected_count": 1,
+                "expected_items": [self.instrument_2.instrument_id]
+            },
+            {
+                "user": self.manager,
+                "expected_status": 200,
+                "expected_count": 1,
+                "expected_items": [self.instrument_2.instrument_id]
+            },
+            {
+                "user": self.moderator,
+                "expected_status": 200,
+                "expected_count": 1,
+                "expected_items": [self.instrument_2.instrument_id]
+            },
+            {
+                "user": self.musician,
+                "expected_status": 200,
+                "expected_count": 1,
+                "expected_items": [self.instrument_2.instrument_id]
+            },
+            {
+                "user": self.outsider,
+                "expected_status": 403,
+            }
+        ]
+
+        for case in test_cases:
+            with self.subTest(user=case["user"]):
+                request = self.factory.get(f"/api/instruments/leftover/?user_id={self.musician.user_id}")
+                force_authenticate(request, user=case["user"])
+
+                response = InstrumentViewSet.as_view({"get": "leftover"})(request)
+
+                self.assertEqual(response.status_code, case["expected_status"])
+
+                if response.status_code == 200:
+                    self.assertEqual(len(response.data), case["expected_count"])
+
+                    received_instruments = [instrument["instrument_id"] for instrument in response.data]
+                    self.assertEqual(received_instruments, case["expected_items"])
+
     # def test_leftover_file_instruments(self):
     #     request = self.factory.get(f"/api/instruments/leftover/?file_id={self.file.file_id}")
     #     force_authenticate(request, user=self.user)
@@ -127,6 +174,12 @@ class InstrumentViewSetTestCase(TestCase):
         self.assertEqual(len(response.data), 0)
 
     def tearDown(self):
+        self.user_instrument_1.delete()
+        self.user_instrument_2.delete()
+        self.user_instrument_3.delete()
+        self.user_instrument_4.delete()
+        self.user_instrument_5.delete()
+
         self.instrument_1.delete()
         self.instrument_2.delete()
         self.instrument_3.delete()
