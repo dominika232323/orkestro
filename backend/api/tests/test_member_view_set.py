@@ -254,6 +254,54 @@ class MemberViewSetTestCase(TestCase):
                     self.assertEqual(response.data["page_number"], case["expected_page_number"])
                     self.assertEqual(response.data["total_pages"], case["expected_total_pages"])
 
+    def test_by_group(self):
+        test_cases = [
+            {
+                "user": self.staff,
+                "expected_status": 200,
+                "expected_count": 3,
+                "expected_items": ["Manage", "Moderato", "Musicia"],
+            },
+            {
+                "user": self.moderator,
+                "expected_status": 200,
+                "expected_count": 3,
+                "expected_items": ["Manage", "Moderato", "Musicia"],
+            },
+            {
+                "user": self.musician,
+                "expected_status": 200,
+                "expected_count": 3,
+                "expected_items": ["Manage", "Moderato", "Musicia"],
+            },
+            {
+                "user": self.manager,
+                "expected_status": 200,
+                "expected_count": 3,
+                "expected_items": ["Manage", "Moderato", "Musicia"],
+            },
+            {
+                "user": self.outsider,
+                "expected_status": 403,
+            },
+        ]
+        for case in test_cases:
+            with self.subTest(user=case["user"]):
+                # Prepare the request
+                request = self.factory.get(f"/api/members/by_group/?group_id={self.group.group_id}")
+                force_authenticate(request, user=case["user"])
+
+                # Execute the request
+                response = MemberViewSet.as_view({"get": "by_group"})(request)
+
+                self.assertEqual(response.status_code, case["expected_status"])
+
+                if response.status_code == 200:
+                    self.assertEqual(len(response.data), case["expected_count"])
+
+                    returned_users = [member["user_details"]["name"] for member in response.data]
+                    self.assertEqual(returned_users, case["expected_items"])
+
 
     def tearDown(self):
         basic_setup_teardown(self.group, [self.staff, self.manager, self.moderator, self.musician, self.outsider, self.unauthenticated])

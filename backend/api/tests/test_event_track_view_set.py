@@ -1,3 +1,5 @@
+from tokenize import group
+
 from django.utils import timezone
 from django.test import TestCase
 from rest_framework.test import APIRequestFactory, force_authenticate
@@ -84,9 +86,24 @@ class EventTrackViewSetTestCase(TestCase):
         EventTrack.objects.create(event=event_3, track=track_3)
 
         test_cases = [
-            {"track": track_1, "expected_status": 200, "expected_count": 2},
-            {"track": track_2, "expected_status": 200, "expected_count": 1},
-            {"track": track_3, "expected_status": 200, "expected_count": 3},
+            {
+                "track": track_1,
+                "expected_status": 200,
+                "expected_count": 2,
+                "expected_items": [event_1.event_id, event_2.event_id]
+            },
+            {
+                "track": track_2,
+                "expected_status": 200,
+                "expected_count": 1,
+                "expected_items": [event_1.event_id]
+            },
+            {
+                "track": track_3,
+                "expected_status": 200,
+                "expected_count": 3,
+                "expected_items": [event_1.event_id, event_2.event_id, event_3.event_id]
+            },
         ]
 
         for case in test_cases:
@@ -98,6 +115,64 @@ class EventTrackViewSetTestCase(TestCase):
 
                 self.assertEqual(response.status_code, case["expected_status"])
                 self.assertEqual(len(response.data), case["expected_count"])
+
+                returned_events = [event_track["event"] for event_track in response.data]
+                self.assertEqual(returned_events, case["expected_items"])
+
+    def test_by_event(self):
+        event_1 = Event.objects.create(group=self.group, name="e 1", description="d 1", date=timezone.now(),
+                                       place="p 1")
+        event_2 = Event.objects.create(group=self.group, name="e 2", description="d 2", date=timezone.now(),
+                                       place="p 2")
+        event_3 = Event.objects.create(group=self.group, name="e 3", description="d 3", date=timezone.now(),
+                                       place="p 3")
+
+        track_1 = Track.objects.create(group=self.group, name="t 1", artist="a 1")
+        track_2 = Track.objects.create(group=self.group, name="t 2", artist="a 2")
+        track_3 = Track.objects.create(group=self.group, name="t 3", artist="a 3")
+
+        EventTrack.objects.create(event=event_1, track=track_1)
+        EventTrack.objects.create(event=event_2, track=track_1)
+        EventTrack.objects.create(event=event_1, track=track_2)
+        EventTrack.objects.create(event=event_1, track=track_3)
+        EventTrack.objects.create(event=event_2, track=track_3)
+        EventTrack.objects.create(event=event_3, track=track_3)
+
+        test_cases = [
+            {
+                "event": event_1,
+                "expected_status": 200,
+                "expected_count": 3,
+                "expected_items": [track_1.track_id, track_2.track_id, track_3.track_id]
+            },
+            {
+                "event": event_2,
+                "expected_status": 200,
+                "expected_count": 2,
+                "expected_items": [track_1.track_id, track_3.track_id]
+            },
+            {
+                "event": event_3,
+                "expected_status": 200,
+                "expected_count": 1,
+                "expected_items": [track_3.track_id]
+            },
+        ]
+
+        for case in test_cases:
+            with self.subTest(track=case["event"]):
+                # Prepare the request
+                request = self.factory.get(f"/api/event-tracks/by_event/?event_id={case["event"].event_id}")
+                force_authenticate(request, user=self.manager)
+
+                # Execute the request
+                response = EventTrackViewSet.as_view({"get": "by_event"})(request)
+
+                self.assertEqual(response.status_code, case["expected_status"])
+                self.assertEqual(len(response.data), case["expected_count"])
+
+                returned_tracks = [event_track["track"] for event_track in response.data]
+                self.assertEqual(returned_tracks, case["expected_items"])
 
     def tearDown(self):
         self.track.delete()

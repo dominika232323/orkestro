@@ -29,26 +29,78 @@ class MessageViewSetTestCase(TestCase):
 
     def test_create_access(self):
         test_cases = [
-            {"user": self.staff, "expected_status": 201},
-            {"user": self.manager, "expected_status": 201},
-            {"user": self.moderator, "expected_status": 201},
-            {"user": self.musician, "expected_status": 403},
-            {"user": self.outsider, "expected_status": 403},
-        ]
-
-        for case in test_cases:
-            with self.subTest(user=case["user"]):
-                # Prepare valid data
-                message_data = {
-                    "user": case["user"].user_id,
+            {
+                "user": self.staff,
+                "data": {
+                    "user": self.staff.user_id,
                     "group": self.group.group_id,
                     "title": "Message title",
                     "content": "Message content",
                     "date": timezone.now(),
-                }
+                },
+                "recipients": [self.musician.user_id, self.moderator.user_id],
+                "expected_status": 201
+            },
+            {
+                "user": self.manager,
+                "data": {
+                    "user": self.manager.user_id,
+                    "group": self.group.group_id,
+                    "title": "Message title",
+                    "content": "Message content",
+                    "date": timezone.now(),
+                },
+                "recipients": [self.musician.user_id, self.moderator.user_id],
+                "expected_status": 201
+            },
+            {
+                "user": self.moderator,
+                "data": {
+                    "user": self.moderator.user_id,
+                    "group": self.group.group_id,
+                    "title": "Message title",
+                    "content": "Message content",
+                    "date": timezone.now(),
+                },
+                "recipients": [self.musician.user_id, self.manager.user_id],
+                "expected_status": 201
+            },
+            {
+                "user": self.musician,
+                "data": {
+                    "user": self.musician.user_id,
+                    "group": self.group.group_id,
+                    "title": "Message title",
+                    "content": "Message content",
+                    "date": timezone.now(),
+                },
+                "recipients": [self.manager.user_id, self.moderator.user_id],
+                "expected_status": 403
+            },
+            {
+                "user": self.outsider,
+                "data": {
+                    "user": self.outsider.user_id,
+                    "group": self.group.group_id,
+                    "title": "Message title",
+                    "content": "Message content",
+                    "date": timezone.now(),
+                },
+                "recipients": [self.musician.user_id, self.moderator.user_id],
+                "expected_status": 403
+            },
+        ]
+
+        for case in test_cases:
+            with self.subTest(user=case["user"]):
+                ids = "&".join([f"id={user_id}" for user_id in case['recipients']])
 
                 # Create a request
-                request = self.factory.post("/api/messages/", message_data, format="json")
+                request = self.factory.post(
+                    f"/api/messages/?{ids}",
+                    data=case["data"],
+                    format="json"
+                )
                 force_authenticate(request, user=case["user"])
 
                 # Instantiate the view and call the create method
@@ -84,6 +136,28 @@ class MessageViewSetTestCase(TestCase):
         # Assertions
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.data["error"], "Data validation failed")
+
+    def test_create_zero_recipients(self):
+        # Prepare invalid data
+        message_data = {
+            "user": self.manager.user_id,
+            "group": self.group.group_id,
+            "title": "Message title",
+            "content": "Message content",
+            "date": timezone.now(),
+        }
+
+        # Create a request
+        request = self.factory.post("/api/messages/", message_data, format="json")
+        force_authenticate(request, user=self.manager)
+
+        # Instantiate the view and call the create method
+        view = MessageViewSet.as_view({"post": "create"})
+        response = view(request)
+
+        # Assertions
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.data["error"], "Message must have at least one recipient")
 
     def test_by_group(self):
         # Define test cases with expected outcomes

@@ -41,6 +41,6 @@ class EventTrackViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=["get"])
     def by_event(self, request):
-        event_tracks = EventTrack.objects.filter(event_id=request.GET.get("group_id")).select_related("track", "event")
+        event_tracks = EventTrack.objects.filter(event_id=request.GET.get("event_id")).select_related("track", "event")
         serializer = self.get_serializer(event_tracks, many=True)
         return Response(serializer.data)

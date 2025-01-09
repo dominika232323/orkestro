@@ -2,7 +2,7 @@ from django.utils import timezone
 from django.test import TestCase
 from rest_framework.test import APIRequestFactory, force_authenticate
 
-from api.models import Event, EventAttendee
+from api.models import Event, EventAttendee, User, Member
 from api.tests.common_setups import basic_setup, basic_setup_teardown
 from api.views.event_attendee_view_set import EventAttendeeViewSet
 from api.views.event_view_set import EventViewSet
@@ -32,6 +32,86 @@ class EventAttendeeViewSetTestCase(TestCase):
 
                 # Assert the status code
                 self.assertEqual(response.status_code, case["expected_status"])
+
+    def test_create_access(self):
+        event = Event.objects.create(group=self.group, name="Event", description="Desp", date=timezone.now(), place="Place")
+
+        test_cases = [
+            {
+                "user": self.staff,
+                "expected_status": 201,
+            },
+            {
+                "user": self.manager,
+                "expected_status": 201,
+            },
+            {
+                "user": self.moderator,
+                "expected_status": 403,
+            },
+            {
+                "user": self.musician,
+                "expected_status": 403,
+            },
+            {
+                "user": self.outsider,
+                "expected_status": 403,
+            },
+        ]
+
+        for case in test_cases:
+            with self.subTest(user=case["user"]):
+                new_user = User.objects.create(email="new_user@a.com", name="User", surname="R", date_joined=timezone.now())
+                Member.objects.create(group=self.group, user=new_user, permission_level="C")
+
+                # Prepare valid data
+                event_attendee_data = {
+                    "event": event.event_id,
+                    "user": new_user.user_id
+                }
+
+                # Prepare the request
+                request = self.factory.post(
+                    f"/api/event-attendees/",
+                    data=event_attendee_data,
+                    format="json"
+                )
+                force_authenticate(request, user=case["user"])
+
+                # Execute the request
+                response = EventAttendeeViewSet.as_view({"post": "create"})(request)
+
+                # Assertions
+                self.assertEqual(response.status_code, case["expected_status"])
+
+                if response.status_code == 201:
+                    self.assertEqual(response.data["event"], event.event_id)
+                    self.assertEqual(response.data["user"], new_user.user_id)
+
+    def test_create_invalid_data(self):
+        event = Event.objects.create(group=self.group, name="Event", description="Desp", date=timezone.now(), place="Place")
+
+        # Prepare valid data
+        event_attendee_data = {
+            "event": "event.event_id",
+            "user": self.musician.user_id
+        }
+
+        # Create a request
+        request = self.factory.post(
+            f"/api/event-attendees/",
+            data=event_attendee_data,
+            format="json"
+        )
+        force_authenticate(request, user=self.staff)
+
+        # Instantiate the view and call the create method
+        view = EventAttendeeViewSet.as_view({"post": "create"})
+        response = view(request)
+
+        # Assertions
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.data["error"], "Data validation failed")
 
     def test_by_event(self):
         event_1 = Event.objects.create(group=self.group, name="n 1", description="d 1", date=timezone.now(), place="p 1")
