@@ -23,7 +23,7 @@ class InstrumentViewSetTestCase(TestCase):
         self.user_instrument_4 = UserInstrument.objects.create(user=self.moderator, instrument=self.instrument_3)
         self.user_instrument_5 = UserInstrument.objects.create(user=self.manager, instrument=self.instrument_2)
 
-    def test_leftover_user_instruments(self):
+    def test_leftover(self):
         test_cases = [
             {
                 "user": self.staff,
