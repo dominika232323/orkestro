@@ -4,9 +4,11 @@ import { Event } from "../interfaces";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons";
+import { useNavigate } from "react-router-dom";
 
 export default function Calendar() {
   const { t, currentLanguage } = useLanguage();
+  const navigate = useNavigate();
 
   const currentYear = new Date().getFullYear();
   const [loading, setLoading] = useState(false);
@@ -200,7 +202,11 @@ export default function Calendar() {
           <ul className="mt-2">
             {eventsForDay(selectedDay).length > 0 ? (
               eventsForDay(selectedDay).map((event: Event, index) => (
-                <li key={index} className="text-sm text-gray-800">
+                <li
+                  key={index}
+                  className="text-sm text-gray-800"
+                  onClick={() => navigate(`/event-details/${event.event_id}`)}
+                >
                   <strong>{event.name}</strong> -{" "}
                   {new Date(event.date).toLocaleTimeString()}
                 </li>
