@@ -16,7 +16,8 @@ DJANGO_KEY=[key]
 DJANGO_DEBUG=1 # 0
 REACT_APP_GOOGLE_CLIENT_ID=[Google API client ID]
 BROWSER=none
-URL=localhost
+DOMAIN=orkestro.ddns.net
+IP=localhost
 ```
 
 

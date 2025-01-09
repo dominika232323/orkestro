@@ -34,7 +34,7 @@ for ((i = 0; i < ${#vms[@]}; i++)); do
         az vm run-command invoke --resource-group $resource_group --name $1 --command-id RunShellScript --scripts "@./deploy/setup_machine.sh"
 
         ip="$(az vm show -d --resource-group $resource_group --name $machine_with_ip --query publicIps -o tsv)"
-        echo "URL=${ip}" >> ../.env
+        echo "IP=${ip}" >> ../.env
         cd ../..
         scp -i ~/.ssh/orkestro.pem -o StrictHostKeyChecking=accept-new -rp orkestro azureuser@${ip}:/home/azureuser/
         scp -i ~/.ssh/orkestro.pem ~/.ssh/orkestro.pem azureuser@${ip}:/home/azureuser/.ssh/orkestro.pem
