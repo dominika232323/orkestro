@@ -33,6 +33,56 @@ class TrackViewSetTestCase(TestCase):
         self.file_instrument2 = FileInstrument.objects.create(file=self.file2, instrument=self.instrument1)
         self.file_instrument3 = FileInstrument.objects.create(file=self.file3, instrument=self.instrument1)
 
+    def test_leftover(self):
+        test_cases = [
+            {
+                "user": self.staff,
+                "expected_status": 200,
+                "expected_count": 1,
+                "expected_items": [self.track3.track_id]
+            },
+            {
+                "user": self.manager,
+                "expected_status": 200,
+                "expected_count": 1,
+                "expected_items": [self.track3.track_id]
+            },
+            {
+                "user": self.moderator,
+                "expected_status": 200,
+                "expected_count": 1,
+                "expected_items": [self.track3.track_id]
+            },
+            {
+                "user": self.musician,
+                "expected_status": 200,
+                "expected_count": 1,
+                "expected_items": [self.track3.track_id]
+            },
+            {
+                "user": self.outsider,
+                "expected_status": 403,
+            }
+        ]
+
+        for case in test_cases:
+            with self.subTest(user=case["user"]):
+                request = self.factory.get(
+                    "/api/tracks/leftover/",
+                    {"event_id": self.event1.event_id, "group_id": self.group.group_id}
+                )
+                force_authenticate(request, user=case["user"])
+
+                response = TrackViewSet.as_view({"get": "leftover"})(request)
+
+                self.assertEqual(response.status_code, case["expected_status"])
+
+                if response.status_code == 200:
+                    self.assertEqual(len(response.data), case["expected_count"])
+
+                    received_tracks = [track["track_id"] for track in response.data]
+                    self.assertEqual(received_tracks, case["expected_items"])
+
     def test_create_access(self):
         test_cases = [
             {"user": self.staff, "expected_status": 201},
