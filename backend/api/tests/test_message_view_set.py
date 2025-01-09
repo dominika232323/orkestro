@@ -38,7 +38,7 @@ class MessageViewSetTestCase(TestCase):
                     "content": "Message content",
                     "date": timezone.now(),
                 },
-                "recipients": [self.musician.user_id],
+                "recipients": [self.musician.user_id, self.moderator.user_id],
                 "expected_status": 201
             },
             {
@@ -50,7 +50,7 @@ class MessageViewSetTestCase(TestCase):
                     "content": "Message content",
                     "date": timezone.now(),
                 },
-                "recipients": [self.musician.user_id],
+                "recipients": [self.musician.user_id, self.moderator.user_id],
                 "expected_status": 201
             },
             {
@@ -62,7 +62,7 @@ class MessageViewSetTestCase(TestCase):
                     "content": "Message content",
                     "date": timezone.now(),
                 },
-                "recipients": [self.musician.user_id],
+                "recipients": [self.musician.user_id, self.manager.user_id],
                 "expected_status": 201
             },
             {
@@ -74,7 +74,7 @@ class MessageViewSetTestCase(TestCase):
                     "content": "Message content",
                     "date": timezone.now(),
                 },
-                "recipients": [self.musician.user_id],
+                "recipients": [self.manager.user_id, self.moderator.user_id],
                 "expected_status": 403
             },
             {
@@ -86,26 +86,18 @@ class MessageViewSetTestCase(TestCase):
                     "content": "Message content",
                     "date": timezone.now(),
                 },
-                "recipients": [self.musician.user_id],
+                "recipients": [self.musician.user_id, self.moderator.user_id],
                 "expected_status": 403
             },
         ]
 
         for case in test_cases:
             with self.subTest(user=case["user"]):
-                # Prepare valid data
-                message_data = {
-                    "user": case["user"].user_id,
-                    "group": self.group.group_id,
-                    "title": "Message title",
-                    "content": "Message content",
-                    "date": timezone.now(),
-                    "id": [self.musician.user_id]
-                }
+                ids = "&".join([f"id={user_id}" for user_id in case['recipients']])
 
                 # Create a request
                 request = self.factory.post(
-                    f"/api/messages/?id={','.join(map(str, case['recipients']))}",
+                    f"/api/messages/?{ids}",
                     data=case["data"],
                     format="json"
                 )
