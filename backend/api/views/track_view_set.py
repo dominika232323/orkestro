@@ -30,12 +30,12 @@ class TrackViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=["get"])
     def leftover(self, request):
-        banned_tracks = (EventTrack.objects.select_related("track")
+        chosen = (EventTrack.objects.select_related("track")
             .filter(event_id=request.GET.get("event_id"), track__group_id=request.GET.get("group_id")))
-        banned_tracks = [bt.track for bt in banned_tracks]
+        chosen_tracks = [c.track for c in chosen]
 
         tracks = Track.objects.filter(group_id=request.GET.get("group_id"))
-        tracks = [t for t in tracks if t not in banned_tracks]
+        tracks = [t for t in tracks if t not in chosen_tracks]
 
         serializer = self.get_serializer(tracks, many=True)
         return Response(serializer.data)
