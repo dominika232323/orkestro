@@ -68,7 +68,10 @@ export default function Tracks() {
 
   const handleNewTrack = () => {};
 
-  const handleDelete = (track_id: number) => {};
+  const handleDelete = async (track_id: number) => {
+    await axios.delete(`/api/tracks/${track_id}/`);
+    fetchTracks();
+  };
 
   return (
     <div className="bg-gray-200 p-6 rounded-lg max-w-4xl mx-auto mt-8">
