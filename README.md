@@ -20,6 +20,7 @@ DOMAIN=orkestro.ddns.net
 IP=localhost
 ```
 
+# Uruchomienie (wersja deweloperska, bez wszystkich kontenerów)
 
 ## Baza danych PostgreSQL (`database/`)
 ### Uruchomienie
