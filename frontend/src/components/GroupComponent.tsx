@@ -18,6 +18,7 @@ export default function GroupComponent({ group }: Params) {
         </div>
 
         <div className="flex space-x-4">
+          {/*
           <button
             className="text-sm text-blue-500 hover:text-blue-700"
             onClick={() => {
@@ -26,6 +27,7 @@ export default function GroupComponent({ group }: Params) {
           >
             {t("group.manage")}
           </button>
+          */}
           <button
             className="text-sm text-blue-500 hover:text-blue-700"
             onClick={() => {
@@ -34,6 +36,7 @@ export default function GroupComponent({ group }: Params) {
           >
             {t("group.events")}
           </button>
+          {/*
           <button
             className="text-sm text-blue-500 hover:text-blue-700"
             onClick={() => {
@@ -42,6 +45,7 @@ export default function GroupComponent({ group }: Params) {
           >
             {t("group.files")}
           </button>
+          */}
           <button
             className="text-sm text-blue-500 hover:text-blue-700"
             onClick={() => {
