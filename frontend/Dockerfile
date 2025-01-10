@@ -1,23 +1,5 @@
-# BUILD
-FROM node:18 AS build
-
-WORKDIR /app
-
-COPY package*.json ./
-RUN npm install
-
+FROM node:18
 COPY . .
-
+RUN npm install
 RUN npm run build
-
-# RUN
-FROM nginx:stable-alpine
-
-ARG PORT=8080
-EXPOSE ${PORT}
-
-COPY --from=build /app/build /usr/share/nginx/html
-
-RUN echo "server { listen ${PORT}; server_name localhost; location / { root /usr/share/nginx/html; index index.html; try_files \$uri /index.html; } }" > /etc/nginx/conf.d/default.conf
-
-CMD ["nginx", "-g", "daemon off;"]
+ENTRYPOINT npm start

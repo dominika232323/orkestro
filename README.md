@@ -9,14 +9,18 @@ Przykładowy plik `.env` w katalogu głównym projektu:
 POSTGRES_USER=myuser
 POSTGRES_PASSWORD=[password]
 POSTGRES_DB=orkestrodb
-DJANGO_DB_HOST=localhost
+INCLUDE_TEST_DATA=true # false
+DJANGO_DB_HOST=192.168.0.100 # local ip address
 DJANGO_DB_PORT=5432
 DJANGO_KEY=[key]
-DJANGO_DEBUG=1
+DJANGO_DEBUG=1 # 0
 REACT_APP_GOOGLE_CLIENT_ID=[Google API client ID]
 BROWSER=none
+DOMAIN=orkestro.ddns.net
+IP=localhost
 ```
 
+# Uruchomienie (wersja deweloperska, bez wszystkich kontenerów)
 
 ## Baza danych PostgreSQL (`database/`)
 ### Uruchomienie
