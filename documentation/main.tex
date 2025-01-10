@@ -339,7 +339,7 @@ Przypadek specjalizujący PB3.
 Aktorzy: kierownik.
 \begin{enumerate}
     \item Jak w przypadku generalizującym PB3 – kroki 1. i 2.
-    \item Kierownik nawiguje do wybranego obiektu - (pod)grupy, próby, koncertu, utworu, uprawnień użytkownika – i go usuwa.
+    \item Kierownik nawiguje do wybranego obiektu - (pod)grupy, próby, koncertu, utworu, uprawnień użytkownika – i wybiera jego usunięcie.
     \item System prosi o potwierdzenie wykonywanej akcji. Jeżeli zostanie anulowana – koniec scenariusza.
     \item System usuwa obiekt. Jeżeli usunięto (pod)grupę, usuwa się jej wszystkie powiadomienia, utwory, zaplanowane koncerty i próby. Jeżeli usunięto utwór, usuwa się wszystkie udostępnione do niego pliki.
 \end{enumerate}
@@ -372,7 +372,7 @@ Przypadek specjalizujący PB12.
 Aktorzy: użytkownik.
 \begin{enumerate}
     \item System weryfikuje tożsamość użytkownika.
-    \item Użytkownik wybiera listę powiadomień dla wszystkich lub wybranej grupy i przegląda wiadomości.
+    \item Użytkownik wybiera listę powiadomień dla wszystkich lub wybranej grupy i przegląda wiadomości. Może je również wyszukiwać.
 \end{enumerate}
 
 
@@ -396,7 +396,7 @@ Aktorzy: użytkownik.
 \begin{enumerate}
     \item System weryfikuje tożsamość użytkownika.
     \item Użytkownik wybiera (pod)grupę, której planem wydarzeń jest zainteresowany.
-    \item Użytkownik przegląda listę wydarzeń. Może je wybierać, by uzyskać na ich temat więcej informacji.
+    \item Użytkownik przegląda listę wydarzeń. Może je wyszukiwać oraz wybierać wydarzenia, by uzyskać na ich temat więcej informacji.
 \end{enumerate}
 
 \subsubsection{PB17. Zmiana ustawień konta}
@@ -561,7 +561,7 @@ Aktorzy: kierownik.
     \item Jak w funkcji generalizującej FU6 – krok 1.
     \item Kierownik wybiera opcję utworzenia nowego koncertu lub próby do istniejącego koncertu w sekcji z wydarzeniami.
     \item System wyświetla formularz do utworzenia wydarzenia.
-    \item Kierownik wpisuje tytuł wydarzenia, opis, czas, miejsce i uczestników (zaznacza opcję zaangażowania całej grupy lub zaznacza wybranych członków (pod)grupy).
+    \item Kierownik wpisuje tytuł wydarzenia, opis, czas, miejsce i uczestników (cała (pod)grupa lub jej wybrani członkowie).
     \item System dodaje próbę/koncert i odsyła do sekcji z wydarzeniami.
 \end{enumerate}
 
@@ -789,6 +789,8 @@ Wybraliśmy relacyjną bazę danych PostgreSQL, z którą warstwa przetwarzania 
 
 Repozytorium projektu: \href{https://gitlab-stud.elka.pw.edu.pl/zgromadzeni/orkestro}{https://gitlab-stud.elka.pw.edu.pl/zgromadzeni/orkestro}
 
+Dokumentacja odnosi się do stanu projektu z commita 
+
 \subsection{Metody realizacji}
 
 Wykorzystywane metody realizacji:
@@ -893,9 +895,12 @@ Klasy nieujęte w pozostałych grupach:
 
 \subsection{Statystyki}
 
-\textcolor{red}{TODO}
-
-Obowiązkowo statystyki: liczba plików, linie kodu, liczba testów jednostkowych
+Statystyki dotyczące plików projektu:
+\begin{itemize}
+    \item liczba plików:
+    \item linie kodu:
+    \item liczba testów jednostkowych: 148
+\end{itemize}
 
 \section{Projekt standardu interfejsu użytkownika}
 
@@ -945,7 +950,7 @@ Główne zmiany, które zaszły w interakcjach z aplikacją względem wstępnego
     \item informacje o użytkowniku są w większości pobierane z konta Google - modyfikować można Google Calendar i listę instrumentów
 \end{itemize}
 
-\textcolor{red} {Aplikacja jest wciąż rozwijana, co może wiązać się z dodatkowymi zmianami.}
+\textcolor{red} {W porozumieniu z mentorem grupy: do 20 stycznia możemy rozwijać aplikację, co może wiązać się z dodatkowymi zmianami.}
 
 \section{Specyfikacja testów}
 
@@ -957,10 +962,10 @@ Serwer weryfikuje spójność danych przesyłanych w zapytaniach z modelem danyc
 
 Do backendu zostały napisane testy jednostkowe. Sprawdzają one m.in. poprawność działania klas, reakcje na błędne dane czy brak uprawnień. Testy zostały napisane we frameworku \texttt{unittest}, a sprawdzanie stopnia pokrycia odbywa się poprzez \texttt{coverage.py}. Miary jakości testów:
 \begin{itemize}
-    \item liczba testów: \textcolor{red} {TODO}
-    \item odsetek przechodzących testów:
-    \item pokrycie linii testami:
-    \item pokrycie gałęzi testami:
+    \item liczba testów: 148
+    \item odsetek przechodzących testów: 100\%
+    \item pokrycie linii testami: 96\%
+    \item pokrycie gałęzi testami: 94\%
 \end{itemize}
 
 \textcolor{red} {System jest wciąż rozwijany, co wiąże się z dodawaniem testów i kodu do przetestowania.} 
