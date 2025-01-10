@@ -54,7 +54,7 @@ for ((i = 0; i < ${#scripts[@]}; i++)); do
 	script=$1; shift
 
 	case $script in # azure CLI fails to get script path from a variable
-	    "frontend") az vm run-command invoke --resource-group $resource_group --name $vm_name --command-id RunShellScript --scripts "cd /home/azureuser/orkestro && sudo docker compose up orkestro-frontend orkestro-nginx -d" ;;
+	    "frontend") az vm run-command invoke --resource-group $resource_group --name $vm_name --command-id RunShellScript --scripts "cd /home/azureuser/orkestro && sudo docker compose up orkestro-frontend -d" ;;
 		"backend")  az vm run-command invoke --resource-group $resource_group --name $vm_name --command-id RunShellScript --scripts "cd /home/azureuser/orkestro && sudo docker compose up orkestro-backend -d" ;;
 		"master")   az vm run-command invoke --resource-group $resource_group --name $vm_name --command-id RunShellScript --scripts "cd /home/azureuser/orkestro && sudo docker compose up orkestro-db-master -d && sleep 15" ;;
 		"slave")    az vm run-command invoke --resource-group $resource_group --name $vm_name --command-id RunShellScript --scripts "cd /home/azureuser/orkestro && sudo docker compose up orkestro-db-slave -d && sleep 15" ;; # --parameters $@
