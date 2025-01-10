@@ -4,6 +4,7 @@ RUN pip install -r backend/requirements.txt
 RUN python3 backend/manage.py collectstatic --noinput
 
 FROM node:18 AS frontend
+ARG REACT_APP_GOOGLE_CLIENT_ID
 COPY frontend frontend
 WORKDIR frontend
 RUN npm install
