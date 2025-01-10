@@ -51,7 +51,7 @@
     \vspace{0.5cm}
     WERSJA 4 \\
     \vspace{0.5cm}
-    2.01.2024 \\
+    10.01.2024 \\
     Semestr 24Z
 
     \vfill
@@ -809,14 +809,15 @@ Repozytorium projektu: \href{https://gitlab-stud.elka.pw.edu.pl/zgromadzeni/orke
 Wykorzystywane metody realizacji:
 \begin{itemize}
     \item serwer, load balancer, reverse proxy: NGINX
-    \item technologie frontendowe: framework React.js, framework Tailwind CSS, Typescript, Javascript, CSS, HTML
-    \item technologie backendowe: Django REST Framework, Python
+    \item technologie frontendowe: aplikacja webowa - React.js, Typescript, Tailwind CSS
+    \item technologie backendowe: REST API - Python, Django, Django REST Framework
+    \item testowanie: unittest, coverage.py
     \item baza danych: PostgreSQL
     \item dokumentacja: LaTeX, draw.io, SQL Developer Data Modeler
-    \item praca grupowa, komunikacja: Git, Github, Overleaf, Messenger
-    \item środowiska programowania: PyCharm, gedit
-    \item systemy operacyjne: Windows (10, 11), Linux (Ubuntu 22.04)
-    \item wdrożenie (lokalnie, na chmurę Azure): Docker, Docker Compose, skrypty bashowe
+    \item praca grupowa, komunikacja: Git, GitLab, Messenger, Overleaf
+    \item środowiska programowania: PyCharm, gedit, Neovim
+    \item systemy operacyjne: Windows (10, 11), Linux (Ubuntu, Arch Linux)
+    \item uruchomienie, wdrożenie (lokalnie i na chmurę Azure): Docker, Docker Compose, skrypty bashowe
 \end{itemize}
 
 \subsection{Struktura klas}
@@ -827,7 +828,7 @@ Jako argumenty czy zwracane typy funkcji wykorzystywane są dodatkowe klasy Djan
 \begin{itemize}
 \item request/Request: zapytanie HTTP
 \item Response: odpowiedź HTTP
-\item view/View - funkcja przetwarzająca zapytanie
+\item view/View - wywoływalna klasa przetwarzająca zapytanie
 \item QuerySet - dane z zapytania do bazy danych
 \item BaseAuthentication - klasa przeprowadzająca autoryzację użytkownika
 \item Error - wiadomość o błędzie przy operacji na obiekcie typu Model
@@ -900,7 +901,8 @@ Zdefiniowane klasy modyfikują domyślną funkcjonalność panelu administratora
 Klasy nieujęte w pozostałych grupach:
 \begin{itemize}
     \item \texttt{ApiConfig} - dziedziczy po \texttt{AppConfig}, ustawia niektóre pola w domyślnej konfiguracji aplikacji.
-    \item \texttt{CookieAuth} - dziedziczy po \texttt{JWTAuthentication}, nadpisuje metodę autoryzującą użytkownika.
+    \item \texttt{JWTCookieMiddleware} - dziedziczy po \texttt{MiddlewareMixin}, autoryzuje użytkownika przy dostępie do panelu administratora.
+    \item \texttt{JWTCookieAuth} - dziedziczy po \texttt{JWTAuthentication}, autoryzuje użytkownika przy dostępie do API.
     \item \texttt{GoogleLoginView} - dziedziczy po \texttt{APIView}, (\texttt{View} - uproszczona wersja \texttt{ViewSet}, gdzie większa część kodu jest do samodzielnego napisania); umożliwia logowanie się kontem Google
 \end{itemize}
 
@@ -938,19 +940,47 @@ Projekt interfejsu użytkownika:
     \caption{Makiety najważniejszych ekranów aplikacji}
 \end{figure}
 
+\textcolor{red} {TODO} wrzucić screeny z faktycznej aplikacji, napisać co zostało przestawione
+
 \section{Specyfikacja testów}
 
-\textcolor{red}{TODO}
+\subsection{Obsługa błędów}
 
-[standardy obsługi błędów i sytuacji wyjątkowych
+Serwer weryfikuje spójność danych przesyłanych w zapytaniach z modelem danych i resztą informacji w systemie oraz uprawnienia użytkowników do wykonania danej akcji. Jeżeli wykryje jakąś nieprawidłowość, zwraca odpowiedni kod błędu: 400 Bad Request dla niepoprawnych zapytań, 401 Unauthorized dla niezalogowanych użytkowników, 403 Forbidden dla niewystarczających uprawnień, 404 Not Found dla nieistniejących zasobów. Przy wyłączonym backendzie może również wystąpić błąd 502 Bad Gateway.
 
-rodzaje testów, specyfikacja i opis sposobu realizacji poszczególnych rodzajów testów, scenariusze testowe
+\subsection{Testowanie serwera}
 
-miary jakości testów]
+Do backendu zostały napisane testy jednostkowe. Sprawdzają one m.in. poprawność działania klas, reakcje na błędne dane czy brak uprawnień. Testy zostały napisane we frameworku \texttt{unittest}, a sprawdzanie stopnia pokrycia odbywa się poprzez \texttt{coverage.py}. Miary jakości testów:
+\begin{itemize}
+    \item liczba testów: \textcolor{red} {TODO}
+    \item odsetek przechodzących testów:
+    \item pokrycie linii testami:
+    \item pokrycie gałęzi testami:
+\end{itemize}
+
+\textcolor{red} {System jest wciąż rozwijany, co wiąże się z dodawaniem testów i kodu do przetestowania.} 
+
+\subsection{Testy systemowe}
+
+Zgodność systemu z wymaganiami można sprawdzić następującym zestawem testów (część wymagań ma elementy, których ocena jest z natury subiektywna - w tych przypadkach przydatne jest weryfikacja ich spełnienia przez kilka osób):
+\begin{itemize}
+    \item Wymaganie B1 - do oceny na podstawie stopnia realizacji pozostałych wymagań.
+    \item Wymagania U1-U18, S1-S29 - należy zweryfikować, czy w serwisie da się wykonać daną akcję jako użytkownik o danych uprawnieniach. Za scenariusze testowe można przyjąć przypadki użycia zdefiniowane w rozdziale 3.3. Modyfikacja i usuwanie danych dotyczy tworzonych zasobów, z pewnymi wyjątkami (usuwanie wiadomości i ich odbiorców, usuwanie/degradacja siebie jako ostatniego kierownika grupy, usuwanie siebie jako ostatniej osoby z dostępem do pliku).
+    \item Wymaganie U18, część o dodawaniu języków - powinna być dostępna procedura dodawania języków, ponadto należy ocenić jej pracochłonność.
+    \item Wymagania U19, S30 - należy zweryfikować, czy system wspiera replikację bazy danych oraz funkcjonowanie dowolnej liczby kontenerów z Django REST API, do tego zasymulować obciążenie podane w wymaganiu i sprawdzić, czy serwer z wystarczająco dużymi zasobami będzie responsywny.
+    \item Wymagania U20, S34, S35 - korzystając z poszczególnych systemów i przeglądarek, należy otwierać stronę internetową i sprawdzać, czy utracona została jakaś funkcjonalność.
+    \item Wymagania U21, S36 - należy upewnić się, że akcji wymienionych w przypadkach użycia nie da się wykonać jako użytkownik o niższych uprawnieniach niż podane (poprzez aplikację lub API). W przypadku większości danych dostępnych w ramach grupy hierarchia uprawnień jest następująca: kierownik - moderator - członek grupy - użytkownik niebędący członkiem grupy - osoba niezalogowana do serwisu. Ponadto użytkownik nie powinien mieć dostępu do nieadresowanych do siebie plików, wiadomości i zaproszeń oraz modyfikować danych nie swojego konta.
+    \item Wymaganie S31 - do określenia na podstawie tej dokumentacji.
+    \item Wymagania S32, S33 - należy ocenić, jak komfortowe jest korzystanie ze strony internetowej na obu typach urządzeń.
+    \item Wymaganie S37 - należy zweryfikować zgodność systemu z przepisami RODO.
+    \item Wymaganie S38 - należy zweryfikować, czy system wspiera serwowanie aplikacji przez HTTPS.
+    \item Wymaganie S39 - należy ocenić, jak dobrze system jest chroniony przed włamaniami.
+    
+\end{itemize}
 
 \section{Wirtualizacja/konteneryzacja}
 
-System zostanie wdrożony na maszynach wirtualnych zapewnionych przez Azure. Korzystamy z Dockera do tworzenia i uruchamiania kontenerów z komponentami systemu.
+System może być wdrażany na maszynach wirtualnych zapewnionych przez Azure. Korzystamy z Dockera do tworzenia i uruchamiania kontenerów z komponentami systemu.
 
 \section{Bezpieczeństwo}
 
@@ -959,30 +989,87 @@ W celu zapewnienia bezpieczeństwa (przed włamaniami, nieuprawnionym dostępem 
     \item System wdrożony na chmurze Azure funkcjonuje w większości w sieci lokalnej - jedyną maszyną dostępną bezpośrednio z zewnątrz jest ta serwująca aplikację poprzez NGINX.
     \item System wdrożony na chmurze Azure ma skonfigurowanego firewalla - dla zewnętrznych maszyn dostępny jest tylko port SSH i ten, na którym serwowana jest aplikacja. Dalsze połączenia odbywają się poprzez reverse proxy.
     \item Dostęp do maszyn systemu wymaga posiadania kluczy SSH wygenerowanych przy jego wdrożeniu.
-    \item Korzystanie z aplikacji wymaga logowania; odbywa się to poprzez konto Google, w którym można skorzystać z uwierzytelniania wieloskładnikowego.
+    \item Wrażliwe parametry takie jak token API czy hasło do bazy danych są przechowywane w pliku \texttt{.env}.
+    \item Korzystanie z aplikacji wymaga logowania; odbywa się to poprzez konto Google, które jest bezpieczniejsze od implementacji loginu i hasła oraz umożliwia uwierzytelnianie wieloskładnikowe.
+    \item Panel administratora jest zabezpieczony przed atakami CSRF.
+    \item Backend jest napisany w Django, które posiada wbudowane mechanizmy bezpieczeństwa, m.in. ochrona przed SQL injection.
+    \item System korzysta z tokenów JWT o ograniczonym czasie życia.
     \item Zaimplementowany jest system uprawnień - przed udzieleniem dostępu do zasobu sprawdzane jest, czy użytkownik ma prawo wykonać daną akcję.
-    \item Dostęp do aplikacji odbywa się poprzez HTTPS.
-    \item System funkcjonuje zgodnie z przepisami RODO.
-    \item System umożliwia wykonanie zrzutu danych oraz odtworzenie systemu z zadaną kopią danych.
+    \item Dostęp do aplikacji odbywa się poprzez HTTPS/SSL.
+%    \item System funkcjonuje zgodnie z przepisami RODO.
+%    \item System umożliwia wykonanie zrzutu danych oraz odtworzenie systemu z zadaną kopią danych.
 \end{itemize}
 
-\textcolor{red}{TODO} zweryfikować przed piątkiem, ile faktycznie jest
+\textcolor{red}{Wraz z rozwojem aplikacji mogą pojawić się dodatkowe elementy podnoszące poziom bezpieczeństwa.}
 
 \section{Podręcznik użytkownika}
 
-Korzystanie z funkcjonalności systemu jest szeroko opisane poprzez listę przypadków użycia - ten rozdział streszcza przekazane tam informacje.
+\textcolor{red}{W porozumieniu z mentorem grupy: ta sekcja jest do wypełnienia do 20 stycznia.}
 
-Korzystanie z aplikacji wymaga zalogowania się - należy wybrać opcję logowania kontem Google. Przed logowaniem można zmienić język, w którym wyświetlany jest interfejs aplikacji.
+% Korzystanie z funkcjonalności systemu jest szeroko opisane poprzez listę przypadków użycia - ten rozdział streszcza przekazane tam informacje.
 
-Po zalogowaniu pokaże się lista (pod)grup, których jest się członkiem, oraz zaproszeń do kolejnych (jeżeli są). Można przyjmować i odrzucać zaproszenia, przechodzić do grup lub utworzyć nową. Aby otrzymać zaproszenie do czyjejś grupy, trzeba skontaktować się poza aplikacją z kierownikiem tej grupy i podać mu adres e-mail konta, którego użyto przy logowaniu - jest potrzebny do wysyłania zaproszeń.
+% Korzystanie z aplikacji wymaga zalogowania się - należy wybrać opcję logowania kontem Google. Przed logowaniem można zmienić język, w którym wyświetlany jest interfejs aplikacji.
 
-W górnym panelu można wybrać obecną zakładkę z grupami, zakładkę ze wszystkimi otrzymanymi przez użytkownika wiadomościami (można je wyszukiwać, przeglądać i oznaczać jako przeczytane), zakładkę z kalendarzem wydarzeń odbywających się w uczęszczanych grupach (można je przeglądać i przechodzić do wybranych wydarzeń) i zakładkę z ustawieniami (można przeglądać konto, zsynchronizować swój Google Calendar, cofać synchronizację poprzez usunięcie ID i modyfikować listę instrumentów, na których potrafi się grać). Można też zmienić język aplikacji i wylogować się.
+% Po zalogowaniu pokaże się lista (pod)grup, których jest się członkiem, oraz zaproszeń do kolejnych (jeżeli są). Można przyjmować i odrzucać zaproszenia, przechodzić do grup lub utworzyć nową. Aby otrzymać zaproszenie do czyjejś grupy, trzeba skontaktować się poza aplikacją z kierownikiem tej grupy i podać mu adres e-mail konta, którego użyto przy logowaniu - jest potrzebny do wysyłania zaproszeń.
 
-Po przejściu do grupy dostępne są sekcje: z wydarzeniami, z utworami (tutaj można też podpinać utwory pod wydarzenia, dzielić się plikami i podpinać pod nie instrumenty) i do zarządzania grupą (członkowie, ich uprawnienia, wysyłanie i przeglądanie wiadomości). Jako użytkownik można przeglądać wszystkie dane grupy oprócz wiadomości i plików, których nie jest się adresatem. Moderator może dodatkowo wysyłać wiadomości (istnieje dodatkowo opcja wysłania kopii wiadomości na skrzynki pocztowe adresatów). Kierownik może przeglądać, dodawać, edytować i usuwać wszelkie dane grupy, w tym samą grupę. Wyjątkiem są pliki i wiadomości nieudostępnione kierownikowi.
+% W górnym panelu można wybrać obecną zakładkę z grupami, zakładkę ze wszystkimi otrzymanymi przez użytkownika wiadomościami (można je wyszukiwać, przeglądać i oznaczać jako przeczytane), zakładkę z kalendarzem wydarzeń odbywających się w uczęszczanych grupach (można je przeglądać i przechodzić do wybranych wydarzeń) i zakładkę z ustawieniami (można przeglądać konto, zsynchronizować swój Google Calendar, cofać synchronizację poprzez usunięcie ID i modyfikować listę instrumentów, na których potrafi się grać). Można też zmienić język aplikacji i wylogować się.
 
-\textcolor{red}{TODO} zweryfikować przed piątkiem
+% Po przejściu do grupy dostępne są sekcje: z wydarzeniami, z utworami (tutaj można też podpinać utwory pod wydarzenia, dzielić się plikami i podpinać pod nie instrumenty) i do zarządzania grupą (członkowie, ich uprawnienia, wysyłanie i przeglądanie wiadomości). Jako użytkownik można przeglądać wszystkie dane grupy oprócz wiadomości i plików, których nie jest się adresatem. Moderator może dodatkowo wysyłać wiadomości (istnieje dodatkowo opcja wysłania kopii wiadomości na skrzynki pocztowe adresatów). Kierownik może przeglądać, dodawać, edytować i usuwać wszelkie dane grupy, w tym samą grupę. Wyjątkiem są pliki i wiadomości nieudostępnione kierownikowi.
+
+% \textcolor{red}{TODO} % zweryfikować przed piątkiem
 
 \section{Podręcznik administratora}
+
+\textcolor{red}{W porozumieniu z mentorem grupy: do 20 stycznia możemy dodawać funkcjonalność i instrukcje jej użycia, a na ten moment sekcja powinna zawierać podstawową instrukcję uruchomienia systemu.}
+
+\subsection{Czynności wstępne}
+
+Należy sklonować repozytorium: \href{https://gitlab-stud.elka.pw.edu.pl/zgromadzeni/orkestro}{https://gitlab-stud.elka.pw.edu.pl/zgromadzeni/orkestro}
+
+Do lokalnego uruchomienia potrzebny jest Docker, a wdrożenie na chmurę wymaga zainstalowania Azure CLI i zalogowania się tam (na koncie muszą znajdować się środki do opłacania maszyn). 
+
+Potrzebne jest uzyskanie identyfikatora klienta interfejsu API Google i dodanie URI, na których będzie działać system (np. lokalnie: \texttt{http://localhost:5000}, przy wdrożeniu: \texttt{https://orkestro.ddns.net:5000}).
+
+Dodatkowo do udostępnienia aplikacji innym użytkownikom potrzebne jest pozyskanie domeny (np. korzystając z DDNS) oraz certyfikatu dla niej - Google wymaga szyfrowania SSL dla aplikacji dostępnych z zewnątrz. Pliki \texttt{chain.pem}, \texttt{fullchain.pem} i \texttt{privkey.pem} należy umieścić w folderze \texttt{nginx}, a w pliku \texttt{nginx.conf} trzeba zakomentować dyrektywę \texttt{listen 5000;} i odkomentować linie pod nią.
+
+Należy utworzyć w katalogu głównym projektu plik \texttt{.env} z zawartością podaną w \texttt{readme} repozytorium. Znaczenie \texttt{parametrów} (\textbf{pogrubione} wymagają dostosowania, \textit{pochylone} - dodatkowo, przy udostępnianiu aplikacji innym):
+\begin{itemize}
+    \item \texttt{POSTGRES\_DB}, \texttt{POSTGRES\_USER}, \textbf{POSTGRES\textunderscore PASSWORD}, \textbf{DJANGO\textunderscore DB\textunderscore HOST}, \texttt{DJANGO\_DB\_PORT} - nazwa bazy danych, nazwa użytkownika do niej, hasło, adres IP, na którym nasłuchuje baza (jeżeli to localhost, należy wpisać adres typu \texttt{192.168.x.x}), port
+    \item \textit{INCLUDE\textunderscore TEST\textunderscore DATA} - czy dodawać przykładowe dane (najlepiej wyłączyć przy wdrożeniu)
+    \item \textbf{DJANGO\textunderscore KEY} - dowolnie wybrany, tajny klucz do Django
+    \item \textit{DJANGO\textunderscore DEBUG} - czy włączać tryb Django udostępniający dodatkowe informacje do debugowania (wyłączyć przy wdrożeniu)
+    \item \textbf{REACT\textunderscore APP\textunderscore GOOGLE\textunderscore CLIENT\textunderscore ID} - uzyskany identyfikator do API Google
+    \item \texttt{BROWSER} - przy rozwijaniu aplikacji umożliwia wybór przeglądarki, którą otwiera \texttt{npm start}
+    \item \textit{DOMAIN}, \textit{IP} - domena/publiczny adres IP maszyny, który powinno akceptować Django REST API.
+\end{itemize}
+
+\subsection{Podstawowe uruchomienie}
+
+W \texttt{readme} repozytorium znajdują się podstawowe komendy do uruchomienia aplikacji. W tym wariancie baza danych i NGINX znajdują się w kontenerach, a backend i frontend startują bez ich wykorzystania (NGINX przekierowuje na serwer frontendu zamiast serwować pliki statyczne). Umożliwia to szybsze uruchamianie aplikacji z nowo wprowadzonymi zmianami.
+
+Gotową aplikację lepiej jest uruchamiać, korzystając z instrukcji w poniższej sekcji.
+
+\subsection{Uruchomienie lokalnie}
+
+Przy tworzeniu obrazów należy osobno uruchomić kontener z bazą danych (\texttt{sudo docker compose up orkestro-db-master -d}), a gdy będzie ona gotowa do przyjmowania połączeń - osobno uruchomić kontener z backendem (\texttt{sudo docker compose up orkestro-backend -d}). Jest to spowodowane tym, że w ramach konfiguracji Django musi zsynchronizować się z bazą i musi ona być wtedy aktywna.
+
+Od tego momentu można uruchamiać całość komendą \texttt{sudo docker compose up}. Jeżeli frontend będzie zgłaszał problemy z siecią, należy skasować kontenery i ponownie je stworzyć (\texttt{sudo docker compose down}, \texttt{sudo docker compose up}).
+
+\subsection{Wdrożenie na chmurę Azure}
+
+Na ten moment dysponujemy bashowym skryptem umożliwiającym deweloperską wersję wdrożenia systemu na jedną maszynę w chmurze Azure (skopiowanie projektu na chmurę zamiast pobierania z repozytorium - z tego powodu dla oszczędności czasu należy tymczasowo wynieść foldery takie jak \texttt{node\_modules}, \texttt{.git} czy \texttt{.idea}).
+
+Potrzebne skrypty znajdują się w folderze \texttt{deploy}. Do wdrożenia potrzebny jest klucz SSH umieszczony w \texttt{\textasciitilde /.ssh/orkestro.pem[.pub]} - można go wygenerować skryptem \texttt{create\_keys.sh}.
+
+Wdrożenie odbywa się komendą \texttt{./main.sh configs/single\_machine.sh}. Po wykonaniu zostanie podana gotowa do wklejenia komenda do połączenia się z maszyną oraz adres IP, pod którym jest dostępna aplikacja (trzeba podpiąć do niego domenę z certyfikatem, by działało logowanie Google).
+
+\texttt{configs/single\_machine.sh} jest przykładowym plikiem konfiguracyjnym umożliwiającym dostosowanie nazw zasobów, tworzonych podsieci oraz chroniących je firewalli, maszyn wirtualnych i komponentów instalowanych na maszynach.
+
+\subsection{Po zbudowaniu aplikacji}
+
+Aplikacja jest dostępna na porcie 5000. Oprócz głównej strony dostępny jest m.in. panel administratora (\texttt{...:5000/admin/}) oraz API (\texttt{...:5000/api/}).
+
+Na backendowym kontenerze można dodać superużytkownika, którym będzie można logować się do panelu administratora i wykonywać wszystkie operacje na API (\texttt{docker exec -it orkestro-backend python3 manage.py createsuperuser}).
 
 \textcolor{red}{TODO}
 
@@ -1000,7 +1087,7 @@ Po przejściu do grupy dostępne są sekcje: z wydarzeniami, z utworami (tutaj m
 
 \section{Podsumowanie}
 
-\textcolor{red}{TODO}
+\textcolor{red}{W porozumieniu z mentorem grupy: ta sekcja jest do wypełnienia do 20 stycznia.}
 
 [Krytyczna analiza osiągniętych wyników, mocne i słabe strony
 
@@ -1011,6 +1098,8 @@ i. Rysunek (1 slajd) podsumowujący projekt do umieszczenia w repozytorium proje
 ii. Możliwe kierunki rozwoju
 
 \section{Bibliografia}
+
+\textcolor{red}{W porozumieniu z mentorem grupy: ta sekcja jest do wypełnienia do 20 stycznia.}
 
 \textcolor{red}{TODO} [Wykaz materiałów źródłowych, opis zgodny ze standardem sporządzania opisów bibliograficznych – \url{https://bg.pw.edu.pl/index.php/przypisy-i-bibliografia}]
 
