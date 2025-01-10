@@ -803,7 +803,7 @@ Wykorzystywane metody realizacji:
     \item dokumentacja: LaTeX, draw.io, SQL Developer Data Modeler
     \item praca grupowa, komunikacja: Git, GitLab, Messenger, Overleaf
     \item środowiska programowania: PyCharm, gedit, Neovim
-    \item systemy operacyjne: Windows (10, 11), Linux (Ubuntu, Arch Linux)
+    \item systemy operacyjne: Windows (10, 11), Linux (Ubuntu, Arch Linux, Fedora)
     \item uruchomienie, wdrożenie (lokalnie i na chmurę Azure): Docker, Docker Compose, skrypty bashowe
 \end{itemize}
 
@@ -836,7 +836,7 @@ Jako argumenty czy zwracane typy funkcji wykorzystywane są dodatkowe klasy Djan
 
 Klasy dziedziczące po \texttt{Model} pośredniczą w wymianie danych z bazą. Na tak zdefiniowanych klasach Django ORM umożliwia m.in. pobieranie wszystkich lub jednego rekordu, modyfikację danych, dostęp do danych w powiązanych tabelach czy filtrowanie wszystkich rekordów po różnych kryteriach. Każdy model jest powiązany z tabelą w bazie, zdefiniowane są właściwości pól i więzy integralności. Zdefiniowane modele mają wyłączoną możliwość zarządzania cyklem życia tabel.
 
-Klasa User wymagała dodatkowych pól i metod, by realizować operacje związane z autoryzacją użytkowników.
+Klasa User wymagała dodatkowych pól i metod, by realizować operacje związane z autoryzacją użytkowników (m.in. hash hasła wymagany przez Django, ale niewykorzystywany przez nas, ponieważ korzystamy z logowania przez Google).
 
 \begin{figure} [H]
     \centering
@@ -897,8 +897,8 @@ Klasy nieujęte w pozostałych grupach:
 
 Statystyki dotyczące plików projektu:
 \begin{itemize}
-    \item liczba plików:
-    \item linie kodu:
+    \item liczba plików: 167
+    \item linie kodu: 47328 (bez pliku \texttt{package\_lock.json}: 29234, bez pliku \texttt{package\_lock.json} i folderu z dokumentacją: 14519)
     \item liczba testów jednostkowych: 148
 \end{itemize}
 
@@ -999,7 +999,7 @@ W celu zapewnienia bezpieczeństwa (przed włamaniami, nieuprawnionym dostępem 
     \item System wdrożony na chmurze Azure funkcjonuje w większości w sieci lokalnej - jedyną maszyną dostępną bezpośrednio z zewnątrz jest ta serwująca aplikację poprzez NGINX.
     \item System wdrożony na chmurze Azure ma skonfigurowanego firewalla - dla zewnętrznych maszyn dostępny jest tylko port SSH i ten, na którym serwowana jest aplikacja. Dalsze połączenia odbywają się poprzez reverse proxy.
     \item Dostęp do maszyn systemu wymaga posiadania kluczy SSH wygenerowanych przy jego wdrożeniu.
-    \item Wrażliwe parametry takie jak token API czy hasło do bazy danych są przechowywane w pliku \texttt{.env}.
+    \item Wrażliwe parametry takie jak hasło do bazy danych są przechowywane w pliku \texttt{.env}.
     \item Korzystanie z aplikacji wymaga logowania; odbywa się to poprzez konto Google, które jest bezpieczniejsze od implementacji loginu i hasła oraz umożliwia uwierzytelnianie wieloskładnikowe.
     \item Panel administratora jest zabezpieczony przed atakami CSRF.
     \item Backend jest napisany w Django, które posiada wbudowane mechanizmy bezpieczeństwa, m.in. ochrona przed SQL injection.
