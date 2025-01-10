@@ -31,7 +31,7 @@ export default function EventNewPage() {
 
   useEffect(() => {
     fetchUserOrRedirect(navigate);
-  }, []);
+  }, [navigate]);
 
   useEffect(() => {
     const fetchMembers = async () => {

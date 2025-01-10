@@ -1,11 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 
 import { useLanguage } from "../LanguageContext";
 import { axiosInstance as axios } from "../auth";
 import { MessageRecipient, Paged } from "../interfaces";
 import MessageComponent from "./MessageComponent";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import Pagination from "./Pagination";
 
 export default function Messages() {
@@ -16,7 +14,7 @@ export default function Messages() {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
 
-  const fetchMessages = async () => {
+  const fetchMessages = useCallback(async () => {
     setLoading(true);
 
     await axios
@@ -37,21 +35,15 @@ export default function Messages() {
       })
       .catch((error) => console.error("Error fetching invitations:", error));
     setLoading(false);
-  };
+  }, [currentPage, searchQuery]);
 
   useEffect(() => {
     fetchMessages();
-  }, [currentPage]);
+  }, [fetchMessages]);
 
   const handleSearch = () => {
     setCurrentPage(1);
     fetchMessages();
-  };
-
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === "Enter") {
-      handleSearch();
-    }
   };
 
   console.log(messages);
@@ -68,7 +60,6 @@ export default function Messages() {
           onChange={(e) => {
             setSearchQuery(e.target.value);
           }}
-          onKeyDown={handleKeyDown}
           className="flex-1 px-4 py-2 text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder={t("messages.placeholder")}
         />

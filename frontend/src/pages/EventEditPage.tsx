@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useLanguage } from "../LanguageContext";
 import { axiosInstance as axios, fetchUserOrRedirect } from "../auth";
@@ -20,9 +20,9 @@ export default function EventEditPage() {
 
   useEffect(() => {
     fetchUserOrRedirect(navigate);
-  }, []);
+  }, [navigate]);
 
-  const fetchEvent = async () => {
+  const fetchEvent = useCallback(async () => {
     setLoading(true);
     await axios
       .get<Event>(`/api/events/${eventId}/`)
@@ -35,11 +35,11 @@ export default function EventEditPage() {
       })
       .catch((error) => console.error("Error fetching event:", error));
     setLoading(false);
-  };
+  }, [eventId]);
 
   useEffect(() => {
     fetchEvent();
-  }, []);
+  }, [fetchEvent]);
 
   const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target; // The value from the "date" input (YYYY-MM-DD)

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useLanguage } from "../LanguageContext";
 import { Event } from "../interfaces";
 import axios from "axios";
@@ -7,7 +7,6 @@ export default function Calendar() {
   const { t, currentLanguage } = useLanguage();
 
   const currentYear = new Date().getFullYear();
-  const [loading, setLoading] = useState(false);
   const [year, setYear] = useState(currentYear);
   const [month, setMonth] = useState(new Date().getMonth()); // 0 = January, 11 = December
   const [events, setEvents] = useState<Event[]>([]);
@@ -21,21 +20,19 @@ export default function Calendar() {
     daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
   }
 
-  const fetchEvents = async () => {
-    setLoading(true);
-
+  const fetchEvents = useCallback(async () => {
     console.log(year, month);
     await axios
       .get<Event[]>(`/api/events/me/?year=${year}&month=${month + 1}`)
       .then((response) => {
         setEvents(response.data);
       });
-  };
+  }, [year, month]);
 
   useEffect(() => {
     fetchEvents();
     setSelectedDay(null);
-  }, [year, month]);
+  }, [fetchEvents]);
 
   const daysInMonth = new Date(year, month + 1, 0).getDate();
   const firstDayOfWeek = (new Date(year, month, 1).getDay() + 6) % 7; // adjust for Monday as the first day of the week

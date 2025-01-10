@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faTimes,
@@ -27,7 +27,7 @@ export default function Events() {
 
   useEffect(() => {
     fetchUserOrRedirect(navigate);
-  }, []);
+  }, [navigate]);
 
   useEffect(() => {
     const fetchRole = async () => {
@@ -37,9 +37,9 @@ export default function Events() {
     };
 
     fetchRole();
-  }, []);
+  }, [groupId]);
 
-  const fetchEvents = async () => {
+  const fetchEvents = useCallback(async () => {
     setLoading(true);
 
     await axios.get<Paged<Event>>(
@@ -57,21 +57,15 @@ export default function Events() {
       .catch((error) => console.error("Error fetching events:", error));
 
     setLoading(false);
-  };
+  }, [currentPage, groupId, searchQuery]);
 
   useEffect(() => {
     fetchEvents();
-  }, [currentPage]);
+  }, [fetchEvents]);
 
   const handleSearch = () => {
     setCurrentPage(1);
     fetchEvents();
-  };
-
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === "Enter") {
-      handleSearch();
-    }
   };
 
   const handleDelete = async (event_id: number) => {
@@ -95,7 +89,6 @@ export default function Events() {
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          onKeyDown={handleKeyDown}
           placeholder={t("events.placeholder")}
           className="flex-1 px-4 py-2 text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />

@@ -6,12 +6,12 @@ import {
 
 import LoginPage from "./pages/LoginPage";
 import MainLayout from "./layouts/MainLayout";
-import ManageGroup from "./components/ManageGroup";
+// import ManageGroup from "./components/ManageGroup";
 import Messages from "./components/Messages";
 import Calendar from "./components/Calendar";
 import InvitationsAndGroups from "./components/InvitationsAndGroups";
 import Events from "./components/Events";
-import Files from "./components/Files";
+// import Files from "./components/Files";
 import Settings from "./components/Settings";
 import EventEditPage from "./pages/EventEditPage";
 import EventNewPage from "./pages/EventNewPage";
@@ -31,12 +31,12 @@ export default function App() {
           index: true,
           element: <Navigate to="/invitations-and-groups/" replace />,
         },
-        { path: "/manage-group/:groupId", element: <ManageGroup /> },
+        // { path: "/manage-group/:groupId", element: <ManageGroup /> },
         { path: "/messages/", element: <Messages /> },
         { path: "/calendar/", element: <Calendar /> },
         { path: "/invitations-and-groups/", element: <InvitationsAndGroups /> },
         { path: "/events/:groupId", element: <Events /> },
-        { path: "/files/:groupId", element: <Files /> },
+        // { path: "/files/:groupId", element: <Files /> },
         { path: "/settings/", element: <Settings /> },
         { path: "/edit-event/:eventId", element: <EventEditPage /> },
         { path: "/new-event/:groupId", element: <EventNewPage /> },
