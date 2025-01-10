@@ -162,7 +162,7 @@ class EventTrackViewSetTestCase(TestCase):
         for case in test_cases:
             with self.subTest(track=case["event"]):
                 # Prepare the request
-                request = self.factory.get(f"/api/event-tracks/by_event/?event_id={case["event"].event_id}")
+                request = self.factory.get(f"/api/event-tracks/by_event/?event_id={case['event'].event_id}")
                 force_authenticate(request, user=self.manager)
 
                 # Execute the request
