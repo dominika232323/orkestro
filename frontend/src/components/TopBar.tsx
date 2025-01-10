@@ -17,7 +17,7 @@ export default function TopBar() {
 
   useEffect(() => {
     fetchUserOrRedirect(navigate);
-  }, []);
+  }, [navigate]);
 
   const handleLogOut = () => {
     removeTokens();

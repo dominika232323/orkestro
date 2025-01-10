@@ -27,7 +27,7 @@ export default function Settings() {
 
   useEffect(() => {
     fetchUserOrRedirect(navigate, setUser);
-  }, []);
+  }, [navigate]);
 
   useEffect(() => {
     const fetchInstruments = async () => {

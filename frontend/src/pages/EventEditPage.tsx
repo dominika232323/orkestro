@@ -20,7 +20,7 @@ export default function EventEditPage() {
 
   useEffect(() => {
     fetchUserOrRedirect(navigate);
-  }, []);
+  }, [navigate]);
 
   const fetchEvent = async () => {
     setLoading(true);

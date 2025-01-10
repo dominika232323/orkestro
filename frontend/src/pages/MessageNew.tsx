@@ -29,7 +29,7 @@ export default function MessageNew() {
 
   useEffect(() => {
     fetchUserOrRedirect(navigate, setUser);
-  }, []);
+  }, [navigate]);
 
   useEffect(() => {
     setMessage({
@@ -38,7 +38,7 @@ export default function MessageNew() {
       title: "",
       content: "",
     });
-  }, [user]);
+  }, [parsedGroupId, user]);
 
   useEffect(() => {
     const fetchMembers = async () => {

@@ -7,7 +7,6 @@ export default function Calendar() {
   const { t, currentLanguage } = useLanguage();
 
   const currentYear = new Date().getFullYear();
-  const [loading, setLoading] = useState(false);
   const [year, setYear] = useState(currentYear);
   const [month, setMonth] = useState(new Date().getMonth()); // 0 = January, 11 = December
   const [events, setEvents] = useState<Event[]>([]);
@@ -22,8 +21,6 @@ export default function Calendar() {
   }
 
   const fetchEvents = async () => {
-    setLoading(true);
-
     console.log(year, month);
     await axios
       .get<Event[]>(`/api/events/me/?year=${year}&month=${month + 1}`)

@@ -27,7 +27,7 @@ export default function Events() {
 
   useEffect(() => {
     fetchUserOrRedirect(navigate);
-  }, []);
+  }, [navigate]);
 
   useEffect(() => {
     const fetchRole = async () => {
@@ -37,7 +37,7 @@ export default function Events() {
     };
 
     fetchRole();
-  }, []);
+  }, [groupId]);
 
   const fetchEvents = async () => {
     setLoading(true);

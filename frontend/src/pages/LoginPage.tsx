@@ -20,7 +20,7 @@ export default function LoginPage() {
 
   useEffect(() => {
     fetchUserLogin(navigate);
-  }, [justLoggedIn]);
+  }, [navigate, justLoggedIn]);
 
   return (
     <div className="flex flex-col justify-center items-center h-screen bg-gray-100">
