@@ -49,9 +49,9 @@
 
     \Large \textbf{Dokumentacja projektowa PZSP2} \\
     \vspace{0.5cm}
-    WERSJA 3 \\
+    WERSJA 4 \\
     \vspace{0.5cm}
-    16.12.2024 \\
+    10.01.2024 \\
     Semestr 24Z
 
     \vfill
@@ -238,12 +238,12 @@ Aktorzy: kierownik.
 
 \subsubsection{PB3. Zarządzanie grupą lub podgrupą}
 
-Przypadek generalizujący dla PB4, PB6-11.
+Przypadek generalizujący dla PB4, PB7-11.
 
 Aktorzy: kierownik.
 \begin{enumerate}
     \item System weryfikuje tożsamość kierownika.
-    \item Kierownik wybiera grupę (i podgrupę, jeżeli to nią chce zarządzać).
+    \item Kierownik wybiera grupę (lub podgrupę, jeżeli to nią chce zarządzać) oraz sekcję, w której chciałby dokonać zmian.
     \item Kierownik wykonuje akcję dotyczącą (pod)grupy.
 \end{enumerate}
 
@@ -284,7 +284,7 @@ Przypadek specjalizujący PB3.
 Aktorzy: kierownik lub moderator (dalej zwany kierownikiem).
 \begin{enumerate}
     \item Jak w przypadku generalizującym PB3 – kroki 1. i 2.
-    \item Kierownik podaje adresatów (cała (pod)grupa lub lista użytkowników) i treść powiadomienia oraz decyduje, czy wiadomość ma trafić również na skrzynkę e-mailową adresatów.
+    \item Kierownik podaje adresatów (cała (pod)grupa lub lista użytkowników), temat i treść powiadomienia oraz decyduje, czy wiadomość ma trafić również na skrzynkę e-mailową adresatów.
     \item System wysyła powiadomienie (również na skrzynkę pocztową, jeżeli tak zdecydował kierownik).
 \end{enumerate}
 
@@ -295,8 +295,8 @@ Przypadek specjalizujący PB3.
 Aktorzy: kierownik.
 \begin{enumerate}
     \item Jak w przypadku generalizującym PB3 – kroki 1. i 2.
-    \item Kierownik podaje informacje o próbie/koncercie i uczestników wydarzenia (cała (pod)grupa lub lista członków). Decyduje, czy należy wysłać o tym powiadomienie (i czy również mailowo).
-    \item System zapamiętuje nowe dane i (w zależności od ustawień) wysyła uczestnikom powiadomienie (również mailowe).
+    \item Kierownik podaje informacje o próbie/koncercie i uczestników wydarzenia (cała (pod)grupa lub lista członków).
+    \item System zapamiętuje nowe dane.
 \end{enumerate}
 
 \subsubsection{PB8. Dodanie utworu dla grupy lub podgrupy}
@@ -321,7 +321,30 @@ Aktorzy: kierownik.
     \item System zapamiętuje nowe dane.
 \end{enumerate}
 
-\subsubsection{PB10. Przeglądanie konta}
+\subsubsection{PB10. Modyfikacja danych}
+
+Przypadek specjalizujący PB3.
+
+Aktorzy: kierownik.
+\begin{enumerate}
+    \item Jak w przypadku generalizującym PB3 – kroki 1. i 2.
+    \item Kierownik nawiguje do wybranego obiektu - (pod)grupy, próby, koncertu, utworu, uprawnień użytkownika – i zmienia dla niego dane.
+    \item System zapamiętuje wprowadzone zmiany.
+\end{enumerate}
+
+\subsubsection{PB11. Usunięcie obiektu}
+
+Przypadek specjalizujący PB3.
+
+Aktorzy: kierownik.
+\begin{enumerate}
+    \item Jak w przypadku generalizującym PB3 – kroki 1. i 2.
+    \item Kierownik nawiguje do wybranego obiektu - (pod)grupy, próby, koncertu, utworu, uprawnień użytkownika – i wybiera jego usunięcie.
+    \item System prosi o potwierdzenie wykonywanej akcji. Jeżeli zostanie anulowana – koniec scenariusza.
+    \item System usuwa obiekt. Jeżeli usunięto (pod)grupę, usuwa się jej wszystkie powiadomienia, utwory, zaplanowane koncerty i próby. Jeżeli usunięto utwór, usuwa się wszystkie udostępnione do niego pliki.
+\end{enumerate}
+
+\subsubsection{PB12. Przeglądanie konta}
 
 Przypadek generalizujący dla PB13-16.
 
@@ -332,30 +355,9 @@ Aktorzy: użytkownik.
     \item Użytkownik przegląda interesujące go informacje.
 \end{enumerate}
 
-\subsubsection{PB11. Modyfikacja danych}
-
-Przypadek specjalizujący PB3. Korzysta z PB10.
-
-Aktorzy: kierownik.
-\begin{enumerate}
-    \item Kierownik przegląda konto (PB10), by znaleźć obiekt – (pod)grupę, próbę, koncert, utwór, uprawnienia użytkownika – i zmienia dla niego dane.
-    \item System zapamiętuje wprowadzone zmiany.
-\end{enumerate}
-
-\subsubsection{PB12. Usunięcie obiektu}
-
-Przypadek specjalizujący PB3. Korzysta z PB10.
-
-Aktorzy: kierownik.
-\begin{enumerate}
-    \item Kierownik przegląda konto (PB10), by znaleźć obiekt – utwór, koncert, próbę, plik, członkostwo użytkownika, całość (pod)grupy – i go usuwa.
-    \item System prosi o potwierdzenie wykonywanej akcji. Jeżeli zostanie anulowana – koniec scenariusza.
-    \item System usuwa obiekt. Jeżeli usunięto (pod)grupę, usuwa się jej wszystkie powiadomienia, utwory, zaplanowane koncerty i próby. Jeżeli usunięto utwór, usuwa się wszystkie udostępnione do niego pliki.
-\end{enumerate}
-
 \subsubsection{PB13. Przeglądanie kalendarza wydarzeń}
 
-Przypadek specjalizujący PB10.
+Przypadek specjalizujący PB12.
 
 Aktorzy: użytkownik.
 \begin{enumerate}
@@ -365,18 +367,18 @@ Aktorzy: użytkownik.
 
 \subsubsection{PB14. Przeglądanie powiadomień}
 
-Przypadek specjalizujący PB10.
+Przypadek specjalizujący PB12.
 
 Aktorzy: użytkownik.
 \begin{enumerate}
     \item System weryfikuje tożsamość użytkownika.
-    \item Użytkownik wybiera listę powiadomień dla wszystkich lub wybranej grupy i przegląda wiadomości.
+    \item Użytkownik wybiera listę powiadomień dla wszystkich lub wybranej grupy i przegląda wiadomości. Może je również wyszukiwać.
 \end{enumerate}
 
 
 \subsubsection{PB15. Przeglądanie repertuaru grupy}
 
-Przypadek specjalizujący PB10.
+Przypadek specjalizujący PB12.
 
 Aktorzy: użytkownik.
 \begin{enumerate}
@@ -388,13 +390,13 @@ Aktorzy: użytkownik.
 
 \subsubsection{PB16. Przeglądanie planu prób i koncertów grupy}
 
-Przypadek specjalizujący PB10.
+Przypadek specjalizujący PB12.
 
 Aktorzy: użytkownik.
 \begin{enumerate}
     \item System weryfikuje tożsamość użytkownika.
     \item Użytkownik wybiera (pod)grupę, której planem wydarzeń jest zainteresowany.
-    \item Użytkownik przegląda listę wydarzeń. Może je wybierać, by uzyskać na ich temat więcej informacji.
+    \item Użytkownik przegląda listę wydarzeń. Może je wyszukiwać oraz wybierać wydarzenia, by uzyskać na ich temat więcej informacji.
 \end{enumerate}
 
 \subsubsection{PB17. Zmiana ustawień konta}
@@ -450,9 +452,7 @@ Wspiera procedury PB1-18. Korzysta z FU1.
 Aktorzy: użytkownik.
 \begin{enumerate}
     \item Użytkownik loguje się poprzez Google (FU1).
-    \item System nie znajduje użytkownika w bazie danych i przed odesłaniem do głównej części serwisu odsyła go do okna tworzenia konta.
-    \item Użytkownik wprowadza swoje dane.
-    \item System tworzy konto i odsyła do głównej części serwisu.
+    \item System nie znajduje użytkownika w bazie danych, więc tworzy konto, wypełnia pola z danymi osobowymi informacjami uzyskanymi z konta Google oraz odsyła do głównej części serwisu.
 \end{enumerate}
 
 \subsubsection{FU3. Wybór grupy lub podgrupy}
@@ -463,8 +463,8 @@ Aktorzy: użytkownik.
 \begin{enumerate}
     \item Użytkownik loguje się do serwisu (FU1).
     \item System prezentuje okno z grupami i ich podgrupami, których członkiem jest użytkownik.
-    \item Użytkownik wybiera (pod)grupę, którą jest zainteresowany.
-    \item System przenosi użytkownika do panelu wybranej grupy, do zakładki z wydarzeniami.
+    \item Użytkownik wybiera (pod)grupę, którą jest zainteresowany oraz sekcję, w której zamierza wykonać akcję (struktura grupy, wydarzenia, utwory i pliki, dodanie wiadomości)
+    \item System przenosi użytkownika do odpowiedniego panelu wybranej grupy.
 \end{enumerate}
 
 \subsubsection{FU4. Utworzenie grupy}
@@ -477,7 +477,7 @@ Aktorzy: kierownik.
     \item System prezentuje okno z grupami i ich podgrupami, których członkiem jest kierownik.
     \item Kierownik wybiera opcję utworzenia nowej grupy.
     \item System wyświetla formularz z informacjami o grupie.
-    \item Kierownik podaje nazwę grupy, może też podać jej opis i informacje dodatkowe.
+    \item Kierownik podaje nazwę i opis grupy.
     \item System tworzy grupę z kierownikiem jako jej przewodniczącym i jedynym członkiem oraz odsyła do okna z (pod)grupami.
 \end{enumerate}
 
@@ -491,20 +491,19 @@ Aktorzy: kierownik.
     \item System prezentuje okno z grupami i ich podgrupami, których członkiem jest kierownik.
     \item Kierownik wybiera opcję utworzenia nowej podgrupy dla istniejącej (pod)grupy.
     \item System wyświetla formularz z informacjami o podgrupie.
-    \item Kierownik podaje nazwę podgrupy, może też podać jej opis i informacje dodatkowe.
+    \item Kierownik podaje nazwę i opis podgrupy.
     \item System tworzy podgrupę z kierownikiem jako jej przewodniczącym i jedynym członkiem oraz odsyła do okna z (pod)grupami.
 \end{enumerate}
 
 \subsubsection{FU6. Zarządzanie grupą lub podgrupą}
 
-Wspiera procedurę PB3 – Zarządzanie grupą lub podgrupą. Korzysta z FU1 i FU3. Funkcja generalizująca FU7, FU9-12, FU14 i FU15.
+Wspiera procedurę PB3 – Zarządzanie grupą lub podgrupą. Korzysta z FU1 i FU3. Funkcja generalizująca dla FU7 i FU10-14.
 
 Aktorzy: kierownik.
 \begin{enumerate}
     \item Kierownik loguje się do serwisu (FU1) i wybiera (pod)grupę (FU3).
-    \item System wyświetla panel (pod)grupy.
-    \item Kierownik przechodzi do odpowiedniej sekcji w (pod)grupie i wykonuje interesującą go akcję.
-    \item System wykonuje zadaną akcję.
+    \item Kierownik nawiguje do odpowiedniego miejsca w sekcji i wykonuje interesującą go akcję.
+    \item System realizuje zadaną akcję.
 \end{enumerate}
 
 \subsubsection{FU7. Zaproszenie nowego użytkownika do grupy lub podgrupy}
@@ -513,11 +512,11 @@ Wspiera procedurę PB4 – Zaproszenie nowego muzyka do grupy lub podgrupy. Funk
 
 Aktorzy: kierownik.
 \begin{enumerate}
-    \item Jak w funkcji generalizującej FU6 – kroki 1. i 2.
-    \item Kierownik przechodzi do zakładki z informacjami o (pod)grupie i wybiera opcję zaproszenia nowego użytkownika.
+    \item Jak w funkcji generalizującej FU6 – krok 1.
+    \item Kierownik wybiera opcję zaproszenia nowego użytkownika w sekcji z informacjami o (pod)grupie.
     \item System wyświetla formularz do utworzenia zaproszenia.
-    \item Kierownik podaje dane adresata zaproszenia, zaznacza poziom uprawnień, jaki powinien otrzymać i zatwierdza akcję.
-    \item System generuje zaproszenie i odsyła do zakładki z informacjami o (pod)grupie.
+    \item Kierownik podaje adres e-mail adresata zaproszenia, zaznacza poziom uprawnień, jaki powinien otrzymać i zatwierdza akcję.
+    \item System generuje zaproszenie i odsyła do sekcji z informacjami o (pod)grupie.
 \end{enumerate}
 
 \subsubsection{FU8. Odpowiedź użytkownika na zaproszenie do grupy lub podgrupy}
@@ -547,11 +546,10 @@ Wspiera procedurę PB6 – Wysłanie powiadomienia do użytkownika lub ich grupy
 
 Aktorzy: kierownik lub moderator (dalej zwany kierownikiem).
 \begin{enumerate}
-    \item Jak w funkcji generalizującej FU6 – kroki 1. i 2.
-    \item Kierownik przechodzi do zakładki z informacjami o (pod)grupie i wybiera opcję napisania nowej wiadomości.
+    \item Jak w funkcji generalizującej FU6 – krok 1.
     \item System udostępnia formularz do napisania wiadomości.
     \item Kierownik wpisuje treść wiadomości i wybiera, czy wysłać ją również e-mailem i czy wysłać ją do całej (pod)grupy czy wybranych osób (w tym przypadku zaznacza również adresatów spośród członków (pod)grupy).
-    \item System zapisuje powiadomienie do przekazania adresatom (i wysyła im e-mail, jeżeli tak zdecydował kierownik) oraz odsyła do zakładki z informacjami o (pod)grupie.
+    \item System zapisuje powiadomienie do przekazania adresatom (i wysyła im e-mail, jeżeli tak zdecydował kierownik) oraz odsyła do zakładki z odebranymi wiadomościami.
 \end{enumerate}
 
 \subsubsection{FU10. Zaplanowanie próby lub koncertu}
@@ -560,11 +558,11 @@ Wspiera procedurę PB7 – Zaplanowanie próby lub koncertu. Funkcja specjalizuj
 
 Aktorzy: kierownik.
 \begin{enumerate}
-    \item Jak w funkcji generalizującej FU6 – kroki 1. i 2.
-    \item Kierownik wybiera opcję utworzenia nowego koncertu lub próby do istniejącego koncertu.
+    \item Jak w funkcji generalizującej FU6 – krok 1.
+    \item Kierownik wybiera opcję utworzenia nowego koncertu lub próby do istniejącego koncertu w sekcji z wydarzeniami.
     \item System wyświetla formularz do utworzenia wydarzenia.
-    \item Kierownik wpisuje tytuł wydarzenia, opis, czas, miejsce i uczestników (zaznacza opcję zaangażowania całej grupy lub zaznacza wybranych członków (pod)grupy). Wybiera również, czy system powinien wysłać o tym powiadomienie do uczestników (i czy również mailowo).
-    \item System dodaje próbę/koncert i (w zależności od ustawień) wysyła uczestnikom powiadomienie (również mailowe). Odsyła do zakładki z wydarzeniami.
+    \item Kierownik wpisuje tytuł wydarzenia, opis, czas, miejsce i uczestników (cała (pod)grupa lub jej wybrani członkowie).
+    \item System dodaje próbę/koncert i odsyła do sekcji z wydarzeniami.
 \end{enumerate}
 
 \subsubsection{FU11. Dodanie utworu dla grupy lub podgrupy}
@@ -573,10 +571,10 @@ Wspiera procedurę PB8 – Dodanie utworu dla grupy lub podgrupy. Funkcja specja
 
 Aktorzy: kierownik.
 \begin{enumerate}
-    \item Jak w funkcji generalizującej FU6 – kroki 1. i 2.
-    \item Kierownik przechodzi do zakładki z utworami i wybiera opcję dodania nowego utworu.
+    \item Jak w funkcji generalizującej FU6 – krok 1.
+    \item Kierownik wybiera opcję dodania nowego utworu w sekcji z utworami.
     \item System wyświetla formularz do dodania utworu.
-    \item Kierownik wpisuje tytuł i opis utworu. Może zaznaczyć z listy koncerty, z którymi związany jest utwór.
+    \item Kierownik wpisuje tytuł i twórcę utworu. Może zaznaczyć z listy koncerty, z którymi związany jest utwór.
     \item System dodaje utwór i odsyła do zakładki z utworami.
 \end{enumerate}
 
@@ -586,8 +584,8 @@ Wspiera procedurę PB9 – Dodanie pliku dotyczącego utworu. Funkcja specjalizu
 
 Aktorzy: kierownik.
 \begin{enumerate}
-    \item Jak w funkcji generalizującej FU6 – kroki 1. i 2.
-    \item Kierownik przechodzi do zakładki z utworami i wybiera utwór, do którego chciałby dodać plik.
+    \item Jak w funkcji generalizującej FU6 – krok 1.
+    \item W sekcji z utworami kierownik wybiera utwór, do którego chciałby dodać plik.
     \item System wyświetla informacje o utworze i listę plików.
     \item Kierownik wybiera opcję dodania nowego pliku.
     \item System wyświetla formularz do dodania nowego pliku.
@@ -595,9 +593,35 @@ Aktorzy: kierownik.
     \item System dodaje plik i odsyła do informacji o utworze.
 \end{enumerate}
 
-\subsubsection{FU13. Przeglądanie konta}
+\subsubsection{FU13. Modyfikacja danych}
 
-Wspiera procedurę PB10 – Przeglądanie konta. Funkcja generalizująca FU16-20. Korzysta z FU1 i FU3.
+Wspiera procedurę PB10 – Modyfikacja danych. Funkcja specjalizująca FU6.
+
+Aktorzy: kierownik.
+\begin{enumerate}
+    \item Jak w funkcji generalizującej FU6 – krok 1.
+    \item Kierownik nawiguje do wybranego obiektu: próby, koncertu, utworu, pliku, informacji o (pod)grupie, uprawnień członka zespołu. Wybiera opcję edycji danych o zasobie.
+    \item System wyświetla formularz ze starymi danymi o obiekcie.
+    \item Kierownik podaje nowe dane na miejsce starych.
+    \item System aktualizuje informacje o obiekcie i odsyła do miejsca, z którego wybrano opcję edycji.
+\end{enumerate}
+
+\subsubsection{FU14. Usunięcie obiektu}
+
+Wspiera procedurę PB11 – Usunięcie obiektu. Funkcja specjalizująca FU6.
+
+Aktorzy: kierownik.
+\begin{enumerate}
+    \item Jak w funkcji generalizującej FU6 – krok 1.
+    \item Kierownik nawiguje do wybranego obiektu: próby, koncertu, utworu, pliku, członkostwa użytkownika, informacji o (pod)grupie (w przypadku usuwania całej (pod)grupy). Wybiera opcję usunięcia obiektu.
+    \item System prosi o potwierdzenie wykonywanej akcji.
+    \item Kierownik anuluje akcję (koniec scenariusza) lub potwierdza ją.
+    \item System usuwa obiekt. Jeżeli usunięto (pod)grupę, usuwa się jej wszystkie powiadomienia, utwory, zaplanowane koncerty i próby. Jeżeli usunięto utwór, usuwa się wszystkie udostępnione do niego pliki.
+\end{enumerate}
+
+\subsubsection{FU15. Przeglądanie konta}
+
+Wspiera procedurę PB12 – Przeglądanie konta. Funkcja generalizująca FU16-20. Korzysta z FU1 i FU3.
 
 Aktorzy: użytkownik.
 \begin{enumerate}
@@ -606,115 +630,78 @@ Aktorzy: użytkownik.
     \item Użytkownik przegląda interesujące go informacje.
 \end{enumerate}
 
-\subsubsection{FU14. Modyfikacja danych}
-
-Wspiera procedurę PB11 – Modyfikacja danych. Funkcja specjalizująca FU6. Korzysta z FU13.
-
-Aktorzy: kierownik.
-\begin{enumerate}
-    \item Jak w funkcji generalizującej FU6 – kroki 1. i 2.
-    \item Kierownik przegląda konto (FU13), by dotrzeć do wybranego obiektu: próby, koncertu, utworu, pliku, informacji o (pod)grupie, uprawnień członka zespołu. Wybiera opcję edycji danych o zasobie.
-    \item System wyświetla formularz ze starymi danymi o obiekcie.
-    \item Kierownik podaje nowe dane na miejsce starych.
-    \item System aktualizuje informacje o obiekcie i odsyła do miejsca, z którego wybrano opcję edycji.
-\end{enumerate}
-
-\subsubsection{FU15. Usunięcie obiektu}
-
-Wspiera procedurę PB12 – Usunięcie obiektu. Funkcja specjalizująca FU6. Korzysta z FU13.
-
-Aktorzy: kierownik.
-\begin{enumerate}
-    \item Jak w funkcji generalizującej FU6 – kroki 1. i 2.
-    \item Kierownik przegląda konto (FU13), by dotrzeć do wybranego obiektu: próby, koncertu, utworu, pliku, członkostwa użytkownika, informacji o (pod)grupie (w przypadku usuwania całej (pod)grupy). Wybiera opcję usunięcia obiektu.
-    \item System prosi o potwierdzenie wykonywanej akcji.
-    \item Kierownik anuluje akcję (koniec scenariusza) lub potwierdza ją.
-    \item System usuwa obiekt. Jeżeli usunięto (pod)grupę, usuwa się jej wszystkie powiadomienia, utwory, zaplanowane koncerty i próby. Jeżeli usunięto utwór, usuwa się wszystkie udostępnione do niego pliki.
-\end{enumerate}
 
 \subsubsection{FU16. Przeglądanie kalendarza wydarzeń}
 
-Wspiera procedurę PB13 – Przeglądanie kalendarza wydarzeń. Funkcja specjalizująca FU13.
+Wspiera procedurę PB13 – Przeglądanie kalendarza wydarzeń. Funkcja specjalizująca FU15.
 
 Aktorzy: użytkownik.
 \begin{enumerate}
     \item Użytkownik loguje się do serwisu (FU1) i wybiera panel z kalendarzem wydarzeń.
     \item System wyświetla kalendarz z naniesionymi terminami zaplanowanych prób i koncertów w (pod)grupach, do których należy.
-    \item Użytkownik przegląda informacje. Jeżeli zaznaczy jakieś wydarzenie, system przeniesie go do panelu odpowiedniej grupy z otwartymi informacjami o tym wydarzeniu (w tym do listy udostępnionych plików).
+    \item Użytkownik przegląda informacje. Jeżeli wybierze datę i zaznaczy jakieś wydarzenie, system wyświetli informacje o tym wydarzeniu (w tym listę udostępnionych plików).
 \end{enumerate}
 
 \subsubsection{FU17. Przeglądanie powiadomień}
 
-Wspiera procedurę PB14 – Przeglądanie powiadomień. Funkcja specjalizująca FU13.
+Wspiera procedurę PB14 – Przeglądanie powiadomień. Funkcja specjalizująca FU15.
 
 Aktorzy: użytkownik.
 \begin{enumerate}
     \item Użytkownik loguje się do serwisu (FU1) i wybiera panel z listą powiadomień.
-    \item System wyświetla wysłane użytkownikowi powiadomienia z informacją o autorze, (pod)grupie pochodzenia i datą wysłania.
-    \item Użytkownik przegląda informacje. Może zaznaczyć autora lub (pod)grupę pochodzenia, by system przeniósł go do odpowiedniego miejsca w serwisie.
+    \item System wyświetla wysłane użytkownikowi powiadomienia z tytułem, informacją o autorze, (pod)grupie pochodzenia i datą wysłania.
+    \item Użytkownik przegląda informacje. Może przeprowadzić wyszukiwanie wiadomości po tytule, nadawcy i (pod)grupie pochodzenia, podając odpowiednie frazy.
+    \item Jeżeli przeprowadzono wyszukiwanie, system wyświetla przefiltrowane dane.
 \end{enumerate}
 
-\subsubsection{FU18. Przeglądanie powiadomień wysłanych z konkretnej grupy lub podgrupy}
+\subsubsection{FU18. Przeglądanie repertuaru grupy}
 
-Wspiera procedurę PB14 – Przeglądanie powiadomień. Funkcja specjalizująca FU13.
+Wspiera procedurę PB15 – Przeglądanie repertuaru grupy. Funkcja specjalizująca FU15.
 
 Aktorzy: użytkownik.
 \begin{enumerate}
     \item Użytkownik loguje się do serwisu (FU1) i wybiera (pod)grupę (FU3).
-    \item System wyświetla panel (pod)grupy.
-    \item Użytkownik przechodzi do zakładki z informacjami o grupie i wybiera opcję wyświetlenia wiadomości.
-    \item System wyświetla wysłane użytkownikowi powiadomienia z informacją o autorze i datą wysłania.
-    \item Użytkownik przegląda informacje.
+    \item System wyświetla sekcję z utworami.
+    \item Użytkownik przegląda utwory. Może przeprowadzić wyszukiwanie (po nazwie utworu, wykorzystywanego instrumentu lub powiązanego koncertu) lub wybrać utwór.
+    \item Jeżeli przeprowadzono wyszukiwanie, system wyświetla przefiltrowane dane. Jeżeli wybrano utwór, system wyświetla informacje o nim i listę podpiętych pod niego plików, do których użytkownik ma zdefiniowany dostęp.
 \end{enumerate}
 
-\subsubsection{FU19. Przeglądanie repertuaru grupy}
+\subsubsection{FU19. Przeglądanie planu prób i koncertów grupy}
 
-Wspiera procedurę PB15 – Przeglądanie repertuaru grupy. Funkcja specjalizująca FU13.
+Wspiera procedurę PB16 – Przeglądanie planu prób i koncertów grupy. Funkcja specjalizująca FU15.
 
 Aktorzy: użytkownik.
 \begin{enumerate}
     \item Użytkownik loguje się do serwisu (FU1) i wybiera (pod)grupę (FU3).
-    \item System wyświetla panel (pod)grupy.
-    \item Użytkownik przechodzi do zakładki z utworami (pod)grupy. Może wpisać w paski wyszukiwania nazwę utworu, wykorzystywanego instrumentu lub koncertu, na którym ma być wykonywany.
-    \item System wyświetla wszystkie lub przefiltrowane utwory.
-    \item Użytkownik przegląda utwory. Może wybrać utwór, by system wyświetlił informacje o nim i listę podpiętych pod niego plików, do których użytkownik ma zdefiniowany dostęp.
+    \item System wyświetla sekcję z wydarzeniami.
+    \item Użytkownik przegląda listę wydarzeń z naniesionymi informacjami o nich. Może wybierać wydarzenia albo przeprowadzić wyszukiwanie (po nazwie, miejscu i opisie).
+    \item Jeżeli wybrano wydarzenie, system wyświetla listę powiązanych plików, do których użytkownik ma dostęp. Jeżeli przeprowadzono wyszukiwanie, system wyświetla przefiltrowane dane. 
 \end{enumerate}
 
-\subsubsection{FU20. Przeglądanie planu prób i koncertów grupy}
+\subsubsection{FU20. Zmiana ustawień konta}
 
-Wspiera procedurę PB16 – Przeglądanie planu prób i koncertów grupy. Funkcja specjalizująca FU13.
-
-Aktorzy: użytkownik.
-\begin{enumerate}
-    \item Użytkownik loguje się do serwisu (FU1) i wybiera (pod)grupę (FU3).
-    \item System wyświetla panel (pod)grupy z otwartą zakładką z wydarzeniami.
-    \item Użytkownik przegląda listę wydarzeń z naniesionymi terminami, w których się odbywają. Może wybierać wydarzenia, by system wyświetlił więcej informacji na ich temat i listę plików dotyczących wydarzenia, do których ma dostęp.
-\end{enumerate}
-
-\subsubsection{FU21. Zmiana ustawień konta}
-
-Wspiera procedurę PB17 – Zmiana ustawień konta. Korzysta z FU1. Przypadek generalizujący dla FU20.
+Wspiera procedurę PB17 – Zmiana ustawień konta. Korzysta z FU1. Przypadek generalizujący dla FU21.
 
 Aktorzy: użytkownik.
 \begin{enumerate}
     \item Użytkownik loguje się do serwisu (FU1) i wybiera panel z ustawieniami.
     \item System wyświetla możliwe pola do edycji.
-    \item Użytkownik wpisuje nowe dane i zatwierdza zmiany.
+    \item Użytkownik podaje nowe dane i zatwierdza zmiany.
     \item System zapisuje nowe informacje.
 \end{enumerate}
 
-\subsubsection{FU22. Integracja kalendarza wydarzeń z Google Calendar}
+\subsubsection{FU21. Integracja kalendarza wydarzeń z Google Calendar}
 
-Wspiera procedurę PB18 – Integracja kalendarza wydarzeń z Google Calendar. Specjalizuje FU21.
+Wspiera procedurę PB18 – Integracja kalendarza wydarzeń z Google Calendar. Specjalizuje FU20.
 
 Aktorzy: użytkownik.
 \begin{enumerate}
-    \item Jak w funkcji generalizującej FU21 – kroki 1. i 2.
+    \item Jak w funkcji generalizującej FU20 – kroki 1. i 2.
     \item Użytkownik podaje dane do Google Calendar.
     \item System będzie wstawiał terminy nowo tworzonych przez kierownika wydarzeń do kalendarza.
 \end{enumerate}
 
-\subsubsection{FU23. Zmiana języka, w którym wyświetlany jest serwis}
+\subsubsection{FU22. Zmiana języka, w którym wyświetlany jest serwis}
 
 Wspiera procedurę PB19 – Zmiana języka, w którym wyświetlany jest serwis.
 
@@ -770,7 +757,7 @@ Koszt pracy jednej, najtańszej dostępnej maszyny to około 210 zł miesięczni
 
 \begin{figure} [H]
     \centering
-    \includegraphics[width=0.95\linewidth]{images/er3.png}
+    \includegraphics[width=0.95\linewidth]{images/er.png}
     \caption{Model koncepcyjny danych}
 \end{figure}
 
@@ -802,19 +789,122 @@ Wybraliśmy relacyjną bazę danych PostgreSQL, z którą warstwa przetwarzania 
 
 Repozytorium projektu: \href{https://gitlab-stud.elka.pw.edu.pl/zgromadzeni/orkestro}{https://gitlab-stud.elka.pw.edu.pl/zgromadzeni/orkestro}
 
-\textcolor{red}{TODO}
+Dokumentacja odnosi się do stanu projektu z commita 
 
-Obowiązkowo określenie metod realizacji: języki programowania, frameworki, środowisko programowania/ uruchamiania/ wdrażania, środowisko ciągłej integracji]
+\subsection{Metody realizacji}
 
-Obowiązkowo Diagram klas lub model pojęciowy struktury informacyjnej: E-R l
+Wykorzystywane metody realizacji:
+\begin{itemize}
+    \item serwer, load balancer, reverse proxy: NGINX
+    \item technologie frontendowe: aplikacja webowa - React.js, Typescript, Tailwind CSS
+    \item technologie backendowe: REST API - Python, Django, Django REST Framework
+    \item testowanie: unittest, coverage.py
+    \item baza danych: PostgreSQL
+    \item dokumentacja: LaTeX, draw.io, SQL Developer Data Modeler
+    \item praca grupowa, komunikacja: Git, GitLab, Messenger, Overleaf
+    \item środowiska programowania: PyCharm, gedit, Neovim
+    \item systemy operacyjne: Windows (10, 11), Linux (Ubuntu, Arch Linux)
+    \item uruchomienie, wdrożenie (lokalnie i na chmurę Azure): Docker, Docker Compose, skrypty bashowe
+\end{itemize}
 
-Opcjonalnie model struktury systemu (diagram wdrożenia)
+\subsection{Struktura klas}
 
-Opcjonalnie specyfikacja realizacji przypadków użycia: diagramy sekwencji lub współpracy
+W backendzie występuje duża liczba klas, które można podzielić na grupy funkcjonalne - dla lepszej przejrzystości struktura klas zostanie przedstawiona na kilku diagramach dla każdej takiej grupy. Na diagramach pojawią się klasy dostarczone przez Django, ponieważ praca z tym frameworkiem opiera się o pisanie klas pochodnych dostosowujących typowo spotykaną funkcjonalność aplikacji do danego projektu i oferujących dodatkowe funkcje. Wiele z tych klas ma dużą liczbę pól i metod oraz złożony schemat dziedziczenia - dla uproszczenia pokazujemy bezpośrednią nadklasę z własnymi/odziedziczonymi elementami istotnymi dla aplikacji.
 
-Obowiązkowo statystyki: liczba plików, linie kodu, liczba testów jednostkowych
+Jako argumenty czy zwracane typy funkcji wykorzystywane są dodatkowe klasy Django, których struktura nie pojawi się na diagramach:
+\begin{itemize}
+\item request/Request: zapytanie HTTP
+\item Response: odpowiedź HTTP
+\item view/View - wywoływalna klasa przetwarzająca zapytanie
+\item QuerySet - dane z zapytania do bazy danych
+\item BaseAuthentication - klasa przeprowadzająca autoryzację użytkownika
+\item Error - wiadomość o błędzie przy operacji na obiekcie typu Model
+\item CharField, AutoField, ForeignKey, BooleanField, DateTimeField, BinaryField, EmailField, URLField - klasy obsługujące poszczególne typy danych w bazie
+\item ReadOnlyPasswordHashField - klasa przechowująca hasło w formularzach panelu administratora.
+\item BaseManager - klasa pobierająca listy rekordów z bazy danych
+\end{itemize}
+
+"Zbiorczy" diagram klas (poszczególne grupy klas zebrane pod jedną nazwą, zaznaczone związki występują w pewnej formie pomiędzy klasami w grupach):
+
+\begin{figure} [H]
+    \centering
+    \includegraphics[width=0.4\linewidth]{images/general.png}
+    \caption{Ogólny diagram klas}
+\end{figure}
+
+\subsubsection{Model}
+
+Klasy dziedziczące po \texttt{Model} pośredniczą w wymianie danych z bazą. Na tak zdefiniowanych klasach Django ORM umożliwia m.in. pobieranie wszystkich lub jednego rekordu, modyfikację danych, dostęp do danych w powiązanych tabelach czy filtrowanie wszystkich rekordów po różnych kryteriach. Każdy model jest powiązany z tabelą w bazie, zdefiniowane są właściwości pól i więzy integralności. Zdefiniowane modele mają wyłączoną możliwość zarządzania cyklem życia tabel.
+
+Klasa User wymagała dodatkowych pól i metod, by realizować operacje związane z autoryzacją użytkowników.
+
+\begin{figure} [H]
+    \centering
+    \includegraphics[width=0.95\linewidth]{images/models.png}
+    \caption{Struktura klas typu Model}
+\end{figure}
+
+\subsubsection{Serializer}
+
+Klasy dziedziczące po \texttt{ModelSerializer} służą do ładowania i zapisywania danych modeli do formatu JSON. Każdy serializator ma przypisany model, listę jego uwzględnianych pól i listę pól tylko do odczytu. Część klas przekazuje przy odczycie również dane z powiązanych tabel w bazie (poprzez dodatkowe pole), aby uniknąć dodatkowych zapytań do API. Jeżeli powiązany \texttt{ViewSet} umożliwia tworzenie i modyfikację danych modelu, tworzy się dwa serializatory - z wyszczególnionymi polami tylko do odczytu i bez nich.
+
+\begin{figure} [H]
+    \centering
+    \includegraphics[width=0.95\linewidth]{images/serializers.png}
+    \caption{Struktura klas typu Serializer}
+\end{figure}
+
+\subsubsection{Permission}
+
+Klasy dziedziczące po \texttt{BasePermission} służą do weryfikacji, czy użytkownik ma uprawnienia do wykonania danej akcji w \texttt{ViewSet} (wszystkie zawarte w nim klasy muszą na to pozwolić, by zrealizować zapytanie). Uprawnienie może dotyczyć zapytań zbiorowych i konkretnego obiektu.
+
+\begin{figure} [H]
+    \centering
+    \includegraphics[width=0.95\linewidth]{images/permissions.png}
+    \caption{Struktura klas typu Permission}
+\end{figure}
+
+\subsubsection{ViewSet}
+
+Klasy dziedziczące po \texttt{ModelViewSet} zajmują się realizacją zapytań wysyłanych do endpointów - weryfikują uprawnienia użytkownika, przetwarzają dane i wysyłają odpowiedź. Każda niestatyczna metoda z argumentem \texttt{request} odpowiada za pewien endpoint, przy czym niektóre operacje są zablokowane poprzez niewpisanie odpowiedniej metody HTTP do \texttt{http\_method\_names}.
+
+\begin{figure} [H]
+    \centering
+    \includegraphics[width=0.95\linewidth]{images/viewsets.png}
+    \caption{Struktura klas typu ViewSet}
+\end{figure}
+
+\subsubsection{Form, Admin}
+Zdefiniowane klasy modyfikują domyślną funkcjonalność panelu administratora Django - umożliwiają dodanie podrzędnych obiektów podczas przeglądania nadrzędnego, modyfikują zakładkę z danymi użytkownika.
+
+\begin{figure} [H]
+    \centering
+    \includegraphics[width=0.95\linewidth]{images/forms_admin.png}
+    \caption{Struktura klas typu Form/Admin}
+\end{figure}
+
+\subsubsection{Pozostałe}
+
+Klasy nieujęte w pozostałych grupach:
+\begin{itemize}
+    \item \texttt{ApiConfig} - dziedziczy po \texttt{AppConfig}, ustawia niektóre pola w domyślnej konfiguracji aplikacji.
+    \item \texttt{JWTCookieMiddleware} - dziedziczy po \texttt{MiddlewareMixin}, autoryzuje użytkownika przy dostępie do panelu administratora.
+    \item \texttt{JWTCookieAuth} - dziedziczy po \texttt{JWTAuthentication}, autoryzuje użytkownika przy dostępie do API.
+    \item \texttt{GoogleLoginView} - dziedziczy po \texttt{APIView}, (\texttt{View} - uproszczona wersja \texttt{ViewSet}, gdzie większa część kodu jest do samodzielnego napisania); umożliwia logowanie się kontem Google
+\end{itemize}
+
+\subsection{Statystyki}
+
+Statystyki dotyczące plików projektu:
+\begin{itemize}
+    \item liczba plików:
+    \item linie kodu:
+    \item liczba testów jednostkowych: 148
+\end{itemize}
 
 \section{Projekt standardu interfejsu użytkownika}
+
+\subsection{Projekt UX}
 
 User stories:
 \begin{itemize}
@@ -842,29 +932,154 @@ Projekt interfejsu użytkownika:
     \caption{Makiety najważniejszych ekranów aplikacji}
 \end{figure}
 
+\subsection{Styl wykonanej aplikacji}
+
+Szata graficzna i nawigacja po faktycznej aplikacji:
+
+\begin{figure} [H]
+    \centering
+    \includegraphics[width=0.95\linewidth]{images/aplikacja.png}
+    \caption{Ekrany zrealizowanej aplikacji}
+\end{figure}
+
+Główne zmiany, które zaszły w interakcjach z aplikacją względem wstępnego projektu:
+\begin{itemize}
+    \item wybór sekcji po wybraniu grupy zmieniono na jej natychmiastowy wybór wraz z grupą
+    \item dodano możliwość wyszukiwania kolenych typów danych: wiadomości, wydarzeń, członków grupy
+    \item przeniesiono wysyłanie i odbieranie wiadomości wewnątrz grupy - wysyłanie jest dostępne natychmiast w panelu z grupami, a przeglądanie - w zbiorczym panelu wiadomości, przy użyciu wyszukiwania
+    \item informacje o użytkowniku są w większości pobierane z konta Google - modyfikować można Google Calendar i listę instrumentów
+\end{itemize}
+
+\textcolor{red} {W porozumieniu z mentorem grupy: do 20 stycznia możemy rozwijać aplikację, co może wiązać się z dodatkowymi zmianami.}
+
 \section{Specyfikacja testów}
 
-\textcolor{red}{TODO}
+\subsection{Obsługa błędów}
 
-[standardy obsługi błędów i sytuacji wyjątkowych
+Serwer weryfikuje spójność danych przesyłanych w zapytaniach z modelem danych i resztą informacji w systemie oraz uprawnienia użytkowników do wykonania danej akcji. Jeżeli wykryje jakąś nieprawidłowość, zwraca odpowiedni kod błędu: 400 Bad Request dla niepoprawnych zapytań, 401 Unauthorized dla niezalogowanych użytkowników, 403 Forbidden dla niewystarczających uprawnień, 404 Not Found dla nieistniejących zasobów. Przy wyłączonym backendzie może również wystąpić błąd 502 Bad Gateway.
 
-rodzaje testów, specyfikacja i opis sposobu realizacji poszczególnych rodzajów testów, scenariusze testowe
+\subsection{Testowanie serwera}
 
-miary jakości testów]
+Do backendu zostały napisane testy jednostkowe. Sprawdzają one m.in. poprawność działania klas, reakcje na błędne dane czy brak uprawnień. Testy zostały napisane we frameworku \texttt{unittest}, a sprawdzanie stopnia pokrycia odbywa się poprzez \texttt{coverage.py}. Miary jakości testów:
+\begin{itemize}
+    \item liczba testów: 148
+    \item odsetek przechodzących testów: 100\%
+    \item pokrycie linii testami: 96\%
+    \item pokrycie gałęzi testami: 94\%
+\end{itemize}
+
+\textcolor{red} {System jest wciąż rozwijany, co wiąże się z dodawaniem testów i kodu do przetestowania.} 
+
+\subsection{Testy systemowe}
+
+Zgodność systemu z wymaganiami można sprawdzić następującym zestawem testów (część wymagań ma elementy, których ocena jest z natury subiektywna - w tych przypadkach przydatne jest weryfikacja ich spełnienia przez kilka osób):
+\begin{itemize}
+    \item Wymaganie B1 - do oceny na podstawie stopnia realizacji pozostałych wymagań.
+    \item Wymagania U1-U18, S1-S29 - należy zweryfikować, czy w serwisie da się wykonać daną akcję jako użytkownik o danych uprawnieniach. Za scenariusze testowe można przyjąć przypadki użycia zdefiniowane w rozdziale 3.3. Modyfikacja i usuwanie danych dotyczy tworzonych zasobów, z pewnymi wyjątkami (usuwanie wiadomości i ich odbiorców, usuwanie/degradacja siebie jako ostatniego kierownika grupy, usuwanie siebie jako ostatniej osoby z dostępem do pliku).
+    \item Wymaganie U18, część o dodawaniu języków - powinna być dostępna procedura dodawania języków, ponadto należy ocenić jej pracochłonność.
+    \item Wymagania U19, S30 - należy zweryfikować, czy system wspiera replikację bazy danych oraz funkcjonowanie dowolnej liczby kontenerów z Django REST API, do tego zasymulować obciążenie podane w wymaganiu i sprawdzić, czy serwer z wystarczająco dużymi zasobami będzie responsywny.
+    \item Wymagania U20, S34, S35 - korzystając z poszczególnych systemów i przeglądarek, należy otwierać stronę internetową i sprawdzać, czy utracona została jakaś funkcjonalność.
+    \item Wymagania U21, S36 - należy upewnić się, że akcji wymienionych w przypadkach użycia nie da się wykonać jako użytkownik o niższych uprawnieniach niż podane (poprzez aplikację lub API). W przypadku większości danych dostępnych w ramach grupy hierarchia uprawnień jest następująca: kierownik - moderator - członek grupy - użytkownik niebędący członkiem grupy - osoba niezalogowana do serwisu. Ponadto użytkownik nie powinien mieć dostępu do nieadresowanych do siebie plików, wiadomości i zaproszeń oraz modyfikować danych nie swojego konta.
+    \item Wymaganie S31 - do określenia na podstawie tej dokumentacji.
+    \item Wymagania S32, S33 - należy ocenić, jak komfortowe jest korzystanie ze strony internetowej na obu typach urządzeń.
+    \item Wymaganie S37 - należy zweryfikować zgodność systemu z przepisami RODO.
+    \item Wymaganie S38 - należy zweryfikować, czy system wspiera serwowanie aplikacji przez HTTPS.
+    \item Wymaganie S39 - należy ocenić, jak dobrze system jest chroniony przed włamaniami.
+    
+\end{itemize}
 
 \section{Wirtualizacja/konteneryzacja}
 
-System zostanie wdrożony na maszynach wirtualnych zapewnionych przez Azure. Korzystamy z Dockera do tworzenia i uruchamiania kontenerów z komponentami systemu.
+System może być wdrażany na maszynach wirtualnych zapewnionych przez Azure. Korzystamy z Dockera do tworzenia i uruchamiania kontenerów z komponentami systemu.
 
 \section{Bezpieczeństwo}
 
-\textcolor{red}{TODO}
+W celu zapewnienia bezpieczeństwa (przed włamaniami, nieuprawnionym dostępem do danych, utratą danych, ...) system jest wyposażony w następujące zabezpieczenia:
+\begin{itemize}
+    \item System wdrożony na chmurze Azure funkcjonuje w większości w sieci lokalnej - jedyną maszyną dostępną bezpośrednio z zewnątrz jest ta serwująca aplikację poprzez NGINX.
+    \item System wdrożony na chmurze Azure ma skonfigurowanego firewalla - dla zewnętrznych maszyn dostępny jest tylko port SSH i ten, na którym serwowana jest aplikacja. Dalsze połączenia odbywają się poprzez reverse proxy.
+    \item Dostęp do maszyn systemu wymaga posiadania kluczy SSH wygenerowanych przy jego wdrożeniu.
+    \item Wrażliwe parametry takie jak token API czy hasło do bazy danych są przechowywane w pliku \texttt{.env}.
+    \item Korzystanie z aplikacji wymaga logowania; odbywa się to poprzez konto Google, które jest bezpieczniejsze od implementacji loginu i hasła oraz umożliwia uwierzytelnianie wieloskładnikowe.
+    \item Panel administratora jest zabezpieczony przed atakami CSRF.
+    \item Backend jest napisany w Django, które posiada wbudowane mechanizmy bezpieczeństwa, m.in. ochrona przed SQL injection.
+    \item System korzysta z tokenów JWT o ograniczonym czasie życia.
+    \item Zaimplementowany jest system uprawnień - przed udzieleniem dostępu do zasobu sprawdzane jest, czy użytkownik ma prawo wykonać daną akcję.
+    \item Dostęp do aplikacji odbywa się poprzez HTTPS/SSL.
+%    \item System funkcjonuje zgodnie z przepisami RODO.
+%    \item System umożliwia wykonanie zrzutu danych oraz odtworzenie systemu z zadaną kopią danych.
+\end{itemize}
+
+\textcolor{red}{Wraz z rozwojem aplikacji mogą pojawić się dodatkowe elementy podnoszące poziom bezpieczeństwa.}
 
 \section{Podręcznik użytkownika}
 
-\textcolor{red}{TODO} [instrukcja użycia funkcjonalności systemu]
+\textcolor{red}{W porozumieniu z mentorem grupy: ta sekcja jest do wypełnienia do 20 stycznia.}
+
+% Korzystanie z funkcjonalności systemu jest szeroko opisane poprzez listę przypadków użycia - ten rozdział streszcza przekazane tam informacje.
+
+% Korzystanie z aplikacji wymaga zalogowania się - należy wybrać opcję logowania kontem Google. Przed logowaniem można zmienić język, w którym wyświetlany jest interfejs aplikacji.
+
+% Po zalogowaniu pokaże się lista (pod)grup, których jest się członkiem, oraz zaproszeń do kolejnych (jeżeli są). Można przyjmować i odrzucać zaproszenia, przechodzić do grup lub utworzyć nową. Aby otrzymać zaproszenie do czyjejś grupy, trzeba skontaktować się poza aplikacją z kierownikiem tej grupy i podać mu adres e-mail konta, którego użyto przy logowaniu - jest potrzebny do wysyłania zaproszeń.
+
+% W górnym panelu można wybrać obecną zakładkę z grupami, zakładkę ze wszystkimi otrzymanymi przez użytkownika wiadomościami (można je wyszukiwać, przeglądać i oznaczać jako przeczytane), zakładkę z kalendarzem wydarzeń odbywających się w uczęszczanych grupach (można je przeglądać i przechodzić do wybranych wydarzeń) i zakładkę z ustawieniami (można przeglądać konto, zsynchronizować swój Google Calendar, cofać synchronizację poprzez usunięcie ID i modyfikować listę instrumentów, na których potrafi się grać). Można też zmienić język aplikacji i wylogować się.
+
+% Po przejściu do grupy dostępne są sekcje: z wydarzeniami, z utworami (tutaj można też podpinać utwory pod wydarzenia, dzielić się plikami i podpinać pod nie instrumenty) i do zarządzania grupą (członkowie, ich uprawnienia, wysyłanie i przeglądanie wiadomości). Jako użytkownik można przeglądać wszystkie dane grupy oprócz wiadomości i plików, których nie jest się adresatem. Moderator może dodatkowo wysyłać wiadomości (istnieje dodatkowo opcja wysłania kopii wiadomości na skrzynki pocztowe adresatów). Kierownik może przeglądać, dodawać, edytować i usuwać wszelkie dane grupy, w tym samą grupę. Wyjątkiem są pliki i wiadomości nieudostępnione kierownikowi.
+
+% \textcolor{red}{TODO} % zweryfikować przed piątkiem
 
 \section{Podręcznik administratora}
+
+\textcolor{red}{W porozumieniu z mentorem grupy: do 20 stycznia możemy dodawać funkcjonalność i instrukcje jej użycia, a na ten moment sekcja powinna zawierać podstawową instrukcję uruchomienia systemu.}
+
+\subsection{Czynności wstępne}
+
+Należy sklonować repozytorium: \href{https://gitlab-stud.elka.pw.edu.pl/zgromadzeni/orkestro}{https://gitlab-stud.elka.pw.edu.pl/zgromadzeni/orkestro}
+
+Do lokalnego uruchomienia potrzebny jest Docker, a wdrożenie na chmurę wymaga zainstalowania Azure CLI i zalogowania się tam (na koncie muszą znajdować się środki do opłacania maszyn). 
+
+Potrzebne jest uzyskanie identyfikatora klienta interfejsu API Google (\href{https://console.developers.google.com/}{https://console.developers.google.com/}) i dodanie URI, na których będzie działać system (np. lokalnie: \texttt{http://localhost:5000}, przy wdrożeniu: \texttt{https://orkestro.ddns.net:5000}).
+
+Dodatkowo do udostępnienia aplikacji innym użytkownikom potrzebne jest pozyskanie domeny (np. korzystając z DDNS) oraz certyfikatu dla niej - Google wymaga szyfrowania SSL dla aplikacji dostępnych z zewnątrz. Pliki \texttt{chain.pem}, \texttt{fullchain.pem} i \texttt{privkey.pem} należy umieścić w folderze \texttt{nginx}, a w pliku \texttt{nginx.conf} trzeba zakomentować dyrektywę \texttt{listen 5000;} i odkomentować linie pod nią.
+
+Należy utworzyć w katalogu głównym projektu plik \texttt{.env} z zawartością podaną w \texttt{readme} repozytorium. Znaczenie \texttt{parametrów} (\textbf{pogrubione} wymagają dostosowania, \textit{pochylone} - dodatkowo, przy udostępnianiu aplikacji innym):
+\begin{itemize}
+    \item \texttt{POSTGRES\_DB}, \texttt{POSTGRES\_USER}, \textbf{POSTGRES\textunderscore PASSWORD}, \textbf{DJANGO\textunderscore DB\textunderscore HOST}, \texttt{DJANGO\_DB\_PORT} - nazwa bazy danych, nazwa użytkownika do niej, hasło, adres IP, na którym nasłuchuje baza (jeżeli to localhost, należy wpisać adres typu \texttt{192.168.x.x}), port
+    \item \textit{INCLUDE\textunderscore TEST\textunderscore DATA} - czy dodawać przykładowe dane (najlepiej wyłączyć przy wdrożeniu)
+    \item \textbf{DJANGO\textunderscore KEY} - dowolnie wybrany, tajny klucz do Django
+    \item \textit{DJANGO\textunderscore DEBUG} - czy włączać tryb Django udostępniający dodatkowe informacje do debugowania (wyłączyć przy wdrożeniu)
+    \item \textbf{REACT\textunderscore APP\textunderscore GOOGLE\textunderscore CLIENT\textunderscore ID} - uzyskany identyfikator do API Google
+    \item \texttt{BROWSER} - przy rozwijaniu aplikacji umożliwia wybór przeglądarki, którą otwiera \texttt{npm start}
+    \item \textit{DOMAIN}, \textit{IP} - domena/publiczny adres IP maszyny, który powinno akceptować Django REST API.
+\end{itemize}
+
+\subsection{Podstawowe uruchomienie}
+
+W \texttt{readme} repozytorium znajdują się podstawowe komendy do uruchomienia aplikacji. W tym wariancie baza danych i NGINX znajdują się w kontenerach, a backend i frontend startują bez ich wykorzystania (NGINX przekierowuje na serwer frontendu zamiast serwować pliki statyczne). Umożliwia to szybsze uruchamianie aplikacji z nowo wprowadzonymi zmianami.
+
+Gotową aplikację lepiej jest uruchamiać, korzystając z instrukcji w poniższej sekcji.
+
+\subsection{Uruchomienie lokalnie}
+
+Przy tworzeniu obrazów należy osobno uruchomić kontener z bazą danych (\texttt{sudo docker compose up orkestro-db-master -d}), a gdy będzie ona gotowa do przyjmowania połączeń - osobno uruchomić kontener z backendem (\texttt{sudo docker compose up orkestro-backend -d}). Jest to spowodowane tym, że w ramach konfiguracji Django musi zsynchronizować się z bazą i musi ona być wtedy aktywna.
+
+Od tego momentu można uruchamiać całość komendą \texttt{sudo docker compose up}. Jeżeli frontend będzie zgłaszał problemy z siecią, należy skasować kontenery i ponownie je stworzyć (\texttt{sudo docker compose down}, \texttt{sudo docker compose up}).
+
+\subsection{Wdrożenie na chmurę Azure}
+
+Na ten moment dysponujemy bashowym skryptem umożliwiającym deweloperską wersję wdrożenia systemu na jedną maszynę w chmurze Azure (skopiowanie projektu na chmurę zamiast pobierania z repozytorium - z tego powodu dla oszczędności czasu należy tymczasowo wynieść foldery takie jak \texttt{node\_modules}, \texttt{.git} czy \texttt{.idea}).
+
+Potrzebne skrypty znajdują się w folderze \texttt{deploy}. Do wdrożenia potrzebny jest klucz SSH umieszczony w \texttt{\textasciitilde /.ssh/orkestro.pem[.pub]} - można go wygenerować skryptem \texttt{create\_keys.sh}.
+
+Wdrożenie odbywa się komendą \texttt{./main.sh configs/single\_machine.sh}. Po wykonaniu zostanie podana gotowa do wklejenia komenda do połączenia się z maszyną oraz adres IP, pod którym jest dostępna aplikacja (trzeba podpiąć do niego domenę z certyfikatem, by działało logowanie Google).
+
+\texttt{configs/single\_machine.sh} jest przykładowym plikiem konfiguracyjnym umożliwiającym dostosowanie nazw zasobów, tworzonych podsieci oraz chroniących je firewalli, maszyn wirtualnych i komponentów instalowanych na maszynach.
+
+\subsection{Po zbudowaniu aplikacji}
+
+Aplikacja jest dostępna na porcie 5000. Oprócz głównej strony dostępny jest m.in. panel administratora (\texttt{...:5000/admin/}) oraz API (\texttt{...:5000/api/}).
+
+Na backendowym kontenerze można dodać superużytkownika, którym będzie można logować się do panelu administratora i wykonywać wszystkie operacje na API (\texttt{docker exec -it orkestro-backend python3 manage.py createsuperuser}).
 
 \textcolor{red}{TODO}
 
@@ -882,13 +1097,19 @@ System zostanie wdrożony na maszynach wirtualnych zapewnionych przez Azure. Kor
 
 \section{Podsumowanie}
 
-\textcolor{red}{TODO}
+\textcolor{red}{W porozumieniu z mentorem grupy: ta sekcja jest do wypełnienia do 20 stycznia.}
 
 [Krytyczna analiza osiągniętych wyników, mocne i słabe strony
 
 Możliwe kierunki rozwoju]
 
+l. Podsumowanie – omówienie wyników pracy, zrealizowanego zakresu, jak zarządzano jakością?
+i. Rysunek (1 slajd) podsumowujący projekt do umieszczenia w repozytorium projektów PZSP2
+ii. Możliwe kierunki rozwoju
+
 \section{Bibliografia}
+
+\textcolor{red}{W porozumieniu z mentorem grupy: ta sekcja jest do wypełnienia do 20 stycznia.}
 
 \textcolor{red}{TODO} [Wykaz materiałów źródłowych, opis zgodny ze standardem sporządzania opisów bibliograficznych – \url{https://bg.pw.edu.pl/index.php/przypisy-i-bibliografia}]
 
