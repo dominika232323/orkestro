@@ -2,7 +2,6 @@ from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenRefreshView
 
-from .views.debug_views import hello_protected, hello_world
 from .views.event_attendee_view_set import EventAttendeeViewSet
 from .views.event_track_view_set import EventTrackViewSet
 from .views.event_view_set import EventViewSet
@@ -42,6 +41,4 @@ urlpatterns = [
     path("", include(router.urls)),
     path("google-login/", GoogleLoginView.as_view(), name="google_login"),
     path("token-refresh/", TokenRefreshView.as_view(), name="token_refresh"),
-    path("hello-world/", hello_world, name="hello_world"),
-    path("hello-protected/", hello_protected, name="hello_protected"),
 ]

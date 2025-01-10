@@ -5,7 +5,6 @@ import {
 } from "react-router-dom";
 
 import LoginPage from "./pages/LoginPage";
-import TestPage from "./pages/TestPage";
 import MainLayout from "./layouts/MainLayout";
 import ManageGroup from "./components/ManageGroup";
 import Messages from "./components/Messages";
@@ -43,10 +42,6 @@ export default function App() {
         { path: "/new-event/:groupId", element: <EventNewPage /> },
         { path: "/new-message/:groupId", element: <MessageNew /> },
       ],
-    },
-    {
-      path: "/test/",
-      element: <TestPage />,
     },
   ]);
 
