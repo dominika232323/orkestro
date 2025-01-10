@@ -238,12 +238,12 @@ Aktorzy: kierownik.
 
 \subsubsection{PB3. Zarządzanie grupą lub podgrupą}
 
-Przypadek generalizujący dla PB4, PB6-11.
+Przypadek generalizujący dla PB4, PB7-11.
 
 Aktorzy: kierownik.
 \begin{enumerate}
     \item System weryfikuje tożsamość kierownika.
-    \item Kierownik wybiera grupę (i podgrupę, jeżeli to nią chce zarządzać).
+    \item Kierownik wybiera grupę (lub podgrupę, jeżeli to nią chce zarządzać) oraz sekcję, w której chciałby dokonać zmian.
     \item Kierownik wykonuje akcję dotyczącą (pod)grupy.
 \end{enumerate}
 
@@ -284,7 +284,7 @@ Przypadek specjalizujący PB3.
 Aktorzy: kierownik lub moderator (dalej zwany kierownikiem).
 \begin{enumerate}
     \item Jak w przypadku generalizującym PB3 – kroki 1. i 2.
-    \item Kierownik podaje adresatów (cała (pod)grupa lub lista użytkowników) i treść powiadomienia oraz decyduje, czy wiadomość ma trafić również na skrzynkę e-mailową adresatów.
+    \item Kierownik podaje adresatów (cała (pod)grupa lub lista użytkowników), temat i treść powiadomienia oraz decyduje, czy wiadomość ma trafić również na skrzynkę e-mailową adresatów.
     \item System wysyła powiadomienie (również na skrzynkę pocztową, jeżeli tak zdecydował kierownik).
 \end{enumerate}
 
@@ -295,8 +295,8 @@ Przypadek specjalizujący PB3.
 Aktorzy: kierownik.
 \begin{enumerate}
     \item Jak w przypadku generalizującym PB3 – kroki 1. i 2.
-    \item Kierownik podaje informacje o próbie/koncercie i uczestników wydarzenia (cała (pod)grupa lub lista członków). Decyduje, czy należy wysłać o tym powiadomienie (i czy również mailowo).
-    \item System zapamiętuje nowe dane i (w zależności od ustawień) wysyła uczestnikom powiadomienie (również mailowe).
+    \item Kierownik podaje informacje o próbie/koncercie i uczestników wydarzenia (cała (pod)grupa lub lista członków).
+    \item System zapamiętuje nowe dane.
 \end{enumerate}
 
 \subsubsection{PB8. Dodanie utworu dla grupy lub podgrupy}
@@ -321,7 +321,30 @@ Aktorzy: kierownik.
     \item System zapamiętuje nowe dane.
 \end{enumerate}
 
-\subsubsection{PB10. Przeglądanie konta}
+\subsubsection{PB10. Modyfikacja danych}
+
+Przypadek specjalizujący PB3.
+
+Aktorzy: kierownik.
+\begin{enumerate}
+    \item Jak w przypadku generalizującym PB3 – kroki 1. i 2.
+    \item Kierownik nawiguje do wybranego obiektu - (pod)grupy, próby, koncertu, utworu, uprawnień użytkownika – i zmienia dla niego dane.
+    \item System zapamiętuje wprowadzone zmiany.
+\end{enumerate}
+
+\subsubsection{PB11. Usunięcie obiektu}
+
+Przypadek specjalizujący PB3.
+
+Aktorzy: kierownik.
+\begin{enumerate}
+    \item Jak w przypadku generalizującym PB3 – kroki 1. i 2.
+    \item Kierownik nawiguje do wybranego obiektu - (pod)grupy, próby, koncertu, utworu, uprawnień użytkownika – i go usuwa.
+    \item System prosi o potwierdzenie wykonywanej akcji. Jeżeli zostanie anulowana – koniec scenariusza.
+    \item System usuwa obiekt. Jeżeli usunięto (pod)grupę, usuwa się jej wszystkie powiadomienia, utwory, zaplanowane koncerty i próby. Jeżeli usunięto utwór, usuwa się wszystkie udostępnione do niego pliki.
+\end{enumerate}
+
+\subsubsection{PB12. Przeglądanie konta}
 
 Przypadek generalizujący dla PB13-16.
 
@@ -332,30 +355,9 @@ Aktorzy: użytkownik.
     \item Użytkownik przegląda interesujące go informacje.
 \end{enumerate}
 
-\subsubsection{PB11. Modyfikacja danych}
-
-Przypadek specjalizujący PB3. Korzysta z PB10.
-
-Aktorzy: kierownik.
-\begin{enumerate}
-    \item Kierownik przegląda konto (PB10), by znaleźć obiekt – (pod)grupę, próbę, koncert, utwór, uprawnienia użytkownika – i zmienia dla niego dane.
-    \item System zapamiętuje wprowadzone zmiany.
-\end{enumerate}
-
-\subsubsection{PB12. Usunięcie obiektu}
-
-Przypadek specjalizujący PB3. Korzysta z PB10.
-
-Aktorzy: kierownik.
-\begin{enumerate}
-    \item Kierownik przegląda konto (PB10), by znaleźć obiekt – utwór, koncert, próbę, plik, członkostwo użytkownika, całość (pod)grupy – i go usuwa.
-    \item System prosi o potwierdzenie wykonywanej akcji. Jeżeli zostanie anulowana – koniec scenariusza.
-    \item System usuwa obiekt. Jeżeli usunięto (pod)grupę, usuwa się jej wszystkie powiadomienia, utwory, zaplanowane koncerty i próby. Jeżeli usunięto utwór, usuwa się wszystkie udostępnione do niego pliki.
-\end{enumerate}
-
 \subsubsection{PB13. Przeglądanie kalendarza wydarzeń}
 
-Przypadek specjalizujący PB10.
+Przypadek specjalizujący PB12.
 
 Aktorzy: użytkownik.
 \begin{enumerate}
@@ -365,7 +367,7 @@ Aktorzy: użytkownik.
 
 \subsubsection{PB14. Przeglądanie powiadomień}
 
-Przypadek specjalizujący PB10.
+Przypadek specjalizujący PB12.
 
 Aktorzy: użytkownik.
 \begin{enumerate}
@@ -376,7 +378,7 @@ Aktorzy: użytkownik.
 
 \subsubsection{PB15. Przeglądanie repertuaru grupy}
 
-Przypadek specjalizujący PB10.
+Przypadek specjalizujący PB12.
 
 Aktorzy: użytkownik.
 \begin{enumerate}
@@ -388,7 +390,7 @@ Aktorzy: użytkownik.
 
 \subsubsection{PB16. Przeglądanie planu prób i koncertów grupy}
 
-Przypadek specjalizujący PB10.
+Przypadek specjalizujący PB12.
 
 Aktorzy: użytkownik.
 \begin{enumerate}
@@ -450,9 +452,7 @@ Wspiera procedury PB1-18. Korzysta z FU1.
 Aktorzy: użytkownik.
 \begin{enumerate}
     \item Użytkownik loguje się poprzez Google (FU1).
-    \item System nie znajduje użytkownika w bazie danych i przed odesłaniem do głównej części serwisu odsyła go do okna tworzenia konta.
-    \item Użytkownik wprowadza swoje dane.
-    \item System tworzy konto i odsyła do głównej części serwisu.
+    \item System nie znajduje użytkownika w bazie danych, więc tworzy konto, wypełnia pola z danymi osobowymi informacjami uzyskanymi z konta Google oraz odsyła do głównej części serwisu.
 \end{enumerate}
 
 \subsubsection{FU3. Wybór grupy lub podgrupy}
@@ -463,8 +463,8 @@ Aktorzy: użytkownik.
 \begin{enumerate}
     \item Użytkownik loguje się do serwisu (FU1).
     \item System prezentuje okno z grupami i ich podgrupami, których członkiem jest użytkownik.
-    \item Użytkownik wybiera (pod)grupę, którą jest zainteresowany.
-    \item System przenosi użytkownika do panelu wybranej grupy, do zakładki z wydarzeniami.
+    \item Użytkownik wybiera (pod)grupę, którą jest zainteresowany oraz sekcję, w której zamierza wykonać akcję (struktura grupy, wydarzenia, utwory i pliki, dodanie wiadomości)
+    \item System przenosi użytkownika do odpowiedniego panelu wybranej grupy.
 \end{enumerate}
 
 \subsubsection{FU4. Utworzenie grupy}
@@ -477,7 +477,7 @@ Aktorzy: kierownik.
     \item System prezentuje okno z grupami i ich podgrupami, których członkiem jest kierownik.
     \item Kierownik wybiera opcję utworzenia nowej grupy.
     \item System wyświetla formularz z informacjami o grupie.
-    \item Kierownik podaje nazwę grupy, może też podać jej opis i informacje dodatkowe.
+    \item Kierownik podaje nazwę i opis grupy.
     \item System tworzy grupę z kierownikiem jako jej przewodniczącym i jedynym członkiem oraz odsyła do okna z (pod)grupami.
 \end{enumerate}
 
@@ -491,20 +491,19 @@ Aktorzy: kierownik.
     \item System prezentuje okno z grupami i ich podgrupami, których członkiem jest kierownik.
     \item Kierownik wybiera opcję utworzenia nowej podgrupy dla istniejącej (pod)grupy.
     \item System wyświetla formularz z informacjami o podgrupie.
-    \item Kierownik podaje nazwę podgrupy, może też podać jej opis i informacje dodatkowe.
+    \item Kierownik podaje nazwę i opis podgrupy.
     \item System tworzy podgrupę z kierownikiem jako jej przewodniczącym i jedynym członkiem oraz odsyła do okna z (pod)grupami.
 \end{enumerate}
 
 \subsubsection{FU6. Zarządzanie grupą lub podgrupą}
 
-Wspiera procedurę PB3 – Zarządzanie grupą lub podgrupą. Korzysta z FU1 i FU3. Funkcja generalizująca FU7, FU9-12, FU14 i FU15.
+Wspiera procedurę PB3 – Zarządzanie grupą lub podgrupą. Korzysta z FU1 i FU3. Funkcja generalizująca dla FU7 i FU10-14.
 
 Aktorzy: kierownik.
 \begin{enumerate}
     \item Kierownik loguje się do serwisu (FU1) i wybiera (pod)grupę (FU3).
-    \item System wyświetla panel (pod)grupy.
-    \item Kierownik przechodzi do odpowiedniej sekcji w (pod)grupie i wykonuje interesującą go akcję.
-    \item System wykonuje zadaną akcję.
+    \item Kierownik nawiguje do odpowiedniego miejsca w sekcji i wykonuje interesującą go akcję.
+    \item System realizuje zadaną akcję.
 \end{enumerate}
 
 \subsubsection{FU7. Zaproszenie nowego użytkownika do grupy lub podgrupy}
@@ -513,11 +512,11 @@ Wspiera procedurę PB4 – Zaproszenie nowego muzyka do grupy lub podgrupy. Funk
 
 Aktorzy: kierownik.
 \begin{enumerate}
-    \item Jak w funkcji generalizującej FU6 – kroki 1. i 2.
-    \item Kierownik przechodzi do zakładki z informacjami o (pod)grupie i wybiera opcję zaproszenia nowego użytkownika.
+    \item Jak w funkcji generalizującej FU6 – krok 1.
+    \item Kierownik wybiera opcję zaproszenia nowego użytkownika w sekcji z informacjami o (pod)grupie.
     \item System wyświetla formularz do utworzenia zaproszenia.
-    \item Kierownik podaje dane adresata zaproszenia, zaznacza poziom uprawnień, jaki powinien otrzymać i zatwierdza akcję.
-    \item System generuje zaproszenie i odsyła do zakładki z informacjami o (pod)grupie.
+    \item Kierownik podaje adres e-mail adresata zaproszenia, zaznacza poziom uprawnień, jaki powinien otrzymać i zatwierdza akcję.
+    \item System generuje zaproszenie i odsyła do sekcji z informacjami o (pod)grupie.
 \end{enumerate}
 
 \subsubsection{FU8. Odpowiedź użytkownika na zaproszenie do grupy lub podgrupy}
@@ -547,11 +546,10 @@ Wspiera procedurę PB6 – Wysłanie powiadomienia do użytkownika lub ich grupy
 
 Aktorzy: kierownik lub moderator (dalej zwany kierownikiem).
 \begin{enumerate}
-    \item Jak w funkcji generalizującej FU6 – kroki 1. i 2.
-    \item Kierownik przechodzi do zakładki z informacjami o (pod)grupie i wybiera opcję napisania nowej wiadomości.
+    \item Jak w funkcji generalizującej FU6 – krok 1.
     \item System udostępnia formularz do napisania wiadomości.
     \item Kierownik wpisuje treść wiadomości i wybiera, czy wysłać ją również e-mailem i czy wysłać ją do całej (pod)grupy czy wybranych osób (w tym przypadku zaznacza również adresatów spośród członków (pod)grupy).
-    \item System zapisuje powiadomienie do przekazania adresatom (i wysyła im e-mail, jeżeli tak zdecydował kierownik) oraz odsyła do zakładki z informacjami o (pod)grupie.
+    \item System zapisuje powiadomienie do przekazania adresatom (i wysyła im e-mail, jeżeli tak zdecydował kierownik) oraz odsyła do zakładki z odebranymi wiadomościami.
 \end{enumerate}
 
 \subsubsection{FU10. Zaplanowanie próby lub koncertu}
@@ -560,11 +558,11 @@ Wspiera procedurę PB7 – Zaplanowanie próby lub koncertu. Funkcja specjalizuj
 
 Aktorzy: kierownik.
 \begin{enumerate}
-    \item Jak w funkcji generalizującej FU6 – kroki 1. i 2.
-    \item Kierownik wybiera opcję utworzenia nowego koncertu lub próby do istniejącego koncertu.
+    \item Jak w funkcji generalizującej FU6 – krok 1.
+    \item Kierownik wybiera opcję utworzenia nowego koncertu lub próby do istniejącego koncertu w sekcji z wydarzeniami.
     \item System wyświetla formularz do utworzenia wydarzenia.
-    \item Kierownik wpisuje tytuł wydarzenia, opis, czas, miejsce i uczestników (zaznacza opcję zaangażowania całej grupy lub zaznacza wybranych członków (pod)grupy). Wybiera również, czy system powinien wysłać o tym powiadomienie do uczestników (i czy również mailowo).
-    \item System dodaje próbę/koncert i (w zależności od ustawień) wysyła uczestnikom powiadomienie (również mailowe). Odsyła do zakładki z wydarzeniami.
+    \item Kierownik wpisuje tytuł wydarzenia, opis, czas, miejsce i uczestników (zaznacza opcję zaangażowania całej grupy lub zaznacza wybranych członków (pod)grupy).
+    \item System dodaje próbę/koncert i odsyła do sekcji z wydarzeniami.
 \end{enumerate}
 
 \subsubsection{FU11. Dodanie utworu dla grupy lub podgrupy}
@@ -573,10 +571,10 @@ Wspiera procedurę PB8 – Dodanie utworu dla grupy lub podgrupy. Funkcja specja
 
 Aktorzy: kierownik.
 \begin{enumerate}
-    \item Jak w funkcji generalizującej FU6 – kroki 1. i 2.
-    \item Kierownik przechodzi do zakładki z utworami i wybiera opcję dodania nowego utworu.
+    \item Jak w funkcji generalizującej FU6 – krok 1.
+    \item Kierownik wybiera opcję dodania nowego utworu w sekcji z utworami.
     \item System wyświetla formularz do dodania utworu.
-    \item Kierownik wpisuje tytuł i opis utworu. Może zaznaczyć z listy koncerty, z którymi związany jest utwór.
+    \item Kierownik wpisuje tytuł i twórcę utworu. Może zaznaczyć z listy koncerty, z którymi związany jest utwór.
     \item System dodaje utwór i odsyła do zakładki z utworami.
 \end{enumerate}
 
@@ -586,8 +584,8 @@ Wspiera procedurę PB9 – Dodanie pliku dotyczącego utworu. Funkcja specjalizu
 
 Aktorzy: kierownik.
 \begin{enumerate}
-    \item Jak w funkcji generalizującej FU6 – kroki 1. i 2.
-    \item Kierownik przechodzi do zakładki z utworami i wybiera utwór, do którego chciałby dodać plik.
+    \item Jak w funkcji generalizującej FU6 – krok 1.
+    \item W sekcji z utworami kierownik wybiera utwór, do którego chciałby dodać plik.
     \item System wyświetla informacje o utworze i listę plików.
     \item Kierownik wybiera opcję dodania nowego pliku.
     \item System wyświetla formularz do dodania nowego pliku.
@@ -595,9 +593,35 @@ Aktorzy: kierownik.
     \item System dodaje plik i odsyła do informacji o utworze.
 \end{enumerate}
 
-\subsubsection{FU13. Przeglądanie konta}
+\subsubsection{FU13. Modyfikacja danych}
 
-Wspiera procedurę PB10 – Przeglądanie konta. Funkcja generalizująca FU16-20. Korzysta z FU1 i FU3.
+Wspiera procedurę PB10 – Modyfikacja danych. Funkcja specjalizująca FU6.
+
+Aktorzy: kierownik.
+\begin{enumerate}
+    \item Jak w funkcji generalizującej FU6 – krok 1.
+    \item Kierownik nawiguje do wybranego obiektu: próby, koncertu, utworu, pliku, informacji o (pod)grupie, uprawnień członka zespołu. Wybiera opcję edycji danych o zasobie.
+    \item System wyświetla formularz ze starymi danymi o obiekcie.
+    \item Kierownik podaje nowe dane na miejsce starych.
+    \item System aktualizuje informacje o obiekcie i odsyła do miejsca, z którego wybrano opcję edycji.
+\end{enumerate}
+
+\subsubsection{FU14. Usunięcie obiektu}
+
+Wspiera procedurę PB11 – Usunięcie obiektu. Funkcja specjalizująca FU6.
+
+Aktorzy: kierownik.
+\begin{enumerate}
+    \item Jak w funkcji generalizującej FU6 – krok 1.
+    \item Kierownik nawiguje do wybranego obiektu: próby, koncertu, utworu, pliku, członkostwa użytkownika, informacji o (pod)grupie (w przypadku usuwania całej (pod)grupy). Wybiera opcję usunięcia obiektu.
+    \item System prosi o potwierdzenie wykonywanej akcji.
+    \item Kierownik anuluje akcję (koniec scenariusza) lub potwierdza ją.
+    \item System usuwa obiekt. Jeżeli usunięto (pod)grupę, usuwa się jej wszystkie powiadomienia, utwory, zaplanowane koncerty i próby. Jeżeli usunięto utwór, usuwa się wszystkie udostępnione do niego pliki.
+\end{enumerate}
+
+\subsubsection{FU15. Przeglądanie konta}
+
+Wspiera procedurę PB12 – Przeglądanie konta. Funkcja generalizująca FU16-20. Korzysta z FU1 i FU3.
 
 Aktorzy: użytkownik.
 \begin{enumerate}
@@ -606,115 +630,78 @@ Aktorzy: użytkownik.
     \item Użytkownik przegląda interesujące go informacje.
 \end{enumerate}
 
-\subsubsection{FU14. Modyfikacja danych}
-
-Wspiera procedurę PB11 – Modyfikacja danych. Funkcja specjalizująca FU6. Korzysta z FU13.
-
-Aktorzy: kierownik.
-\begin{enumerate}
-    \item Jak w funkcji generalizującej FU6 – kroki 1. i 2.
-    \item Kierownik przegląda konto (FU13), by dotrzeć do wybranego obiektu: próby, koncertu, utworu, pliku, informacji o (pod)grupie, uprawnień członka zespołu. Wybiera opcję edycji danych o zasobie.
-    \item System wyświetla formularz ze starymi danymi o obiekcie.
-    \item Kierownik podaje nowe dane na miejsce starych.
-    \item System aktualizuje informacje o obiekcie i odsyła do miejsca, z którego wybrano opcję edycji.
-\end{enumerate}
-
-\subsubsection{FU15. Usunięcie obiektu}
-
-Wspiera procedurę PB12 – Usunięcie obiektu. Funkcja specjalizująca FU6. Korzysta z FU13.
-
-Aktorzy: kierownik.
-\begin{enumerate}
-    \item Jak w funkcji generalizującej FU6 – kroki 1. i 2.
-    \item Kierownik przegląda konto (FU13), by dotrzeć do wybranego obiektu: próby, koncertu, utworu, pliku, członkostwa użytkownika, informacji o (pod)grupie (w przypadku usuwania całej (pod)grupy). Wybiera opcję usunięcia obiektu.
-    \item System prosi o potwierdzenie wykonywanej akcji.
-    \item Kierownik anuluje akcję (koniec scenariusza) lub potwierdza ją.
-    \item System usuwa obiekt. Jeżeli usunięto (pod)grupę, usuwa się jej wszystkie powiadomienia, utwory, zaplanowane koncerty i próby. Jeżeli usunięto utwór, usuwa się wszystkie udostępnione do niego pliki.
-\end{enumerate}
 
 \subsubsection{FU16. Przeglądanie kalendarza wydarzeń}
 
-Wspiera procedurę PB13 – Przeglądanie kalendarza wydarzeń. Funkcja specjalizująca FU13.
+Wspiera procedurę PB13 – Przeglądanie kalendarza wydarzeń. Funkcja specjalizująca FU15.
 
 Aktorzy: użytkownik.
 \begin{enumerate}
     \item Użytkownik loguje się do serwisu (FU1) i wybiera panel z kalendarzem wydarzeń.
     \item System wyświetla kalendarz z naniesionymi terminami zaplanowanych prób i koncertów w (pod)grupach, do których należy.
-    \item Użytkownik przegląda informacje. Jeżeli zaznaczy jakieś wydarzenie, system przeniesie go do panelu odpowiedniej grupy z otwartymi informacjami o tym wydarzeniu (w tym do listy udostępnionych plików).
+    \item Użytkownik przegląda informacje. Jeżeli wybierze datę i zaznaczy jakieś wydarzenie, system wyświetli informacje o tym wydarzeniu (w tym listę udostępnionych plików).
 \end{enumerate}
 
 \subsubsection{FU17. Przeglądanie powiadomień}
 
-Wspiera procedurę PB14 – Przeglądanie powiadomień. Funkcja specjalizująca FU13.
+Wspiera procedurę PB14 – Przeglądanie powiadomień. Funkcja specjalizująca FU15.
 
 Aktorzy: użytkownik.
 \begin{enumerate}
     \item Użytkownik loguje się do serwisu (FU1) i wybiera panel z listą powiadomień.
-    \item System wyświetla wysłane użytkownikowi powiadomienia z informacją o autorze, (pod)grupie pochodzenia i datą wysłania.
-    \item Użytkownik przegląda informacje. Może zaznaczyć autora lub (pod)grupę pochodzenia, by system przeniósł go do odpowiedniego miejsca w serwisie.
+    \item System wyświetla wysłane użytkownikowi powiadomienia z tytułem, informacją o autorze, (pod)grupie pochodzenia i datą wysłania.
+    \item Użytkownik przegląda informacje. Może przeprowadzić wyszukiwanie wiadomości po tytule, nadawcy i (pod)grupie pochodzenia, podając odpowiednie frazy.
+    \item Jeżeli przeprowadzono wyszukiwanie, system wyświetla przefiltrowane dane.
 \end{enumerate}
 
-\subsubsection{FU18. Przeglądanie powiadomień wysłanych z konkretnej grupy lub podgrupy}
+\subsubsection{FU18. Przeglądanie repertuaru grupy}
 
-Wspiera procedurę PB14 – Przeglądanie powiadomień. Funkcja specjalizująca FU13.
+Wspiera procedurę PB15 – Przeglądanie repertuaru grupy. Funkcja specjalizująca FU15.
 
 Aktorzy: użytkownik.
 \begin{enumerate}
     \item Użytkownik loguje się do serwisu (FU1) i wybiera (pod)grupę (FU3).
-    \item System wyświetla panel (pod)grupy.
-    \item Użytkownik przechodzi do zakładki z informacjami o grupie i wybiera opcję wyświetlenia wiadomości.
-    \item System wyświetla wysłane użytkownikowi powiadomienia z informacją o autorze i datą wysłania.
-    \item Użytkownik przegląda informacje.
+    \item System wyświetla sekcję z utworami.
+    \item Użytkownik przegląda utwory. Może przeprowadzić wyszukiwanie (po nazwie utworu, wykorzystywanego instrumentu lub powiązanego koncertu) lub wybrać utwór.
+    \item Jeżeli przeprowadzono wyszukiwanie, system wyświetla przefiltrowane dane. Jeżeli wybrano utwór, system wyświetla informacje o nim i listę podpiętych pod niego plików, do których użytkownik ma zdefiniowany dostęp.
 \end{enumerate}
 
-\subsubsection{FU19. Przeglądanie repertuaru grupy}
+\subsubsection{FU19. Przeglądanie planu prób i koncertów grupy}
 
-Wspiera procedurę PB15 – Przeglądanie repertuaru grupy. Funkcja specjalizująca FU13.
+Wspiera procedurę PB16 – Przeglądanie planu prób i koncertów grupy. Funkcja specjalizująca FU15.
 
 Aktorzy: użytkownik.
 \begin{enumerate}
     \item Użytkownik loguje się do serwisu (FU1) i wybiera (pod)grupę (FU3).
-    \item System wyświetla panel (pod)grupy.
-    \item Użytkownik przechodzi do zakładki z utworami (pod)grupy. Może wpisać w paski wyszukiwania nazwę utworu, wykorzystywanego instrumentu lub koncertu, na którym ma być wykonywany.
-    \item System wyświetla wszystkie lub przefiltrowane utwory.
-    \item Użytkownik przegląda utwory. Może wybrać utwór, by system wyświetlił informacje o nim i listę podpiętych pod niego plików, do których użytkownik ma zdefiniowany dostęp.
+    \item System wyświetla sekcję z wydarzeniami.
+    \item Użytkownik przegląda listę wydarzeń z naniesionymi informacjami o nich. Może wybierać wydarzenia albo przeprowadzić wyszukiwanie (po nazwie, miejscu i opisie).
+    \item Jeżeli wybrano wydarzenie, system wyświetla listę powiązanych plików, do których użytkownik ma dostęp. Jeżeli przeprowadzono wyszukiwanie, system wyświetla przefiltrowane dane. 
 \end{enumerate}
 
-\subsubsection{FU20. Przeglądanie planu prób i koncertów grupy}
+\subsubsection{FU20. Zmiana ustawień konta}
 
-Wspiera procedurę PB16 – Przeglądanie planu prób i koncertów grupy. Funkcja specjalizująca FU13.
-
-Aktorzy: użytkownik.
-\begin{enumerate}
-    \item Użytkownik loguje się do serwisu (FU1) i wybiera (pod)grupę (FU3).
-    \item System wyświetla panel (pod)grupy z otwartą zakładką z wydarzeniami.
-    \item Użytkownik przegląda listę wydarzeń z naniesionymi terminami, w których się odbywają. Może wybierać wydarzenia, by system wyświetlił więcej informacji na ich temat i listę plików dotyczących wydarzenia, do których ma dostęp.
-\end{enumerate}
-
-\subsubsection{FU21. Zmiana ustawień konta}
-
-Wspiera procedurę PB17 – Zmiana ustawień konta. Korzysta z FU1. Przypadek generalizujący dla FU20.
+Wspiera procedurę PB17 – Zmiana ustawień konta. Korzysta z FU1. Przypadek generalizujący dla FU21.
 
 Aktorzy: użytkownik.
 \begin{enumerate}
     \item Użytkownik loguje się do serwisu (FU1) i wybiera panel z ustawieniami.
     \item System wyświetla możliwe pola do edycji.
-    \item Użytkownik wpisuje nowe dane i zatwierdza zmiany.
+    \item Użytkownik podaje nowe dane i zatwierdza zmiany.
     \item System zapisuje nowe informacje.
 \end{enumerate}
 
-\subsubsection{FU22. Integracja kalendarza wydarzeń z Google Calendar}
+\subsubsection{FU21. Integracja kalendarza wydarzeń z Google Calendar}
 
-Wspiera procedurę PB18 – Integracja kalendarza wydarzeń z Google Calendar. Specjalizuje FU21.
+Wspiera procedurę PB18 – Integracja kalendarza wydarzeń z Google Calendar. Specjalizuje FU20.
 
 Aktorzy: użytkownik.
 \begin{enumerate}
-    \item Jak w funkcji generalizującej FU21 – kroki 1. i 2.
+    \item Jak w funkcji generalizującej FU20 – kroki 1. i 2.
     \item Użytkownik podaje dane do Google Calendar.
     \item System będzie wstawiał terminy nowo tworzonych przez kierownika wydarzeń do kalendarza.
 \end{enumerate}
 
-\subsubsection{FU23. Zmiana języka, w którym wyświetlany jest serwis}
+\subsubsection{FU22. Zmiana języka, w którym wyświetlany jest serwis}
 
 Wspiera procedurę PB19 – Zmiana języka, w którym wyświetlany jest serwis.
 
@@ -803,8 +790,6 @@ Wybraliśmy relacyjną bazę danych PostgreSQL, z którą warstwa przetwarzania 
 Repozytorium projektu: \href{https://gitlab-stud.elka.pw.edu.pl/zgromadzeni/orkestro}{https://gitlab-stud.elka.pw.edu.pl/zgromadzeni/orkestro}
 
 \subsection{Metody realizacji}
-
-\textcolor{red}{TODO} Obowiązkowo określenie metod realizacji: języki programowania, frameworki, środowisko programowania/ uruchamiania/ wdrażania, środowisko ciągłej integracji]
 
 Wykorzystywane metody realizacji:
 \begin{itemize}
@@ -914,6 +899,8 @@ Obowiązkowo statystyki: liczba plików, linie kodu, liczba testów jednostkowyc
 
 \section{Projekt standardu interfejsu użytkownika}
 
+\subsection{Projekt UX}
+
 User stories:
 \begin{itemize}
 	\item Jako kierownik chcę tworzyć (pod)grupy użytkowników, aby nimi zarządzać.
@@ -940,7 +927,25 @@ Projekt interfejsu użytkownika:
     \caption{Makiety najważniejszych ekranów aplikacji}
 \end{figure}
 
-\textcolor{red} {TODO} wrzucić screeny z faktycznej aplikacji, napisać co zostało przestawione
+\subsection{Styl wykonanej aplikacji}
+
+Szata graficzna i nawigacja po faktycznej aplikacji:
+
+\begin{figure} [H]
+    \centering
+    \includegraphics[width=0.95\linewidth]{images/aplikacja.png}
+    \caption{Ekrany zrealizowanej aplikacji}
+\end{figure}
+
+Główne zmiany, które zaszły w interakcjach z aplikacją względem wstępnego projektu:
+\begin{itemize}
+    \item wybór sekcji po wybraniu grupy zmieniono na jej natychmiastowy wybór wraz z grupą
+    \item dodano możliwość wyszukiwania kolenych typów danych: wiadomości, wydarzeń, członków grupy
+    \item przeniesiono wysyłanie i odbieranie wiadomości wewnątrz grupy - wysyłanie jest dostępne natychmiast w panelu z grupami, a przeglądanie - w zbiorczym panelu wiadomości, przy użyciu wyszukiwania
+    \item informacje o użytkowniku są w większości pobierane z konta Google - modyfikować można Google Calendar i listę instrumentów
+\end{itemize}
+
+\textcolor{red} {Aplikacja jest wciąż rozwijana, co może wiązać się z dodatkowymi zmianami.}
 
 \section{Specyfikacja testów}
 
@@ -1028,7 +1033,7 @@ Należy sklonować repozytorium: \href{https://gitlab-stud.elka.pw.edu.pl/zgroma
 
 Do lokalnego uruchomienia potrzebny jest Docker, a wdrożenie na chmurę wymaga zainstalowania Azure CLI i zalogowania się tam (na koncie muszą znajdować się środki do opłacania maszyn). 
 
-Potrzebne jest uzyskanie identyfikatora klienta interfejsu API Google i dodanie URI, na których będzie działać system (np. lokalnie: \texttt{http://localhost:5000}, przy wdrożeniu: \texttt{https://orkestro.ddns.net:5000}).
+Potrzebne jest uzyskanie identyfikatora klienta interfejsu API Google (\href{https://console.developers.google.com/}{https://console.developers.google.com/}) i dodanie URI, na których będzie działać system (np. lokalnie: \texttt{http://localhost:5000}, przy wdrożeniu: \texttt{https://orkestro.ddns.net:5000}).
 
 Dodatkowo do udostępnienia aplikacji innym użytkownikom potrzebne jest pozyskanie domeny (np. korzystając z DDNS) oraz certyfikatu dla niej - Google wymaga szyfrowania SSL dla aplikacji dostępnych z zewnątrz. Pliki \texttt{chain.pem}, \texttt{fullchain.pem} i \texttt{privkey.pem} należy umieścić w folderze \texttt{nginx}, a w pliku \texttt{nginx.conf} trzeba zakomentować dyrektywę \texttt{listen 5000;} i odkomentować linie pod nią.
 
