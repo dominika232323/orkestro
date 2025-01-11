@@ -287,6 +287,12 @@ export default function TrackEditPage() {
               >
                 {t("edit-event.confirm")}
               </button>
+              <button
+                onClick={() => setShowAddFiles(false)}
+                className="ml-1 bg-red-500 text-white p-2 rounded-lg hover:bg-red-600"
+              >
+                {t("edit-track.back")}
+              </button>
             </div>
           </div>
         )}
