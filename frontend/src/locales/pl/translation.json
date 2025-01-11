@@ -159,7 +159,8 @@
   "track-details": {
     "fetching": "Pobieranie...",
     "artist": "Autor",
-    "edit": "Edytuj"
+    "edit": "Edytuj",
+    "download": "Pobierz"
   },
   "edit-track": {
     "title": "Edytuj utwór",

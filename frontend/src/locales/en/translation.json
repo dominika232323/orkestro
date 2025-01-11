@@ -158,7 +158,8 @@
   "track-details": {
     "fetching": "Fetching...",
     "artist": "Artist",
-    "edit": "Edit"
+    "edit": "Edit",
+    "download": "Download"
   },
   "edit-track": {
     "title": "Edit track",

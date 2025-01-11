@@ -25,6 +25,28 @@ export default function TrackDetailsPage() {
     fetchFiles();
   }, [currentPage]);
 
+  const handleDownload = async (file_id: number, file_name: string) => {
+    try {
+      const response = await axios.get(`/api/files/${file_id}/download/`, {
+        responseType: "blob",
+      });
+
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", file_name); // Set the file name
+      document.body.appendChild(link);
+      link.click();
+
+      // Clean up
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Error downloading the file:", error);
+    }
+  };
+
   const fetchTrack = async () => {
     await axios
       .get<OrkestroTrack>(`/api/tracks/${trackId}/`)
@@ -74,6 +96,12 @@ export default function TrackDetailsPage() {
                 className="flex justify-between items-center"
               >
                 <span>{file.name}</span>
+                <button
+                  className="hover:underline"
+                  onClick={() => handleDownload(file.file_id, file.name)}
+                >
+                  {t("track-details.download")}
+                </button>
               </li>
             ))
           ) : (
