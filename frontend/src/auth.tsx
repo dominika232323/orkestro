@@ -2,7 +2,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
 
-import { User } from "./interfaces";
+import { OrkestroUser } from "./interfaces";
 
 const ACCESS_TOKEN_NAME = "access_token";
 const REFRESH_TOKEN_NAME = "refresh_token";
@@ -120,7 +120,7 @@ export const fetchUserLogin = async (navigate: Function) => {
 
   if (access_token || refresh_token) {
     await axiosInstance
-      .get<User>("/api/users/me/")
+      .get<OrkestroUser>("/api/users/me/")
       .then((response) => {
         console.log("Logged in as:", response.data);
         navigate(REDIRECT_AFTER_LOGIN);
@@ -137,7 +137,7 @@ export const fetchUserOrRedirect = async (
   const refresh_token = getRefreshToken();
   if (access_token || refresh_token) {
     await axiosInstance
-      .get<User>("/api/users/me/")
+      .get<OrkestroUser>("/api/users/me/")
       .then((response) => {
         setUser(response.data);
       })

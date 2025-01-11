@@ -7,15 +7,14 @@ import {
 import { useLanguage } from "../LanguageContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
-import {axiosInstance as axios} from "../auth";
-import {MessageRecipient} from "../interfaces";
-
+import { axiosInstance as axios } from "../auth";
+import { OrkestroMessageRecipient } from "../interfaces";
 
 interface Params {
-  message_recipient: MessageRecipient;
+  message_recipient: OrkestroMessageRecipient;
 }
 
-export default function MessageComponent({message_recipient}: Params) {
+export default function MessageComponent({ message_recipient }: Params) {
   const { t } = useLanguage();
   const [isRead, setIsRead] = useState(message_recipient.is_read);
   const [isExpanded, setIsExpanded] = useState(false);
@@ -47,7 +46,7 @@ export default function MessageComponent({message_recipient}: Params) {
           : "bg-yellow-50 border-yellow-300 hover:shadow-lg"
       }`}
     >
-      {!isExpanded ?
+      {!isExpanded ? (
         <div className="flex justify-between text-gray-700">
           <div>
             <p>
@@ -61,16 +60,18 @@ export default function MessageComponent({message_recipient}: Params) {
             </p>
           </div>
           <div>
-            {message_recipient.message_details.date.toLocaleDateString("pl-PL", {
-              day: "2-digit",
-              month: "2-digit",
-              year: "numeric",
-            })}
-            {" "}
+            {message_recipient.message_details.date.toLocaleDateString(
+              "pl-PL",
+              {
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric",
+              }
+            )}{" "}
             {message_recipient.message_details.date.toLocaleTimeString("pl-PL")}
           </div>
         </div>
-        :
+      ) : (
         <div className="flex flex-col">
           <p className="text-gray-700 font-medium">
             <span className="mr-2 text-blue-500">
@@ -92,11 +93,14 @@ export default function MessageComponent({message_recipient}: Params) {
               <FontAwesomeIcon icon={faCalendarAlt} />
             </span>
             {t("message.date")}:{" "}
-            {message_recipient.message_details.date.toLocaleDateString("pl-PL", {
-              day: "2-digit",
-              month: "2-digit",
-              year: "numeric",
-            })}
+            {message_recipient.message_details.date.toLocaleDateString(
+              "pl-PL",
+              {
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric",
+              }
+            )}
           </p>
           <p className="text-gray-700 font-medium">
             <span className="mr-2 text-gray-500">
@@ -112,7 +116,7 @@ export default function MessageComponent({message_recipient}: Params) {
             {message_recipient.message_details.content}
           </p>
         </div>
-      }
+      )}
     </li>
   );
 }

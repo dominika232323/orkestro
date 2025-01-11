@@ -1,17 +1,17 @@
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 
 import { useLanguage } from "../LanguageContext";
-import {axiosInstance as axios} from "../auth";
+import { axiosInstance as axios } from "../auth";
 import InvitationComponent from "./InvitationComponent";
-import {Invitation} from "../interfaces";
-
+import { OrkestroInvitation } from "../interfaces";
 
 export default function Invitations() {
   const { t } = useLanguage();
-  const [invitations, setInvitations] = useState<Invitation[]>([]);
+  const [invitations, setInvitations] = useState<OrkestroInvitation[]>([]);
 
   const fetchInvitations = async () => {
-    await axios.get<Invitation[]>("/api/invitations/me/")
+    await axios
+      .get<OrkestroInvitation[]>("/api/invitations/me/")
       .then((response) => setInvitations(response.data))
       .catch((error) => console.error("Error fetching invitations:", error));
   };
@@ -25,7 +25,7 @@ export default function Invitations() {
       <h1 className="text-2xl font-bold text-center mb-4">
         {t("invitations.title")}
       </h1>
-      {invitations.length > 0 ?
+      {invitations.length > 0 ? (
         <ul className="space-y-4">
           {invitations.map((inv) => (
             <InvitationComponent
@@ -35,9 +35,9 @@ export default function Invitations() {
             />
           ))}
         </ul>
-        :
+      ) : (
         <p>{t("invitations.no-invitations")}</p>
-      }
+      )}
     </div>
   );
 }

@@ -12,14 +12,14 @@ import {
 import { useLanguage } from "../LanguageContext";
 import { useNavigate, useParams } from "react-router-dom";
 import { axiosInstance as axios, fetchUserOrRedirect } from "../auth";
-import { Role, OrkestroEvent, Paged } from "../interfaces";
+import { OrkestroRole, OrkestroEvent, Paged } from "../interfaces";
 import Pagination from "./Pagination";
 
 export default function Events() {
   const { t, currentLanguage } = useLanguage();
   const navigate = useNavigate();
   const { groupId } = useParams();
-  const [role, setRole] = useState<Role>();
+  const [role, setRole] = useState<OrkestroRole>();
   const [events, setEvents] = useState<OrkestroEvent[]>([]);
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -33,7 +33,7 @@ export default function Events() {
   useEffect(() => {
     const fetchRole = async () => {
       await axios
-        .get<Role>(`/api/groups/${groupId}/role/`)
+        .get<OrkestroRole>(`/api/groups/${groupId}/role/`)
         .then((response) => setRole(response.data))
         .catch((error) => console.error("Error fetching role:", error));
     };

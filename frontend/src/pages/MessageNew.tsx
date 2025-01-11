@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useLanguage } from "../LanguageContext";
-import { User, Message, OrkestroMember } from "../interfaces";
+import { OrkestroUser, OrkestroMessage, OrkestroMember } from "../interfaces";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { axiosInstance as axios, fetchUserOrRedirect } from "../auth";
@@ -10,8 +10,8 @@ export default function MessageNew() {
   const navigate = useNavigate();
   const { t } = useLanguage();
   const { groupId } = useParams<{ groupId: string }>();
-  const [user, setUser] = useState<User>();
-  const [message, setMessage] = useState<Partial<Message>>({
+  const [user, setUser] = useState<OrkestroUser>();
+  const [message, setMessage] = useState<Partial<OrkestroMessage>>({
     title: "",
     content: "",
   });

@@ -8,7 +8,7 @@ import {
   faPen,
 } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate, useParams } from "react-router-dom";
-import { Role, OrkestroTrack } from "../interfaces";
+import { OrkestroRole, OrkestroTrack } from "../interfaces";
 import Pagination from "./Pagination";
 import axios from "axios";
 import { fetchUserOrRedirect } from "../auth";
@@ -18,7 +18,7 @@ export default function Tracks() {
   const { groupId } = useParams();
   const navigate = useNavigate();
 
-  const [role, setRole] = useState<Role>();
+  const [role, setRole] = useState<OrkestroRole>();
   const [tracks, setTracks] = useState<OrkestroTrack[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -47,7 +47,7 @@ export default function Tracks() {
   useEffect(() => {
     const fetchRole = async () => {
       await axios
-        .get<Role>(`/api/groups/${groupId}/role/`)
+        .get<OrkestroRole>(`/api/groups/${groupId}/role/`)
         .then((response) => setRole(response.data))
         .catch((error) => console.error("Error fetching role:", error));
     };

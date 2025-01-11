@@ -2,21 +2,21 @@ import { useEffect, useState } from "react";
 import { useLanguage } from "../LanguageContext";
 import { axiosInstance as axios } from "../auth";
 import GroupComponent from "./GroupComponent";
-import { Group, GroupWithSubgroups } from "../interfaces";
+import { OrkestroGroup, OrkestroGroupWithSubgroups } from "../interfaces";
 
 export default function Groups() {
   const { t } = useLanguage();
-  const [groups, setGroups] = useState<GroupWithSubgroups[]>([]);
+  const [groups, setGroups] = useState<OrkestroGroupWithSubgroups[]>([]);
 
   useEffect(() => {
     async function fetchGroups() {
       await axios
-        .get<Group[]>("/api/groups/me/")
+        .get<OrkestroGroup[]>("/api/groups/me/")
         .then((response) => {
-          const flatGroups: Group[] = response.data;
+          const flatGroups: OrkestroGroup[] = response.data;
 
           // create a map of groups
-          const groupMap: Record<number, GroupWithSubgroups> = {};
+          const groupMap: Record<number, OrkestroGroupWithSubgroups> = {};
           flatGroups.forEach((group) => {
             groupMap[group.group_id] = {
               group_id: group.group_id,
@@ -26,7 +26,7 @@ export default function Groups() {
             };
           });
 
-          const groupHierarchy: GroupWithSubgroups[] = [];
+          const groupHierarchy: OrkestroGroupWithSubgroups[] = [];
           flatGroups.forEach((group) => {
             if (group.supergroup) {
               // if the group has a supergroup, add it to the parent's subgroups
