@@ -18,13 +18,14 @@
     "title": "Invitations",
     "no-invitations": "No pending invitations"
   },
-  "invitations-and-groups": {
-    "title": "Groups"
+  "groups": {
+    "title": "Groups",
+    "no-groups": "No groups"
   },
   "group": {
     "manage": "Manage",
     "events": "Events",
-    "files": "Files",
+    "tracks": "Tracks",
     "new-message": "New message"
   },
   "messages": {
@@ -78,16 +79,20 @@
     "placeholder": "Search by name, place, description…",
     "search": "Search",
     "edit": "Edit",
-    "delete": "Delete"
+    "delete": "Delete",
+    "details": "Details"
   },
-  "files": {
-    "title": "Files",
-    "no-files": "No files",
+  "tracks": {
+    "title": "Tracks",
+    "no-tracks": "No tracks",
     "download": "Download",
-    "add-file": "New file",
-    "placeholder": "Search by name or track…",
+    "add-track": "New track",
+    "placeholder": "Search by name or artist...",
     "search": "Search",
-    "loading": "Files loading..."
+    "loading": "Tracks loading...",
+    "delete": "Delete",
+    "edit": "Edit",
+    "files": "Files"
   },
   "manage-group": {
     "title": "Manage group",
@@ -126,7 +131,16 @@
   },
   "edit-event": {
     "title": "Edit event",
-    "submit": "Edit"
+    "submit": "Edit",
+    "remove-track": "Remove Track",
+    "add-tracks": "Add Tracks",
+    "select-tracks": "Select tracks to add",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "submit-tracks": "Add tracks",
+    "tracks": "Tracks",
+    "no-tracks": "No tracks",
+    "back": "Go back"
   },
   "new-message": {
     "title": "New message",
@@ -134,5 +148,27 @@
     "message-title": "Title",
     "content": "Content",
     "submit": "Send"
+  },
+  "event-details": {
+    "fetching": "Fetching...",
+    "tracks": "Tracks",
+    "no-tracks": "No tracks",
+    "edit": "Edit"
+  },
+  "track-details": {
+    "fetching": "Fetching...",
+    "artist": "Artist",
+    "edit": "Edit"
+  },
+  "edit-track": {
+    "title": "Edit track",
+    "name": "Name",
+    "artist": "Artist",
+    "files": "Files",
+    "no-files": "No files",
+    "submit": "Edit",
+    "remove-file": "Remove file",
+    "add-file": "Add files",
+    "back": "Go back"
   }
 }

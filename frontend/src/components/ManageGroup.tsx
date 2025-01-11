@@ -3,14 +3,14 @@ import { useEffect, useState } from "react";
 import ManageMember from "./ManageMember";
 import { useNavigate, useParams } from "react-router-dom";
 import Pagination from "./Pagination";
-import { Member } from "../interfaces";
+import { OrkestroMember } from "../interfaces";
 
 export default function ManageGroup() {
   const { t } = useLanguage();
   const { groupId } = useParams();
   const navigate = useNavigate();
 
-  const [members, setMembers] = useState<Member[]>([]);
+  const [members, setMembers] = useState<OrkestroMember[]>([]);
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [roleFilter, setRoleFilter] = useState("");

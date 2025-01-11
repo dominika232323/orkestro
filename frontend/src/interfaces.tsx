@@ -68,7 +68,7 @@ export interface MessageRecipient {
   is_read: boolean;
 }
 
-export interface Event {
+export interface OrkestroEvent {
   event_id: number;
   group: number;
   name: string;
@@ -77,7 +77,7 @@ export interface Event {
   place: string;
 }
 
-export interface Member {
+export interface OrkestroMember {
   member_id: number;
   group: number;
   user: number;
@@ -85,17 +85,17 @@ export interface Member {
   permission_level: string;
 }
 
-export interface Track {
+export interface OrkestroTrack {
   track_id: number;
   group: number;
   name: string;
   artist: string;
 }
 
-export interface File {
+export interface OrkestroFile {
   file_id: number;
   track: number;
-  track_details: Track;
+  track_details: OrkestroTrack;
   name: string;
 }
 
@@ -103,4 +103,12 @@ export interface Paged<T> {
   items: T[];
   page_number: number;
   total_pages: number;
+}
+
+export interface OrkestroTrackEvent {
+  event: number;
+  event_details: OrkestroEvent;
+  event_track_id: number;
+  track: number;
+  track_details: OrkestroTrack;
 }

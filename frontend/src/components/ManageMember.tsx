@@ -2,10 +2,10 @@ import React from "react";
 import { useLanguage } from "../LanguageContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
-import { Member } from "../interfaces";
+import { OrkestroMember } from "../interfaces";
 
 interface ManageMemberProps {
-  member: Member;
+  member: OrkestroMember;
 }
 
 export default function ManageMember({ member }: ManageMemberProps) {

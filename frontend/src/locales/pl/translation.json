@@ -18,13 +18,14 @@
     "title": "Zaproszenia",
     "no-invitations": "Brak oczekujących zaproszeń"
   },
-  "invitations-and-groups": {
-    "title": "Grupy"
+  "groups": {
+    "title": "Grupy",
+    "no-groups": "Brak grup"
   },
   "group": {
     "manage": "Zarządzaj",
     "events": "Wydarzenia",
-    "files": "Pliki",
+    "tracks": "Utwory",
     "new-message": "Nowa wiadomość"
   },
   "messages": {
@@ -78,16 +79,21 @@
     "placeholder": "Szukaj po nazwie, miejscu, opisie…",
     "search": "Szukaj",
     "edit": "Edytuj",
-    "delete": "Usuń"
+    "delete": "Usuń",
+    "details": "Szczegóły"
   },
-  "files": {
-    "title": "Pliki",
-    "no-files": "Brak plików",
+  "tracks": {
+    "title": "Utwory",
+    "no-tracks": "Brak utworów",
     "download": "Pobierz",
-    "add-file": "Nowy plik",
-    "placeholder": "Szukaj po nazwie lub utworze…",
+    "add-track": "Nowy utwór",
+    "placeholder": "Szukaj po tytule lub autorze...",
     "search": "Szukaj",
-    "loading": "Ładowanie plików..."
+    "loading": "Ładowanie utworów...",
+    "delete": "Usuń",
+    "edit": "Edytuj",
+    "files": "Pliki",
+    "tracks": "Utwory"
   },
   "manage-group": {
     "title": "Zarządzaj grupą",
@@ -126,7 +132,16 @@
   },
   "edit-event": {
     "title": "Edytuj wydarzenie",
-    "submit": "Edytuj"
+    "submit": "Zapisz",
+    "remove-track": "Usuń utwór",
+    "add-tracks": "Dodaj utwory",
+    "select-tracks": "Wybierz utwory do dodania",
+    "cancel": "Anuluj",
+    "confirm": "Dodaj",
+    "submit-tracks": "Dodaj utwory",
+    "tracks": "Utwory",
+    "no-tracks": "Brak utworów",
+    "back": "Powrót"
   },
   "new-message": {
     "title": "Nowa wiadomość",
@@ -134,5 +149,27 @@
     "message-title": "Tytuł",
     "content": "Treść",
     "submit": "Wyślij"
+  },
+  "event-details": {
+    "fetching": "Pobieranie...",
+    "tracks": "Utwory",
+    "no-tracks": "Brak utworów",
+    "edit": "Edytuj"
+  },
+  "track-details": {
+    "fetching": "Pobieranie...",
+    "artist": "Autor",
+    "edit": "Edytuj"
+  },
+  "edit-track": {
+    "title": "Edytuj utwór",
+    "name": "Tytuł",
+    "artist": "Artysta",
+    "files": "Pliki",
+    "no-files": "Brak plików",
+    "submit": "Zapisz",
+    "remove-file": "Usuń plik",
+    "add-file": "Dodaj pliki",
+    "back": "Powrót"
   }
 }

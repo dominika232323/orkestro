@@ -1,11 +1,10 @@
 import { useParams } from "react-router-dom";
 import { useLanguage } from "../LanguageContext";
-import {User, Message, Member} from "../interfaces";
-import {useEffect, useState} from "react";
-import {useNavigate} from "react-router-dom";
-import {axiosInstance as axios, fetchUserOrRedirect} from "../auth";
+import { User, Message, OrkestroMember } from "../interfaces";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { axiosInstance as axios, fetchUserOrRedirect } from "../auth";
 import Select, { MultiValue } from "react-select";
-
 
 export default function MessageNew() {
   const navigate = useNavigate();
@@ -16,7 +15,7 @@ export default function MessageNew() {
     title: "",
     content: "",
   });
-  const [members, setMembers] = useState<Member[]>([]);
+  const [members, setMembers] = useState<OrkestroMember[]>([]);
   const [selectedUserIds, setSelectedUserIds] = useState<number[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<boolean>(false);
@@ -42,12 +41,17 @@ export default function MessageNew() {
 
   useEffect(() => {
     const fetchMembers = async () => {
-      await axios.get(`/api/members/by_group/?group_id=${parsedGroupId}`)
-      .then((response) => {
-        setMembers(response.data);
-        setSelectedUserIds(response.data.map((member: Member) => member.user_details.user_id));
-      })
-      .catch((error) => console.error("Error fetching members:", error));
+      await axios
+        .get(`/api/members/by_group/?group_id=${parsedGroupId}`)
+        .then((response) => {
+          setMembers(response.data);
+          setSelectedUserIds(
+            response.data.map(
+              (member: OrkestroMember) => member.user_details.user_id
+            )
+          );
+        })
+        .catch((error) => console.error("Error fetching members:", error));
     };
 
     fetchMembers();
@@ -83,9 +87,10 @@ export default function MessageNew() {
     const userIdsQuery = selectedUserIds.map((id) => `id=${id}`).join("&");
     const url = `/api/messages/?${userIdsQuery}`;
 
-    await axios.post(url, encodedMessage)
-    .then(() => navigate("/messages/"))
-    .catch((error) => console.error("Error sending message:", error));
+    await axios
+      .post(url, encodedMessage)
+      .then(() => navigate("/messages/"))
+      .catch((error) => console.error("Error sending message:", error));
 
     setLoading(false);
   };
@@ -110,12 +115,12 @@ export default function MessageNew() {
             value: member.user_details.user_id,
           }))}
           value={selectedUserIds.map((id) => ({
-            label: (
-              members.find((member) => member.user_details.user_id === id)?.user_details.name
-                + " "
-                + members.find((member) => member.user_details.user_id === id)?.user_details.surname
-                || ""
-            ),
+            label:
+              members.find((member) => member.user_details.user_id === id)
+                ?.user_details.name +
+                " " +
+                members.find((member) => member.user_details.user_id === id)
+                  ?.user_details.surname || "",
             value: id,
           }))}
           onChange={handleUserSelectionChange}
