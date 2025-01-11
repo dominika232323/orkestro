@@ -10,28 +10,32 @@ import {
 import { fetchUserOrRedirect } from "../auth";
 import axios from "axios";
 import Pagination from "../components/Pagination";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTimes } from "@fortawesome/free-solid-svg-icons";
-import Select from "react-select/dist/declarations/src/Select";
+import Select, { MultiValue } from "react-select";
 
 export default function TrackEditPage() {
   const navigate = useNavigate();
   const { t } = useLanguage();
-  const { trackId } = useParams();
+  const { trackId, groupId } = useParams();
 
   const [track, setTrack] = useState<Partial<OrkestroTrack>>({});
   const [files, setFiles] = useState<OrkestroFile[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [members, setMembers] = useState<OrkestroMember[]>([]);
+  const [selectedUserIds, setSelectedUserIds] = useState<number[]>([]);
 
   const [showAddFiles, setShowAddFiles] = useState(false);
   const [file, setFile] = useState<File | null>(null);
 
-  const parsedTrackId = trackId ? parseInt(trackId, 10) : undefined;
+  console.log(file);
 
-  if (!parsedTrackId) {
-    throw new Error("Track ID is required and must be a valid number");
+  const parsedTrackId = trackId ? parseInt(trackId, 10) : undefined;
+  const parsedGroupId = groupId ? parseInt(groupId, 10) : undefined;
+
+  if (!parsedTrackId || !parsedGroupId) {
+    throw new Error(
+      "Track ID and Group ID is required and must be a valid number"
+    );
   }
 
   useEffect(() => {
@@ -44,23 +48,29 @@ export default function TrackEditPage() {
     fetchFiles();
   };
 
-  // useEffect(() => {
-  //     const fetchMembers = async () => {
-  //       await axios
-  //         .get(`/api/members/by_group/?group_id=${parsedGroupId}`)
-  //         .then((response) => {
-  //           setMembers(response.data);
-  //           setSelectedUserIds(
-  //             response.data.map(
-  //               (member: OrkestroMember) => member.user_details.user_id
-  //             )
-  //           );
-  //         })
-  //         .catch((error) => console.error("Error fetching members:", error));
-  //     };
+  useEffect(() => {
+    const fetchMembers = async () => {
+      await axios
+        .get(`/api/members/by_group/?group_id=${parsedGroupId}`)
+        .then((response) => {
+          setMembers(response.data);
+          setSelectedUserIds(
+            response.data.map(
+              (member: OrkestroMember) => member.user_details.user_id
+            )
+          );
+        })
+        .catch((error) => console.error("Error fetching members:", error));
+    };
 
-  //     fetchMembers();
-  //   }, [parsedGroupId]);
+    fetchMembers();
+  }, [parsedGroupId]);
+
+  const handleUserSelectionChange = (
+    selectedOptions: MultiValue<{ label: string; value: number }>
+  ) => {
+    setSelectedUserIds(selectedOptions.map((option) => option.value));
+  };
 
   const fetchTrack = async () => {
     await axios
@@ -116,6 +126,44 @@ export default function TrackEditPage() {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       setFile(e.target.files[0]);
+    }
+  };
+
+  const handleAddFile = async () => {
+    if (!(file && trackId)) {
+      console.error("File and trackId required");
+      return;
+    }
+
+    try {
+      // Create form data for file upload
+      const formData = new FormData();
+      formData.append("name", file.name);
+      formData.append("track", trackId);
+      formData.append("file", file);
+
+      // Upload the file
+      const fileResponse = await axios.post("/api/files/", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      const fileId = fileResponse.data.file_id;
+
+      // Assign file to selected users
+      const promises = selectedUserIds.map((userId) =>
+        axios.post(`/api/file-allowed-members/`, {
+          file: fileId,
+          user: userId,
+        })
+      );
+      await Promise.all(promises);
+      // Clear states and refresh
+      setSelectedUserIds([]);
+      setShowAddFiles(false);
+      fetchFiles();
+    } catch (error) {
+      console.error("Error in file upload or user assignment:", error);
     }
   };
 
@@ -209,7 +257,7 @@ export default function TrackEditPage() {
                 {t("edit-track.add-file")}
               </h2>
               <input type="file" onChange={handleFileChange} />
-              {/* <label className="block mb-4">
+              <label className="block mb-4">
                 {t("new-message.recipients")}
                 <Select
                   options={members.map((member) => ({
@@ -232,7 +280,13 @@ export default function TrackEditPage() {
                   className="react-select-container"
                   classNamePrefix="react-select"
                 />
-              </label> */}
+              </label>
+              <button
+                onClick={handleAddFile}
+                className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600"
+              >
+                {t("edit-event.confirm")}
+              </button>
             </div>
           </div>
         )}

@@ -50,7 +50,7 @@ export default function App() {
           path: "/track-details/:trackId/:groupId",
           element: <TrackDetailsPage />,
         },
-        { path: "/edit-track/:trackId", element: <TrackEditPage /> },
+        { path: "/edit-track/:trackId/:groupId", element: <TrackEditPage /> },
         { path: "/manage-group/:groupId", element: <ManageGroup /> },
       ],
     },

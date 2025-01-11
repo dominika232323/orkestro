@@ -52,7 +52,7 @@ export default function TrackDetailsPage() {
         <h1 className="text-2xl font-bold text-center mb-6">{track.name}</h1>
         <button
           className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600"
-          onClick={() => navigate(`/edit-track/${track.track_id}`)}
+          onClick={() => navigate(`/edit-track/${track.track_id}/${groupId}`)}
         >
           {t("track-details.edit")}
         </button>
