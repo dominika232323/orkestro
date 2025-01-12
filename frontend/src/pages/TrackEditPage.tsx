@@ -39,6 +39,10 @@ export default function TrackEditPage() {
   }
 
   useEffect(() => {
+    fetchFiles();
+  }, [currentPage]);
+
+  useEffect(() => {
     fetchUserOrRedirect(navigate);
     reloadPage();
   }, []);
@@ -83,7 +87,9 @@ export default function TrackEditPage() {
 
   const fetchFiles = async () => {
     await axios
-      .get<Paged<OrkestroFile>>(`/api/files/search/?track_id=${trackId}`)
+      .get<Paged<OrkestroFile>>(
+        `/api/files/search/?track_id=${trackId}&page=${currentPage}`
+      )
       .then((response) => {
         setFiles(response.data.items);
         setCurrentPage(response.data.page_number);

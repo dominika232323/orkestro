@@ -108,7 +108,7 @@ export default function EventDetailsPage() {
             tracks.map((track) => (
               <li
                 key={track.event_track_id}
-                className="flex justify-between items-center"
+                className="flex justify-between items-center hover:underline"
                 onClick={() =>
                   navigate(`/track-details/${track.track}/${event.group}`)
                 }

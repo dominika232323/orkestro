@@ -57,7 +57,9 @@ export default function TrackDetailsPage() {
   };
   const fetchFiles = async () => {
     await axios
-      .get<Paged<OrkestroFile>>(`/api/files/search/?track_id=${trackId}`)
+      .get<Paged<OrkestroFile>>(
+        `/api/files/search/?track_id=${trackId}&page=${currentPage}`
+      )
       .then((response) => {
         setFiles(response.data.items);
         setCurrentPage(response.data.page_number);
@@ -65,8 +67,6 @@ export default function TrackDetailsPage() {
       })
       .catch((error) => console.error("Error fetching files: ", error));
   };
-
-  console.log(files);
 
   if (track) {
     return (

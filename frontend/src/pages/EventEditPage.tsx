@@ -270,11 +270,7 @@ export default function EventEditPage() {
               key={event_track.event_track_id}
               className="flex justify-between items-center"
             >
-              <span
-                onClick={() => navigate(`/track-details/${event_track.track}`)}
-              >
-                {event_track.track_details.name}
-              </span>
+              <span>{event_track.track_details.name}</span>
               <button
                 onClick={() => handleRemoveTrack(event_track.event_track_id)}
                 className="text-red-500 hover:underline"
