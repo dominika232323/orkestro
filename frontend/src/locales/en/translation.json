@@ -164,7 +164,9 @@
     "edit": "Edit",
     "download": "Download",
     "files": "Files",
-    "back": "Go back"
+    "back": "Go back",
+    "upcoming-events": "Upcoming events",
+    "no-upcoming-events": "No upcoming events"
   },
   "edit-track": {
     "title": "Edit track",

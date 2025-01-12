@@ -21,8 +21,11 @@ export default function TrackDetailsPage() {
   const [track, setTrack] = useState<OrkestroTrack | null>(null);
   const [files, setFiles] = useState<OrkestroFile[]>([]);
   const [events, setEvents] = useState<OrkestroTrackEvent[]>([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
+
+  const [currentPageFiles, setCurrentPageFiles] = useState(1);
+  const [totalPagesFiles, setTotalPagesFiles] = useState(1);
+  const [currentPageEvents, setCurrentPageEvents] = useState(1);
+  const [totalPagesEvents, setTotalPagesEvents] = useState(1);
 
   useEffect(() => {
     fetchTrack();
@@ -31,7 +34,7 @@ export default function TrackDetailsPage() {
 
   useEffect(() => {
     fetchFiles();
-  }, [currentPage]);
+  }, [currentPageFiles]);
 
   const handleDownload = async (file_id: number, file_name: string) => {
     try {
@@ -66,22 +69,25 @@ export default function TrackDetailsPage() {
   const fetchFiles = async () => {
     await axios
       .get<Paged<OrkestroFile>>(
-        `/api/files/search/?track_id=${trackId}&page=${currentPage}`
+        `/api/files/search/?track_id=${trackId}&page=${currentPageFiles}`
       )
       .then((response) => {
         setFiles(response.data.items);
-        setCurrentPage(response.data.page_number);
-        setTotalPages(response.data.total_pages);
+        setCurrentPageFiles(response.data.page_number);
+        setTotalPagesFiles(response.data.total_pages);
       })
       .catch((error) => console.error("Error fetching files: ", error));
   };
 
   const fetchEvents = async () => {
     await axios
-      .get<OrkestroTrackEvent[]>(
-        `/api/event-tracks/by_track/?track_id=${trackId}`
+      .get<Paged<OrkestroTrackEvent>>(
+        `/api/event-tracks/by_track/?track_id=${trackId}&page=${currentPageEvents}`
       )
-      .then((response) => setEvents(response.data))
+      .then((response) => {
+        setEvents(response.data.items);
+        setTotalPagesFiles(response.data.total_pages);
+      })
       .catch((error) => console.error(error));
   };
 
@@ -134,31 +140,43 @@ export default function TrackDetailsPage() {
           )}
         </ul>
 
-        {/*Pagination*/}
+        {/*File Pagination*/}
         <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={(page) => setCurrentPage(page)}
+          currentPage={currentPageFiles}
+          totalPages={totalPagesFiles}
+          onPageChange={(page) => setCurrentPageFiles(page)}
         />
 
         {/* Lista wydarzeń */}
-        <h2 className="text-xl font-bold mt-4">{t("track-details.events")}</h2>
+        <h2 className="text-xl font-bold mt-4">
+          {t("track-details.upcoming-events")}
+        </h2>
         <ul className="list-disc pl-5">
           {events.length > 0 ? (
             events.map((event) => (
-              <li key={event.event}>
+              <li key={event.event} className="flex justify-between">
                 <span
                   className="hover:underline"
                   onClick={() => navigate(`/event-details/${event.event}`)}
                 >
                   {event.event_details.name}
                 </span>
+                <span>
+                  {new Date(event.event_details.date).toLocaleDateString()}
+                </span>
               </li>
             ))
           ) : (
-            <p>{t("track-details.no-events")}</p>
+            <p>{t("track-details.no-upcoming-events")}</p>
           )}
         </ul>
+
+        {/*Event Pagination*/}
+        <Pagination
+          currentPage={currentPageEvents}
+          totalPages={totalPagesEvents}
+          onPageChange={(page) => setCurrentPageEvents(page)}
+        />
       </div>
     );
   } else {

@@ -165,7 +165,9 @@
     "edit": "Edytuj",
     "download": "Pobierz",
     "files": "Pliki",
-    "back": "Powrót"
+    "back": "Powrót",
+    "upcoming-events": "Nadchodzące wydarzenia",
+    "no-upcoming-events": "Brak nadchodzących wydarzeń"
   },
   "edit-track": {
     "title": "Edytuj utwór",
