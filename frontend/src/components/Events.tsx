@@ -89,6 +89,17 @@ export default function Events() {
         {t("events.title")}
       </h1>
 
+      {/* Add Event Button */}
+      {role?.is_manager && (
+        <button
+          className="w-full py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 font-medium flex items-center justify-center my-3"
+          onClick={() => navigate(`/new-event/${groupId}`)}
+        >
+          <FontAwesomeIcon icon={faPlus} className="mr-2" />
+          {t("events.add-event")}
+        </button>
+      )}
+
       {/* Search Bar */}
       <div className="flex items-center mb-6 bg-white shadow-md rounded-lg overflow-hidden">
         <input
@@ -188,17 +199,6 @@ export default function Events() {
         <p className="text-gray-600 text-center">{t("events.loading")}</p>
       ) : (
         <p className="text-gray-600 text-center">{t("events.no-events")}</p>
-      )}
-
-      {/* Add Event Button */}
-      {role?.is_manager && (
-        <button
-          className="w-full py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 font-medium flex items-center justify-center mt-6"
-          onClick={() => navigate(`/new-event/${groupId}`)}
-        >
-          <FontAwesomeIcon icon={faPlus} className="mr-2" />
-          {t("events.add-event")}
-        </button>
       )}
 
       {/* Pagination */}

@@ -215,6 +215,13 @@ export default function EventNewPage() {
       >
         {t("new-event.submit")}
       </button>
+
+      <button
+        onClick={() => navigate(-1)}
+        className="ml-1 bg-red-500 text-white p-2 rounded-lg hover:bg-red-600"
+      >
+        {t("new-event.back")}
+      </button>
     </div>
   );
 }

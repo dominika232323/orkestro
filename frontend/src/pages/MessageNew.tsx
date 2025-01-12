@@ -161,6 +161,13 @@ export default function MessageNew() {
       >
         {t("new-message.submit")}
       </button>
+
+      <button
+        onClick={() => navigate(-1)}
+        className="ml-1 bg-red-500 text-white p-2 rounded-lg hover:bg-red-600"
+      >
+        {t("new-message.back")}
+      </button>
     </div>
   );
 }

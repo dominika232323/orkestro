@@ -128,7 +128,8 @@
     "date": "Data",
     "time": "Godzina",
     "submit": "Utwórz",
-    "form-error": "Wszystkie pola są obowiązkowe"
+    "form-error": "Wszystkie pola są obowiązkowe",
+    "back": "Powrót"
   },
   "edit-event": {
     "title": "Edytuj wydarzenie",
@@ -148,19 +149,23 @@
     "recipients": "Odbiorcy",
     "message-title": "Tytuł",
     "content": "Treść",
-    "submit": "Wyślij"
+    "submit": "Wyślij",
+    "back": "Powrót"
   },
   "event-details": {
     "fetching": "Pobieranie...",
     "tracks": "Utwory",
     "no-tracks": "Brak utworów",
-    "edit": "Edytuj"
+    "edit": "Edytuj",
+    "back": "Powrót"
   },
   "track-details": {
     "fetching": "Pobieranie...",
     "artist": "Autor",
     "edit": "Edytuj",
-    "download": "Pobierz"
+    "download": "Pobierz",
+    "files": "Pliki",
+    "back": "Powrót"
   },
   "edit-track": {
     "title": "Edytuj utwór",
@@ -171,6 +176,14 @@
     "submit": "Zapisz",
     "remove-file": "Usuń plik",
     "add-file": "Dodaj pliki",
+    "back": "Powrót"
+  },
+  "new-track": {
+    "title": "Nowy utwór",
+    "form-error": "Wszystkie pola są obowiązkowe",
+    "name": "Tytuł",
+    "artist": "Autor",
+    "submit": "Utwórz",
     "back": "Powrót"
   }
 }

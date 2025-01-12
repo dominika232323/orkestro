@@ -203,20 +203,18 @@ export default function TrackEditPage() {
             required
           />
         </label>
-        <div className="flex justify-between">
-          <button
-            onClick={handleSubmit}
-            className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600"
-          >
-            {t("edit-track.submit")}
-          </button>
-          <button
-            onClick={() => navigate(-1)}
-            className="bg-red-500 text-white p-2 rounded-lg hover:bg-red-600"
-          >
-            {t("edit-track.back")}
-          </button>
-        </div>
+        <button
+          onClick={handleSubmit}
+          className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600"
+        >
+          {t("edit-track.submit")}
+        </button>
+        <button
+          onClick={() => navigate(-1)}
+          className="ml-1 bg-red-500 text-white p-2 rounded-lg hover:bg-red-600"
+        >
+          {t("edit-track.back")}
+        </button>
 
         {/* Lista plików */}
         <h2 className="text-xl font-bold mt-4">{t("edit-track.files")}</h2>

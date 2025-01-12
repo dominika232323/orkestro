@@ -53,11 +53,15 @@ export default function EventDetailsPage() {
         <h1 className="text-2xl font-bold text-center mb-6">{event.name}</h1>
         <button
           className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600"
-          onClick={() =>
-            navigate(`/edit-event/${event.event_id}`)
-          }
+          onClick={() => navigate(`/edit-event/${event.event_id}`)}
         >
           {t("event-details.edit")}
+        </button>
+        <button
+          onClick={() => navigate(-1)}
+          className="ml-1 bg-red-500 text-white p-2 rounded-lg hover:bg-red-600"
+        >
+          {t("event-details.back")}
         </button>
         <p>
           <strong>

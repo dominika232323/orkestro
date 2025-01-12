@@ -8,7 +8,7 @@ import {
   faPen,
 } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate, useParams } from "react-router-dom";
-import { OrkestroRole, OrkestroTrack } from "../interfaces";
+import { OrkestroRole, OrkestroTrack, Paged } from "../interfaces";
 import Pagination from "./Pagination";
 import axios from "axios";
 import { fetchUserOrRedirect } from "../auth";
@@ -29,7 +29,7 @@ export default function Tracks() {
     setLoading(true);
 
     await axios
-      .get(`/api/tracks/?groupId=${groupId}`)
+      .get(`/api/tracks/search/?group_id=${groupId}`)
       .then((response) => setTracks(response.data))
       .catch((error) => console.error(error));
 
@@ -38,7 +38,7 @@ export default function Tracks() {
 
   useEffect(() => {
     fetchTracks();
-  }, [currentPage]);
+  }, []);
 
   useEffect(() => {
     fetchUserOrRedirect(navigate);
@@ -66,8 +66,6 @@ export default function Tracks() {
     }
   };
 
-  const handleNewTrack = () => {};
-
   const handleDelete = async (track_id: number) => {
     await axios.delete(`/api/tracks/${track_id}/`);
     fetchTracks();
@@ -78,6 +76,15 @@ export default function Tracks() {
       <h1 className="text-2xl font-bold text-center mb-6">
         {t("tracks.title")}
       </h1>
+
+      {/* Add Track Button */}
+      <button
+        className="w-full py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 font-medium flex items-center justify-center my-3"
+        onClick={() => navigate(`/new-track/${groupId}`)}
+      >
+        <FontAwesomeIcon icon={faPlus} className="mr-2" />
+        {t("tracks.add-track")}
+      </button>
 
       {/* Search Bar */}
       <div className="flex items-center mb-6 bg-white shadow-md rounded-lg overflow-hidden">
@@ -98,7 +105,7 @@ export default function Tracks() {
       </div>
 
       {/* Track List or Loading/Empty State */}
-      {tracks.length > 0 ? (
+      {tracks && tracks.length > 0 ? (
         <ul className="space-y-4">
           {tracks.map((track) => (
             <li
@@ -148,12 +155,6 @@ export default function Tracks() {
       ) : (
         <p className="text-gray-600 text-center">{t("tracks.no-tracks")}</p>
       )}
-
-      {/* Add Track Button */}
-      <button className="w-full py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 font-medium flex items-center justify-center mt-6">
-        <FontAwesomeIcon icon={faPlus} className="mr-2" />
-        {t("tracks.add-track")}
-      </button>
 
       {/* Pagination */}
       <Pagination

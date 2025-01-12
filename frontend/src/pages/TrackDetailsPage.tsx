@@ -78,6 +78,12 @@ export default function TrackDetailsPage() {
         >
           {t("track-details.edit")}
         </button>
+        <button
+          onClick={() => navigate(-1)}
+          className="ml-1 bg-red-500 text-white p-2 rounded-lg hover:bg-red-600"
+        >
+          {t("track-details.back")}
+        </button>
         <p>
           <strong>
             <FontAwesomeIcon icon={faUser} className="mr-2 text-gray-500" />

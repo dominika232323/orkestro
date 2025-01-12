@@ -127,7 +127,8 @@
     "date": "Date",
     "time": "Time",
     "submit": "Create",
-    "form-error": "All fields are mandatory"
+    "form-error": "All fields are mandatory",
+    "back": "Go back"
   },
   "edit-event": {
     "title": "Edit event",
@@ -147,19 +148,23 @@
     "recipients": "Odbiorcy",
     "message-title": "Title",
     "content": "Content",
-    "submit": "Send"
+    "submit": "Send",
+    "back": "Go back"
   },
   "event-details": {
     "fetching": "Fetching...",
     "tracks": "Tracks",
     "no-tracks": "No tracks",
-    "edit": "Edit"
+    "edit": "Edit",
+    "back": "Go back"
   },
   "track-details": {
     "fetching": "Fetching...",
     "artist": "Artist",
     "edit": "Edit",
-    "download": "Download"
+    "download": "Download",
+    "files": "Files",
+    "back": "Go back"
   },
   "edit-track": {
     "title": "Edit track",
@@ -170,6 +175,13 @@
     "submit": "Edit",
     "remove-file": "Remove file",
     "add-file": "Add files",
+    "back": "Go back"
+  },
+  "new-track": {
+    "title": "New track",
+    "form-error": "All fields are mandatory",
+    "name": "Name",
+    "artist": "Artist",
     "back": "Go back"
   }
 }

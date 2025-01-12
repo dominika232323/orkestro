@@ -245,21 +245,19 @@ export default function EventEditPage() {
           required
         />
       </label>
-      <div className="flex justify-between">
-        <button
-          onClick={handleSubmit}
-          disabled={loading}
-          className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600"
-        >
-          {t("edit-event.submit")}
-        </button>
-        <button
-          onClick={() => navigate(-1)}
-          className="bg-red-500 text-white p-2 rounded-lg hover:bg-red-600"
-        >
-          {t("edit-event.back")}
-        </button>
-      </div>
+      <button
+        onClick={handleSubmit}
+        disabled={loading}
+        className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600"
+      >
+        {t("edit-event.submit")}
+      </button>
+      <button
+        onClick={() => navigate(-1)}
+        className="ml-1 bg-red-500 text-white p-2 rounded-lg hover:bg-red-600"
+      >
+        {t("edit-event.back")}
+      </button>
 
       {/* Lista utworów */}
       <h2 className="text-xl font-bold mt-4">{t("edit-event.tracks")}</h2>
