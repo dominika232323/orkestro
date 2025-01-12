@@ -11,13 +11,13 @@ from rest_framework.response import Response
 
 from api.models import UserInstrument, Instrument
 from api.serializers import UserInstrumentSerializer, InstrumentSerializer
-from api.permissions.user_instrument_permissions import CanViewUserInstrument, CanCreateUserInstrument, CanDeleteUserInstrument
+from api.permissions.user_instrument_permissions import UserInstrumentPermission
 
 
 class UserInstrumentViewSet(viewsets.ModelViewSet):
     queryset = UserInstrument.objects.all()
     serializer_class = UserInstrumentSerializer
-    permission_classes = [IsAuthenticated, CanViewUserInstrument, CanCreateUserInstrument, CanDeleteUserInstrument]
+    permission_classes = [IsAuthenticated, UserInstrumentPermission]
     http_method_names = ["get", "post", "delete", "head"]
 
     @action(detail=False, methods=["get"])

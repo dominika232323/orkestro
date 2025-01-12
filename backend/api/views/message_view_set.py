@@ -11,13 +11,13 @@ from rest_framework.response import Response
 
 from api.models import Message, MessageRecipient, Member, User
 from api.serializers import MessageSerializer
-from api.permissions.message_permissions import CanViewMessage, CanCreateMessage
+from api.permissions.message_permissions import MessagePermission
 
 
 class MessageViewSet(viewsets.ModelViewSet):
     queryset = Message.objects.all().select_related("group", "user")
     serializer_class = MessageSerializer
-    permission_classes = [IsAuthenticated, CanViewMessage, CanCreateMessage]
+    permission_classes = [IsAuthenticated, MessagePermission]
     http_method_names = ["get", "post", "head"]
 
     def create(self, request, *args, **kwargs):

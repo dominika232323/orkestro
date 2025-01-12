@@ -5,18 +5,17 @@ from rest_framework.permissions import BasePermission
 
 from api.permissions.common_checks import is_member, is_manager
 
-
-class CanViewCreateMember(BasePermission):
+class MemberPermission(BasePermission):
     def has_permission(self, request, view):
-        if request.method not in ["GET", "POST"] or request.user.is_staff:
+        if request.user.is_staff or request.method == "HEAD" or view.action in ["me", "update", "destroy"]:
             return True
-        if request.method != "GET" or view.action not in {"search", "by_group"}:
-            return False
-        return is_member(request, request.GET.get("group_id"))
+        if view.action in ["search", "by_group"]:
+            return is_member(request, request.GET.get("group_id"))
+        return False
 
-
-class CanEditDeleteMember(BasePermission):
     def has_object_permission(self, request, view, obj):
-        if request.method not in ["PUT", "DELETE"] or request.user.is_staff:
+        if request.user.is_staff or request.method == "HEAD":
             return True
-        return is_manager(request, obj.group_id)
+        if view.action in ["update", "destroy"]:
+            return is_manager(request, obj.group_id)
+        return False

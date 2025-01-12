@@ -12,13 +12,13 @@ from rest_framework.response import Response
 
 from api.models import Track, FileInstrument, EventTrack
 from api.serializers import TrackSerializer, TrackCreateSerializer
-from api.permissions.track_permissions import CanViewTrack, CanCreateTrack, CanEditDeleteTrack
+from api.permissions.track_permissions import TrackPermission
 
 
 class TrackViewSet(viewsets.ModelViewSet):
     queryset = Track.objects.all()
     serializer_class = TrackSerializer
-    permission_classes = [IsAuthenticated, CanViewTrack, CanCreateTrack, CanEditDeleteTrack]
+    permission_classes = [IsAuthenticated, TrackPermission]
     http_method_names = ["get", "post", "put", "delete", "head"]
 
     def create(self, request, *args, **kwargs):

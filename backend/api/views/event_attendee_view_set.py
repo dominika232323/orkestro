@@ -11,14 +11,13 @@ from rest_framework.response import Response
 
 from api.models import EventAttendee, Event, User
 from api.serializers import EventAttendeeSerializer, EventSerializer, UserSerializer
-
-from api.permissions.event_attendee_permissions import CanViewEventAttendee, CanCreateEventAttendee, CanDeleteEventAttendee
+from api.permissions.event_attendee_permissions import EventAttendeePermission
 
 
 class EventAttendeeViewSet(viewsets.ModelViewSet):
     queryset = EventAttendee.objects.all().select_related("user")
     serializer_class = EventAttendeeSerializer
-    permission_classes = [IsAuthenticated, CanViewEventAttendee, CanCreateEventAttendee, CanDeleteEventAttendee]
+    permission_classes = [IsAuthenticated, EventAttendeePermission]
     http_method_names = ["get", "post", "delete", "head"]
 
     @staticmethod

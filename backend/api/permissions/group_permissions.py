@@ -7,24 +7,23 @@ from api.models import Group
 from api.permissions.common_checks import is_manager
 
 
-class CanViewGroup(BasePermission):
+class GroupPermission(BasePermission):
     def has_permission(self, request, view):
-        return request.method != "GET" or request.user.is_staff or view.action in {"me", "role"}
-
-
-class CanCreateSubgroup(BasePermission):
-    def has_permission(self, request, view):
-        if request.method != "POST" or request.user.is_staff or request.data.get("supergroup") is None:
+        if request.user.is_staff or request.method == "HEAD" or view.action in ["me", "role", "update", "delete"]:
             return True
-        try:
-            supergroup = Group.objects.get(group_id=request.data.get("supergroup"))
-        except Group.DoesNotExist:
-            return False
-        return is_manager(request, supergroup.group_id)
+        if view.action == "create":
+            if request.data.get("supergroup") is None:
+                return True
+            try:
+                supergroup = Group.objects.get(group_id=request.data.get("supergroup"))
+            except Group.DoesNotExist:
+                return False
+            return is_manager(request, supergroup.group_id)
+        return False
 
-
-class CanEditDeleteGroup(BasePermission):
     def has_object_permission(self, request, view, obj):
-        if request.method not in ["PUT", "DELETE"] or request.user.is_staff:
+        if request.user.is_staff or request.method == "HEAD" or view.action == "role":
             return True
-        return is_manager(request, obj.group_id)
+        if view.action in ["update", "delete"]:
+            return is_manager(request, obj.group_id)
+        return False

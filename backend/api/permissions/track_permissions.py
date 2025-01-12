@@ -6,24 +6,19 @@ from rest_framework.permissions import BasePermission
 from api.permissions.common_checks import is_member, is_manager
 
 
-class CanViewTrack(BasePermission):
+class TrackPermission(BasePermission):
     def has_permission(self, request, view):
-        if request.method != "GET" or request.user.is_staff:
+        if request.user.is_staff or request.method == "HEAD" or view.action in ["update", "destroy"]:
             return True
-        if view.action not in ["search", "leftover"]:
-            return False
-        return is_member(request, request.GET.get("group_id"))
+        if view.action in ["search", "leftover"]:
+            return is_member(request, request.GET.get("group_id"))
+        if view.action == "create":
+            return is_manager(request, request.data.get("group"))
+        return False
 
-
-class CanCreateTrack(BasePermission):
-    def has_permission(self, request, view):
-        if request.method != "POST" or request.user.is_staff:
-            return True
-        return is_manager(request, request.data.get("group"))
-
-
-class CanEditDeleteTrack(BasePermission):
     def has_object_permission(self, request, view, obj):
-        if request.method not in ["PUT", "DELETE"] or request.user.is_staff:
+        if request.user.is_staff or request.method == "HEAD":
             return True
-        return is_manager(request, obj.group_id)
+        if view.action in ["update", "destroy"]:
+            return is_manager(request, obj.group_id)
+        return False

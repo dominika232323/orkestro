@@ -17,13 +17,13 @@ from rest_framework.response import Response
 
 from api.models import MessageRecipient, Message, User
 from api.serializers import MessageRecipientSerializer
-from api.permissions.message_recipient_permissions import CanViewMessageRecipient, CanCreateMessageRecipient, CanMarkAsRead, CanSendEmail
+from api.permissions.message_recipient_permissions import MessageRecipientPermission
 
 
 class MessageRecipientViewSet(viewsets.ModelViewSet):
     queryset = MessageRecipient.objects.all().select_related("message")
     serializer_class = MessageRecipientSerializer
-    permission_classes = [IsAuthenticated, CanViewMessageRecipient, CanCreateMessageRecipient, CanMarkAsRead]
+    permission_classes = [IsAuthenticated, MessageRecipientPermission]
     http_method_names = ["get", "post", "head"]
 
     @staticmethod

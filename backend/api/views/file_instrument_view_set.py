@@ -11,13 +11,13 @@ from rest_framework.response import Response
 
 from api.models import FileInstrument
 from api.serializers import FileInstrumentSerializer
-from api.permissions.file_instrument_permissions import CanViewFileInstrument, CanCreateFileInstrument, CanDeleteFileInstrument
+from api.permissions.file_instrument_permissions import FileInstrumentPermission
 
 
 class FileInstrumentViewSet(viewsets.ModelViewSet):
     queryset = FileInstrument.objects.all()
     serializer_class = FileInstrumentSerializer
-    permission_classes = [IsAuthenticated, CanViewFileInstrument, CanCreateFileInstrument, CanDeleteFileInstrument]
+    permission_classes = [IsAuthenticated, FileInstrumentPermission]
     http_method_names = ["get", "post", "delete", "head"]
 
     @action(detail=False, methods=["get"])

@@ -6,27 +6,19 @@ from rest_framework.permissions import BasePermission
 from api.permissions.common_checks import is_author
 
 
-class CanViewMessageRecipient(BasePermission):
+class MessageRecipientPermission(BasePermission):
     def has_permission(self, request, view):
-        return request.method != "GET" or request.user.is_staff or view.action == "me"
-
-
-class CanCreateMessageRecipient(BasePermission):
-    def has_permission(self, request, view):
-        if request.method != "POST" or request.user.is_staff or view.action in ["mark_as_read", "send_email"]:
+        if request.user.is_staff or request.method == "HEAD" or view.action in ["me", "mark_as_read", "send_email"]:
             return True
-        return is_author(request, request.data.get("message"))
+        if view.action == "create":
+            return is_author(request, request.data.get("message"))
+        return False
 
-
-class CanMarkAsRead(BasePermission):
     def has_object_permission(self, request, view, obj):
-        if request.method != "POST" or request.user.is_staff or view.action != "mark_as_read":
+        if request.user.is_staff or request.method == "HEAD":
             return True
-        return obj.user_id == request.user.user_id
-
-
-class CanSendEmail(BasePermission):
-    def has_object_permission(self, request, view, obj):
-        if request.method != "POST" or request.user.is_staff or view.action != "send_email":
-            return True
-        return obj.message.user_id == request.user.user_id
+        if view.action == "mark_as_read":
+            return obj.user_id == request.user.user_id
+        if view.action == "send_email":
+            return obj.message.user_id == request.user.user_id
+        return False

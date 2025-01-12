@@ -15,13 +15,12 @@ from rest_framework.response import Response
 
 from api.models import Member
 from api.serializers import MemberSerializer, MemberCreateSerializer
-from api.permissions.member_permissions import CanViewCreateMember, CanEditDeleteMember
-
+from api.permissions.member_permissions import MemberPermission
 
 class MemberViewSet(viewsets.ModelViewSet):
     queryset = Member.objects.all().select_related("user")
     serializer_class = MemberSerializer
-    permission_classes = [IsAuthenticated, CanViewCreateMember, CanEditDeleteMember]
+    permission_classes = [IsAuthenticated, MemberPermission]
     http_method_names = ["get", "post", "put", "delete", "head"]
 
     def create(self, request, *args, **kwargs):
