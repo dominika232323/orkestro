@@ -102,9 +102,9 @@
     "save-changes": "Zapisz zmiany",
     "members": "Członkowie",
     "roles": {
-      "manager": "Kierownik",
-      "musician": "Muzyk",
-      "moderator": "Moderator"
+      "A": "Kierownik",
+      "C": "Muzyk",
+      "B": "Moderator"
     },
     "no-members": "Brak członków grupy",
     "previous": "Poprzedni",

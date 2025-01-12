@@ -101,9 +101,9 @@
     "save-changes": "Save changes",
     "members": "Members",
     "roles": {
-      "manager": "Manager",
-      "musician": "Musician",
-      "moderator": "Moderator"
+      "A": "Manager",
+      "C": "Musician",
+      "B": "Moderator"
     },
     "no-members": "No members",
     "previous": "Previous",

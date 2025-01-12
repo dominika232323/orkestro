@@ -204,7 +204,7 @@ export default function Calendar() {
                   className="text-sm text-gray-800"
                   onClick={() => navigate(`/event-details/${event.event_id}`)}
                 >
-                  <strong>{event.name}</strong> -{" "}
+                  <strong className="hover:underline">{event.name}</strong> -{" "}
                   {new Date(event.date).toLocaleTimeString()}
                 </li>
               ))
