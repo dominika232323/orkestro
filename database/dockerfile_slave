@@ -1,0 +1,16 @@
+FROM postgres:17-alpine
+
+ARG DJANGO_DB_MASTER_HOST
+ARG DJANGO_DB_MASTER_PORT
+ARG POSTGRES_SLAVE_USER
+ARG POSTGRES_SLAVE_PASSWORD
+
+RUN echo "primary_conninfo = 'host=${DJANGO_DB_MASTER_HOST} port=${DJANGO_DB_MASTER_PORT} \
+          user=${POSTGRES_SLAVE_USER} password=${POSTGRES_SLAVE_PASSWORD}'" \
+    >> /var/lib/postgresql/data/postgresql.conf
+
+ENTRYPOINT until pg_basebackup -D /var/lib/postgresql/data -h ${DJANGO_DB_MASTER_HOST} -p ${DJANGO_DB_MASTER_PORT} \
+               -U ${POSTGRES_SLAVE_USER} -w -X stream -R -C -S replication_slot ; \
+           do echo 'Connecting to master' ; sleep 1 ; done ; \
+           chmod -R 0700 /var/lib/postgresql/data ; \
+           postgres

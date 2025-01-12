@@ -100,15 +100,27 @@ WSGI_APPLICATION = "orkestro.wsgi.application"
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
-    "default": {
+    "default": {},
+    "master": {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": os.getenv("POSTGRES_DB"),
-        "USER": os.getenv("POSTGRES_USER"),
-        "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
-        "HOST": os.getenv("DJANGO_DB_HOST"),
-        "PORT": os.getenv("DJANGO_DB_PORT"),
+        "USER": os.getenv("POSTGRES_MASTER_USER"),
+        "PASSWORD": os.getenv("POSTGRES_MASTER_PASSWORD"),
+        "HOST": os.getenv("DJANGO_DB_MASTER_HOST"),
+        "PORT": os.getenv("DJANGO_DB_MASTER_PORT"),
+    },
+    "slave": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.getenv("POSTGRES_DB"),
+        "USER": os.getenv("POSTGRES_SLAVE_USER"),
+        "PASSWORD": os.getenv("POSTGRES_SLAVE_PASSWORD"),
+        "HOST": os.getenv("DJANGO_DB_SLAVE_HOST"),
+        "PORT": os.getenv("DJANGO_DB_SLAVE_PORT"),
+        "TEST": {"MIRROR": "master"},
     }
 }
+
+DATABASE_ROUTERS = ["ReplicationRouter"]
 
 
 # Password validation

@@ -10,33 +10,38 @@ services:
       context: .
       dockerfile: database/dockerfile_master
       args:
-        - POSTGRES_USER=$POSTGRES_USER
         - POSTGRES_DB=$POSTGRES_DB
         - INCLUDE_TEST_DATA=$INCLUDE_TEST_DATA
+        - POSTGRES_SLAVE_USER=$POSTGRES_SLAVE_USER
+        - POSTGRES_SLAVE_PASSWORD=$POSTGRES_SLAVE_PASSWORD
+    environment:
+      - POSTGRES_USER=$POSTGRES_MASTER_USER
+      - POSTGRES_PASSWORD=$POSTGRES_MASTER_PASSWORD
     volumes:
-      - "pgdata_volume:/var/lib/postgresql/data"
+      - "pgdata_master_volume:/var/lib/postgresql/data"
 
-      
-#  orkestro-db-slave:
-#    container_name: orkestro-db-slave
-#    restart: always
-#    env_file:
-#      - .env
-#    ports:
-#      - "5433:5432"
-#    extra_hosts:
-#      - "host.docker.internal:host-gateway"
-#    build:
-#      context: .
-#      dockerfile: database/dockerfile_slave
-#      args:
-#        - POSTGRES_USER=$POSTGRES_USER
-#        - POSTGRES_DB=$POSTGRES_DB
-#        - INCLUDE_TEST_DATA=$INCLUDE_TEST_DATA
-#    volumes:
-#      - "pgdata_slave_volume:/var/lib/postgresql/data"
-#    depends_on:
-#      - orkestro-db-master
+  orkestro-db-slave:
+    container_name: orkestro-db-slave
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - "5433:5432"
+    build:
+      context: .
+      dockerfile: database/dockerfile_slave
+      args:
+        - DJANGO_DB_MASTER_HOST=$DJANGO_DB_MASTER_HOST
+        - DJANGO_DB_MASTER_PORT=$DJANGO_DB_MASTER_PORT
+        - POSTGRES_SLAVE_USER=$POSTGRES_SLAVE_USER
+        - POSTGRES_SLAVE_PASSWORD=$POSTGRES_SLAVE_PASSWORD
+    environment:
+      - POSTGRES_USER=$POSTGRES_SLAVE_USER
+      - POSTGRES_PASSWORD=$POSTGRES_SLAVE_PASSWORD
+    volumes:
+      - "pgdata_slave_volume:/var/lib/postgresql/data"
+    depends_on:
+      - orkestro-db-master
 
   orkestro-backend:
     container_name: orkestro-backend
@@ -48,11 +53,11 @@ services:
     build:
       context: ./backend
       args:
-        - POSTGRES_USER=$POSTGRES_USER
-        - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+        - POSTGRES_MASTER_USER=$POSTGRES_MASTER_USER
+        - POSTGRES_MASTER_PASSWORD=$POSTGRES_MASTER_PASSWORD
         - POSTGRES_DB=$POSTGRES_DB
-        - DJANGO_DB_HOST=$DJANGO_DB_HOST
-        - DJANGO_DB_PORT=$DJANGO_DB_PORT
+        - DJANGO_DB_MASTER_HOST=$DJANGO_DB_MASTER_HOST
+        - DJANGO_DB_MASTER_PORT=$DJANGO_DB_MASTER_PORT
         - DJANGO_KEY=$DJANGO_KEY
         - DJANGO_DEBUG=$DJANGO_DEBUG
         - REACT_APP_GOOGLE_CLIENT_ID=$REACT_APP_GOOGLE_CLIENT_ID
@@ -84,5 +89,5 @@ services:
       - orkestro-backend
 
 volumes:
-  pgdata_volume: {}
+  pgdata_master_volume: {}
   pgdata_slave_volume: {}

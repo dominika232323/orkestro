@@ -1,9 +1,19 @@
 FROM postgres:17-alpine
+
+ARG POSTGRES_DB
 ARG INCLUDE_TEST_DATA
+ARG POSTGRES_SLAVE_USER
+ARG POSTGRES_SLAVE_PASSWORD
+
 COPY ./database/tables.sql /docker-entrypoint-initdb.d/1.sql
 COPY ./database/data.sql /docker-entrypoint-initdb.d/2.sql
 COPY ./database/tables_test.sql /docker-entrypoint-initdb.d/3.sql
+
 RUN sed -e "s/test_orkestrodb/test_${POSTGRES_DB}/g" /docker-entrypoint-initdb.d/3.sql
 RUN cat /docker-entrypoint-initdb.d/1.sql >> /docker-entrypoint-initdb.d/3.sql
 RUN if [ "$INCLUDE_TEST_DATA" == "false" ] ; then rm /docker-entrypoint-initdb.d/2.sql ; fi
 
+RUN echo "CREATE USER ${POSTGRES_SLAVE_USER} WITH REPLICATION LOGIN PASSWORD '${POSTGRES_SLAVE_PASSWORD}';" >> /docker-entrypoint-initdb.d/1.sql
+RUN echo "host replication ${POSTGRES_SLAVE_USER} 0.0.0.0/0 scram-sha-256" >> /var/lib/postgresql/data/pg_hba.conf
+RUN echo "wal_log_hints = on" >> /var/lib/postgresql/data/postgresql.conf
+RUN echo "hot_standby = on" >> /var/lib/postgresql/data/postgresql.conf
