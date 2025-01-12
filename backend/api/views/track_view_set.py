@@ -13,6 +13,7 @@ from rest_framework.response import Response
 from api.models import Track, FileInstrument, EventTrack
 from api.serializers import TrackSerializer, TrackCreateSerializer
 from api.permissions.track_permissions import CanViewTrack, CanCreateTrack, CanEditDeleteTrack
+from django.core.paginator import Paginator
 
 
 class TrackViewSet(viewsets.ModelViewSet):
@@ -51,5 +52,14 @@ class TrackViewSet(viewsets.ModelViewSet):
                 .filter(file__track__in=tracks, instrument_id__in=request.GET.getlist("instrument_id")))
             tracks = set([fi.file.track for fi in file_instruments])
 
-        serializer = self.get_serializer(tracks, many=True)
-        return Response(serializer.data)
+        tracks = sorted(tracks, key=lambda track: track.name)
+
+        paginator = Paginator(tracks, 10)
+        page = paginator.get_page(request.GET.get("page", 1))
+        serializer = self.get_serializer(page, many=True)
+
+        return Response({
+            "items": serializer.data,
+            "page_number": page.number,
+            "total_pages": paginator.num_pages
+        })

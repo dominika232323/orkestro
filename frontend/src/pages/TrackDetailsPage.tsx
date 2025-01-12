@@ -1,6 +1,12 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useLanguage } from "../LanguageContext";
-import { OrkestroFile, Paged, OrkestroTrack } from "../interfaces";
+import {
+  OrkestroFile,
+  Paged,
+  OrkestroTrack,
+  OrkestroEvent,
+  OrkestroTrackEvent,
+} from "../interfaces";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Pagination from "../components/Pagination";
@@ -14,11 +20,13 @@ export default function TrackDetailsPage() {
 
   const [track, setTrack] = useState<OrkestroTrack | null>(null);
   const [files, setFiles] = useState<OrkestroFile[]>([]);
+  const [events, setEvents] = useState<OrkestroTrackEvent[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
     fetchTrack();
+    fetchEvents();
   }, []);
 
   useEffect(() => {
@@ -67,6 +75,17 @@ export default function TrackDetailsPage() {
       })
       .catch((error) => console.error("Error fetching files: ", error));
   };
+
+  const fetchEvents = async () => {
+    await axios
+      .get<OrkestroTrackEvent[]>(
+        `/api/event-tracks/by_track/?track_id=${trackId}`
+      )
+      .then((response) => setEvents(response.data))
+      .catch((error) => console.error(error));
+  };
+
+  console.log(events);
 
   if (track) {
     return (
@@ -121,6 +140,25 @@ export default function TrackDetailsPage() {
           totalPages={totalPages}
           onPageChange={(page) => setCurrentPage(page)}
         />
+
+        {/* Lista wydarzeń */}
+        <h2 className="text-xl font-bold mt-4">{t("track-details.events")}</h2>
+        <ul className="list-disc pl-5">
+          {events.length > 0 ? (
+            events.map((event) => (
+              <li key={event.event}>
+                <span
+                  className="hover:underline"
+                  onClick={() => navigate(`/event-details/${event.event}`)}
+                >
+                  {event.event_details.name}
+                </span>
+              </li>
+            ))
+          ) : (
+            <p>{t("track-details.no-events")}</p>
+          )}
+        </ul>
       </div>
     );
   } else {

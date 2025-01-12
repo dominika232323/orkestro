@@ -29,16 +29,23 @@ export default function Tracks() {
     setLoading(true);
 
     await axios
-      .get(`/api/tracks/search/?group_id=${groupId}`)
-      .then((response) => setTracks(response.data))
+      .get<Paged<OrkestroTrack>>(
+        `/api/tracks/search/?group_id=${groupId}&page=${currentPage}`
+      )
+      .then((response) => {
+        setTracks(response.data.items);
+        setTotalPages(response.data.total_pages);
+      })
       .catch((error) => console.error(error));
 
     setLoading(false);
   };
 
+  console.log(tracks);
+
   useEffect(() => {
     fetchTracks();
-  }, []);
+  }, [currentPage]);
 
   useEffect(() => {
     fetchUserOrRedirect(navigate);
