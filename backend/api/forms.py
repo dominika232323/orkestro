@@ -1,3 +1,6 @@
+"""
+Contains forms used in admin.py.
+"""
 from django import forms
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.utils import timezone
