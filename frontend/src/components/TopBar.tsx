@@ -37,12 +37,16 @@ export default function TopBar() {
       </div>
 
       {/* Center Section - Orkestro Title */}
-      <button
-        onClick={() => navigate("/invitations-and-groups/")}
+      <a
+        href="/invitations-and-groups/"
+        onClick={(e) => {
+          e.preventDefault(); // prevent the default full-page reload
+          navigate("/invitations-and-groups/");
+        }}
         className="absolute left-1/2 transform -translate-x-1/2 text-4xl font-bold text-gray-800 hover:text-gray-600 transition-colors"
       >
         Orkestro
-      </button>
+      </a>
 
       {/* Right Section - Controls */}
       <div className="flex items-center space-x-4 ml-auto">
