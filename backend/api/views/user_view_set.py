@@ -13,13 +13,13 @@ from rest_framework.response import Response
 
 from api.models import User, Member, EventAttendee, FileAllowedMember
 from api.serializers import UserSerializer
-from api.permissions.user_permissions import CanViewUser, CanEditUser
+from api.permissions.user_permissions import UserPermission
 
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = [IsAuthenticated, CanViewUser, CanEditUser]
+    permission_classes = [IsAuthenticated, UserPermission]
     http_method_names = ["get", "put", "head"]
 
     @staticmethod

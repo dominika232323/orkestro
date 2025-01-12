@@ -1,3 +1,6 @@
+"""
+Overwrites default fields in the app config.
+"""
 from django.apps import AppConfig
 
 

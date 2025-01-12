@@ -13,13 +13,13 @@ from rest_framework.response import Response
 
 from api.models import Invitation, User, Group, Member
 from api.serializers import InvitationSerializer, GroupSerializer
-from api.permissions.invitation_permissions import CanViewInvitation, CanCreateInvitation, CanRespondToInvitation
+from api.permissions.invitation_permissions import InvitationPermission
 
 
 class InvitationViewSet(viewsets.ModelViewSet):
     queryset = Invitation.objects.all().select_related("group")
     serializer_class = InvitationSerializer
-    permission_classes = [IsAuthenticated, CanViewInvitation, CanCreateInvitation, CanRespondToInvitation]
+    permission_classes = [IsAuthenticated, InvitationPermission]
     http_method_names = ["get", "post", "head"]
 
     @staticmethod

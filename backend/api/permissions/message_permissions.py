@@ -6,13 +6,10 @@ from rest_framework.permissions import BasePermission
 from api.permissions.common_checks import is_moderator
 
 
-class CanViewMessage(BasePermission):
+class MessagePermission(BasePermission):
     def has_permission(self, request, view):
-        return request.method != "GET" or request.user.is_staff or view.action == "by_group"
-
-
-class CanCreateMessage(BasePermission):
-    def has_permission(self, request, view):
-        if request.method != "POST" or request.user.is_staff:
+        if request.user.is_staff or request.method == "HEAD" or view.action == "by_group":
             return True
-        return is_moderator(request, request.data.get("group"))
+        if view.action == "create":
+            return is_moderator(request, request.data.get("group"))
+        return False

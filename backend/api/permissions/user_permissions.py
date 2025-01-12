@@ -6,14 +6,17 @@ from rest_framework.permissions import BasePermission
 from api.permissions.common_checks import is_member
 
 
-class CanViewUser(BasePermission):
+class UserPermission(BasePermission):
     def has_permission(self, request, view):
-        if request.method != "GET" or request.user.is_staff or view.action in ["me", "by_email"]:
+        if request.user.is_staff or request.method == "HEAD" or view.action in ["me", "by_email", "update"]:
             return True
-        if view.action not in ["by_group", "leftover"]:
-            return False
-        return is_member(request, request.GET.get("group_id"))
+        if view.action in ["by_group", "leftover"]:
+            return is_member(request, request.GET.get("group_id"))
+        return False
 
-class CanEditUser(BasePermission):
     def has_object_permission(self, request, view, obj):
-        return request.method != "PUT" or request.user.is_staff or obj.user_id == request.user.user_id
+        if request.user.is_staff or request.method == "HEAD":
+            return True
+        if view.action == "update":
+            return obj.user_id == request.user.user_id
+        return False

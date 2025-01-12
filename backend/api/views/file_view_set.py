@@ -19,13 +19,13 @@ from api.models import File
 from api.serializers import FileSerializer
 from api.models import FileAllowedMember, Event, EventTrack, FileInstrument
 
-from api.permissions.file_permissions import CanViewFile, CanDownloadFile, CanCreateFile, CanDeleteFile
+from api.permissions.file_permissions import FilePermission
 
 
 class FileViewSet(viewsets.ModelViewSet):
     queryset = File.objects.all()
     serializer_class = FileSerializer
-    permission_classes = [IsAuthenticated, CanViewFile, CanDownloadFile, CanCreateFile, CanDeleteFile]
+    permission_classes = [IsAuthenticated, FilePermission]
     http_method_names = ["get", "post", "delete", "head"]
 
     def create(self, request, *args, **kwargs):

@@ -11,13 +11,13 @@ from rest_framework.response import Response
 
 from api.models import FileAllowedMember, Member
 from api.serializers import FileAllowedMemberSerializer
-from api.permissions.file_allowed_member_permissions import CanViewFileAllowedMember, CanCreateFileAllowedMember, CanDeleteFileAllowedMember
+from api.permissions.file_allowed_member_permissions import FileAllowedMemberPermission
 
 
 class FileAllowedMemberViewSet(viewsets.ModelViewSet):
     queryset = FileAllowedMember.objects.all()
     serializer_class = FileAllowedMemberSerializer
-    permission_classes = [IsAuthenticated, CanViewFileAllowedMember, CanCreateFileAllowedMember, CanDeleteFileAllowedMember]
+    permission_classes = [IsAuthenticated, FileAllowedMemberPermission]
     http_method_names = ["get", "post", "delete", "head"]
 
     @staticmethod

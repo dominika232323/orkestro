@@ -1,11 +1,16 @@
+"""
+Contains classes that map database tables for Django ORM.
+"""
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.db import models
 from django.utils import timezone
 
-# IDs in bridging tables like event_attendees are redundant and exist because Django can't handle compound primary keys
-
 
 class UserManager(BaseUserManager):
+    """
+    Model manager with custom functions for user creation.
+    """
+
     def create_user(self, email, password=None, date_joined=None, **extra_fields):
         if not email:
             raise ValueError("The Email field must be set")

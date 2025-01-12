@@ -15,13 +15,13 @@ from rest_framework.response import Response
 
 from api.models import Event, EventAttendee, Member, User
 from api.serializers import EventSerializer, EventCreateSerializer
-from api.permissions.event_permissions import CanViewEvent, CanEditDeleteEvent, CanCreateEvent
+from api.permissions.event_permissions import EventPermission
 
 
 class EventViewSet(viewsets.ModelViewSet):
     queryset = Event.objects.all()
     serializer_class = EventSerializer
-    permission_classes = [IsAuthenticated, CanViewEvent, CanCreateEvent, CanEditDeleteEvent]
+    permission_classes = [IsAuthenticated, EventPermission]
     http_method_names = ["get", "post", "put", "delete", "head"]
 
     def create(self, request, *args, **kwargs):

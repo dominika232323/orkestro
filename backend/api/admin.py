@@ -1,3 +1,6 @@
+"""
+Adds extra functionality to the default Django admin panel.
+"""
 from django.apps import apps
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin

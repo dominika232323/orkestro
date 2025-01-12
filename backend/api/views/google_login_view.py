@@ -1,3 +1,6 @@
+"""
+Handles API requests regarding Google authentication.
+"""
 from django.conf import settings
 from django.utils import timezone
 from google.auth.transport import requests
