@@ -1,19 +1,46 @@
-import React from "react";
+import React, { useState } from "react";
 import { useLanguage } from "../LanguageContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { OrkestroMember } from "../interfaces";
+import axios from "axios";
 
 interface ManageMemberProps {
   member: OrkestroMember;
+  reload: () => void;
 }
 
-export default function ManageMember({ member }: ManageMemberProps) {
+export default function ManageMember({ member, reload }: ManageMemberProps) {
   const { t } = useLanguage();
 
-  const handleRoleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {};
+  const [deleting, setDeleting] = useState(false);
 
-  const handleDelete = () => {};
+  const handleRoleChange = async (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    try {
+      await axios.put(`/api/members/${member.member_id}/`, {
+        ...member,
+        permission_level: event.target.value,
+      });
+    } catch (error) {
+      console.error(error);
+    } finally {
+      reload();
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      setDeleting(true);
+      await axios.delete(`/api/members/${member.member_id}/`);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setDeleting(false);
+      reload();
+    }
+  };
 
   return (
     <div
@@ -24,7 +51,7 @@ export default function ManageMember({ member }: ManageMemberProps) {
       <div className="flex items-center space-x-4">
         <select
           value={member.permission_level}
-          onSelect={handleRoleChange}
+          onChange={handleRoleChange}
           className="p-2 border border-gray-300 rounded-lg"
         >
           <option value="A">{t("manage-group.roles.A")}</option>
@@ -34,6 +61,7 @@ export default function ManageMember({ member }: ManageMemberProps) {
         <button
           className="p-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
           onClick={handleDelete}
+          disabled={deleting}
         >
           <FontAwesomeIcon icon={faTimes} />
         </button>

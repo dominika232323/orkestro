@@ -103,7 +103,11 @@ export default function ManageGroup() {
       {/* Members List or Loading State */}
       {members && members.length > 0 ? (
         members.map((member) => (
-          <ManageMember key={member.user} member={member} />
+          <ManageMember
+            key={member.user}
+            member={member}
+            reload={fetchMembers}
+          />
         ))
       ) : loading ? (
         <p className="text-gray-600 text-center">{t("manage-group.loading")}</p>
