@@ -29,9 +29,14 @@ services:
     environment:
       - POSTGRES_USER=$POSTGRES_SLAVE_USER
       - POSTGRES_PASSWORD=$POSTGRES_SLAVE_PASSWORD
+      - PGUSER=$POSTGRES_SLAVE_USER
+      - PGPASSWORD=$POSTGRES_SLAVE_PASSWORD
+      - PGHOST=$DJANGO_DB_MASTER_HOST
+      - PGPORT=$DJANGO_DB_MASTER_PORT
     volumes:
       - "pgdata_slave_volume:/var/lib/postgresql/data"
     image: postgres:17-alpine
+    command: "/bin/sh -c 'until pg_basebackup -D /var/lib/postgresql/data -w -R ; do sleep 1 ; done'"
 
   orkestro-db-slave:
     container_name: orkestro-db-slave
@@ -40,23 +45,16 @@ services:
       - .env
     ports:
       - "5433:5432"
-    build:
-      context: .
-      dockerfile: database/dockerfile_slave
-      args:
-        - DJANGO_DB_MASTER_HOST=$DJANGO_DB_MASTER_HOST
-        - DJANGO_DB_MASTER_PORT=$DJANGO_DB_MASTER_PORT
-        - POSTGRES_SLAVE_USER=$POSTGRES_SLAVE_USER
-        - POSTGRES_SLAVE_PASSWORD=$POSTGRES_SLAVE_PASSWORD
     environment:
-      - POSTGRES_USER=$POSTGRES_SLAVE_USER
-      - POSTGRES_PASSWORD=$POSTGRES_SLAVE_PASSWORD
+      - POSTGRES_USER=$POSTGRES_MASTER_USER
+      - POSTGRES_PASSWORD=$POSTGRES_MASTER_PASSWORD
       - PGUSER=$POSTGRES_SLAVE_USER
       - PGPASSWORD=$POSTGRES_SLAVE_PASSWORD
       - PGHOST=$DJANGO_DB_MASTER_HOST
       - PGPORT=$DJANGO_DB_MASTER_PORT
-#    volumes:
-#      - "pgdata_slave_volume:/var/lib/postgresql/data"
+    volumes:
+      - "pgdata_slave_volume:/var/lib/postgresql/data"
+    image: postgres:17-alpine
 
   orkestro-backend:
     container_name: orkestro-backend

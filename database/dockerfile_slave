@@ -1,6 +1,6 @@
 FROM postgres:17-alpine
 
-ENTRYPOINT until pg_basebackup -D /var/lib/postgresql/data -w -X stream -R -C -S replication_slot ; \
-           do echo 'Connecting to master' ; sleep 1 ; done ; \
-           chmod -R 0700 /var/lib/postgresql/data ; \
-           postgres
+RUN rm -rf /var/lib/postgresql/data/*
+RUN chmod -R 0700 /var/lib/postgresql/data
+
+# ENTRYPOINT until pg_basebackup -D /var/lib/postgresql/data -w -R ; do sleep 1 ; done ; ./usr/local/bin/docker-entrypoint.sh

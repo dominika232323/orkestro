@@ -7,7 +7,8 @@ docker exec -it orkestro-db-master psql -U ${POSTGRES_MASTER_USER} -d ${POSTGRES
 docker exec -it orkestro-db-master /bin/sh -c "echo \"host replication ${POSTGRES_SLAVE_USER} 0.0.0.0/0 scram-sha-256\" >> /var/lib/postgresql/data/pg_hba.conf"
 docker exec -it orkestro-db-master /bin/sh -c "echo \"wal_log_hints = on\" >> /var/lib/postgresql/data/postgresql.conf"
 docker exec -it orkestro-db-master /bin/sh -c "echo \"hot_standby = on\" >> /var/lib/postgresql/data/postgresql.conf"
+docker exec -it orkestro-db-master psql -U ${POSTGRES_MASTER_USER} -d ${POSTGRES_DB} -c "SELECT pg_reload_conf()"
 
 # TODO: migrate db
 
-docker compose down orkestro-db-master
+#docker compose down orkestro-db-master
