@@ -29,7 +29,7 @@ scripts=(
 #   vm_name   setup
     "frontend master"
     "rest     slave"
-#    "frontend backend"
-#    "frontend frontend"
+    "frontend backend"
+    "frontend frontend"
 )
 

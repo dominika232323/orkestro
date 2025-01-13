@@ -48,7 +48,7 @@ for ((i = 0; i < ${#vms[@]}; i++)); do
 		    --scripts "@./deploy/setup_machine.sh"
 
 		az vm run-command invoke --resource-group $resource_group --name $machine_with_ip --command-id RunShellScript \
-		    --scripts "scp -i ~/.ssh/orkestro.pem -o StrictHostKeyChecking=accept-new -rp /home/azureuser/orkestro azureuser@${3}:/home/azureuser/" ;;
+		    --scripts "scp -i /home/azureuser/.ssh/orkestro.pem -o StrictHostKeyChecking=accept-new -rp /home/azureuser/orkestro azureuser@${3}:/home/azureuser/"
 	fi
 done
 
@@ -64,9 +64,9 @@ for ((i = 0; i < ${#scripts[@]}; i++)); do
 		"backend")  az vm run-command invoke --resource-group $resource_group --name $vm_name --command-id RunShellScript \
 		            --scripts "cd /home/azureuser/orkestro && docker compose up orkestro-backend -d" ;;
 		"master")   az vm run-command invoke --resource-group $resource_group --name $vm_name --command-id RunShellScript \
-		            --scripts "./home/azureuser/orkestro/setup_master.sh" ;;
+		            --scripts "cd /home/azureuser/orkestro && sudo ./setup_master.sh" ;;
 		"slave")    az vm run-command invoke --resource-group $resource_group --name $vm_name --command-id RunShellScript \
-		            --scripts "cd /home/azureuser/orkestro && docker compose up orkestro-db-slave-setup ; docker compose down orkestro-db-slave-setup --rmi all docker compose up orkestro-db-slave -d" ;; # --parameters $@
+		            --scripts "cd /home/azureuser/orkestro && sudo ./setup_slave.sh" ;; # --parameters $@
 	esac
 done
 

@@ -59,7 +59,7 @@ services:
 
   orkestro-backend-migrate:
     container_name: orkestro-backend
-    restart: no
+    restart: on-failure
     env_file:
       - .env
     ports:
