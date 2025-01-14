@@ -6,6 +6,7 @@ export interface User {
   google_user_id: string;
   google_calendar_id: string;
   profile_picture_url: string;
+  is_staff: boolean;
 }
 
 export interface Group {

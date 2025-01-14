@@ -1,22 +1,26 @@
 import { LanguageSelector, useLanguage } from "../LanguageContext";
-import { useEffect } from "react";
+import {useState, useEffect} from "react";
 import { useNavigate } from "react-router-dom";
 import {
   faCalendarDays,
   faCog,
   faArrowRightFromBracket,
   faMessage,
+  faScrewdriverWrench,
 } from "@fortawesome/free-solid-svg-icons";
 import HoverText from "./HoverText";
 import TopBarIcon from "./TopBarIcon";
 import { removeTokens, fetchUserOrRedirect } from "../auth";
+import {User} from "../interfaces";
+
 
 export default function TopBar() {
   const navigate = useNavigate();
   const { t } = useLanguage();
+  const [user, setUser] = useState<User>();
 
   useEffect(() => {
-    fetchUserOrRedirect(navigate);
+    fetchUserOrRedirect(navigate, setUser);
   }, [navigate]);
 
   const handleLogOut = () => {
@@ -53,6 +57,13 @@ export default function TopBar() {
         <div className="relative">
           <LanguageSelector />
         </div>
+        {user && user.is_staff &&
+          <HoverText textToShow={t("top-bar.admin-panel")}>
+            <a href="/admin/">
+              <TopBarIcon location={null} iconObject={faScrewdriverWrench}/>
+            </a>
+          </HoverText>
+        }
         <HoverText textToShow={t("top-bar.settings")}>
           <TopBarIcon location="/settings/" iconObject={faCog} />
         </HoverText>
