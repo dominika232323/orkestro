@@ -58,7 +58,7 @@ services:
 
   orkestro-backend-migrate:
     container_name: orkestro-backend-migrate
-    restart: no
+    restart: on-failure
     ports:
       - "8000:8000"
     build:
@@ -71,6 +71,7 @@ services:
 
   orkestro-backend:
     container_name: orkestro-backend
+    restart: always
     ports:
       - "8000:8000"
     build:

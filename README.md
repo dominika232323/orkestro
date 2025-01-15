@@ -10,7 +10,7 @@ Przykładowy plik `.env` w katalogu głównym projektu:
 POSTGRES_DB=orkestrodb
 INCLUDE_TEST_DATA=true
 
-# Master database; in HOST use local address (192.168.x.x) rather than localhost
+# Master database; in HOST fields use local address (192.168.x.x) rather than localhost
 POSTGRES_MASTER_USER=myuser
 POSTGRES_MASTER_PASSWORD=[password]
 POSTGRES_MASTER_HOST=192.168.0.100
