@@ -1,3 +1,4 @@
+cd ../..
 . ./.env
 
 docker compose up orkestro-db-master -d

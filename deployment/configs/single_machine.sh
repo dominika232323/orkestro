@@ -24,9 +24,9 @@ vms=(
     "rest             internal            10.0.0.11    -"
 )
 
-# setups to run on VMs (master slave backend frontend): vm_name setup arg1 arg2 arg3 ...
+# components for VMs (master slave backend frontend)
 scripts=(
-#   vm_name   setup
+#   vm_name   component
     "frontend master"
     "rest     slave"
     "frontend backend"

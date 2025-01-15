@@ -13,23 +13,25 @@ INCLUDE_TEST_DATA=true
 # Master database; in HOST use local address (192.168.x.x) rather than localhost
 POSTGRES_MASTER_USER=myuser
 POSTGRES_MASTER_PASSWORD=[password]
-DJANGO_DB_MASTER_HOST=192.168.0.100
-DJANGO_DB_MASTER_PORT=5432
+POSTGRES_MASTER_HOST=192.168.0.100
+POSTGRES_MASTER_PORT=5432
 
 # Slave database - if unused, leave parameters the same as in master
 POSTGRES_SLAVE_USER=myuser_slave
 POSTGRES_SLAVE_PASSWORD=[password]
-DJANGO_DB_SLAVE_HOST=192.168.0.100
-DJANGO_DB_SLAVE_PORT=5433
+POSTGRES_SLAVE_HOST=192.168.0.100
+POSTGRES_SLAVE_PORT=5433
 
 # Django-specific parameters
 DJANGO_KEY=[key]
-DJANGO_DEBUG=1
+DJANGO_DEBUG=true
 DOMAIN=orkestro.ddns.net
 IP=localhost
 
 # Other
+BACKEND_HOSTS="192.168.0.100:8000"
 REACT_APP_GOOGLE_CLIENT_ID=[Google API client ID]
+USE_HTTPS=false
 BROWSER=none
 
 # The deployment script can overwrite IP values below
