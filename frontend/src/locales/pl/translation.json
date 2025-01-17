@@ -21,7 +21,8 @@
   },
   "groups": {
     "title": "Grupy",
-    "no-groups": "Brak grup"
+    "no-groups": "Brak grup",
+    "add-group": "Dodaj grupę"
   },
   "group": {
     "manage": "Zarządzaj",
@@ -124,7 +125,8 @@
     "edit-success": "Edycja zakończona sukcesem",
     "edit-failed": "Edycja nieudana",
     "edit-missing": "Wszystkie pola muszą być wypełnione",
-    "delete-group": "Usuń grupę"
+    "delete-group": "Usuń grupę",
+    "new-subgroup": "Nowa podgrupa"
   },
   "delete-group": {
     "title": "Usuń grupę",
@@ -213,5 +215,13 @@
     "artist": "Autor",
     "submit": "Utwórz",
     "back": "Powrót"
+  },
+  "new-group": {
+    "title": "Nowa grupa",
+    "name": "Nazwa",
+    "description": "Opis",
+    "submit": "Utwórz",
+    "back": "Powrót",
+    "missing": "Wszystkie pola są obowiązkowe"
   }
 }

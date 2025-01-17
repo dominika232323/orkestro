@@ -21,7 +21,8 @@
   },
   "groups": {
     "title": "Groups",
-    "no-groups": "No groups"
+    "no-groups": "No groups",
+    "add-group": "Add group"
   },
   "group": {
     "manage": "Manage",
@@ -123,7 +124,8 @@
     "edit-success": "Edit successfull",
     "edit-failed": "Edit failed",
     "edit-missing": "All fields must not be empty",
-    "delete-group": "Delete group"
+    "delete-group": "Delete group",
+    "new-subgroup": "New subgroup"
   },
   "new-invitation": {
     "title": "Invite new member",
@@ -207,9 +209,17 @@
   },
   "new-track": {
     "title": "New track",
-    "form-error": "All fields are mandatory",
+    "form-error": "All fields are required",
     "name": "Name",
     "artist": "Artist",
     "back": "Go back"
+  },
+  "new-group": {
+    "title": "New group",
+    "name": "Name",
+    "description": "Description",
+    "submit": "Create",
+    "back": "Back",
+    "missing": "All fields are required"
   }
 }

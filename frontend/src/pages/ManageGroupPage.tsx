@@ -12,7 +12,7 @@ import {
 import axios, { AxiosError } from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import { axiosInstance } from "../auth";
+import { axiosInstance, fetchUserOrRedirect } from "../auth";
 import NewInvitation from "../components/NewInvitation";
 import DeleteGroup from "../components/DeleteGroup";
 
@@ -32,6 +32,7 @@ export default function ManageGroupPage() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [group, setGroup] = useState<OrkestroGroup | null>(null);
+  const [user, setUser] = useState<OrkestroUser>();
 
   const parsedGroupId = groupId ? parseInt(groupId, 10) : undefined;
 
@@ -68,6 +69,10 @@ export default function ManageGroupPage() {
   useEffect(() => {
     fetchMembers();
   }, [currentPage, roleFilter]);
+
+  useEffect(() => {
+    fetchUserOrRedirect(setUser);
+  }, []);
 
   const toggleRoleFilter = (newFilter: string) => {
     setRoleFilter((prevFilter) => (prevFilter === newFilter ? "" : newFilter));
@@ -164,6 +169,16 @@ export default function ManageGroupPage() {
             disabled={loading}
           >
             {t("manage-group.edit")}
+          </button>
+          <button
+            onClick={() =>
+              navigate(`/new-group/${user?.user_id}/${group.group_id}`)
+            }
+            className="px-4 py-2 bg-blue-500 text-white font-medium hover:bg-blue-600 transition-colors"
+            disabled={loading}
+          >
+            <FontAwesomeIcon className="mr-1" icon={faPlus} />
+            {t("manage-group.new-subgroup")}
           </button>
           <button
             onClick={() => setShowDeleteGroup(true)}

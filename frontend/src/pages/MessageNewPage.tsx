@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { axiosInstance as axios, fetchUserOrRedirect } from "../auth";
 import Select, { MultiValue } from "react-select";
 
-export default function MessageNew() {
+export default function MessageNewPage() {
   const navigate = useNavigate();
   const { t } = useLanguage();
   const { groupId } = useParams<{ groupId: string }>();
@@ -27,7 +27,7 @@ export default function MessageNew() {
   }
 
   useEffect(() => {
-    fetchUserOrRedirect(navigate, setUser);
+    fetchUserOrRedirect(setUser);
   }, [navigate]);
 
   useEffect(() => {

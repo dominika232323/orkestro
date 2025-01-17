@@ -14,7 +14,7 @@ import Tracks from "./components/Tracks";
 import Settings from "./components/Settings";
 import EventEditPage from "./pages/EventEditPage";
 import EventNewPage from "./pages/EventNewPage";
-import MessageNew from "./pages/MessageNew";
+import MessageNewPage from "./pages/MessageNewPage";
 import EventDetailsPage from "./pages/EventDetailsPage";
 import TrackDetailsPage from "./pages/TrackDetailsPage";
 import TrackEditPage from "./pages/TrackEditPage";
@@ -45,7 +45,7 @@ export default function App() {
         { path: "/settings/", element: <Settings /> },
         { path: "/edit-event/:eventId", element: <EventEditPage /> },
         { path: "/new-event/:groupId", element: <EventNewPage /> },
-        { path: "/new-message/:groupId", element: <MessageNew /> },
+        { path: "/new-message/:groupId", element: <MessageNewPage /> },
         { path: "/event-details/:eventId", element: <EventDetailsPage /> },
         {
           path: "/track-details/:trackId/:groupId",
@@ -54,7 +54,10 @@ export default function App() {
         { path: "/edit-track/:trackId/:groupId", element: <TrackEditPage /> },
         { path: "/manage-group/:groupId", element: <ManageGroupPage /> },
         { path: "/new-track/:groupId", element: <TrackNewPage /> },
-        { path: "/new-group/", element: <GroupNewPage /> },
+        {
+          path: "/new-group/:userId/:superGroupId?",
+          element: <GroupNewPage />,
+        },
       ],
     },
   ]);

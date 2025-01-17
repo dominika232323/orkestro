@@ -16,10 +16,6 @@ export default function EventNewPage() {
 
   const parsedGroupId = groupId ? parseInt(groupId, 10) : undefined;
 
-  if (!parsedGroupId) {
-    throw new Error("Group ID is required and must be a valid number");
-  }
-
   const [event, setEvent] = useState<Partial<OrkestroEvent>>({
     group: parsedGroupId,
     name: "",
@@ -27,6 +23,10 @@ export default function EventNewPage() {
     date: new Date(),
     place: "",
   });
+
+  if (!parsedGroupId) {
+    throw new Error("Group ID is required and must be a valid number");
+  }
 
   useEffect(() => {
     fetchUserOrRedirect(navigate);

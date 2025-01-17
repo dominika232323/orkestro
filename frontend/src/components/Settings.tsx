@@ -34,7 +34,7 @@ export default function Settings() {
   };
 
   useEffect(() => {
-    fetchUserOrRedirect(navigate, setUser);
+    fetchUserOrRedirect(setUser);
   }, [navigate]);
 
   useEffect(() => {
