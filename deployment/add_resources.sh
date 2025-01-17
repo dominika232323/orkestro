@@ -56,28 +56,7 @@ for ((i = 0; i < ${#vms[@]}; i++)); do
 
 		az vm run-command invoke --resource-group $resource_group --name $machine_with_ip --command-id RunShellScript \
 		    --scripts "scp -i /home/azureuser/.ssh/orkestro.pem -o StrictHostKeyChecking=accept-new -rp /home/azureuser/orkestro/.env azureuser@${3}:/home/azureuser/orkestro/"
-		
-		az vm run-command invoke --resource-group $resource_group --name $machine_with_ip --command-id RunShellScript \
-		    --scripts "scp -i /home/azureuser/.ssh/orkestro.pem -o StrictHostKeyChecking=accept-new -rp /home/azureuser/orkestro/nginx/*.pem azureuser@${3}:/home/azureuser/orkestro/nginx/"
 	fi
-done
-
-
-for ((i = 0; i < ${#scripts[@]}; i++)); do
-	set ${scripts[$i]} # vm_name component
-	vm_name=$1; shift
-	component=$1; shift
-
-	case $component in # azure CLI fails to get script path from a variable
-	    "frontend") az vm run-command invoke --resource-group $resource_group --name $vm_name --command-id RunShellScript \
-	                --scripts "cd /home/azureuser/orkestro && docker compose up orkestro-frontend -d" ;;
-		"backend")  az vm run-command invoke --resource-group $resource_group --name $vm_name --command-id RunShellScript \
-		            --scripts "cd /home/azureuser/orkestro && docker compose up orkestro-backend -d" ;;
-		"master")   az vm run-command invoke --resource-group $resource_group --name $vm_name --command-id RunShellScript \
-		            --scripts "cd /home/azureuser/orkestro/deployment/deploy && sudo ./setup_master.sh" ;;
-		"slave")    az vm run-command invoke --resource-group $resource_group --name $vm_name --command-id RunShellScript \
-		            --scripts "cd /home/azureuser/orkestro/deployment/deploy && sudo ./setup_slave.sh" ;;
-	esac
 done
 
 echo

@@ -60,7 +60,7 @@ services:
     container_name: orkestro-backend-migrate
     restart: on-failure
     ports:
-      - "8000:8000"
+      - "8888:8000"
     build:
       context: ./backend
       args:

@@ -16,7 +16,6 @@ security_groups=(
 public_ip="frontend-ip"
 machine_with_ip="frontend"
 
-
 # VMs to set up; type - to give a VM no public address; 4 first and 1 last address in a subnet are reserved
 # Enter the machine with public IP first
 vms=(
@@ -25,15 +24,5 @@ vms=(
     "rest             internal            10.0.0.20    -"
     "db               internal            10.0.0.11    -"
     "slave            internal            10.0.0.12    -"
-)
-
-# Components for VMs (master slave backend frontend)
-scripts=(
-#   vm_name   component
-    "db       master"
-    "slave    slave"
-    "rest     backend"
-    "frontend frontend"
-    "db       backend"
 )
 

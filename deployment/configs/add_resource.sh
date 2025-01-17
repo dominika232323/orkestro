@@ -19,11 +19,5 @@ machine_with_ip="frontend"
 # Enter the machine with public IP first
 vms=(
 #   name              security_group_name private_ip   public_ip
+   "rest2             internal            10.0.0.21    -"
 )
-
-# Components for VMs (master slave backend frontend)
-scripts=(
-#   vm_name   component
-    "frontend backend"
-)
-

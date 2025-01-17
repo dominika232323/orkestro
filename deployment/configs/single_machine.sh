@@ -22,11 +22,3 @@ vms=(
     "$machine_with_ip exposed             10.0.255.11 $public_ip"
 )
 
-# Components for VMs (master slave backend frontend)
-scripts=(
-#   vm_name   component
-    "frontend master"
-    "frontend backend"
-    "frontend frontend"
-)
-

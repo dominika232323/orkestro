@@ -25,6 +25,7 @@ POSTGRES_SLAVE_PORT=5433
 # Django-specific parameters
 DJANGO_KEY=[key]
 DJANGO_DEBUG=true
+DJANGO_WORKERS=3
 DOMAIN=orkestro.ddns.net
 IP=localhost
 

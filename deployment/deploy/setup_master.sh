@@ -16,3 +16,4 @@ docker exec -it orkestro-db-master /bin/sh -c "echo \"wal_log_hints = on\" >> /v
 docker exec -it orkestro-db-master /bin/sh -c "echo \"hot_standby = on\" >> /var/lib/postgresql/data/postgresql.conf"
 
 docker exec -it orkestro-db-master psql -U ${POSTGRES_MASTER_USER} -d ${POSTGRES_DB} -c "SELECT pg_reload_conf()"
+
