@@ -18,8 +18,9 @@ import MessageNew from "./pages/MessageNew";
 import EventDetailsPage from "./pages/EventDetailsPage";
 import TrackDetailsPage from "./pages/TrackDetailsPage";
 import TrackEditPage from "./pages/TrackEditPage";
-import ManageGroup from "./components/ManageGroup";
+import ManageGroupPage from "./pages/ManageGroupPage";
 import TrackNewPage from "./pages/TrackNewPage";
+import GroupNewPage from "./pages/GroupNewPage";
 
 export default function App() {
   const router = createBrowserRouter([
@@ -51,8 +52,9 @@ export default function App() {
           element: <TrackDetailsPage />,
         },
         { path: "/edit-track/:trackId/:groupId", element: <TrackEditPage /> },
-        { path: "/manage-group/:groupId", element: <ManageGroup /> },
+        { path: "/manage-group/:groupId", element: <ManageGroupPage /> },
         { path: "/new-track/:groupId", element: <TrackNewPage /> },
+        { path: "/new-group/", element: <GroupNewPage /> },
       ],
     },
   ]);

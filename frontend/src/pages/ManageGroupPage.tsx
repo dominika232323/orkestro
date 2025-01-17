@@ -1,8 +1,8 @@
 import { useLanguage } from "../LanguageContext";
 import { useEffect, useState } from "react";
-import ManageMember from "./ManageMember";
+import ManageMember from "../components/ManageMember";
 import { useNavigate, useParams } from "react-router-dom";
-import Pagination from "./Pagination";
+import Pagination from "../components/Pagination";
 import {
   OrkestroGroup,
   OrkestroMember,
@@ -13,10 +13,10 @@ import axios, { AxiosError } from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { axiosInstance } from "../auth";
-import NewInvitation from "./NewInvitation";
-import DeleteGroup from "./DeleteGroup";
+import NewInvitation from "../components/NewInvitation";
+import DeleteGroup from "../components/DeleteGroup";
 
-function ManageGroup() {
+export default function ManageGroupPage() {
   const { t } = useLanguage();
   const { groupId } = useParams();
   const navigate = useNavigate();
@@ -272,5 +272,3 @@ function ManageGroup() {
     return <p>Loading...</p>;
   }
 }
-
-export default ManageGroup;
