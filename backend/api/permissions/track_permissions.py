@@ -8,7 +8,7 @@ from api.permissions.common_checks import is_member, is_manager
 
 class TrackPermission(BasePermission):
     def has_permission(self, request, view):
-        if request.user.is_staff or request.method == "HEAD" or view.action in ["update", "destroy"]:
+        if request.user.is_staff or request.method == "HEAD" or view.action in ["update", "destroy", "retrieve"]:
             return True
         if view.action in ["search", "leftover"]:
             return is_member(request, request.GET.get("group_id"))
@@ -21,4 +21,6 @@ class TrackPermission(BasePermission):
             return True
         if view.action in ["update", "destroy"]:
             return is_manager(request, obj.group_id)
+        if view.action == "retrieve":
+            return is_member(request, obj.group_id)
         return False
