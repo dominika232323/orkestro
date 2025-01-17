@@ -115,7 +115,13 @@
     "new-message": "New message",
     "page": "Page",
     "search": "Search",
-    "loading": "Members loading..."
+    "loading": "Members loading...",
+    "invite": "Invite",
+    "invite-title": "Invite new member",
+    "invite-placeholder": "Enter email address...",
+    "no-user": "No user with such email",
+    "invite-error": "User not invitable",
+    "invite-success": "User invited"
   },
   "pagination": {
     "page": "Page"

@@ -3,8 +3,11 @@ import { useEffect, useState } from "react";
 import ManageMember from "./ManageMember";
 import { useNavigate, useParams } from "react-router-dom";
 import Pagination from "./Pagination";
-import { OrkestroMember, Paged } from "../interfaces";
-import axios from "axios";
+import { OrkestroMember, OrkestroUser, Paged } from "../interfaces";
+import axios, { AxiosError } from "axios";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { axiosInstance } from "../auth";
 
 export default function ManageGroup() {
   const { t } = useLanguage();
@@ -17,6 +20,12 @@ export default function ManageGroup() {
   const [roleFilter, setRoleFilter] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [showInvite, setShowInvite] = useState(false);
+  const [email, setEmail] = useState("");
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+
+  const parsedGroupId = groupId ? parseInt(groupId, 10) : undefined;
 
   const fetchMembers = async () => {
     setLoading(true);
@@ -55,6 +64,45 @@ export default function ManageGroup() {
     }
   };
 
+  const handleInvite = async () => {
+    setError("");
+    setSuccess("");
+    setLoading(true);
+
+    let user: OrkestroUser;
+
+    try {
+      const response = await axios.get<OrkestroUser>(
+        `/api/users/by_email/?email=${email}`
+      );
+      user = response.data;
+      try {
+        const data = {
+          user: user.user_id,
+          group: parsedGroupId,
+          permission_level: "A",
+        };
+        const response = await axios.post(`/api/invitations/`, data);
+        setSuccess(t("manage-group.invite-success"));
+      } catch (err) {
+        if (axios.isAxiosError(err)) {
+          setError(t("manage-group.invite-error"));
+        }
+        console.error(err);
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        if (error.response?.status === 404) {
+          setError(t("manage-group.no-user"));
+        }
+      } else {
+        console.error(error);
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="bg-gray-200 p-6 rounded-lg max-w-4xl mx-auto mt-8">
       <h1 className="text-2xl font-bold text-center mb-6">
@@ -80,6 +128,15 @@ export default function ManageGroup() {
           </button>
         </div>
       </div>
+
+      {/* Invite member */}
+      <button
+        className="w-full py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 font-medium flex items-center justify-center my-3"
+        onClick={() => setShowInvite(true)}
+      >
+        <FontAwesomeIcon icon={faPlus} className="mr-2" />
+        {t("manage-group.invite")}
+      </button>
 
       {/* Role Filter Buttons */}
       <div className="flex justify-center space-x-4 mb-6">
@@ -123,6 +180,41 @@ export default function ManageGroup() {
         totalPages={totalPages}
         onPageChange={(page) => setCurrentPage(page)}
       />
+
+      {showInvite && (
+        <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center">
+          <div className="bg-white p-6 rounded-lg max-w-lg w-full">
+            <h2 className="text-lg font-bold mb-4">
+              {t("manage-group.invite-title")}
+            </h2>
+            {error && <p className="text-red-500 text-center mb-4">{error}</p>}
+            {success && (
+              <p className="text-green-500 text-center mb-4">{success}</p>
+            )}
+            <input
+              type="text"
+              name="email"
+              value={email}
+              placeholder={t("manage-group.invite-placeholder")}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <button
+              onClick={handleInvite}
+              className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600"
+              disabled={loading}
+            >
+              {t("manage-group.invite")}
+            </button>
+            <button
+              onClick={() => setShowInvite(false)}
+              className="ml-1 bg-red-500 text-white p-2 rounded-lg hover:bg-red-600"
+              disabled={loading}
+            >
+              {t("edit-track.back")}
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

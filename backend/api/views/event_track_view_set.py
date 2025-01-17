@@ -4,12 +4,15 @@ Handles API requests regarding events' track data:
 - getting all entries related to a track (requires being a member of the group)
 Staff users can do all of the above + list all event tracks or a specific one.
 """
+import datetime
+import pytz
+
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from django.core.paginator import Paginator
-from datetime import date
+from datetime import datetime
 
 from api.models import Event, Track, EventTrack
 from api.serializers import EventTrackSerializer
@@ -40,7 +43,7 @@ class EventTrackViewSet(viewsets.ModelViewSet):
         event_tracks = EventTrack.objects.filter(track_id=request.GET.get("track_id")).select_related("track", "event")
         event_tracks = [
             event_track for event_track in event_tracks
-            if event_tracks.event.date >= date.today()
+            if event_track.event.date >= datetime.now(pytz.timezone("Europe/Warsaw"))
         ]
         event_tracks = sorted(event_tracks, key=lambda event_track: event_track.event.date)
 

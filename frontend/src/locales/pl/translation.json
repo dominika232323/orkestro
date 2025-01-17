@@ -116,7 +116,13 @@
     "new-message": "Nowa wiadomość",
     "page": "Strona",
     "search": "Szukaj",
-    "loading": "Ładowanie członków grupy..."
+    "loading": "Ładowanie członków grupy...",
+    "invite": "Zaproś",
+    "invite-title": "Zaproś do grupy",
+    "invite-placeholder": "Wprowadź adres email...",
+    "no-user": "Brak użytkownika o takim adresie email",
+    "invite-error": "Nie udało się zaprosić użytkownika",
+    "invite-success": "Użytkownik zaproszony"
   },
   "pagination": {
     "page": "Strona"

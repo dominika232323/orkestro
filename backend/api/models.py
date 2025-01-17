@@ -145,7 +145,6 @@ class Message(models.Model):
     title = models.CharField(max_length=100)
     content = models.CharField(max_length=2000)
     date = models.DateTimeField()
-
     def __str__(self) -> str:
         return f"{self.user} → {self.group.name} ({self.message_id})"
 
