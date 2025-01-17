@@ -19,13 +19,14 @@
     "title": "Invitations",
     "no-invitations": "No pending invitations"
   },
-  "invitations-and-groups": {
-    "title": "Groups"
+  "groups": {
+    "title": "Groups",
+    "no-groups": "No groups"
   },
   "group": {
     "manage": "Manage",
     "events": "Events",
-    "files": "Files",
+    "tracks": "Tracks",
     "new-message": "New message"
   },
   "messages": {
@@ -79,16 +80,20 @@
     "placeholder": "Search by name, place, description…",
     "search": "Search",
     "edit": "Edit",
-    "delete": "Delete"
+    "delete": "Delete",
+    "details": "Details"
   },
-  "files": {
-    "title": "Files",
-    "no-files": "No files",
+  "tracks": {
+    "title": "Tracks",
+    "no-tracks": "No tracks",
     "download": "Download",
-    "add-file": "New file",
-    "placeholder": "Search by name or track…",
+    "add-track": "New track",
+    "placeholder": "Search by name or artist...",
     "search": "Search",
-    "loading": "Files loading..."
+    "loading": "Tracks loading...",
+    "delete": "Delete",
+    "edit": "Edit",
+    "files": "Files"
   },
   "manage-group": {
     "title": "Manage group",
@@ -97,9 +102,9 @@
     "save-changes": "Save changes",
     "members": "Members",
     "roles": {
-      "manager": "Manager",
-      "musician": "Musician",
-      "moderator": "Moderator"
+      "A": "Manager",
+      "C": "Musician",
+      "B": "Moderator"
     },
     "no-members": "No members",
     "previous": "Previous",
@@ -123,17 +128,63 @@
     "date": "Date",
     "time": "Time",
     "submit": "Create",
-    "form-error": "All fields are mandatory"
+    "form-error": "All fields are mandatory",
+    "back": "Go back"
   },
   "edit-event": {
     "title": "Edit event",
-    "submit": "Edit"
+    "submit": "Edit",
+    "remove-track": "Remove Track",
+    "add-tracks": "Add Tracks",
+    "select-tracks": "Select tracks to add",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "submit-tracks": "Add tracks",
+    "tracks": "Tracks",
+    "no-tracks": "No tracks",
+    "back": "Go back"
   },
   "new-message": {
     "title": "New message",
     "recipients": "Odbiorcy",
     "message-title": "Title",
     "content": "Content",
-    "submit": "Send"
+    "submit": "Send",
+    "back": "Go back"
+  },
+  "event-details": {
+    "fetching": "Fetching...",
+    "tracks": "Tracks",
+    "no-tracks": "No tracks",
+    "edit": "Edit",
+    "back": "Go back"
+  },
+  "track-details": {
+    "fetching": "Fetching...",
+    "artist": "Artist",
+    "edit": "Edit",
+    "download": "Download",
+    "files": "Files",
+    "back": "Go back",
+    "upcoming-events": "Upcoming events",
+    "no-upcoming-events": "No upcoming events"
+  },
+  "edit-track": {
+    "title": "Edit track",
+    "name": "Name",
+    "artist": "Artist",
+    "files": "Files",
+    "no-files": "No files",
+    "submit": "Edit",
+    "remove-file": "Remove file",
+    "add-file": "Add files",
+    "back": "Go back"
+  },
+  "new-track": {
+    "title": "New track",
+    "form-error": "All fields are mandatory",
+    "name": "Name",
+    "artist": "Artist",
+    "back": "Go back"
   }
 }

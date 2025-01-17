@@ -1,9 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import { useLanguage } from "../LanguageContext";
-import { GroupWithSubgroups } from "../interfaces";
+import { OrkestroGroupWithSubgroups } from "../interfaces";
 
 interface Params {
-  group: GroupWithSubgroups;
+  group: OrkestroGroupWithSubgroups;
 }
 
 export default function GroupComponent({ group }: Params) {
@@ -18,7 +18,6 @@ export default function GroupComponent({ group }: Params) {
         </div>
 
         <div className="flex space-x-4">
-          {/*
           <button
             className="text-sm text-blue-500 hover:text-blue-700"
             onClick={() => {
@@ -27,7 +26,7 @@ export default function GroupComponent({ group }: Params) {
           >
             {t("group.manage")}
           </button>
-          */}
+
           <button
             className="text-sm text-blue-500 hover:text-blue-700"
             onClick={() => {
@@ -36,16 +35,16 @@ export default function GroupComponent({ group }: Params) {
           >
             {t("group.events")}
           </button>
-          {/*
+
           <button
             className="text-sm text-blue-500 hover:text-blue-700"
             onClick={() => {
-              navigate(`/files/${group.group_id}`);
+              navigate(`/tracks/${group.group_id}`);
             }}
           >
-            {t("group.files")}
+            {t("group.tracks")}
           </button>
-          */}
+
           <button
             className="text-sm text-blue-500 hover:text-blue-700"
             onClick={() => {

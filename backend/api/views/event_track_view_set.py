@@ -8,6 +8,8 @@ from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from django.core.paginator import Paginator
+from datetime import date
 
 from api.models import Event, Track, EventTrack
 from api.serializers import EventTrackSerializer
@@ -36,8 +38,21 @@ class EventTrackViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=["get"])
     def by_track(self, request):
         event_tracks = EventTrack.objects.filter(track_id=request.GET.get("track_id")).select_related("track", "event")
-        serializer = self.get_serializer(event_tracks, many=True)
-        return Response(serializer.data)
+        event_tracks = [
+            event_track for event_track in event_tracks
+            if event_tracks.event.date >= date.today()
+        ]
+        event_tracks = sorted(event_tracks, key=lambda event_track: event_track.event.date)
+
+        paginator = Paginator(event_tracks, 10)
+        page = paginator.get_page(request.GET.get("page", 1))
+        serializer = self.get_serializer(page, many=True)
+
+        return Response({
+            "items": serializer.data,
+            "page_number": page.number,
+            "total_pages": paginator.num_pages
+        })
 
     @action(detail=False, methods=["get"])
     def by_event(self, request):

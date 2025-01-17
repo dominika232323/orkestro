@@ -1,5 +1,5 @@
 import { LanguageSelector, useLanguage } from "../LanguageContext";
-import {useState, useEffect} from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   faCalendarDays,
@@ -11,13 +11,12 @@ import {
 import HoverText from "./HoverText";
 import TopBarIcon from "./TopBarIcon";
 import { removeTokens, fetchUserOrRedirect } from "../auth";
-import {User} from "../interfaces";
-
+import { OrkestroUser } from "../interfaces";
 
 export default function TopBar() {
   const navigate = useNavigate();
   const { t } = useLanguage();
-  const [user, setUser] = useState<User>();
+  const [user, setUser] = useState<OrkestroUser>();
 
   useEffect(() => {
     fetchUserOrRedirect(navigate, setUser);
@@ -57,13 +56,13 @@ export default function TopBar() {
         <div className="relative">
           <LanguageSelector />
         </div>
-        {user && user.is_staff &&
+        {user && user.is_staff && (
           <HoverText textToShow={t("top-bar.admin-panel")}>
             <a href="/admin/">
-              <TopBarIcon location={null} iconObject={faScrewdriverWrench}/>
+              <TopBarIcon location={null} iconObject={faScrewdriverWrench} />
             </a>
           </HoverText>
-        }
+        )}
         <HoverText textToShow={t("top-bar.settings")}>
           <TopBarIcon location="/settings/" iconObject={faCog} />
         </HoverText>

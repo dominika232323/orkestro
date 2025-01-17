@@ -85,8 +85,8 @@ class EventAttendeeSerializer(serializers.ModelSerializer):
 
 
 class EventTrackSerializer(serializers.ModelSerializer):
-    track_details = EventSerializer(source="event", read_only=True)
-    event_details = TrackSerializer(source="track", read_only=True)
+    event_details = EventSerializer(source="event", read_only=True)
+    track_details = TrackSerializer(source="track", read_only=True)
 
     class Meta:
         model = models.EventTrack

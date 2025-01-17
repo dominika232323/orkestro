@@ -3,27 +3,37 @@ import { useEffect, useState } from "react";
 import ManageMember from "./ManageMember";
 import { useNavigate, useParams } from "react-router-dom";
 import Pagination from "./Pagination";
-import { Member } from "../interfaces";
+import { OrkestroMember, Paged } from "../interfaces";
+import axios from "axios";
 
 export default function ManageGroup() {
   const { t } = useLanguage();
   const { groupId } = useParams();
   const navigate = useNavigate();
 
-  const [members, setMembers] = useState<Member[]>([]);
+  const [members, setMembers] = useState<OrkestroMember[]>([]);
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [roleFilter, setRoleFilter] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
-  const fetchMembers = () => {
+  const fetchMembers = async () => {
     setLoading(true);
-    // TO DO
-    // use groupId, searchString, currentPage and roleFilter, return list of IMembers (concatenate information from User class and Member class)
-    // members can be searched by searchstring OR ROLE
-    // use setTotalPages() to set amount of pages received from API
-    setLoading(false);
+
+    try {
+      const response = await axios.get<Paged<OrkestroMember>>(
+        `/api/members/search/?group_id=${groupId}&page=${currentPage}${roleFilter && `&permission_level=${roleFilter}`}${searchQuery && `&name=${searchQuery}`}`
+      );
+
+      setMembers(response.data.items);
+      setCurrentPage(response.data.page_number);
+      setTotalPages(response.data.total_pages);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -31,17 +41,12 @@ export default function ManageGroup() {
   }, [currentPage, roleFilter]);
 
   const toggleRoleFilter = (newFilter: string) => {
-    if (roleFilter === newFilter) {
-      setRoleFilter("");
-    } else {
-      setRoleFilter(newFilter);
-    }
-    handleSearch();
+    setRoleFilter((prevFilter) => (prevFilter === newFilter ? "" : newFilter));
+    setCurrentPage(1);
   };
 
   const handleSearch = () => {
     setCurrentPage(1);
-    fetchMembers();
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -78,7 +83,7 @@ export default function ManageGroup() {
 
       {/* Role Filter Buttons */}
       <div className="flex justify-center space-x-4 mb-6">
-        {["manager", "musician", "moderator"].map((role) => (
+        {["A", "C", "B"].map((role) => (
           <button
             key={role}
             className={`py-2 px-6 rounded-lg font-medium transition-colors ${
@@ -96,9 +101,13 @@ export default function ManageGroup() {
       </div>
 
       {/* Members List or Loading State */}
-      {members.length > 0 ? (
+      {members && members.length > 0 ? (
         members.map((member) => (
-          <ManageMember key={member.user} member={member} />
+          <ManageMember
+            key={member.user}
+            member={member}
+            reload={fetchMembers}
+          />
         ))
       ) : loading ? (
         <p className="text-gray-600 text-center">{t("manage-group.loading")}</p>

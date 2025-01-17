@@ -2,14 +2,14 @@ import { useEffect, useState, useCallback } from "react";
 
 import { useLanguage } from "../LanguageContext";
 import { axiosInstance as axios } from "../auth";
-import { MessageRecipient, Paged } from "../interfaces";
+import { OrkestroMessageRecipient, Paged } from "../interfaces";
 import MessageComponent from "./MessageComponent";
 import Pagination from "./Pagination";
 
 export default function Messages() {
   const { t } = useLanguage();
   const [loading, setLoading] = useState(true);
-  const [messages, setMessages] = useState<MessageRecipient[]>([]);
+  const [messages, setMessages] = useState<OrkestroMessageRecipient[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
@@ -18,7 +18,7 @@ export default function Messages() {
     setLoading(true);
 
     await axios
-      .get<Paged<MessageRecipient>>(
+      .get<Paged<OrkestroMessageRecipient>>(
         `/api/message-recipients/me/?page=${currentPage}&search=${searchQuery}`
       )
       .then((response) => {
