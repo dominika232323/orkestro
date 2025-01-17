@@ -121,7 +121,9 @@
     "invite-placeholder": "Enter email address...",
     "no-user": "No user with such email",
     "invite-error": "User not invitable",
-    "invite-success": "User invited"
+    "invite-success": "User invited",
+    "manage-basics": "Manage basics",
+    "manage-members": "Manage members"
   },
   "pagination": {
     "page": "Page"

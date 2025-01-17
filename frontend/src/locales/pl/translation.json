@@ -122,7 +122,9 @@
     "invite-placeholder": "Wprowadź adres email...",
     "no-user": "Brak użytkownika o takim adresie email",
     "invite-error": "Nie udało się zaprosić użytkownika",
-    "invite-success": "Użytkownik zaproszony"
+    "invite-success": "Użytkownik zaproszony",
+    "manage-basics": "Podstawowe informacje",
+    "manage-members": "Członkowie grupy"
   },
   "pagination": {
     "page": "Strona"

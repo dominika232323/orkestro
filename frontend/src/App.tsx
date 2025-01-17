@@ -6,7 +6,6 @@ import {
 
 import LoginPage from "./pages/LoginPage";
 import MainLayout from "./layouts/MainLayout";
-// import ManageGroup from "./components/ManageGroup";
 import Messages from "./components/Messages";
 import Calendar from "./components/Calendar";
 import InvitationsAndGroups from "./components/InvitationsAndGroups";
