@@ -260,7 +260,11 @@ function ManageGroup() {
         )}
 
         {showDeleteGroup && (
-          <DeleteGroup setShowDeleteGroup={setShowDeleteGroup} />
+          <DeleteGroup
+            groupName={group.name}
+            groupId={group.group_id}
+            setShowDeleteGroup={setShowDeleteGroup}
+          />
         )}
       </div>
     );

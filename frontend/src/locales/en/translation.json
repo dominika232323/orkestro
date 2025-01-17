@@ -133,7 +133,15 @@
     "success": "User invited",
     "invite": "Invite"
   },
-  "delete-group": { "title": "Delete group", "back": "Go back" },
+  "delete-group": {
+    "title": "Delete group",
+    "back": "Go back",
+    "description": "To delete group, type it's name:",
+    "placeholder": "Group's name...",
+    "delete": "Delete",
+    "name-mismatch": "Group name does not match",
+    "fail": "Group deletion failed"
+  },
   "pagination": {
     "page": "Page"
   },
