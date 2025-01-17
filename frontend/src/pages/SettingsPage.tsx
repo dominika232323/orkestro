@@ -15,7 +15,7 @@ import {
   OrkestroUserInstrument,
 } from "../interfaces";
 
-export default function Settings() {
+export default function SettingsPage() {
   const navigate = useNavigate();
   const { t, currentLanguage } = useLanguage();
   const [user, setUser] = useState<OrkestroUser>();

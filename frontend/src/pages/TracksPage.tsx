@@ -9,11 +9,11 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate, useParams } from "react-router-dom";
 import { OrkestroRole, OrkestroTrack, Paged } from "../interfaces";
-import Pagination from "./Pagination";
+import Pagination from "../components/Pagination";
 import axios from "axios";
 import { fetchUserOrRedirect } from "../auth";
 
-export default function Tracks() {
+export default function TracksPage() {
   const { t } = useLanguage();
   const { groupId } = useParams();
   const navigate = useNavigate();

@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 
-export default function Calendar() {
+export default function CalendarPage() {
   const { t, currentLanguage } = useLanguage();
   const navigate = useNavigate();
 
