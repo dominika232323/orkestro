@@ -13,6 +13,8 @@ import axios, { AxiosError } from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { axiosInstance } from "../auth";
+import NewInvitation from "./NewInvitation";
+import DeleteGroup from "./DeleteGroup";
 
 function ManageGroup() {
   const { t } = useLanguage();
@@ -26,12 +28,14 @@ function ManageGroup() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [showInvite, setShowInvite] = useState(false);
-  const [email, setEmail] = useState("");
+  const [showDeleteGroup, setShowDeleteGroup] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [group, setGroup] = useState<OrkestroGroup | null>(null);
 
   const parsedGroupId = groupId ? parseInt(groupId, 10) : undefined;
+
+  if (!parsedGroupId) throw new Error("Group ID invalid");
 
   const fetchMembers = async () => {
     setLoading(true);
@@ -80,40 +84,22 @@ function ManageGroup() {
     }
   };
 
-  const handleInvite = async () => {
+  const submitTextChanges = async () => {
+    setLoading(true);
     setError("");
     setSuccess("");
-    setLoading(true);
 
-    let user: OrkestroUser;
+    if (!group?.name || !group?.description) {
+      setError(t("manage-group.edit-missing"));
+      setLoading(false);
+      return;
+    }
 
     try {
-      const response = await axios.get<OrkestroUser>(
-        `/api/users/by_email/?email=${email}`
-      );
-      user = response.data;
-      try {
-        const data = {
-          user: user.user_id,
-          group: parsedGroupId,
-          permission_level: "A",
-        };
-        const response = await axios.post(`/api/invitations/`, data);
-        setSuccess(t("manage-group.invite-success"));
-      } catch (err) {
-        if (axios.isAxiosError(err)) {
-          setError(t("manage-group.invite-error"));
-        }
-        console.error(err);
-      }
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        if (error.response?.status === 404) {
-          setError(t("manage-group.no-user"));
-        }
-      } else {
-        console.error(error);
-      }
+      await axios.put(`/api/groups/${group.group_id}/`, group);
+      setSuccess(t("manage-group.edit-success"));
+    } catch (err) {
+      setError(t("manage-group.edit-failed"));
     } finally {
       setLoading(false);
     }
@@ -142,6 +128,11 @@ function ManageGroup() {
           {t("manage-group.manage-basics")}
         </h2>
 
+        {error && <p className="text-red-500 text-center mb-4">{error}</p>}
+        {success && (
+          <p className="text-green-500 text-center mb-4">{success}</p>
+        )}
+
         <label>
           {t("new-event.name")}
           <input
@@ -165,6 +156,23 @@ function ManageGroup() {
             required
           />
         </label>
+
+        <div className="flex justify-between">
+          <button
+            onClick={submitTextChanges}
+            className="px-4 py-2 bg-blue-500 text-white font-medium hover:bg-blue-600 transition-colors"
+            disabled={loading}
+          >
+            {t("manage-group.edit")}
+          </button>
+          <button
+            onClick={() => setShowDeleteGroup(true)}
+            className="ml-1 bg-red-500 text-white p-2 rounded-lg hover:bg-red-600"
+            disabled={loading}
+          >
+            {t("manage-group.delete-group")}
+          </button>
+        </div>
 
         <h2 className="text-xl font-bold text-center mb-6">
           {t("manage-group.manage-members")}
@@ -245,40 +253,14 @@ function ManageGroup() {
         />
 
         {showInvite && (
-          <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center">
-            <div className="bg-white p-6 rounded-lg max-w-lg w-full">
-              <h2 className="text-lg font-bold mb-4">
-                {t("manage-group.invite-title")}
-              </h2>
-              {error && (
-                <p className="text-red-500 text-center mb-4">{error}</p>
-              )}
-              {success && (
-                <p className="text-green-500 text-center mb-4">{success}</p>
-              )}
-              <input
-                type="text"
-                name="email"
-                value={email}
-                placeholder={t("manage-group.invite-placeholder")}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-              <button
-                onClick={handleInvite}
-                className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600"
-                disabled={loading}
-              >
-                {t("manage-group.invite")}
-              </button>
-              <button
-                onClick={() => setShowInvite(false)}
-                className="ml-1 bg-red-500 text-white p-2 rounded-lg hover:bg-red-600"
-                disabled={loading}
-              >
-                {t("edit-track.back")}
-              </button>
-            </div>
-          </div>
+          <NewInvitation
+            parsedGroupId={parsedGroupId}
+            setShowInvite={setShowInvite}
+          />
+        )}
+
+        {showDeleteGroup && (
+          <DeleteGroup setShowDeleteGroup={setShowDeleteGroup} />
         )}
       </div>
     );

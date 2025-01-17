@@ -117,14 +117,23 @@
     "search": "Search",
     "loading": "Members loading...",
     "invite": "Invite",
-    "invite-title": "Invite new member",
-    "invite-placeholder": "Enter email address...",
-    "no-user": "No user with such email",
-    "invite-error": "User not invitable",
-    "invite-success": "User invited",
     "manage-basics": "Manage basics",
-    "manage-members": "Manage members"
+    "manage-members": "Manage members",
+    "edit": "Edit",
+    "edit-success": "Edit successfull",
+    "edit-failed": "Edit failed",
+    "edit-missing": "All fields must not be empty",
+    "delete-group": "Delete group"
   },
+  "new-invitation": {
+    "title": "Invite new member",
+    "placeholder": "Enter email address...",
+    "no-user": "No user with such email",
+    "error": "User not invitable",
+    "success": "User invited",
+    "invite": "Invite"
+  },
+  "delete-group": { "title": "Delete group", "back": "Go back" },
   "pagination": {
     "page": "Page"
   },
