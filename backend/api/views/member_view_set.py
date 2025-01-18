@@ -38,6 +38,9 @@ class MemberViewSet(viewsets.ModelViewSet):
     def update(self, request, pk=None, *args, **kwargs):
         member = self.get_object()
         serializer = self.get_serializer(instance=member, data=request.data)
+
+        if request.data.get("user") == request.user.user_id:
+            return Response({"error": "You can't change your own permission level"}, status=status.HTTP_400_BAD_REQUEST)
         if not serializer.is_valid():
             return Response({"error": "Data validation failed"}, status=status.HTTP_400_BAD_REQUEST)
         if self.is_last_manager(member) and request.data.get("permission_level") != "A":
@@ -47,6 +50,10 @@ class MemberViewSet(viewsets.ModelViewSet):
 
     def destroy(self, request, pk=None, *args, **kwargs):
         member = self.get_object()
+        print(member.user.user_id)
+        print(request.user.user_id)
+        if member.user.user_id == request.user.user_id:
+            return Response({"error": "You can't remove yourself from the group"}, status=status.HTTP_400_BAD_REQUEST)
         if self.is_last_manager(member):
             return Response({"error": "Can't remove the last manager"}, status=status.HTTP_400_BAD_REQUEST)
         member.delete()
