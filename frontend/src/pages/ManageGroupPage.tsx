@@ -319,7 +319,6 @@ export default function ManageGroupPage() {
         {showLeaveGroup && groupId && user && (
           <LeaveGroup
             groupId={groupId}
-            userId={user?.user_id}
             setShowLeaveGroup={setShowLeaveGroup}
           />
         )}

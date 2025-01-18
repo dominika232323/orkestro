@@ -59,6 +59,24 @@ class MemberViewSet(viewsets.ModelViewSet):
         member.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+    @action(detail=False, methods=["post"])
+    def leave(self, request):
+        # Extract group and user from the request
+        group_id = request.data.get("group")
+        user_id = request.user.user_id
+        if not group_id:
+            return Response({"error": "Group ID is required"}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            member = Member.objects.get(group_id=group_id, user_id=user_id)
+        except Member.DoesNotExist:
+            return Response({"error": "Membership not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        if self.is_last_manager(member):
+            return Response({"error": "Can't remove the last manager"}, status=status.HTTP_400_BAD_REQUEST)
+
+        member.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
     @action(detail=False, methods=["get"])
     def search(self, request):
         name_query = Q()
