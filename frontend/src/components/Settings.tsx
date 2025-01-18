@@ -111,19 +111,19 @@ export default function Settings() {
   const linkGoogleCalendar = useGoogleLogin({
     flow: "auth-code", // use "auth-code" for backend exchange
     onSuccess: async (codeResponse) => {
-      console.log("Auth code received:", codeResponse.code);
+      console.log("Google Calendar consent successful:", codeResponse);
 
       // Send the authorization code to the backend
       await axios.post("/api/google-calendar/", {
         authorization_code: codeResponse.code,
       })
       .then((backendResponse) => {
-        console.log("Backend response:", backendResponse.data);
+        console.log("Backend Google Calendar link successful:", backendResponse.data);
         setJustLinkedGcalendar(true);
       })
-      .catch((error) => console.error("Backend link failed:", error));
+      .catch((error) => console.error("Backend Google Calendar link failed:", error));
     },
-    onError: () => console.log("Calendar login failed"),
+    onError: () => console.log("Google Calendar login failed"),
     scope: "https://www.googleapis.com/auth/calendar",
   });
 
