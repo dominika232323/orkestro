@@ -126,7 +126,8 @@
     "edit-failed": "Edycja nieudana",
     "edit-missing": "Wszystkie pola muszą być wypełnione",
     "delete-group": "Usuń grupę",
-    "new-subgroup": "Nowa podgrupa"
+    "new-subgroup": "Nowa podgrupa",
+    "leave-group": "Opuść grupę"
   },
   "delete-group": {
     "title": "Usuń grupę",
@@ -238,5 +239,11 @@
   },
   "search": {
     "search": "Szukaj"
+  },
+  "leave-group": {
+    "title": "Opuść grupę",
+    "description": "Jesteś pewny, że chcesz opuścić grupę?",
+    "leave": "Opuść",
+    "back": "Powrót"
   }
 }

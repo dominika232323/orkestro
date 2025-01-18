@@ -125,7 +125,8 @@
     "edit-failed": "Edit failed",
     "edit-missing": "All fields must not be empty",
     "delete-group": "Delete group",
-    "new-subgroup": "New subgroup"
+    "new-subgroup": "New subgroup",
+    "leave-group": "Leave group"
   },
   "new-invitation": {
     "title": "Invite new member",
@@ -236,5 +237,11 @@
   },
   "search": {
     "search": "Search"
+  },
+  "leave-group": {
+    "title": "Leave group",
+    "description": "Are you sure you want to leave the group?",
+    "leave": "Leave",
+    "back": "Go back"
   }
 }

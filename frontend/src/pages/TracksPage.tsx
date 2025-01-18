@@ -85,13 +85,15 @@ export default function TracksPage() {
       </h1>
 
       {/* Add Track Button */}
-      <button
-        className="w-full py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 font-medium flex items-center justify-center my-3"
-        onClick={() => navigate(`/new-track/${groupId}`)}
-      >
-        <FontAwesomeIcon icon={faPlus} className="mr-2" />
-        {t("tracks.add-track")}
-      </button>
+      {role?.is_manager && (
+        <button
+          className="w-full py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 font-medium flex items-center justify-center my-3"
+          onClick={() => navigate(`/new-track/${groupId}`)}
+        >
+          <FontAwesomeIcon icon={faPlus} className="mr-2" />
+          {t("tracks.add-track")}
+        </button>
+      )}
 
       {/* Search Bar */}
       <div className="flex items-center mb-6 bg-white shadow-md rounded-lg overflow-hidden">

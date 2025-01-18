@@ -6,6 +6,7 @@ import Pagination from "../components/Pagination";
 import {
   OrkestroGroup,
   OrkestroMember,
+  OrkestroRole,
   OrkestroUser,
   Paged,
 } from "../interfaces";
@@ -15,6 +16,7 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { axiosInstance, fetchUserOrRedirect } from "../auth";
 import NewInvitation from "../components/NewInvitation";
 import DeleteGroup from "../components/DeleteGroup";
+import LeaveGroup from "../components/LeaveGroup";
 
 export default function ManageGroupPage() {
   const { t } = useLanguage();
@@ -29,10 +31,12 @@ export default function ManageGroupPage() {
   const [totalPages, setTotalPages] = useState(1);
   const [showInvite, setShowInvite] = useState(false);
   const [showDeleteGroup, setShowDeleteGroup] = useState(false);
+  const [showLeaveGroup, setShowLeaveGroup] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [group, setGroup] = useState<OrkestroGroup | null>(null);
   const [user, setUser] = useState<OrkestroUser>();
+  const [role, setRole] = useState<OrkestroRole>();
 
   const parsedGroupId = groupId ? parseInt(groupId, 10) : undefined;
 
@@ -72,6 +76,17 @@ export default function ManageGroupPage() {
 
   useEffect(() => {
     fetchUserOrRedirect(setUser);
+  }, []);
+
+  useEffect(() => {
+    const fetchRole = async () => {
+      await axios
+        .get<OrkestroRole>(`/api/groups/${groupId}/role/`)
+        .then((response) => setRole(response.data))
+        .catch((error) => console.error("Error fetching role:", error));
+    };
+
+    fetchRole();
   }, []);
 
   const toggleRoleFilter = (newFilter: string) => {
@@ -146,6 +161,7 @@ export default function ManageGroupPage() {
             value={group.name}
             onChange={handleTextChange}
             className="block w-full p-2 border mb-2"
+            disabled={!role || !role?.is_manager}
             required
           />
         </label>
@@ -165,7 +181,7 @@ export default function ManageGroupPage() {
         <div className="flex justify-between">
           <button
             onClick={submitTextChanges}
-            className="px-4 py-2 bg-blue-500 text-white font-medium hover:bg-blue-600 transition-colors"
+            className="px-4 py-2 bg-blue-500 text-white font-medium rounded-lg hover:bg-blue-600 transition-colors"
             disabled={loading}
           >
             {t("manage-group.edit")}
@@ -174,11 +190,18 @@ export default function ManageGroupPage() {
             onClick={() =>
               navigate(`/new-group/${user?.user_id}/${group.group_id}`)
             }
-            className="px-4 py-2 bg-blue-500 text-white font-medium hover:bg-blue-600 transition-colors"
+            className="px-4 py-2 bg-blue-500 text-white font-medium rounded-lg hover:bg-blue-600 transition-colors"
             disabled={loading}
           >
             <FontAwesomeIcon className="mr-1" icon={faPlus} />
             {t("manage-group.new-subgroup")}
+          </button>
+          <button
+            onClick={() => setShowLeaveGroup(true)}
+            className="ml-1 bg-red-500 text-white p-2 rounded-lg hover:bg-red-600"
+            disabled={loading}
+          >
+            {t("manage-group.leave-group")}
           </button>
           <button
             onClick={() => setShowDeleteGroup(true)}
@@ -279,6 +302,14 @@ export default function ManageGroupPage() {
             groupName={group.name}
             groupId={group.group_id}
             setShowDeleteGroup={setShowDeleteGroup}
+          />
+        )}
+
+        {showLeaveGroup && groupId && user && (
+          <LeaveGroup
+            groupId={groupId}
+            userId={user?.user_id}
+            setShowLeaveGroup={setShowLeaveGroup}
           />
         )}
       </div>

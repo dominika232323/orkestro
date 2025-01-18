@@ -6,6 +6,8 @@ import {
   OrkestroTrack,
   OrkestroEvent,
   OrkestroTrackEvent,
+  OrkestroUser,
+  OrkestroRole,
 } from "../interfaces";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -13,6 +15,7 @@ import Pagination from "../components/Pagination";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import FileComponent from "../components/FileComponent";
+import { fetchUserOrRedirect } from "../auth";
 
 export default function TrackDetailsPage() {
   const { t, currentLanguage } = useLanguage();
@@ -22,11 +25,23 @@ export default function TrackDetailsPage() {
   const [track, setTrack] = useState<OrkestroTrack | null>(null);
   const [files, setFiles] = useState<OrkestroFile[]>([]);
   const [events, setEvents] = useState<OrkestroTrackEvent[]>([]);
+  const [role, setRole] = useState<OrkestroRole>();
 
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
   const [searchQuery, setSearchQuery] = useState("");
+
+  useEffect(() => {
+    const fetchRole = async () => {
+      await axios
+        .get<OrkestroRole>(`/api/groups/${groupId}/role/`)
+        .then((response) => setRole(response.data))
+        .catch((error) => console.error("Error fetching role:", error));
+    };
+
+    fetchRole();
+  }, [groupId]);
 
   useEffect(() => {
     fetchTrack();
@@ -86,12 +101,15 @@ export default function TrackDetailsPage() {
     return (
       <div className="bg-gray-200 p-6 rounded-lg max-w-4xl mx-auto mt-8">
         <h1 className="text-2xl font-bold text-center mb-6">{track.name}</h1>
-        <button
-          className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600"
-          onClick={() => navigate(`/edit-track/${track.track_id}/${groupId}`)}
-        >
-          {t("track-details.edit")}
-        </button>
+        {role?.is_manager && (
+          <button
+            className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600"
+            onClick={() => navigate(`/edit-track/${track.track_id}/${groupId}`)}
+          >
+            {t("track-details.edit")}
+          </button>
+        )}
+
         <button
           onClick={() => navigate(-1)}
           className="ml-1 bg-red-500 text-white p-2 rounded-lg hover:bg-red-600"

@@ -1,6 +1,11 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useLanguage } from "../LanguageContext";
-import { OrkestroEvent, OrkestroTrackEvent } from "../interfaces";
+import {
+  OrkestroEvent,
+  OrkestroRole,
+  OrkestroTrackEvent,
+  OrkestroUser,
+} from "../interfaces";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -10,6 +15,7 @@ import {
   faLocationDot,
   faPen,
 } from "@fortawesome/free-solid-svg-icons";
+import { fetchUserOrRedirect } from "../auth";
 
 export default function EventDetailsPage() {
   const { t, currentLanguage } = useLanguage();
@@ -19,10 +25,28 @@ export default function EventDetailsPage() {
   const [event, setEvent] = useState<OrkestroEvent | null>(null);
   const [tracks, setTracks] = useState<OrkestroTrackEvent[]>([]);
 
+  const [user, setUser] = useState<OrkestroUser>();
+  const [role, setRole] = useState<OrkestroRole>();
+
   useEffect(() => {
     fetchEvent();
     fetchTracks();
   }, []);
+
+  useEffect(() => {
+    fetchUserOrRedirect(setUser);
+  }, [navigate]);
+
+  useEffect(() => {
+    const fetchRole = async () => {
+      await axios
+        .get<OrkestroRole>(`/api/groups/${event?.group}/role/`)
+        .then((response) => setRole(response.data))
+        .catch((error) => console.error("Error fetching role:", error));
+    };
+
+    fetchRole();
+  }, [event?.group]);
 
   const fetchEvent = async () => {
     await axios
@@ -51,12 +75,14 @@ export default function EventDetailsPage() {
     return (
       <div className="bg-gray-200 p-6 rounded-lg max-w-4xl mx-auto mt-8">
         <h1 className="text-2xl font-bold text-center mb-6">{event.name}</h1>
-        <button
-          className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600"
-          onClick={() => navigate(`/edit-event/${event.event_id}`)}
-        >
-          {t("event-details.edit")}
-        </button>
+        {role?.is_manager && (
+          <button
+            className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600"
+            onClick={() => navigate(`/edit-event/${event.event_id}`)}
+          >
+            {t("event-details.edit")}
+          </button>
+        )}
         <button
           onClick={() => navigate(-1)}
           className="ml-1 bg-red-500 text-white p-2 rounded-lg hover:bg-red-600"
