@@ -8,7 +8,7 @@ from api.permissions.common_checks import have_common_group, is_member, get_grou
 
 class InstrumentPermission(BasePermission):
     def has_permission(self, request, view):
-        if request.user.is_staff or request.method == "HEAD" or view.action in ["search", "update", "destroy"]:
+        if request.user.is_staff or request.method == "HEAD" or view.action not in ["leftover", "create"]:
             return True
         if view.action == "leftover":
             if request.GET.get("file_id"):
@@ -19,4 +19,4 @@ class InstrumentPermission(BasePermission):
         return False
 
     def has_object_permission(self, request, view, obj):
-        return request.user.is_staff or request.method == "HEAD"
+        return request.user.is_staff or request.method == "HEAD" or view.action == "retrieve"
