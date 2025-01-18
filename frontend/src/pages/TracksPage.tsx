@@ -30,7 +30,7 @@ export default function TracksPage() {
 
     await axios
       .get<Paged<OrkestroTrack>>(
-        `/api/tracks/search/?group_id=${groupId}&page=${currentPage}`
+        `/api/tracks/search/?group_id=${groupId}&page=${currentPage}${searchQuery ? `&name=${searchQuery}` : ""}`
       )
       .then((response) => {
         setTracks(response.data.items);
