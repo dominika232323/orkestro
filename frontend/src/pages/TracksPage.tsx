@@ -41,8 +41,6 @@ export default function TracksPage() {
     setLoading(false);
   };
 
-  console.log(tracks);
-
   useEffect(() => {
     fetchTracks();
   }, [currentPage]);

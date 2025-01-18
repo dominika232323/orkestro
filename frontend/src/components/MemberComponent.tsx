@@ -8,9 +8,14 @@ import axios from "axios";
 interface ManageMemberProps {
   member: OrkestroMember;
   reload: () => void;
+  isManager: boolean;
 }
 
-export default function ManageMember({ member, reload }: ManageMemberProps) {
+export default function MemberComponent({
+  member,
+  reload,
+  isManager,
+}: ManageMemberProps) {
   const { t } = useLanguage();
 
   const [deleting, setDeleting] = useState(false);
@@ -53,18 +58,21 @@ export default function ManageMember({ member, reload }: ManageMemberProps) {
           value={member.permission_level}
           onChange={handleRoleChange}
           className="p-2 border border-gray-300 rounded-lg"
+          disabled={!isManager}
         >
           <option value="A">{t("manage-group.roles.A")}</option>
           <option value="C">{t("manage-group.roles.C")}</option>
           <option value="B">{t("manage-group.roles.B")}</option>
         </select>
-        <button
-          className="p-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
-          onClick={handleDelete}
-          disabled={deleting}
-        >
-          <FontAwesomeIcon icon={faTimes} />
-        </button>
+        {isManager && (
+          <button
+            className="p-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
+            onClick={handleDelete}
+            disabled={deleting}
+          >
+            <FontAwesomeIcon icon={faTimes} />
+          </button>
+        )}
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
 import { useLanguage } from "../LanguageContext";
 import { useEffect, useState } from "react";
-import ManageMember from "../components/ManageMember";
+import MemberComponent from "../components/MemberComponent";
 import { useNavigate, useParams } from "react-router-dom";
 import Pagination from "../components/Pagination";
 import {
@@ -41,6 +41,8 @@ export default function ManageGroupPage() {
   const parsedGroupId = groupId ? parseInt(groupId, 10) : undefined;
 
   if (!parsedGroupId) throw new Error("Group ID invalid");
+
+  const isManager = role ? role.is_manager : false;
 
   const fetchMembers = async () => {
     setLoading(true);
@@ -161,7 +163,7 @@ export default function ManageGroupPage() {
             value={group.name}
             onChange={handleTextChange}
             className="block w-full p-2 border mb-2"
-            disabled={!role || !role?.is_manager}
+            disabled={!isManager}
             required
           />
         </label>
@@ -174,41 +176,47 @@ export default function ManageGroupPage() {
             value={group.description}
             onChange={handleTextChange}
             className="block w-full p-2 border mb-2"
+            disabled={!isManager}
             required
           />
         </label>
 
         <div className="flex justify-between">
-          <button
-            onClick={submitTextChanges}
-            className="px-4 py-2 bg-blue-500 text-white font-medium rounded-lg hover:bg-blue-600 transition-colors"
-            disabled={loading}
-          >
-            {t("manage-group.edit")}
-          </button>
-          <button
-            onClick={() =>
-              navigate(`/new-group/${user?.user_id}/${group.group_id}`)
-            }
-            className="px-4 py-2 bg-blue-500 text-white font-medium rounded-lg hover:bg-blue-600 transition-colors"
-            disabled={loading}
-          >
-            <FontAwesomeIcon className="mr-1" icon={faPlus} />
-            {t("manage-group.new-subgroup")}
-          </button>
+          {isManager && (
+            <>
+              <button
+                onClick={submitTextChanges}
+                className="px-4 py-2 bg-blue-500 text-white font-medium rounded-lg hover:bg-blue-600 transition-colors"
+                disabled={loading}
+              >
+                {t("manage-group.edit")}
+              </button>
+              <button
+                onClick={() =>
+                  navigate(`/new-group/${user?.user_id}/${group.group_id}`)
+                }
+                className="px-4 py-2 bg-blue-500 text-white font-medium rounded-lg hover:bg-blue-600 transition-colors"
+                disabled={loading}
+              >
+                <FontAwesomeIcon className="mr-1" icon={faPlus} />
+                {t("manage-group.new-subgroup")}
+              </button>
+              <button
+                onClick={() => setShowDeleteGroup(true)}
+                className="ml-1 bg-red-500 text-white p-2 rounded-lg hover:bg-red-600"
+                disabled={loading}
+              >
+                {t("manage-group.delete-group")}
+              </button>
+            </>
+          )}
+
           <button
             onClick={() => setShowLeaveGroup(true)}
             className="ml-1 bg-red-500 text-white p-2 rounded-lg hover:bg-red-600"
             disabled={loading}
           >
             {t("manage-group.leave-group")}
-          </button>
-          <button
-            onClick={() => setShowDeleteGroup(true)}
-            className="ml-1 bg-red-500 text-white p-2 rounded-lg hover:bg-red-600"
-            disabled={loading}
-          >
-            {t("manage-group.delete-group")}
           </button>
         </div>
 
@@ -237,13 +245,15 @@ export default function ManageGroupPage() {
         </div>
 
         {/* Invite member */}
-        <button
-          className="w-full py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 font-medium flex items-center justify-center my-3"
-          onClick={() => setShowInvite(true)}
-        >
-          <FontAwesomeIcon icon={faPlus} className="mr-2" />
-          {t("manage-group.invite")}
-        </button>
+        {isManager && (
+          <button
+            className="w-full py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 font-medium flex items-center justify-center my-3"
+            onClick={() => setShowInvite(true)}
+          >
+            <FontAwesomeIcon icon={faPlus} className="mr-2" />
+            {t("manage-group.invite")}
+          </button>
+        )}
 
         {/* Role Filter Buttons */}
         <div className="flex justify-center space-x-4 mb-6">
@@ -267,10 +277,11 @@ export default function ManageGroupPage() {
         {/* Members List or Loading State */}
         {members && members.length > 0 ? (
           members.map((member) => (
-            <ManageMember
+            <MemberComponent
               key={member.user}
               member={member}
               reload={fetchMembers}
+              isManager={isManager}
             />
           ))
         ) : loading ? (

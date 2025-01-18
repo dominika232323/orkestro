@@ -4,14 +4,11 @@ Handles API requests regarding events' track data:
 - getting all entries related to a track (requires being a member of the group)
 Staff users can do all of the above + list all event tracks or a specific one.
 """
-import datetime
-import pytz
 
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from django.core.paginator import Paginator
 from django.utils import timezone
 
 from api.models import Event, Track, EventTrack

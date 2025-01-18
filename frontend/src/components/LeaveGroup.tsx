@@ -26,7 +26,7 @@ export default function LeaveGroup({
 
         <button
           onClick={handleLeave}
-          className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
+          className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
           disabled={loading}
         >
           {t("leave-group.leave")}
@@ -34,7 +34,7 @@ export default function LeaveGroup({
 
         <button
           onClick={() => setShowLeaveGroup(false)}
-          className="ml-1 bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
+          className="ml-1 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
           disabled={loading}
         >
           {t("leave-group.back")}

@@ -9,7 +9,7 @@ from api.permissions.common_checks import is_manager
 
 class GroupPermission(BasePermission):
     def has_permission(self, request, view):
-        if request.user.is_staff or request.method == "HEAD" or view.action in ["me", "role", "update", "delete"]:
+        if request.user.is_staff or request.method == "HEAD" or view.action in ["me", "role", "update", "delete", "retrieve"]:
             return True
         if view.action == "create":
             if request.data.get("supergroup") is None:
@@ -26,4 +26,7 @@ class GroupPermission(BasePermission):
             return True
         if view.action in ["update", "delete"]:
             return is_manager(request, obj.group_id)
+
+        if view.action == "retrieve":
+            return obj.members.filter(user=request.user).exists()
         return False
