@@ -223,5 +223,14 @@
     "submit": "Utwórz",
     "back": "Powrót",
     "missing": "Wszystkie pola są obowiązkowe"
+  },
+  "add-file": {
+    "no-file": "Plik nie został wybrany",
+    "file-too-big": "Maksymalny rozmiar pliku wynosi 10 MB",
+    "title": "Dodaj plik",
+    "users-allowed": "Członkowie przypisani do pliku:",
+    "send": "Wyślij",
+    "back": "Powrót",
+    "sending": "Wysyłanie..."
   }
 }

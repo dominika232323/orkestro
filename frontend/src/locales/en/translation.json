@@ -221,5 +221,14 @@
     "submit": "Create",
     "back": "Back",
     "missing": "All fields are required"
+  },
+  "add-file": {
+    "no-file": "No file selected",
+    "file-too-big": "Maximum file size is 10 MB",
+    "title": "Add file",
+    "users-allowed": "Members allowed:",
+    "send": "Send",
+    "back": "Go back",
+    "sending": "Sending..."
   }
 }
