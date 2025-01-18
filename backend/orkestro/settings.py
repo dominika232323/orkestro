@@ -32,7 +32,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv("DJANGO_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True if os.getenv("DJANGO_DEBUG", "0") == "1" else False
+DEBUG = os.getenv("DJANGO_DEBUG", "false") == "true"
 
 ALLOWED_HOSTS = [os.getenv("DOMAIN"), "localhost", "127.0.0.1", os.getenv("IP")]
 
@@ -99,15 +99,34 @@ WSGI_APPLICATION = "orkestro.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+DATABASE_ROUTERS = ["api.routers.ReplicationRouter"]
+
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": os.getenv("POSTGRES_DB"),
-        "USER": os.getenv("POSTGRES_USER"),
-        "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
-        "HOST": os.getenv("DJANGO_DB_HOST"),
-        "PORT": os.getenv("DJANGO_DB_PORT"),
-    }
+        "USER": os.getenv("POSTGRES_MASTER_USER"),
+        "PASSWORD": os.getenv("POSTGRES_MASTER_PASSWORD"),
+        "HOST": os.getenv("POSTGRES_MASTER_HOST"),
+        "PORT": os.getenv("POSTGRES_MASTER_PORT"),
+    },
+    "master": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.getenv("POSTGRES_DB"),
+        "USER": os.getenv("POSTGRES_MASTER_USER"),
+        "PASSWORD": os.getenv("POSTGRES_MASTER_PASSWORD"),
+        "HOST": os.getenv("POSTGRES_MASTER_HOST"),
+        "PORT": os.getenv("POSTGRES_MASTER_PORT"),
+    },
+    "slave": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.getenv("POSTGRES_DB"),
+        "USER": os.getenv("POSTGRES_SLAVE_USER"),
+        "PASSWORD": os.getenv("POSTGRES_SLAVE_PASSWORD"),
+        "HOST": os.getenv("POSTGRES_SLAVE_HOST"),
+        "PORT": os.getenv("POSTGRES_SLAVE_PORT"),
+        "TEST": {"MIRROR": "master"},
+    },
 }
 
 

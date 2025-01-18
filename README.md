@@ -6,18 +6,37 @@ Celem projektu jest stworzenie aplikacji ułatwiającej kierownikom grup muzyczn
 Przykładowy plik `.env` w katalogu głównym projektu:
 
 ```sh
-POSTGRES_USER=myuser
-POSTGRES_PASSWORD=[password]
+# Database - general
 POSTGRES_DB=orkestrodb
-INCLUDE_TEST_DATA=true # false
-DJANGO_DB_HOST=192.168.0.100 # local ip address
-DJANGO_DB_PORT=5432
+INCLUDE_TEST_DATA=true
+
+# Master database; in HOST fields use local address (192.168.x.x) rather than localhost
+POSTGRES_MASTER_USER=myuser
+POSTGRES_MASTER_PASSWORD=[password]
+POSTGRES_MASTER_HOST=192.168.0.100
+POSTGRES_MASTER_PORT=5432
+
+# Slave database - if unused, leave parameters the same as in master
+POSTGRES_SLAVE_USER=myuser_slave
+POSTGRES_SLAVE_PASSWORD=[password]
+POSTGRES_SLAVE_HOST=192.168.0.100
+POSTGRES_SLAVE_PORT=5433
+
+# Django-specific parameters
 DJANGO_KEY=[key]
-DJANGO_DEBUG=1 # 0
-REACT_APP_GOOGLE_CLIENT_ID=[Google API client ID]
-BROWSER=none
+DJANGO_DEBUG=true
+DJANGO_WORKERS=3
 DOMAIN=orkestro.ddns.net
 IP=localhost
+
+# Other
+BACKEND_HOSTS="192.168.0.100:8000"
+REACT_APP_GOOGLE_CLIENT_ID=[Google API client ID]
+USE_HTTPS=false
+BROWSER=none
+
+# The deployment script can overwrite IP values below
+
 ```
 
 # Uruchomienie (wersja deweloperska, bez wszystkich kontenerów)

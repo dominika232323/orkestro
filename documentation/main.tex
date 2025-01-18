@@ -1030,70 +1030,127 @@ W celu zapewnienia bezpieczeństwa (przed włamaniami, nieuprawnionym dostępem 
 
 \section{Podręcznik administratora}
 
-\textcolor{red}{W porozumieniu z mentorem grupy: do 20 stycznia możemy dodawać funkcjonalność i instrukcje jej użycia, a na ten moment sekcja powinna zawierać podstawową instrukcję uruchomienia systemu.}
-
 \subsection{Czynności wstępne}
 
 Należy sklonować repozytorium: \href{https://gitlab-stud.elka.pw.edu.pl/zgromadzeni/orkestro}{https://gitlab-stud.elka.pw.edu.pl/zgromadzeni/orkestro}
 
-Do lokalnego uruchomienia potrzebny jest Docker, a wdrożenie na chmurę wymaga zainstalowania Azure CLI i zalogowania się tam (na koncie muszą znajdować się środki do opłacania maszyn). 
+Do lokalnego uruchomienia potrzebny jest Docker, a wdrożenie na chmurę wymaga zainstalowania Azure CLI i zalogowania się tam (na koncie muszą znajdować się środki do opłacania maszyn). Komendy Dockera wymagają uprawnień administratora lub dodania użytkownika wykonującego komendy do grupy \texttt{docker}.
 
 Potrzebne jest uzyskanie identyfikatora klienta interfejsu API Google (\href{https://console.developers.google.com/}{https://console.developers.google.com/}) i dodanie URI, na których będzie działać system (np. lokalnie: \texttt{http://localhost:5000}, przy wdrożeniu: \texttt{https://orkestro.ddns.net:5000}).
 
-Dodatkowo do udostępnienia aplikacji innym użytkownikom potrzebne jest pozyskanie domeny (np. korzystając z DDNS) oraz certyfikatu dla niej - Google wymaga szyfrowania SSL dla aplikacji dostępnych z zewnątrz. Pliki \texttt{chain.pem}, \texttt{fullchain.pem} i \texttt{privkey.pem} należy umieścić w folderze \texttt{nginx}, a w pliku \texttt{nginx.conf} trzeba zakomentować dyrektywę \texttt{listen 5000;} i odkomentować linie pod nią.
+Dodatkowo do udostępnienia aplikacji innym użytkownikom potrzebne jest pozyskanie domeny (np. korzystając z DDNS) oraz certyfikatu dla niej - Google wymaga szyfrowania SSL dla aplikacji dostępnych z zewnątrz. Pliki \texttt{chain.pem}, \texttt{fullchain.pem} i \texttt{privkey.pem} należy umieścić w folderze \texttt{nginx}.
 
-Należy utworzyć w katalogu głównym projektu plik \texttt{.env} z zawartością podaną w \texttt{readme} repozytorium. Znaczenie \texttt{parametrów} (\textbf{pogrubione} wymagają dostosowania, \textit{pochylone} - dodatkowo, przy udostępnianiu aplikacji innym):
+Należy utworzyć w katalogu głównym projektu plik \texttt{.env} z zawartością podaną w \texttt{readme} repozytorium. Znaczenie parametrów (zaznaczone na \textcolor{orange}{pomarańczowo} wymagają dostosowania, \textcolor{purple}{fioletowo} - dodatkowo, przy udostępnianiu aplikacji innym):
 \begin{itemize}
-    \item \texttt{POSTGRES\_DB}, \texttt{POSTGRES\_USER}, \textbf{POSTGRES\textunderscore PASSWORD}, \textbf{DJANGO\textunderscore DB\textunderscore HOST}, \texttt{DJANGO\_DB\_PORT} - nazwa bazy danych, nazwa użytkownika do niej, hasło, adres IP, na którym nasłuchuje baza (jeżeli to localhost, należy wpisać adres typu \texttt{192.168.x.x}), port
-    \item \textit{INCLUDE\textunderscore TEST\textunderscore DATA} - czy dodawać przykładowe dane (najlepiej wyłączyć przy wdrożeniu)
-    \item \textbf{DJANGO\textunderscore KEY} - dowolnie wybrany, tajny klucz do Django
-    \item \textit{DJANGO\textunderscore DEBUG} - czy włączać tryb Django udostępniający dodatkowe informacje do debugowania (wyłączyć przy wdrożeniu)
-    \item \textbf{REACT\textunderscore APP\textunderscore GOOGLE\textunderscore CLIENT\textunderscore ID} - uzyskany identyfikator do API Google
-    \item \texttt{BROWSER} - przy rozwijaniu aplikacji umożliwia wybór przeglądarki, którą otwiera \texttt{npm start}
-    \item \textit{DOMAIN}, \textit{IP} - domena/publiczny adres IP maszyny, który powinno akceptować Django REST API.
+    \item POSTGRES\_DB - nazwa bazy danych
+    \item \textcolor{purple}{INCLUDE\_TEST\_DATA} - czy dodawać przykładowe dane (najlepiej wyłączyć przy wdrożeniu)
+    \item POSTGRES\_MASTER\_USER, \textcolor{orange}{POSTGRES\_MASTER\_PASSWORD}, \textcolor{orange}{POSTGRES\_MASTER\_HOST}, POSTGRES\_MASTER\_PORT - parametry do łączenia się z bazą danych master (użytkownik, hasło, adres IP, port); jeżeli adres to localhost, należy wpisać adres prywatny typu \texttt{192.168.x.x}
+    \item POSTGRES\_SLAVE\_USER, \textcolor{orange}{POSTGRES\_SLAVE\_PASSWORD}, \textcolor{orange}{POSTGRES\_SLAVE\_HOST}, POSTGRES\ \_SLAVE\_PORT - parametry do bazy danych slave; jeżeli używana jest jedna baza, należy podać tutaj takie same wartości, jak dla bazy master
+    \item \textcolor{orange}{DJANGO\_KEY} - dowolnie wybrany, tajny klucz do Django
+    \item \textcolor{purple}{DJANGO\_DEBUG} - czy włączać tryb Django udostępniający dodatkowe informacje do debugowania (wyłączyć przy wdrożeniu)
+    \item DJANGO\_WORKERS - iloma wątkami powinno dysponować Django REST API
+    \item \textcolor{purple}{DOMAIN}, \textcolor{purple}{IP} - domena/publiczny adres IP maszyny, który powinno akceptować Django REST API
+    \item \textcolor{orange}{BACKEND\_HOSTS} - lista adresów IP i portów oddzielana spacją, na których nasłuchują komponenty Django; tutaj również zamiast localhosta należy używać adresu prywatnego
+    \item \textcolor{orange}{REACT\_APP\_GOOGLE\_CLIENT\_ID} - uzyskany identyfikator do API Google
+    \item \textcolor{purple}{USE\_HTTPS} - czy NGINX powinien szyfrować połączenia (włączyć przy wdrożeniu)
+    \item BROWSER - przy rozwijaniu aplikacji umożliwia wybór przeglądarki, którą otwiera \texttt{npm start}
+    
 \end{itemize}
 
 \subsection{Podstawowe uruchomienie}
 
 W \texttt{readme} repozytorium znajdują się podstawowe komendy do uruchomienia aplikacji. W tym wariancie baza danych i NGINX znajdują się w kontenerach, a backend i frontend startują bez ich wykorzystania (NGINX przekierowuje na serwer frontendu zamiast serwować pliki statyczne). Umożliwia to szybsze uruchamianie aplikacji z nowo wprowadzonymi zmianami.
 
-Gotową aplikację lepiej jest uruchamiać, korzystając z instrukcji w poniższej sekcji.
+Aplikacja jest dostępna na porcie 5000. Oprócz głównej strony dostępny jest m.in. panel administratora (\texttt{...:5000/admin/}) oraz API (\texttt{...:5000/api/}).
+
+Gotową aplikację lepiej jest uruchamiać, korzystając z poniższej sekcji.
 
 \subsection{Uruchomienie lokalnie}
 
-Przy tworzeniu obrazów należy osobno uruchomić kontener z bazą danych (\texttt{sudo docker compose up orkestro-db-master -d}), a gdy będzie ona gotowa do przyjmowania połączeń - osobno uruchomić kontener z backendem (\texttt{sudo docker compose up orkestro-backend -d}). Jest to spowodowane tym, że w ramach konfiguracji Django musi zsynchronizować się z bazą i musi ona być wtedy aktywna.
+Przy tworzeniu obrazów należy skorzystać ze skryptów tworzących bazy danych: \texttt{cd deployment/deploy \&\& sudo ./setup\_master.sh} i, jeżeli używane są dwie bazy: \texttt{sudo ./setup\_slave.sh}. Są one również odpowiedzialne za automatyczną migrację danych Django do bazy (ten etap może kilkukrotnie zwrócić błąd przed uzyskaniem połączenia z bazą) oraz umożliwienie replikacji. Po tej konfiguracji można normalnie uruchamiać te kontenery za pomocą \texttt{docker compose}.
 
-Od tego momentu można uruchamiać całość komendą \texttt{sudo docker compose up}. Jeżeli frontend będzie zgłaszał problemy z siecią, należy skasować kontenery i ponownie je stworzyć (\texttt{sudo docker compose down}, \texttt{sudo docker compose up}).
+Oprócz tego trzeba uruchomić serwisy dla frontendu i backendu: \texttt{docker compose up orkestro-backend orkestro-frontend -d}. Jeżeli frontend będzie zgłaszał problemy z siecią, należy skasować wszsytkie kontenery aplikacji i ponownie je stworzyć (\texttt{docker compose down}, \texttt{docker compose up <serwisy> -d}).
+
+Serwisami działającymi w gotowym systemie są \texttt{orkestro-db-master, orkestro-db-slave, orkestro-backend, orkestro-frontend}. Można je zatrzymywać (\texttt{docker compose stop <serwisy\_oddzielone\_spacja>}) i ponownie uruchamiać (\texttt{docker compose start <serwisy\_oddzielone\_spacja>}).
 
 \subsection{Wdrożenie na chmurę Azure}
 
-Na ten moment dysponujemy bashowym skryptem umożliwiającym deweloperską wersję wdrożenia systemu na jedną maszynę w chmurze Azure (skopiowanie projektu na chmurę zamiast pobierania z repozytorium - z tego powodu dla oszczędności czasu należy tymczasowo wynieść foldery takie jak \texttt{node\_modules}, \texttt{.git} czy \texttt{.idea}).
+W folderze \texttt{deploy} znajdują się skrypty umożliwiające wdrożenie systemu na chmurę. Do wdrożenia potrzebny jest klucz SSH umieszczony w \texttt{\textasciitilde /.ssh/orkestro.pem[.pub]} - można go wygenerować skryptem \texttt{create\_keys.sh}.
 
-Potrzebne skrypty znajdują się w folderze \texttt{deploy}. Do wdrożenia potrzebny jest klucz SSH umieszczony w \texttt{\textasciitilde /.ssh/orkestro.pem[.pub]} - można go wygenerować skryptem \texttt{create\_keys.sh}.
+Dostępne są dwie wersje skryptu automatyzującego utworzenie potrzebnych zasobów w Azure (m.in. maszyn wirtualnych) oraz przeniesienie tam kodu i innych potrzebnych plików. Jedna (\texttt{add\_resources\_dev.sh}) kopiuje na chmurę całość projektu, w którym został uruchomiony skrypt (przy uruchamianiu warto tymczasowo wynieść stamtąd niepotrzebne foldery takie jak \texttt{node\_modules} czy \texttt{.git}) - umożliwia to testowe wdrożenie kodu, który nie znajduje się na gałęzi master. Druga klonuje repozytorium na maszynach i wysyła na nie pliki, których się tam nie przechowuje (\texttt{.env}, pliki certyfikatów, klucz SSH) - do jej użycia potrzebny jest jednak token dostępu GitLaba.
 
-Wdrożenie odbywa się komendą \texttt{./main.sh configs/single\_machine.sh}. Po wykonaniu zostanie podana gotowa do wklejenia komenda do połączenia się z maszyną oraz adres IP, pod którym jest dostępna aplikacja (trzeba podpiąć do niego domenę z certyfikatem, by działało logowanie Google).
+Skrypty te korzystają z plików konfiguracyjnych, które definiują m.in. liczbę maszyn wirtualnych, ich adresy IP oraz konfigurację firewalla. W folderze \texttt{deployment/configs} znajdują się przykładowe pliki dla jednej i czterech maszyn, odpowiadające im pliki .env oraz przykładowy plik konfiguracyjny, którym można dodać piątą maszynę do istniejącej grupy zasobów.
 
-\texttt{configs/single\_machine.sh} jest przykładowym plikiem konfiguracyjnym umożliwiającym dostosowanie nazw zasobów, tworzonych podsieci oraz chroniących je firewalli, maszyn wirtualnych i komponentów instalowanych na maszynach.
+Wdrożenie odbywa się poprzez uruchomienie części wspólnej skryptów i jednego z wariantów pozostałej części, z plikiem konfiguracyjnym jako argumentem (i tokenem do Gitlaba, jeżeli potrzebny), np: 
 
-\subsection{Po zbudowaniu aplikacji}
+\texttt{./create\_group.sh configs/four\_machines.sh \&\& ./add\_resources\_dev.sh configs/four\_machines.sh}
 
-Aplikacja jest dostępna na porcie 5000. Oprócz głównej strony dostępny jest m.in. panel administratora (\texttt{...:5000/admin/}) oraz API (\texttt{...:5000/api/}).
+\texttt{./create\_group.sh configs/four\_machines.sh \&\& ./add\_resources.sh configs/four\_machines.sh <nazwa\_tokena> <wartosc\_tokena>}
 
-Na backendowym kontenerze można dodać superużytkownika, którym będzie można logować się do panelu administratora i wykonywać wszystkie operacje na API (\texttt{docker exec -it orkestro-backend python3 manage.py createsuperuser}).
+Po wykonaniu zostanie podana gotowa do przeklejenia komenda do połączenia się z maszyną oraz adres IP, pod którym będzie dostępna aplikacja (trzeba podpiąć do niego domenę z certyfikatem, by działało logowanie Google). Z zewnątrz dostępna jest tylko jedna maszyna - do pozostałych trzeba wykonać jeszcze jedno połączenie SSH wewnątrz sieci prywatnej. Należy połączyć się z każdą maszyną i wdrożyć na nich planowane komponenty - robi się to tak samo, jak zostało to opisane w poprzedniej sekcji.
 
-\textcolor{red}{TODO}
+Skrypt \texttt{add\_resources(\_dev).sh} można wykonać ponownie na tej samej grupie, by dodać kolejne podsieci czy maszyny wirtualne - wystarczy zmodyfikować plik konfiguracyjny.
 
-[- instrukcja budowy systemu z kodu źródłowego
+\subsection{Zarządzanie użytkownikami i uprawnieniami}
 
-- instrukcja instalacji i konfiguracji systemu
+Zarządzanie użytkownikami i uprawnieniami (jak i inne czynności administracyjne) wykonuje się poprzez panel administratora. Aby uzyskać do niego dostęp, należy dodać pierwszego superużytkownika na którymkolwiek backendowym kontenerze: (\texttt{docker exec -it orkestro-backend python3 manage.py createsuperuser}). Program poprosi o adres e-mail i hasło. Tego konta można użyć do zalogowania się do panelu. Kolejne można dodawać tą samą komendą lub poprzez panel administratora, dodając ręcznie użytkowników i ustawiając im hasło. Można też nadawać istniejącym uprawnienia pracownika i/lub superużytkownika.
 
-- instrukcja aktualizacji oprogramowania
+Zarządzanie użytkownikami i uprawnieniami w kontekście grup muzycznych wykonują kierownicy poprzez aplikację, ale panel administratora również umożliwia modyfikację danych w tabeli z członkami grup.
 
-- instrukcja zarządzania użytkownikami i uprawnieniami
+\subsection{Zarządzanie zasobami systemu}
 
-- instrukcja tworzenia kopii zapasowych i odtwarzania systemu
+Przed wykonaniem czynności modyfikujących strukturę systemu warto tymczasowo wyłączyć dostęp do aplikacji, zatrzymując kontener z frontendem, a przy czynnościach modyfikujących plik \texttt{.env} zapisywać zmiany również w pliku przechowywanym na maszynie administratora - może być przydatny jako backup.
 
-- instrukcja zarządzania zasobami systemu]
+Aby dodać kolejny kontener z backendem, należy stworzyć go na wybranej maszynie, a na maszynie z frontendem dodać w pliku \texttt{.env} prywatny adres IP i port nowego kontenera do \texttt{DJANGO\_HOSTS}. Następnie należy ponownie zbudować usługę z frontendem:
+
+\texttt{docker compose down orkestro-frontend --rmi all ; docker compose up orkestro-frontend}
+
+Usuwanie kontenera wykonuje się odwrotnie: skasowanie kontenera, usunięcie adresu z \texttt{.env}, ponowne zbudowanie frontendu.
+
+Analogicznie wygląda procedura dodawania bazy danych slave: dodanie kontenera, wpisanie danych do łączenia z bazą (\texttt{POSTGRES\_SLAVE\_USER, POSTGRES\_SLAVE\_PASSWORD, POSTGRES\_SLAVE\_HOST, POSTGRES\ \_SLAVE\_PORT}) do pliku \texttt{.env} na każdej maszynie z uruchomionym backendem i ponowne zbudowanie tych usług:
+
+\texttt{docker compose down orkestro-backend --rmi all ; docker compose up orkestro-backend}
+
+Usunięcie takiej bazy wymaga usunięcia kontenera, przepisania danych do łączenia z bazą master na pola dla bazy slave w \texttt{.env} i ponownego zbudowania backendów.
+
+\subsection{Aktualizacja oprogramowania}
+
+System jest uruchamiany na kontenerach, co uniezależnia go od wersji oprogramowania występującego na maszynach (poza samym Dockerem). Wersje obrazów i zależności wewnątrz kontenerów są zapisane w plikach \texttt{Dockerfile}, \texttt{frontend/package.json}, \texttt{backend/requirements.txt} - w razie potrzeby można je zmodyfikować i ponownie zbudować odpowiednie serwisy:
+
+\texttt{docker compose down <serwisy> --rmi all \&\& docker compose up <serwisy> -d}
+
+Aby zaktualizować kod poszczególnych komponentów, należy pobrać zmiany (np. poprzez \texttt{git pull}), jeżeli trzeba - zaktualizować plik \texttt{.env}, po czym ponownie zbudować odpowiednie serwisy powyższą komendą.  
+
+\subsection{Dodawanie języka}
+Dodanie nowego języka wymaga następujących kroków:
+\begin{itemize}
+    \item w bazie danych: utworzyć nową kolumnę w tabeli \texttt{instruments} i wypełnić ją tłumaczeniami, zaktualizować plik SQL z definicją tabel i opcjonalnie z danymi testowymi
+    \item we frontendzie: dodać nowy język do ogólnych plików frontendowych zajmujących się tłumaczeniem (\texttt{LanguageContext.tsx}, \texttt{i18n.js}), dodać same tłumaczenia w \texttt{locales}
+    \item we frontendzie: dodać obsługę nowego języka w plikach mających do czynienia z danymi instrumentów lub wymagających dostosowania pisowni (\texttt{interfaces.tsx}, \textcolor{red}{TODO})
+\end{itemize}
+
+\subsection{Kopia zapasowa i odtwarzanie systemu}
+
+Backupów wymagają następujące dane:
+\begin{itemize}
+    \item kod
+    \item plik \texttt{.env}
+    \item pliki .pem  wykorzystywane do szyfrowania połączenia
+    \item plik z konfiguracją maszyn w chmurze i klucz SSH wykorzystywany do łączenia się z nimi (jeżeli wykorzystywana chmura; przy odtwarzaniu systemu od zera klucz jest niepotrzebny, ale warto zabezpieczyć się przed jego zgubieniem)
+    \item stan bazy danych master.
+\end{itemize}
+
+Pierwsze cztery pozycje są plikami dostępnymi z komputera administratora - wystarczy je  zarchiwizować. W celu wykonania backupu bazy danych należy wykonać w kontenerze kopię i przenieść ją do systemu plików - zakładając, że nazwa użytkownika do bazy danych i samej bazy to \texttt{myuser} i \texttt{orkestrodb}:
+
+\texttt{docker exec -it orkestro-db-master /bin/sh -c "PGUSER=myuser pg\_dump -Fc orkestrodb > db.sql" \&\& docker cp orkestro-db-master:db.sql .}
+
+Tak otrzymany plik można pobrać poprzez \texttt{scp} na maszynę z frontendem, a potem na komputer administratora. 
+
+Przy odtwarzaniu systemu po utracie danych należy umieścić kopie plików na swoim miejscu i ponownie wykonać wdrożenie. Przy odtwarzaniu bazy danych master należy (po wykonaniu skryptu instalacyjnego) wysłać plik z kopią na odpowiednią maszynę, użyć go w kontenerze i ponownie wykonać migrację Django:
+
+\texttt{docker cp db.sql orkestro-db-master:/ \&\& docker exec -it orkestro-db-master /bin/sh -c "export PGUSER=myuser ; dropdb orkestrodb ; createdb orkestrodb ; pg\_restore -d orkestrodb db.sql" \&\& docker compose up orkestro-backend-migrate}
+
+Baza slave, jeżeli istnieje, samodzielnie pobierze odpowiednie dane.
 
 \section{Podsumowanie}
 
