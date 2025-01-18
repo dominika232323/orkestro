@@ -18,7 +18,7 @@ export default function FileComponent({ file }: FileComponentProps) {
 
   useEffect(() => {
     fetchInstruments();
-  }, []);
+  }, [file]);
 
   const handleDownload = async (file_id: number, file_name: string) => {
     try {
@@ -63,8 +63,6 @@ export default function FileComponent({ file }: FileComponentProps) {
   };
 
   const instrumentName = currentLanguage === "en" ? "name_en" : "name_pl";
-
-  console.log(instruments);
 
   return (
     <li

@@ -195,7 +195,9 @@
     "files": "Pliki",
     "back": "Powrót",
     "upcoming-events": "Nadchodzące wydarzenia",
-    "no-upcoming-events": "Brak nadchodzących wydarzeń"
+    "no-upcoming-events": "Brak nadchodzących wydarzeń",
+    "placeholder": "Szukaj po nazwie lub instrumencie...",
+    "no-files": "Brak plików"
   },
   "edit-track": {
     "title": "Edytuj utwór",

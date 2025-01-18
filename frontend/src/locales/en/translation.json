@@ -194,7 +194,9 @@
     "files": "Files",
     "back": "Go back",
     "upcoming-events": "Upcoming events",
-    "no-upcoming-events": "No upcoming events"
+    "no-upcoming-events": "No upcoming events",
+    "placeholder": "Search by title or instrument...",
+    "no-files": "No files"
   },
   "edit-track": {
     "title": "Edit track",

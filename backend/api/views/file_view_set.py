@@ -44,25 +44,49 @@ class FileViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=["get"])
     def search(self, request):
-        files_for_me = (FileAllowedMember.objects.select_related("file", "file__track").defer('file__content')
-            .filter(user_id=request.user, file__track__track_id=request.GET.get("track_id"),
-                    file__name__icontains=request.GET.get("name", "")))
-        files = [ffm.file for ffm in files_for_me]
+        track_id = request.GET.get("track_id")
+        search_query = request.GET.get("search", "")
+        page_number = request.GET.get("page", 1)
+        search_language = request.GET.get("search_language", "en")
 
-        if request.GET.get("instrument_id"):
-            file_instruments = (FileInstrument.objects.select_related("file").defer('file__content')
-                .filter(file__in=files, instrument_id__in=request.GET.get("instrument_id").split()))
-            files = set([fi.file for fi in file_instruments])
-        files = sorted(files, key=lambda file: file.name)
+        files_for_me = (
+            FileAllowedMember.objects.select_related("file", "file__track")
+            .defer("file__content")
+            .filter(
+                user_id=request.user,
+                file__track__track_id=track_id,
+            )
+        )
+
+        if search_query:
+            file_ids_matching_name = files_for_me.filter(
+                file__name__icontains=search_query
+            ).values_list("file_id", flat=True)
+
+            instrument_field = ("instrument__name_en__icontains" if search_language == "en" else "instrument__name_pl__icontains")
+
+            file_ids_matching_instrument = (
+                FileInstrument.objects.filter(
+                    file__in=[ffm.file for ffm in files_for_me],
+                )
+                .filter(**{instrument_field: search_query})  # Dynamic field
+                .values_list("file_id", flat=True)
+            )
+
+            matching_file_ids = set(file_ids_matching_name).union(file_ids_matching_instrument)
+
+            files_for_me = files_for_me.filter(file_id__in=matching_file_ids)
+
+        files = sorted([ffm.file for ffm in files_for_me], key=lambda file: file.name)
 
         paginator = Paginator(files, 10)
-        page = paginator.get_page(request.GET.get("page", 1))
+        page = paginator.get_page(page_number)
         serializer = self.get_serializer(page, many=True)
 
         return Response({
             "items": serializer.data,
             "page_number": page.number,
-            "total_pages": paginator.num_pages
+            "total_pages": paginator.num_pages,
         })
 
     @action(detail=False, methods=["get"])
