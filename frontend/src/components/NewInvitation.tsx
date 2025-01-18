@@ -34,13 +34,13 @@ export default function NewInvitation({
         const data = {
           user: user.user_id,
           group: parsedGroupId,
-          permission_level: "A",
+          permission_level: "C",
         };
         await axios.post(`/api/invitations/`, data);
         setSuccess(t("new-invitation.success"));
       } catch (err) {
         if (axios.isAxiosError(err)) {
-          setError(t("new-invitation.-error"));
+          setError(t("new-invitation.error"));
         }
         console.error(err);
       }

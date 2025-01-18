@@ -11,6 +11,8 @@ class MemberPermission(BasePermission):
             return True
         if view.action in ["search", "by_group"]:
             return is_member(request, request.GET.get("group_id"))
+        if view.action == "leave":
+            return True
         return False
 
     def has_object_permission(self, request, view, obj):
