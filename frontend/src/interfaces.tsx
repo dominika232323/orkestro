@@ -3,10 +3,10 @@ export interface OrkestroUser {
   email: string;
   name: string;
   surname: string;
-  google_user_id: string;
-  google_calendar_id: string;
-  profile_picture_url: string;
   is_staff: boolean;
+  google_user_id: string;
+  profile_picture_url: string;
+  gcalendar_is_linked: boolean;
 }
 
 export interface OrkestroGroup {

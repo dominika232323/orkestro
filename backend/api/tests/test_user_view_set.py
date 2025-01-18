@@ -35,8 +35,8 @@ class UserViewSetTestCase(TestCase):
                 self.assertEqual(response.data["name"], case["user"].name)
                 self.assertEqual(response.data["surname"], case["user"].surname)
                 self.assertEqual(response.data["google_user_id"], case["user"].google_user_id)
-                self.assertEqual(response.data["google_calendar_id"], case["user"].google_calendar_id)
                 self.assertEqual(response.data["profile_picture_url"], case["user"].profile_picture_url)
+                self.assertEqual(response.data["gcalendar_is_linked"], case["user"].gcalendar_is_linked)
 
     def test_by_email(self):
         test_cases = [

@@ -43,8 +43,10 @@ class User(AbstractBaseUser):
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
     google_user_id = models.CharField(max_length=255, null=True, blank=True)
-    google_calendar_id = models.CharField(max_length=1024, blank=True, null=True)
     profile_picture_url = models.URLField(blank=True, null=True)
+    gcalendar_is_linked = models.BooleanField(default=False)
+    gcalendar_refresh_token = models.CharField(max_length=255, null=True, blank=True)
+    gcalendar_access_token = models.CharField(max_length=255, null=True, blank=True)
 
     objects = UserManager()
 

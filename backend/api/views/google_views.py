@@ -8,6 +8,7 @@ from google.auth.transport.requests import Request
 from google.oauth2 import id_token
 import requests
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -102,6 +103,8 @@ class GoogleLoginView(APIView):
 
 
 class GoogleCalendarView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def post(self, request):
         """Link user's Google Calendar"""
 
@@ -122,13 +125,25 @@ class GoogleCalendarView(APIView):
 
             response = requests.post(token_url, data=payload)
             token_data = response.json()
-            print("TOKEN_DATA", token_data)
 
             if "error" in token_data:
                 return Response({"error": token_data["error_description"]}, status=400)
 
-            print("ACCESS", token_data["access_token"])
-            print("REFRESH", token_data["refresh_token"])
+            info = id_token.verify_oauth2_token(
+                token_data["id_token"],
+                Request(),
+                settings.GOOGLE_CLIENT_ID
+            )
+            email = info["email"]
+
+            if not email == request.user.email:
+                return Response({"error": "Email does not match"}, status=400)
+
+            user = User.objects.get(email=request.user.email)
+            user.gcalendar_is_linked = True
+            user.gcalendar_refresh_token = token_data["refresh_token"]
+            user.gcalendar_access_token = token_data["access_token"]
+            user.save()
 
             return Response({"message": "Google Calendar linked successfully"})
         except Exception as e:

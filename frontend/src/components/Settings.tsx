@@ -25,6 +25,7 @@ export default function Settings() {
     OrkestroUserInstrument[]
   >([]);
   const [newInstrument, setNewInstrument] = useState<string>("");
+  const [justLinkedGcalendar, setJustLinkedGcalendar] = useState<boolean>(false);
 
   const instrumentName = (instrument: OrkestroInstrument, language: string) => {
     if (language === "pl") {
@@ -36,7 +37,7 @@ export default function Settings() {
 
   useEffect(() => {
     fetchUserOrRedirect(navigate, setUser);
-  }, [navigate]);
+  }, [navigate, justLinkedGcalendar]);
 
   useEffect(() => {
     const fetchInstruments = async () => {
@@ -118,6 +119,7 @@ export default function Settings() {
       })
       .then((backendResponse) => {
         console.log("Backend response:", backendResponse.data);
+        setJustLinkedGcalendar(true);
       })
       .catch((error) => console.error("Backend link failed:", error));
     },
@@ -163,7 +165,7 @@ export default function Settings() {
             <span className="text-gray-700">
               {t("settings.google-calendar")}:{" "}
             </span>
-            {user && user.google_calendar_id ? (
+            {user && user.gcalendar_is_linked ? (
               <span className="text-green-700">{t("settings.connected")}</span>
             ) : (
               <>

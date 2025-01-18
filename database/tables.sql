@@ -131,19 +131,21 @@ ALTER TABLE user_instruments ADD CONSTRAINT user_instruments_pk PRIMARY KEY ( us
 ALTER TABLE user_instruments ADD CONSTRAINT user_instruments_unique UNIQUE ( instrument_id, user_id );
 
 CREATE TABLE users (
-    user_id             SERIAL NOT NULL,
-    email               VARCHAR(100) NOT NULL,
-    password            VARCHAR(255),
-    name                VARCHAR(50),
-    surname             VARCHAR(50),
-    google_user_id      VARCHAR(255),
-    google_calendar_id  VARCHAR(1024),
-    date_joined         TIMESTAMP WITH TIME ZONE,
-    last_login          TIMESTAMP WITH TIME ZONE,
-    profile_picture_url VARCHAR(255),
-    is_superuser        BOOLEAN,
-    is_staff            BOOLEAN,
-    is_active           BOOLEAN
+    user_id                 SERIAL NOT NULL,
+    email                   VARCHAR(100) NOT NULL,
+    password                VARCHAR(255),
+    name                    VARCHAR(50),
+    surname                 VARCHAR(50),
+    date_joined             TIMESTAMP WITH TIME ZONE,
+    last_login              TIMESTAMP WITH TIME ZONE,
+    is_active               BOOLEAN,
+    is_staff                BOOLEAN,
+    is_superuser            BOOLEAN,
+    google_user_id          VARCHAR(255),
+    profile_picture_url     VARCHAR(255),
+    gcalendar_is_linked     BOOLEAN,
+    gcalendar_refresh_token VARCHAR(255),
+    gcalendar_access_token  VARCHAR(255)
 );
 
 ALTER TABLE users ADD CONSTRAINT users_pk PRIMARY KEY ( user_id );
