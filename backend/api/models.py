@@ -5,6 +5,12 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.db import models
 from django.utils import timezone
 
+PERMISSION_LEVEL_CHOICES = {
+    "A": "Manager",
+    "B": "Moderator",
+    "C": "Musician",
+}
+
 
 class UserManager(BaseUserManager):
     """
@@ -214,7 +220,7 @@ class Invitation(models.Model):
     invitation_id = models.AutoField(primary_key=True)
     group = models.ForeignKey(Group, models.CASCADE, related_name="invitees")
     user = models.ForeignKey(User, models.CASCADE, related_name="invitations")
-    permission_level = models.CharField(max_length=1)
+    permission_level = models.CharField(max_length=1, choices=PERMISSION_LEVEL_CHOICES)
 
     def __str__(self) -> str:
         return f"{self.group.name} → {self.user} ({self.invitation_id})"
@@ -229,7 +235,7 @@ class Member(models.Model):
     member_id = models.AutoField(primary_key=True)
     group = models.ForeignKey(Group, models.CASCADE, related_name="members")
     user = models.ForeignKey(User, models.CASCADE, related_name="group_memberships")
-    permission_level = models.CharField(max_length=1)
+    permission_level = models.CharField(max_length=1, choices=PERMISSION_LEVEL_CHOICES)
 
     def __str__(self) -> str:
         return f"{self.group.name} → {self.user} ({self.member_id})"

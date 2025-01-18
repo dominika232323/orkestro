@@ -25,8 +25,14 @@ class InvitationViewSet(viewsets.ModelViewSet):
     @staticmethod
     def is_invitable(request):
         invitee = User.objects.get(user_id=request.data.get("user"))
-        return (not invitee.group_memberships.filter(group_id=request.data.get("group")).exists()
-                and not invitee.invitations.filter(group_id=request.data.get("group")).exists())
+        group = Group.objects.get(group_id=request.data.get("group"))
+
+        is_associated = (invitee.group_memberships.filter(group=group).exists()
+                         or invitee.invitations.filter(group=group).exists())
+        has_group_hierarchy_gap = (group.supergroup is not None
+                                   and invitee.group_memberships.filter(group=group.supergroup).exists())
+
+        return not is_associated and not has_group_hierarchy_gap
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)

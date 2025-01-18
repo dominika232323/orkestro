@@ -80,6 +80,7 @@ CREATE TABLE invitations (
 
 ALTER TABLE invitations ADD CONSTRAINT invitations_pk PRIMARY KEY ( invitation_id );
 ALTER TABLE invitations ADD CONSTRAINT invitations_unique UNIQUE ( group_id, user_id );
+ALTER TABLE invitations ADD CONSTRAINT invitations_permissions CHECK ( permission_level IN ('A', 'B', 'C') );
 
 CREATE TABLE members (
     member_id        SERIAL NOT NULL,
@@ -90,6 +91,8 @@ CREATE TABLE members (
 
 ALTER TABLE members ADD CONSTRAINT members_pk PRIMARY KEY ( member_id );
 ALTER TABLE members ADD CONSTRAINT members_unique UNIQUE ( group_id, user_id );
+ALTER TABLE members ADD CONSTRAINT members_permissions CHECK ( permission_level IN ('A', 'B', 'C') );
+
 
 CREATE TABLE message_recipients (
     message_recipient_id SERIAL NOT NULL,
@@ -147,6 +150,7 @@ CREATE TABLE users (
 );
 
 ALTER TABLE users ADD CONSTRAINT users_pk PRIMARY KEY ( user_id );
+ALTER TABLE users ADD CONSTRAINT users_email_unique UNIQUE ( email );
 
 ALTER TABLE event_attendees ADD CONSTRAINT event_attendees_events_fk FOREIGN KEY ( event_id ) REFERENCES events ( event_id ) ON DELETE CASCADE;
 ALTER TABLE event_attendees ADD CONSTRAINT event_attendees_users_fk FOREIGN KEY ( user_id ) REFERENCES users ( user_id ) ON DELETE CASCADE;
@@ -171,20 +175,18 @@ ALTER TABLE tracks ADD CONSTRAINT tracks_groups_fk FOREIGN KEY ( group_id ) REFE
 ALTER TABLE user_instruments ADD CONSTRAINT user_instruments_instruments_fk FOREIGN KEY ( instrument_id ) REFERENCES instruments ( instrument_id ) ON DELETE CASCADE;
 ALTER TABLE user_instruments ADD CONSTRAINT user_instruments_users_fk FOREIGN KEY ( user_id ) REFERENCES users ( user_id ) ON DELETE CASCADE;
 
-CREATE INDEX index_users ON users USING hash ( google_user_id );
 CREATE INDEX index_user_instruments ON user_instruments USING hash ( user_id );
 CREATE INDEX index_members_user_id ON members USING hash ( user_id );
-CREATE INDEX index_invitations ON invitations USING hash ( user_id );
-CREATE INDEX index_message_recipients ON message_recipients USING hash ( user_id );
-CREATE INDEX index_event_attendees ON event_attendees USING hash ( user_id );
-CREATE INDEX index_groups ON groups USING hash ( group_id );
 CREATE INDEX index_members_group_id ON members USING hash ( group_id );
-CREATE INDEX index_messages ON messages USING hash ( group_id );
+CREATE INDEX index_invitations_user_id ON invitations USING hash ( user_id );
+CREATE INDEX index_invitations_group_id ON invitations USING hash ( group_id );
+CREATE INDEX index_message_recipients ON message_recipients USING hash ( user_id );
+CREATE INDEX index_event_attendees_user_id ON event_attendees USING hash ( user_id );
+CREATE INDEX index_event_attendees_group_id ON event_attendees USING hash ( event_id );
 CREATE INDEX index_events ON events USING hash ( group_id );
 CREATE INDEX index_tracks ON tracks USING hash ( group_id );
-CREATE INDEX index_event_tracks ON event_tracks USING hash ( event_id );
-CREATE INDEX index_files ON files USING hash ( track_id );
-CREATE INDEX index_instruments ON instruments USING hash ( instrument_id );
-CREATE INDEX index_file_allowed_members ON file_allowed_members USING hash ( file_id );
+CREATE INDEX index_event_tracks_event_id ON event_tracks USING hash ( event_id );
+CREATE INDEX index_event_tracks_track_id ON event_tracks USING hash ( track_id );
+CREATE INDEX index_file_allowed_members_file_id ON file_allowed_members USING hash ( file_id );
+CREATE INDEX index_file_allowed_members_user_id ON file_allowed_members USING hash ( user_id );
 CREATE INDEX index_file_instruments ON file_instruments USING hash ( file_id );
-
