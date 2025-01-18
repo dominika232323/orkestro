@@ -6,9 +6,10 @@ Handles API requests regarding message recipient data:
 - searching messages sent to the calling user
 Staff users can do all of the above + list all message recipients or a specific one.
 """
-from django.core.mail import send_mail
 from django.core.paginator import Paginator
 from django.db.models import Q
+from django.core.mail import send_mail
+from django.core.mail import EmailMessage
 
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
@@ -42,8 +43,7 @@ class MessageRecipientViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=["post"])
     def send_email(self, request, pk=None):
         mr = self.get_object()
-        # send_mail(subject=mr.message.title, message=mr.message.content, from_email=mr.message.user.email, recipient_list=[mr.user.email])
-        # TODO: setup backend for e-mails
+        send_mail(subject=mr.message.title, message=mr.message.content, from_email=mr.message.user.email, recipient_list=[mr.user.email])
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(detail=True, methods=["post"])
