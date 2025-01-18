@@ -19,7 +19,7 @@ export default function TopBar() {
   const [user, setUser] = useState<OrkestroUser>();
 
   useEffect(() => {
-    fetchUserOrRedirect(navigate, setUser);
+    fetchUserOrRedirect(setUser);
   }, [navigate]);
 
   const handleLogOut = () => {

@@ -9,11 +9,11 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate, useParams } from "react-router-dom";
 import { OrkestroRole, OrkestroTrack, Paged } from "../interfaces";
-import Pagination from "./Pagination";
+import Pagination from "../components/Pagination";
 import axios from "axios";
 import { fetchUserOrRedirect } from "../auth";
 
-export default function Tracks() {
+export default function TracksPage() {
   const { t } = useLanguage();
   const { groupId } = useParams();
   const navigate = useNavigate();
@@ -30,7 +30,7 @@ export default function Tracks() {
 
     await axios
       .get<Paged<OrkestroTrack>>(
-        `/api/tracks/search/?group_id=${groupId}&page=${currentPage}`
+        `/api/tracks/search/?group_id=${groupId}&page=${currentPage}${searchQuery ? `&name=${searchQuery}` : ""}`
       )
       .then((response) => {
         setTracks(response.data.items);
@@ -85,13 +85,15 @@ export default function Tracks() {
       </h1>
 
       {/* Add Track Button */}
-      <button
-        className="w-full py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 font-medium flex items-center justify-center my-3"
-        onClick={() => navigate(`/new-track/${groupId}`)}
-      >
-        <FontAwesomeIcon icon={faPlus} className="mr-2" />
-        {t("tracks.add-track")}
-      </button>
+      {role?.is_manager && (
+        <button
+          className="w-full py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 font-medium flex items-center justify-center my-3"
+          onClick={() => navigate(`/new-track/${groupId}`)}
+        >
+          <FontAwesomeIcon icon={faPlus} className="mr-2" />
+          {t("tracks.add-track")}
+        </button>
+      )}
 
       {/* Search Bar */}
       <div className="flex items-center mb-6 bg-white shadow-md rounded-lg overflow-hidden">

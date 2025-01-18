@@ -130,7 +130,6 @@ export const fetchUserLogin = async (navigate: Function) => {
 };
 
 export const fetchUserOrRedirect = async (
-  navigate: Function,
   setUser: Function = (_: any) => {}
 ) => {
   const access_token = getAccessToken();

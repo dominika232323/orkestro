@@ -36,8 +36,10 @@ class InvitationViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
-        if not serializer.is_valid() or not self.is_invitable(request):
+        if not serializer.is_valid():
             return Response(data={"error": "Data validation failed"}, status=status.HTTP_400_BAD_REQUEST)
+        if not self.is_invitable(request):
+            return Response(data={"error": "User not invitable"}, status=status.HTTP_400_BAD_REQUEST)
         serializer.save()
         return Response(data=serializer.data, status=status.HTTP_201_CREATED)
 

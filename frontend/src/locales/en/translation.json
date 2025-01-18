@@ -21,7 +21,8 @@
   },
   "groups": {
     "title": "Groups",
-    "no-groups": "No groups"
+    "no-groups": "No groups",
+    "add-group": "Add group"
   },
   "group": {
     "manage": "Manage",
@@ -88,7 +89,7 @@
     "no-tracks": "No tracks",
     "download": "Download",
     "add-track": "New track",
-    "placeholder": "Search by name or artist...",
+    "placeholder": "Search by name...",
     "search": "Search",
     "loading": "Tracks loading...",
     "delete": "Delete",
@@ -115,7 +116,34 @@
     "new-message": "New message",
     "page": "Page",
     "search": "Search",
-    "loading": "Members loading..."
+    "loading": "Members loading...",
+    "invite": "Invite",
+    "manage-basics": "Manage basics",
+    "manage-members": "Manage members",
+    "edit": "Edit",
+    "edit-success": "Edit successfull",
+    "edit-failed": "Edit failed",
+    "edit-missing": "All fields must not be empty",
+    "delete-group": "Delete group",
+    "new-subgroup": "New subgroup",
+    "leave-group": "Leave group"
+  },
+  "new-invitation": {
+    "title": "Invite new member",
+    "placeholder": "Enter email address...",
+    "no-user": "No user with such email",
+    "error": "User not invitable",
+    "success": "User invited",
+    "invite": "Invite"
+  },
+  "delete-group": {
+    "title": "Delete group",
+    "back": "Go back",
+    "description": "To delete group, type it's name:",
+    "placeholder": "Group's name...",
+    "delete": "Delete",
+    "name-mismatch": "Group name does not match",
+    "fail": "Group deletion failed"
   },
   "pagination": {
     "page": "Page"
@@ -167,7 +195,9 @@
     "files": "Files",
     "back": "Go back",
     "upcoming-events": "Upcoming events",
-    "no-upcoming-events": "No upcoming events"
+    "no-upcoming-events": "No upcoming events",
+    "placeholder": "Search by title or instrument...",
+    "no-files": "No files"
   },
   "edit-track": {
     "title": "Edit track",
@@ -182,9 +212,36 @@
   },
   "new-track": {
     "title": "New track",
-    "form-error": "All fields are mandatory",
+    "form-error": "All fields are required",
     "name": "Name",
     "artist": "Artist",
+    "back": "Go back"
+  },
+  "new-group": {
+    "title": "New group",
+    "name": "Name",
+    "description": "Description",
+    "submit": "Create",
+    "back": "Back",
+    "missing": "All fields are required"
+  },
+  "add-file": {
+    "no-file": "No file selected",
+    "file-too-big": "Maximum file size is 10 MB",
+    "title": "Add file",
+    "users-allowed": "Members allowed:",
+    "send": "Send",
+    "back": "Go back",
+    "sending": "Sending...",
+    "instruments": "Instruments:"
+  },
+  "search": {
+    "search": "Search"
+  },
+  "leave-group": {
+    "title": "Leave group",
+    "description": "Are you sure you want to leave the group?",
+    "leave": "Leave",
     "back": "Go back"
   }
 }

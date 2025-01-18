@@ -21,7 +21,8 @@
   },
   "groups": {
     "title": "Grupy",
-    "no-groups": "Brak grup"
+    "no-groups": "Brak grup",
+    "add-group": "Dodaj grupę"
   },
   "group": {
     "manage": "Zarządzaj",
@@ -88,7 +89,7 @@
     "no-tracks": "Brak utworów",
     "download": "Pobierz",
     "add-track": "Nowy utwór",
-    "placeholder": "Szukaj po tytule lub autorze...",
+    "placeholder": "Szukaj po tytule...",
     "search": "Szukaj",
     "loading": "Ładowanie utworów...",
     "delete": "Usuń",
@@ -116,7 +117,34 @@
     "new-message": "Nowa wiadomość",
     "page": "Strona",
     "search": "Szukaj",
-    "loading": "Ładowanie członków grupy..."
+    "loading": "Ładowanie członków grupy...",
+    "invite": "Zaproś",
+    "manage-basics": "Podstawowe informacje",
+    "manage-members": "Członkowie grupy",
+    "edit": "Edytuj",
+    "edit-success": "Edycja zakończona sukcesem",
+    "edit-failed": "Edycja nieudana",
+    "edit-missing": "Wszystkie pola muszą być wypełnione",
+    "delete-group": "Usuń grupę",
+    "new-subgroup": "Nowa podgrupa",
+    "leave-group": "Opuść grupę"
+  },
+  "delete-group": {
+    "title": "Usuń grupę",
+    "back": "Powrót",
+    "description": "Aby usunąć grupę, potwierdź jej nazwę:",
+    "placeholder": "Nazwa grupy...",
+    "delete": "Usuń",
+    "name-mismatch": "Nazwa grupy się nie zgadza",
+    "fail": "Usunięcie grupy nieudane"
+  },
+  "new-invitation": {
+    "title": "Zaproś do grupy",
+    "placeholder": "Wprowadź adres email...",
+    "no-user": "Brak użytkownika o takim adresie email",
+    "error": "Nie udało się zaprosić użytkownika",
+    "success": "Użytkownik zaproszony",
+    "invite": "Zaproś"
   },
   "pagination": {
     "page": "Strona"
@@ -168,7 +196,9 @@
     "files": "Pliki",
     "back": "Powrót",
     "upcoming-events": "Nadchodzące wydarzenia",
-    "no-upcoming-events": "Brak nadchodzących wydarzeń"
+    "no-upcoming-events": "Brak nadchodzących wydarzeń",
+    "placeholder": "Szukaj po nazwie lub instrumencie...",
+    "no-files": "Brak plików"
   },
   "edit-track": {
     "title": "Edytuj utwór",
@@ -187,6 +217,33 @@
     "name": "Tytuł",
     "artist": "Autor",
     "submit": "Utwórz",
+    "back": "Powrót"
+  },
+  "new-group": {
+    "title": "Nowa grupa",
+    "name": "Nazwa",
+    "description": "Opis",
+    "submit": "Utwórz",
+    "back": "Powrót",
+    "missing": "Wszystkie pola są obowiązkowe"
+  },
+  "add-file": {
+    "no-file": "Plik nie został wybrany",
+    "file-too-big": "Maksymalny rozmiar pliku wynosi 10 MB",
+    "title": "Dodaj plik",
+    "users-allowed": "Członkowie przypisani do pliku:",
+    "send": "Wyślij",
+    "back": "Powrót",
+    "sending": "Wysyłanie...",
+    "instruments": "Instrumenty:"
+  },
+  "search": {
+    "search": "Szukaj"
+  },
+  "leave-group": {
+    "title": "Opuść grupę",
+    "description": "Jesteś pewny, że chcesz opuścić grupę?",
+    "leave": "Opuść",
     "back": "Powrót"
   }
 }

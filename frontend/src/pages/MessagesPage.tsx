@@ -3,10 +3,10 @@ import { useEffect, useState, useCallback } from "react";
 import { useLanguage } from "../LanguageContext";
 import { axiosInstance as axios } from "../auth";
 import { OrkestroMessageRecipient, Paged } from "../interfaces";
-import MessageComponent from "./MessageComponent";
-import Pagination from "./Pagination";
+import MessageComponent from "../components/MessageComponent";
+import Pagination from "../components/Pagination";
 
-export default function Messages() {
+export default function MessagesPage() {
   const { t } = useLanguage();
   const [loading, setLoading] = useState(true);
   const [messages, setMessages] = useState<OrkestroMessageRecipient[]>([]);

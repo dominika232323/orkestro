@@ -6,12 +6,16 @@ import {
   OrkestroTrack,
   OrkestroEvent,
   OrkestroTrackEvent,
+  OrkestroUser,
+  OrkestroRole,
 } from "../interfaces";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Pagination from "../components/Pagination";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
+import FileComponent from "../components/FileComponent";
+import { fetchUserOrRedirect } from "../auth";
 
 export default function TrackDetailsPage() {
   const { t, currentLanguage } = useLanguage();
@@ -21,11 +25,23 @@ export default function TrackDetailsPage() {
   const [track, setTrack] = useState<OrkestroTrack | null>(null);
   const [files, setFiles] = useState<OrkestroFile[]>([]);
   const [events, setEvents] = useState<OrkestroTrackEvent[]>([]);
+  const [role, setRole] = useState<OrkestroRole>();
 
-  const [currentPageFiles, setCurrentPageFiles] = useState(1);
-  const [totalPagesFiles, setTotalPagesFiles] = useState(1);
-  const [currentPageEvents, setCurrentPageEvents] = useState(1);
-  const [totalPagesEvents, setTotalPagesEvents] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+
+  const [searchQuery, setSearchQuery] = useState("");
+
+  useEffect(() => {
+    const fetchRole = async () => {
+      await axios
+        .get<OrkestroRole>(`/api/groups/${groupId}/role/`)
+        .then((response) => setRole(response.data))
+        .catch((error) => console.error("Error fetching role:", error));
+    };
+
+    fetchRole();
+  }, [groupId]);
 
   useEffect(() => {
     fetchTrack();
@@ -34,29 +50,7 @@ export default function TrackDetailsPage() {
 
   useEffect(() => {
     fetchFiles();
-  }, [currentPageFiles]);
-
-  const handleDownload = async (file_id: number, file_name: string) => {
-    try {
-      const response = await axios.get(`/api/files/${file_id}/download/`, {
-        responseType: "blob",
-      });
-
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-
-      const link = document.createElement("a");
-      link.href = url;
-      link.setAttribute("download", file_name); // Set the file name
-      document.body.appendChild(link);
-      link.click();
-
-      // Clean up
-      link.remove();
-      window.URL.revokeObjectURL(url);
-    } catch (error) {
-      console.error("Error downloading the file:", error);
-    }
-  };
+  }, [currentPage]);
 
   const fetchTrack = async () => {
     await axios
@@ -66,43 +60,56 @@ export default function TrackDetailsPage() {
       })
       .catch((error) => console.error("Error fetching track:", error));
   };
+
   const fetchFiles = async () => {
     await axios
       .get<Paged<OrkestroFile>>(
-        `/api/files/search/?track_id=${trackId}&page=${currentPageFiles}`
+        `/api/files/search/?track_id=${trackId}&page=${currentPage}${searchQuery ? `&search=${searchQuery}&search_language=${currentLanguage}` : ""}`
       )
       .then((response) => {
+        console.log(response);
         setFiles(response.data.items);
-        setCurrentPageFiles(response.data.page_number);
-        setTotalPagesFiles(response.data.total_pages);
+        setCurrentPage(response.data.page_number);
+        setTotalPages(response.data.total_pages);
       })
       .catch((error) => console.error("Error fetching files: ", error));
   };
 
   const fetchEvents = async () => {
     await axios
-      .get<Paged<OrkestroTrackEvent>>(
-        `/api/event-tracks/by_track/?track_id=${trackId}&page=${currentPageEvents}`
+      .get<OrkestroTrackEvent[]>(
+        `/api/event-tracks/by_track/?track_id=${trackId}`
       )
       .then((response) => {
-        setEvents(response.data.items);
-        setTotalPagesFiles(response.data.total_pages);
+        setEvents(response.data);
       })
       .catch((error) => console.error(error));
   };
 
-  console.log(events);
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      handleSearch();
+    }
+  };
+
+  const handleSearch = async () => {
+    fetchFiles();
+    setCurrentPage(1);
+  };
 
   if (track) {
     return (
       <div className="bg-gray-200 p-6 rounded-lg max-w-4xl mx-auto mt-8">
         <h1 className="text-2xl font-bold text-center mb-6">{track.name}</h1>
-        <button
-          className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600"
-          onClick={() => navigate(`/edit-track/${track.track_id}/${groupId}`)}
-        >
-          {t("track-details.edit")}
-        </button>
+        {role?.is_manager && (
+          <button
+            className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600"
+            onClick={() => navigate(`/edit-track/${track.track_id}/${groupId}`)}
+          >
+            {t("track-details.edit")}
+          </button>
+        )}
+
         <button
           onClick={() => navigate(-1)}
           className="ml-1 bg-red-500 text-white p-2 rounded-lg hover:bg-red-600"
@@ -119,22 +126,28 @@ export default function TrackDetailsPage() {
 
         {/* Lista plików */}
         <h2 className="text-xl font-bold mt-4">{t("track-details.files")}</h2>
+
+        {/* Search Bar */}
+        <div className="flex items-center mb-6 bg-white shadow-md rounded-lg overflow-hidden">
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyDown={handleKeyDown}
+            placeholder={t("track-details.placeholder")}
+            className="flex-1 px-4 py-2 text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <button
+            onClick={handleSearch}
+            className="px-6 py-2 bg-blue-500 text-white font-medium hover:bg-blue-600 transition-colors"
+          >
+            {t("tracks.search")}
+          </button>
+        </div>
+
         <ul className="list-disc pl-5">
           {files.length > 0 ? (
-            files.map((file) => (
-              <li
-                key={file.file_id}
-                className="flex justify-between items-center"
-              >
-                <span>{file.name}</span>
-                <button
-                  className="hover:underline"
-                  onClick={() => handleDownload(file.file_id, file.name)}
-                >
-                  {t("track-details.download")}
-                </button>
-              </li>
-            ))
+            files.map((file) => <FileComponent file={file} />)
           ) : (
             <p>{t("track-details.no-files")}</p>
           )}
@@ -142,9 +155,9 @@ export default function TrackDetailsPage() {
 
         {/*File Pagination*/}
         <Pagination
-          currentPage={currentPageFiles}
-          totalPages={totalPagesFiles}
-          onPageChange={(page) => setCurrentPageFiles(page)}
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={(page) => setCurrentPage(page)}
         />
 
         {/* Lista wydarzeń */}
@@ -170,13 +183,6 @@ export default function TrackDetailsPage() {
             <p>{t("track-details.no-upcoming-events")}</p>
           )}
         </ul>
-
-        {/*Event Pagination*/}
-        <Pagination
-          currentPage={currentPageEvents}
-          totalPages={totalPagesEvents}
-          onPageChange={(page) => setCurrentPageEvents(page)}
-        />
       </div>
     );
   } else {

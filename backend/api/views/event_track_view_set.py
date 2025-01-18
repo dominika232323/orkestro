@@ -4,6 +4,9 @@ Handles API requests regarding events' track data:
 - getting all entries related to a track (requires being a member of the group)
 Staff users can do all of the above + list all event tracks or a specific one.
 """
+import datetime
+import pytz
+
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
@@ -44,15 +47,9 @@ class EventTrackViewSet(viewsets.ModelViewSet):
         ]
         event_tracks = sorted(event_tracks, key=lambda event_track: event_track.event.date)
 
-        paginator = Paginator(event_tracks, 10)
-        page = paginator.get_page(request.GET.get("page", 1))
-        serializer = self.get_serializer(page, many=True)
+        serializer = self.get_serializer(event_tracks, many=True)
 
-        return Response({
-            "items": serializer.data,
-            "page_number": page.number,
-            "total_pages": paginator.num_pages
-        })
+        return Response(serializer.data)
 
     @action(detail=False, methods=["get"])
     def by_event(self, request):

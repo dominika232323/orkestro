@@ -11,6 +11,7 @@ import { fetchUserOrRedirect } from "../auth";
 import axios from "axios";
 import Pagination from "../components/Pagination";
 import Select, { MultiValue } from "react-select";
+import AddFiles from "../components/AddFiles";
 
 export default function TrackEditPage() {
   const navigate = useNavigate();
@@ -21,13 +22,8 @@ export default function TrackEditPage() {
   const [files, setFiles] = useState<OrkestroFile[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [members, setMembers] = useState<OrkestroMember[]>([]);
-  const [selectedUserIds, setSelectedUserIds] = useState<number[]>([]);
 
   const [showAddFiles, setShowAddFiles] = useState(false);
-  const [file, setFile] = useState<File | null>(null);
-
-  console.log(file);
 
   const parsedTrackId = trackId ? parseInt(trackId, 10) : undefined;
   const parsedGroupId = groupId ? parseInt(groupId, 10) : undefined;
@@ -50,30 +46,6 @@ export default function TrackEditPage() {
   const reloadPage = () => {
     fetchTrack();
     fetchFiles();
-  };
-
-  useEffect(() => {
-    const fetchMembers = async () => {
-      await axios
-        .get(`/api/members/by_group/?group_id=${parsedGroupId}`)
-        .then((response) => {
-          setMembers(response.data);
-          setSelectedUserIds(
-            response.data.map(
-              (member: OrkestroMember) => member.user_details.user_id
-            )
-          );
-        })
-        .catch((error) => console.error("Error fetching members:", error));
-    };
-
-    fetchMembers();
-  }, [parsedGroupId]);
-
-  const handleUserSelectionChange = (
-    selectedOptions: MultiValue<{ label: string; value: number }>
-  ) => {
-    setSelectedUserIds(selectedOptions.map((option) => option.value));
   };
 
   const fetchTrack = async () => {
@@ -127,50 +99,6 @@ export default function TrackEditPage() {
   const handleRemoveFile = async (file_id: number) => {
     await axios.delete(`/api/files/${file_id}/`);
     fetchFiles();
-  };
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setFile(e.target.files[0]);
-    }
-  };
-
-  const handleAddFile = async () => {
-    if (!(file && trackId)) {
-      console.error("File and trackId required");
-      return;
-    }
-
-    try {
-      // Create form data for file upload
-      const formData = new FormData();
-      formData.append("name", file.name);
-      formData.append("track", trackId);
-      formData.append("file", file);
-
-      // Upload the file
-      const fileResponse = await axios.post("/api/files/", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-      const fileId = fileResponse.data.file_id;
-
-      // Assign file to selected users
-      const promises = selectedUserIds.map((userId) =>
-        axios.post(`/api/file-allowed-members/`, {
-          file: fileId,
-          user: userId,
-        })
-      );
-      await Promise.all(promises);
-      // Clear states and refresh
-      setSelectedUserIds([]);
-      setShowAddFiles(false);
-      fetchFiles();
-    } catch (error) {
-      console.error("Error in file upload or user assignment:", error);
-    }
   };
 
   console.log(files);
@@ -255,50 +183,12 @@ export default function TrackEditPage() {
         />
 
         {showAddFiles && (
-          <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center">
-            <div className="bg-white p-6 rounded-lg max-w-lg w-full">
-              <h2 className="text-lg font-bold mb-4">
-                {t("edit-track.add-file")}
-              </h2>
-              <input type="file" onChange={handleFileChange} />
-              <label className="block mb-4">
-                {t("new-message.recipients")}
-                <Select
-                  options={members.map((member) => ({
-                    label: `${member.user_details.name} ${member.user_details.surname}`,
-                    value: member.user_details.user_id,
-                  }))}
-                  value={selectedUserIds.map((id) => ({
-                    label:
-                      members.find(
-                        (member) => member.user_details.user_id === id
-                      )?.user_details.name +
-                        " " +
-                        members.find(
-                          (member) => member.user_details.user_id === id
-                        )?.user_details.surname || "",
-                    value: id,
-                  }))}
-                  onChange={handleUserSelectionChange}
-                  isMulti
-                  className="react-select-container"
-                  classNamePrefix="react-select"
-                />
-              </label>
-              <button
-                onClick={handleAddFile}
-                className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600"
-              >
-                {t("edit-event.confirm")}
-              </button>
-              <button
-                onClick={() => setShowAddFiles(false)}
-                className="ml-1 bg-red-500 text-white p-2 rounded-lg hover:bg-red-600"
-              >
-                {t("edit-track.back")}
-              </button>
-            </div>
-          </div>
+          <AddFiles
+            parsedTrackId={parsedTrackId}
+            parsedGroupId={parsedGroupId}
+            setShowAddFiles={setShowAddFiles}
+            fetchFiles={fetchFiles}
+          />
         )}
       </div>
     );

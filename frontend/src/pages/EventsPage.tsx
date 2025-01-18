@@ -13,9 +13,9 @@ import { useLanguage } from "../LanguageContext";
 import { useNavigate, useParams } from "react-router-dom";
 import { axiosInstance as axios, fetchUserOrRedirect } from "../auth";
 import { OrkestroRole, OrkestroEvent, Paged } from "../interfaces";
-import Pagination from "./Pagination";
+import Pagination from "../components/Pagination";
 
-export default function Events() {
+export default function EventsPage() {
   const { t, currentLanguage } = useLanguage();
   const navigate = useNavigate();
   const { groupId } = useParams();
