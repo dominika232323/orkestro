@@ -41,21 +41,18 @@ BROWSER=none
 
 # Uruchomienie (wersja deweloperska, bez wszystkich kontenerów)
 
-## Baza danych PostgreSQL (`database/`)
-### Uruchomienie
+## Baza danych PostgreSQL
+### Pierwsze uruchomienie
 ```sh
-docker compose up
+cd deployment/deploy
+sudo ./setup_master.sh
 ```
 
-### Wypełnienie przykładowymi danymi
-```sh
-docker cp tables.sql orkestro-db:/
-docker cp data.sql orkestro-db:/
-docker exec -it orkestro-db psql -U myuser -d orkestrodb -f /tables.sql
-docker exec -it orkestro-db psql -U myuser -d orkestrodb -f /data.sql
-docker exec -it orkestro-db psql -U myuser -d orkestrodb -c "CREATE DATABASE test_orkestrodb;"
-docker exec -it orkestro-db psql -U myuser -d test_orkestrodb -f /tables.sql
+Na Windowsie można wykonać komendy Dockerowe zawarte w skrypcie. Kontener wykonujący migrację może się kilkukrotnie zrestartować przed uzyskaniem połączenia z bazą danych.
 
+### Następne uruchomienia
+```sh
+docker compose up orkestro-db-master
 ```
 
 ## Django backend (`backend/`)
@@ -67,7 +64,6 @@ pip install -r requirements.txt
 ### Pierwsze uruchomienie
 ```sh
 python manage.py makemigrations
-python manage.py migrate
 python manage.py createsuperuser
 ```
 
@@ -99,16 +95,12 @@ npm start
 
 Serwer słucha na: <http://localhost:3000/>
 
-## Nginx (`nginx/`)
+## NGINX
 ### Uruchomienie
 ```sh
-docker compose up
+docker compose up orkestro-nginx-dev
 ```
 
 Aplikacja dostępna jest na: <http://localhost:5000/>
 
-Przykładowe strony:
-
-- <http://localhost:5000/>
-- <http://localhost:5000/admin/>
-- <http://localhost:5000/test/> (tymczasowa strona z testami API i logowaniem Google)
+Panel administratora: <http://localhost:5000/admin/>
