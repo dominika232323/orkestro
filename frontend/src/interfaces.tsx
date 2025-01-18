@@ -113,3 +113,10 @@ export interface OrkestroTrackEvent {
   track: number;
   track_details: OrkestroTrack;
 }
+
+export interface OrkestroFileInstrument {
+  file: number;
+  file_instrument_id: number;
+  instrument: number;
+  instrument_details: OrkestroInstrument;
+}

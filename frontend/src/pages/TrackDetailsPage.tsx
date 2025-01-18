@@ -12,6 +12,7 @@ import axios from "axios";
 import Pagination from "../components/Pagination";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
+import FileComponent from "../components/FileComponent";
 
 export default function TrackDetailsPage() {
   const { t, currentLanguage } = useLanguage();
@@ -22,36 +23,17 @@ export default function TrackDetailsPage() {
   const [files, setFiles] = useState<OrkestroFile[]>([]);
   const [events, setEvents] = useState<OrkestroTrackEvent[]>([]);
 
-  const [currentPageFiles, setCurrentPageFiles] = useState(1);
-  const [totalPagesFiles, setTotalPagesFiles] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
     fetchTrack();
     fetchEvents();
-    fetchFiles();
   }, []);
 
-  const handleDownload = async (file_id: number, file_name: string) => {
-    try {
-      const response = await axios.get(`/api/files/${file_id}/download/`, {
-        responseType: "blob",
-      });
-
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-
-      const link = document.createElement("a");
-      link.href = url;
-      link.setAttribute("download", file_name); // Set the file name
-      document.body.appendChild(link);
-      link.click();
-
-      // Clean up
-      link.remove();
-      window.URL.revokeObjectURL(url);
-    } catch (error) {
-      console.error("Error downloading the file:", error);
-    }
-  };
+  useEffect(() => {
+    fetchFiles();
+  }, [currentPage]);
 
   const fetchTrack = async () => {
     await axios
@@ -64,12 +46,12 @@ export default function TrackDetailsPage() {
   const fetchFiles = async () => {
     await axios
       .get<Paged<OrkestroFile>>(
-        `/api/files/search/?track_id=${trackId}&page=${currentPageFiles}`
+        `/api/files/search/?track_id=${trackId}&page=${currentPage}`
       )
       .then((response) => {
         setFiles(response.data.items);
-        setCurrentPageFiles(response.data.page_number);
-        setTotalPagesFiles(response.data.total_pages);
+        setCurrentPage(response.data.page_number);
+        setTotalPages(response.data.total_pages);
       })
       .catch((error) => console.error("Error fetching files: ", error));
   };
@@ -84,8 +66,6 @@ export default function TrackDetailsPage() {
       })
       .catch((error) => console.error(error));
   };
-
-  console.log(events);
 
   if (track) {
     return (
@@ -113,22 +93,10 @@ export default function TrackDetailsPage() {
 
         {/* Lista plików */}
         <h2 className="text-xl font-bold mt-4">{t("track-details.files")}</h2>
+
         <ul className="list-disc pl-5">
           {files.length > 0 ? (
-            files.map((file) => (
-              <li
-                key={file.file_id}
-                className="flex justify-between items-center"
-              >
-                <span>{file.name}</span>
-                <button
-                  className="hover:underline"
-                  onClick={() => handleDownload(file.file_id, file.name)}
-                >
-                  {t("track-details.download")}
-                </button>
-              </li>
-            ))
+            files.map((file) => <FileComponent file={file} />)
           ) : (
             <p>{t("track-details.no-files")}</p>
           )}
@@ -136,9 +104,9 @@ export default function TrackDetailsPage() {
 
         {/*File Pagination*/}
         <Pagination
-          currentPage={currentPageFiles}
-          totalPages={totalPagesFiles}
-          onPageChange={(page) => setCurrentPageFiles(page)}
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={(page) => setCurrentPage(page)}
         />
 
         {/* Lista wydarzeń */}

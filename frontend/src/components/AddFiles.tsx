@@ -1,6 +1,10 @@
 import axios, { AxiosResponse } from "axios";
 import { useEffect, useState } from "react";
-import { OrkestroFile, OrkestroMember } from "../interfaces";
+import {
+  OrkestroFile,
+  OrkestroInstrument,
+  OrkestroMember,
+} from "../interfaces";
 import Select, { MultiValue } from "react-select";
 import { useLanguage } from "../LanguageContext";
 
@@ -17,13 +21,23 @@ export default function AddFiles({
   setShowAddFiles,
   fetchFiles,
 }: AddFilesProps) {
-  const { t } = useLanguage();
+  const { t, currentLanguage } = useLanguage();
 
   const [file, setFile] = useState<File | null>(null);
   const [selectedUserIds, setSelectedUserIds] = useState<number[]>([]);
   const [members, setMembers] = useState<OrkestroMember[]>([]);
   const [error, setError] = useState("");
   const [sending, setSending] = useState(false);
+  const [instruments, setInstruments] = useState<OrkestroInstrument[]>([]);
+  const [selectedInstruments, setSelectedInstruments] = useState<number[]>([]);
+
+  useEffect(() => {
+    fetchMembers();
+  }, [parsedGroupId]);
+
+  useEffect(() => {
+    fetchInstruments();
+  }, []);
 
   const fetchMembers = async () => {
     await axios
@@ -39,11 +53,7 @@ export default function AddFiles({
       .catch((error) => console.error("Error fetching members:", error));
   };
 
-  useEffect(() => {
-    fetchMembers();
-  }, [parsedGroupId]);
-
-  const handleAddFile = async () => {
+  const handleSubmit = async () => {
     setError("");
     setSending(true);
     if (!(file && parsedTrackId)) {
@@ -82,15 +92,27 @@ export default function AddFiles({
       const fileId = fileResponse.data.file_id;
 
       // Assign file to selected users
-      const promises = selectedUserIds.map((userId) =>
+      const promisesUsers = selectedUserIds.map((userId) =>
         axios.post(`/api/file-allowed-members/`, {
           file: fileId,
           user: userId,
         })
       );
-      await Promise.all(promises);
+      await Promise.all(promisesUsers);
       // Clear states and refresh
       setSelectedUserIds([]);
+      setShowAddFiles(false);
+      fetchFiles();
+
+      const promisesInstruments = selectedInstruments.map((instrumentId) =>
+        axios.post(`/api/file-instruments/`, {
+          file: fileId,
+          instrument: instrumentId,
+        })
+      );
+
+      await Promise.all(promisesInstruments);
+      setSelectedInstruments([]);
       setShowAddFiles(false);
       fetchFiles();
     } catch (error) {
@@ -112,12 +134,31 @@ export default function AddFiles({
     setSelectedUserIds(selectedOptions.map((option) => option.value));
   };
 
+  const handleInstrumentSelectionChange = (
+    selectedOptions: MultiValue<{ label: string; value: number }>
+  ) => {
+    setSelectedInstruments(selectedOptions.map((option) => option.value));
+  };
+
+  const fetchInstruments = async () => {
+    await axios
+      .get<OrkestroInstrument[]>("/api/instruments/")
+      .then((response) => setInstruments(response.data))
+      .catch((error) => console.error("Error fetching instruments:", error));
+  };
+
+  const instrumentName = currentLanguage === "en" ? "name_en" : "name_pl";
+
   return (
     <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center">
       <div className="bg-white p-6 rounded-lg max-w-lg w-full">
         <h2 className="text-lg font-bold mb-4">{t("add-file.title")}</h2>
         {error && <p className="text-red-500 text-center mb-4">{error}</p>}
-        <input type="file" onChange={handleFileChange} />
+        <input
+          type="file"
+          onChange={handleFileChange}
+          className="block w-full text-sm text-gray-500 border border-gray-300 rounded-lg p-2 cursor-pointer hover:border-blue-500 focus:outline-none focus:ring focus:ring-blue-300"
+        />
         <label className="block mb-4">
           {t("add-file.users-allowed")}
           <Select
@@ -140,8 +181,30 @@ export default function AddFiles({
             classNamePrefix="react-select"
           />
         </label>
+        <label className="block mb-4">
+          {t("add-file.instruments")}
+          <Select
+            options={instruments.map((instrument) => ({
+              label: instrument[instrumentName] || "Unknown",
+              value: instrument.instrument_id,
+            }))}
+            value={selectedInstruments.map((id) => {
+              const instrument = instruments.find(
+                (instrument) => instrument.instrument_id === id
+              );
+              return {
+                label: instrument?.[instrumentName] || "Unknown",
+                value: id,
+              };
+            })}
+            onChange={handleInstrumentSelectionChange}
+            isMulti
+            className="react-select-container"
+            classNamePrefix="react-select"
+          />
+        </label>
         <button
-          onClick={handleAddFile}
+          onClick={handleSubmit}
           className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600"
           disabled={sending}
         >

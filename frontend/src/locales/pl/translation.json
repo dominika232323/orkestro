@@ -231,6 +231,10 @@
     "users-allowed": "Członkowie przypisani do pliku:",
     "send": "Wyślij",
     "back": "Powrót",
-    "sending": "Wysyłanie..."
+    "sending": "Wysyłanie...",
+    "instruments": "Instrumenty:"
+  },
+  "search": {
+    "search": "Szukaj"
   }
 }

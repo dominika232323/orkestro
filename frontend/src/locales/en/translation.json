@@ -229,6 +229,10 @@
     "users-allowed": "Members allowed:",
     "send": "Send",
     "back": "Go back",
-    "sending": "Sending..."
+    "sending": "Sending...",
+    "instruments": "Instruments:"
+  },
+  "search": {
+    "search": "Search"
   }
 }
