@@ -117,7 +117,7 @@ class GoogleCalendarView(APIView):
                 "client_secret": settings.GOOGLE_CLIENT_SECRET,
                 "code": authorization_code,
                 "grant_type": "authorization_code",
-                "redirect_uri": "http://localhost:5000",  # must match frontend
+                "redirect_uri": request.META["HTTP_ORIGIN"],  # must match frontend
             }
 
             response = requests.post(token_url, data=payload)
