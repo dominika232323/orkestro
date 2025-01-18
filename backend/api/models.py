@@ -47,6 +47,7 @@ class User(AbstractBaseUser):
     gcalendar_is_linked = models.BooleanField(default=False)
     gcalendar_refresh_token = models.CharField(max_length=255, null=True, blank=True)
     gcalendar_access_token = models.CharField(max_length=255, null=True, blank=True)
+    gcalendar_token_expiry = models.DateTimeField(null=True, blank=True)
 
     objects = UserManager()
 

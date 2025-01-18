@@ -2,6 +2,7 @@
 Handles API requests regarding Google authentication.
 """
 
+from datetime import timedelta
 from django.conf import settings
 from django.utils import timezone
 from google.auth.transport.requests import Request
@@ -143,8 +144,33 @@ class GoogleCalendarView(APIView):
             user.gcalendar_is_linked = True
             user.gcalendar_refresh_token = token_data["refresh_token"]
             user.gcalendar_access_token = token_data["access_token"]
+            user.gcalendar_token_expiry = timezone.now() + timedelta(seconds=token_data["expires_in"])
             user.save()
 
             return Response({"message": "Google Calendar linked successfully"})
         except Exception as e:
             return Response({"error": str(e)}, status=400)
+
+
+def refresh_gcalendar_token(user: User):
+    """Refresh the Google Calendar OAuth2 access token using the refresh token."""
+
+    try:
+        token_url = "https://oauth2.googleapis.com/token"
+        payload = {
+            "client_id": settings.GOOGLE_CLIENT_ID,
+            "client_secret": settings.GOOGLE_CLIENT_SECRET,
+            "refresh_token": user.gcalendar_refresh_token,
+            "grant_type": "refresh_token",
+        }
+
+        response = requests.post(token_url, data=payload)
+        new_token_data = response.json()
+
+        user.gcalendar_access_token = new_token_data["access_token"]
+        user.gcalendar_token_expiry = timezone.now() + timedelta(seconds=new_token_data["expires_in"])
+        user.save()
+        return new_token_data["access_token"]
+
+    except Exception as e:
+        raise Exception("Failed to refresh Google Calendar token") from e

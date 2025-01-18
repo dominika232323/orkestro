@@ -145,7 +145,8 @@ CREATE TABLE users (
     profile_picture_url     VARCHAR(255),
     gcalendar_is_linked     BOOLEAN,
     gcalendar_refresh_token VARCHAR(255),
-    gcalendar_access_token  VARCHAR(255)
+    gcalendar_access_token  VARCHAR(255),
+    gcalendar_token_expiry  TIMESTAMP WITH TIME ZONE
 );
 
 ALTER TABLE users ADD CONSTRAINT users_pk PRIMARY KEY ( user_id );

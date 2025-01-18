@@ -11,7 +11,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.User
         fields = ["user_id", "email", "name", "surname", "is_staff", "google_user_id", "profile_picture_url", "gcalendar_is_linked"]
-        read_only_fields = ["user_id", "email", "name", "surname", "is_active", "is_staff", "is_superuser", "google_user_id", "profile_picture_url", "gcalendar_is_linked", "gcalendar_refresh_token", "gcalendar_access_token"]
+        read_only_fields = ["user_id", "email", "name", "surname", "is_active", "is_staff", "is_superuser", "google_user_id", "profile_picture_url", "gcalendar_is_linked", "gcalendar_refresh_token", "gcalendar_access_token", "gcalendar_token_expiry"]
 
 
 class GroupSerializer(serializers.ModelSerializer):
