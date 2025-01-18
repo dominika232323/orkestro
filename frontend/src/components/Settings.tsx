@@ -1,3 +1,4 @@
+import { useGoogleLogin } from "@react-oauth/google";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useLanguage } from "../LanguageContext";
 import {
@@ -106,6 +107,24 @@ export default function Settings() {
       );
   };
 
+  const linkGoogleCalendar = useGoogleLogin({
+    flow: "auth-code", // use "auth-code" for backend exchange
+    onSuccess: async (codeResponse) => {
+      console.log("Auth code received:", codeResponse.code);
+
+      // Send the authorization code to the backend
+      await axios.post("/api/google-calendar/", {
+        authorization_code: codeResponse.code,
+      })
+      .then((backendResponse) => {
+        console.log("Backend response:", backendResponse.data);
+      })
+      .catch((error) => console.error("Backend link failed:", error));
+    },
+    onError: () => console.log("Calendar login failed"),
+    scope: "https://www.googleapis.com/auth/calendar",
+  });
+
   return (
     <div className="bg-gray-200 p-6 rounded-lg max-w-4xl mx-auto mt-8">
       <h1 className="text-2xl font-bold text-center mb-4">
@@ -151,7 +170,10 @@ export default function Settings() {
                 <span className="text-red-700">
                   {t("settings.unconnected")}
                 </span>
-                <button className="px-2 py-0.5 bg-green-500 text-white rounded-lg hover:bg-green-600 ml-2">
+                <button
+                    className="px-2 py-0.5 bg-green-500 text-white rounded-lg hover:bg-green-600 ml-2"
+                    onClick={linkGoogleCalendar}
+                  >
                   {t("settings.connect")}
                 </button>
               </>

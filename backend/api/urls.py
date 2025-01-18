@@ -11,7 +11,7 @@ from .views.event_view_set import EventViewSet
 from .views.file_allowed_member_view_set import FileAllowedMemberViewSet
 from .views.file_instrument_view_set import FileInstrumentViewSet
 from .views.file_view_set import FileViewSet
-from .views.google_login_view import GoogleLoginView
+from .views.google_views import GoogleLoginView, GoogleCalendarView
 from .views.group_view_set import GroupViewSet
 from .views.instrument_view_set import InstrumentViewSet
 from .views.invitation_view_set import InvitationViewSet
@@ -43,5 +43,6 @@ router.register(r"user-instruments", UserInstrumentViewSet)
 urlpatterns = [
     path("", include(router.urls)),
     path("google-login/", GoogleLoginView.as_view(), name="google_login"),
+    path("google-calendar/", GoogleCalendarView.as_view(), name="google_calendar"),
     path("token-refresh/", TokenRefreshView.as_view(), name="token_refresh"),
 ]

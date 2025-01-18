@@ -15,6 +15,7 @@ DJANGO_DB_PORT=5432
 DJANGO_KEY=[key]
 DJANGO_DEBUG=1 # 0
 REACT_APP_GOOGLE_CLIENT_ID=[Google API client ID]
+GOOGLE_CLIENT_SECRET=[Google API client secret]
 BROWSER=none
 DOMAIN=orkestro.ddns.net
 IP=localhost

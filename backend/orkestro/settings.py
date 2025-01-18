@@ -158,6 +158,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTH_USER_MODEL = "api.User"
 
 GOOGLE_CLIENT_ID = os.getenv("REACT_APP_GOOGLE_CLIENT_ID")
+GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
 
 REST_USE_JWT = True
 
