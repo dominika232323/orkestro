@@ -174,3 +174,61 @@ def refresh_gcalendar_token(user: User):
 
     except Exception as e:
         raise Exception("Failed to refresh Google Calendar token") from e
+
+
+def get_valid_gcalendar_token(user: User):
+    """Get valid Google Calendar OAuth2 token. Refresh it first if needed."""
+
+    if not user.gcalendar_is_linked:
+        raise Exception(f"Google Calendar is not linked for user {user.email}")
+
+    if user.gcalendar_token_expiry and timezone.now() < user.gcalendar_token_expiry:
+        return user.gcalendar_access_token
+    else:
+        return refresh_gcalendar_token(user)
+
+
+def get_calendar_list(user: User):
+    """Fetches a list of user's Google Calendars."""
+
+    access_token = get_valid_gcalendar_token(user)
+
+    url = "https://www.googleapis.com/calendar/v3/users/me/calendarList"
+    headers = {"Authorization": f"Bearer {access_token}"}
+
+    response = requests.get(url, headers=headers)
+    return response.json()
+
+
+def create_orkestro_calendar(user: User):
+    """Creates a new Orkestro Google Calendar for the user."""
+
+    access_token = get_valid_gcalendar_token(user)
+
+    calendar_data = {
+        "summary": "Orkestro",
+        "timeZone": settings.TIME_ZONE
+    }
+
+    url = "https://www.googleapis.com/calendar/v3/calendars"
+    headers = {
+        "Authorization": f"Bearer {access_token}",
+        "Content-Type": "application/json"
+    }
+
+    response = requests.post(url, json=calendar_data, headers=headers)
+    return response.json()
+
+
+def get_or_create_orkestro_calendar(user: User):
+    """TODO"""
+
+    calendar_list = get_calendar_list(user)
+    orkestro_calendars = [cal for cal in calendar_list["items"] if cal["summary"] == "Orkestro"]
+
+    if orkestro_calendars:
+        orkestro_calendar = orkestro_calendars[0]
+    else:
+        orkestro_calendar = create_orkestro_calendar(user)
+
+    return orkestro_calendar

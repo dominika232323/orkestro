@@ -6,6 +6,7 @@ Handles API requests regarding user data:
 - getting the ID of the user with given e-mail address (allows sending invitations without leaking everyone's full data)
 Staff members can do all of the above + list all users or a specific one.
 """
+
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
@@ -14,6 +15,8 @@ from rest_framework.response import Response
 from api.models import User, Member, EventAttendee, FileAllowedMember
 from api.serializers import UserSerializer
 from api.permissions.user_permissions import UserPermission
+
+from .google_views import get_or_create_orkestro_calendar
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -62,3 +65,13 @@ class UserViewSet(viewsets.ModelViewSet):
         users = [m.user for m in members]
         serialized_users = UserSerializer(users, many=True)
         return Response(serialized_users.data)
+
+    @action(detail=False, methods=["get"])
+    def gcalendar(self, request):
+        # temporary endpoint for easier development
+
+        user: User = request.user
+
+        data = get_or_create_orkestro_calendar(user)
+
+        return Response(data)
