@@ -187,7 +187,8 @@
     "content": "Treść",
     "submit": "Wyślij",
     "submiting": "Wysyłanie...",
-    "back": "Powrót"
+    "back": "Powrót",
+    "send-by-email": "Wyślij maila"
   },
   "event-details": {
     "fetching": "Pobieranie...",
