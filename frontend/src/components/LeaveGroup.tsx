@@ -19,7 +19,6 @@ export default function LeaveGroup({
 
   const handleLeave = async () => {
     setLoading(true);
-    console.log(groupId);
     await axios
       .post(`/api/members/leave/`, { group: groupId })
       .then(() => navigate("/"))

@@ -114,7 +114,6 @@ export default function EventEditPage() {
     await axios
       .put(`/api/events/${eventId}/`, encodedEvent)
       .then(() => {
-        console.log("Successfully edited event");
         navigate(-1);
       })
       .catch((error) => console.error("Error adding event:", error));

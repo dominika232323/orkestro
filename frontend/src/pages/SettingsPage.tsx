@@ -63,7 +63,6 @@ export default function SettingsPage() {
   }, [user]);
 
   const handleAddInstrument = async () => {
-    console.log("AA", newInstrument);
     if (newInstrument.trim() !== "") {
       await axios
         .post("/api/user-instruments/", {
@@ -72,9 +71,6 @@ export default function SettingsPage() {
         })
         .then((response) => {
           const newUserInstrument: OrkestroUserInstrument = response.data;
-          console.log(
-            `Successfully added user instrument ${newUserInstrument.user_instrument_id}`
-          );
           setUserInstruments([...userInstruments, newUserInstrument]);
           setNewInstrument("");
         })
@@ -88,9 +84,6 @@ export default function SettingsPage() {
     await axios
       .delete(`/api/user-instruments/${user_instrument_id}/`)
       .then(() => {
-        console.log(
-          `Successfully deleted user instrument ${user_instrument_id}`
-        );
         setUserInstruments((prev) =>
           prev.filter(
             (user_instrument) =>

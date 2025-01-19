@@ -29,7 +29,6 @@ export default function CalendarPage() {
   // Fetching Events
 
   const fetchEvents = useCallback(async () => {
-    console.log(year, month);
     await axios
       .get<OrkestroEvent[]>(`/api/events/me/?year=${year}&month=${month + 1}`)
       .then((response) => {
@@ -61,7 +60,7 @@ export default function CalendarPage() {
       setMonth((prevMonth) => prevMonth + 1);
     }
   };
-  
+
   const prevMonth = () => {
     if (month === 0) {
       setMonth(11);

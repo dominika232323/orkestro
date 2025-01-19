@@ -19,9 +19,6 @@ export default function InvitationComponent({
     await axios
       .post(`/api/invitations/${invitation.invitation_id}/accept/`)
       .then(() => {
-        console.log(
-          `Successfully accepted invitation ${invitation.invitation_id}`
-        );
         navigate(`/manage-group/${invitation.group}`);
       })
       .catch((error) =>
@@ -36,9 +33,6 @@ export default function InvitationComponent({
     await axios
       .post(`/api/invitations/${invitation.invitation_id}/reject/`)
       .then(() => {
-        console.log(
-          `Successfully rejected invitation ${invitation.invitation_id}`
-        );
         onActionComplete();
       })
       .catch((error) =>

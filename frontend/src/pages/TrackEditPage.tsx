@@ -69,7 +69,6 @@ export default function TrackEditPage() {
     await axios
       .put(`/api/tracks/${trackId}/`, track)
       .then(() => {
-        console.log("Successfully edited event");
         navigate(-1);
       })
       .catch((error) => console.error("Error adding event:", error));

@@ -14,10 +14,6 @@ export default function LoginPage() {
     backendLogin(credentialResponse, setJustLoggedIn);
   };
 
-  const handleLoginError = () => {
-    console.log("Google login failed");
-  };
-
   useEffect(() => {
     fetchUserLogin(navigate);
   }, [navigate, justLoggedIn]);
@@ -31,7 +27,6 @@ export default function LoginPage() {
         <div className="flex justify-center items-center">
           <GoogleLogin
             onSuccess={handleLoginSuccess}
-            onError={handleLoginError}
             locale={currentLanguage}
           />
         </div>

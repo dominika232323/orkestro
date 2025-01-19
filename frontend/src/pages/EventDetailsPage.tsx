@@ -31,7 +31,6 @@ export default function EventDetailsPage() {
     await axios
       .get<OrkestroEvent>(`/api/events/${eventId}/`)
       .then((response) => {
-        console.log(response.data);
         let event = response.data;
         event.date = new Date(response.data.date);
         setEvent(event);

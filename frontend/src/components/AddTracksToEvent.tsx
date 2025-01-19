@@ -44,7 +44,6 @@ export default function AddTracksToEvent({
 
     Promise.all(promises)
       .then((responses) => {
-        console.log("All tracks added successfully:", responses);
         setTracksToAdd([]);
         setShowAddTracksModal(false);
         reloadPage();
@@ -59,7 +58,6 @@ export default function AddTracksToEvent({
     await axios
       .get(`/api/tracks/leftover/?event_id=${eventId}&group_id=${groupId}`)
       .then((response) => {
-        console.log(response);
         setAvailableTracks(response.data);
       })
       .catch((error) => console.error(error));

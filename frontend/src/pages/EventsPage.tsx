@@ -71,7 +71,6 @@ export default function EventsPage() {
     await axios
       .delete(`/api/events/${event_id}/`)
       .then(() => {
-        console.log(`Successfully deleted event ${event_id}`);
         fetchEvents();
       })
       .catch((error) =>
