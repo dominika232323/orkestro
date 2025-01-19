@@ -16,7 +16,7 @@ from api.models import User, Member, EventAttendee, FileAllowedMember
 from api.serializers import UserSerializer
 from api.permissions.user_permissions import UserPermission
 
-from .google_views import sync_events
+from .google_views import sync_calendar_events
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -72,6 +72,6 @@ class UserViewSet(viewsets.ModelViewSet):
 
         user: User = request.user
 
-        data = sync_events(user)
+        data = sync_calendar_events(user)
 
         return Response(data)
