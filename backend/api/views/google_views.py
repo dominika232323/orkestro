@@ -280,6 +280,8 @@ def create_calendar_event(access_token, calendar_id, summary, description, start
 
 
 def create_calendar_orkestro_event(user: User, event: Event):
+    """TODO doc"""
+
     access_token = get_valid_gcalendar_token(user)
     calendar_id = get_orkestro_calendar_id(user)
 
@@ -294,17 +296,39 @@ def create_calendar_orkestro_event(user: User, event: Event):
     return create_calendar_event(access_token, calendar_id, summary, description, start, end)
 
 
+def delete_calendar_event(access_token, calendar_id, calendar_event_id):
+    """Deletes given event in the specified Google Calendar."""
+
+    url = f"https://www.googleapis.com/calendar/v3/calendars/{calendar_id}/events/{calendar_event_id}"
+    headers = {
+        "Authorization": f"Bearer {access_token}",
+        "Content-Type": "application/json"
+    }
+
+    response = requests.delete(url, headers=headers)
+    if response.status_code == 204:
+        return {"message": "Event deleted successfully"}
+    else:
+        return response.json()
+
+
 def sync_events(user: User):
+    """TODO doc"""
+
+    access_token = get_valid_gcalendar_token(user)
+    calendar_id = get_orkestro_calendar_id(user)
     calendar_events = get_calendar_events(user)["items"]
 
     calendar_event_ids = set()
+    calendar_events_dict = {}
     for cal_event in calendar_events:
         # find e.g. (id: 12) at the end of description
         description = cal_event["description"]
         match = re.search(r'\(id:\s*(\d+)\)$', description)
         if match:
-            id_value = match.group(1)
-            calendar_event_ids.add(int(id_value))
+            id_value = int(match.group(1))
+            calendar_event_ids.add(id_value)
+            calendar_events_dict[id_value] = cal_event
 
     user_participations = EventAttendee.objects.filter(user=user).select_related("event")
     user_event_ids = {p.event.event_id for p in user_participations}
@@ -314,6 +338,9 @@ def sync_events(user: User):
         event = Event.objects.get(event_id=event_id)
         create_calendar_orkestro_event(user, event)
 
-    # TODO: added_redundant, remove them
+    added_redundant = calendar_event_ids - user_event_ids
+    for event_id in added_redundant:
+        calendar_event_id = calendar_events_dict[event_id]["id"]
+        delete_calendar_event(access_token, calendar_id, calendar_event_id)
 
-    return {"cal": calendar_event_ids, "user": user_event_ids, "not_added": not_added}
+    return {"cal": calendar_event_ids, "user": user_event_ids, "not_added": not_added, "added_redundant": added_redundant}
