@@ -3,6 +3,8 @@ Handles API requests regarding Google authentication.
 """
 
 from datetime import datetime, timedelta
+import re
+
 from django.conf import settings
 from django.utils import timezone
 from google.auth.transport.requests import Request
@@ -14,7 +16,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from api.models import Event, User
+from api.models import Event, EventAttendee, User
 
 
 class GoogleLoginView(APIView):
@@ -281,9 +283,37 @@ def create_calendar_orkestro_event(user: User, event: Event):
     access_token = get_valid_gcalendar_token(user)
     calendar_id = get_orkestro_calendar_id(user)
 
-    summary = f"{event.name} ({event.event_id})"
-    description = event.description
+    summary = event.name
+    if event.description:
+        description = f"{event.description}\n(id: {event.event_id})"
+    else:
+        description = f"(id: {event.event_id})"
     start = event.date
     end = start + timedelta(hours=1)
 
     return create_calendar_event(access_token, calendar_id, summary, description, start, end)
+
+
+def sync_events(user: User):
+    calendar_events = get_calendar_events(user)["items"]
+
+    calendar_event_ids = set()
+    for cal_event in calendar_events:
+        # find e.g. (id: 12) at the end of description
+        description = cal_event["description"]
+        match = re.search(r'\(id:\s*(\d+)\)$', description)
+        if match:
+            id_value = match.group(1)
+            calendar_event_ids.add(int(id_value))
+
+    user_participations = EventAttendee.objects.filter(user=user).select_related("event")
+    user_event_ids = {p.event.event_id for p in user_participations}
+
+    not_added = user_event_ids - calendar_event_ids
+    for event_id in not_added:
+        event = Event.objects.get(event_id=event_id)
+        create_calendar_orkestro_event(user, event)
+
+    # TODO: added_redundant, remove them
+
+    return {"cal": calendar_event_ids, "user": user_event_ids, "not_added": not_added}

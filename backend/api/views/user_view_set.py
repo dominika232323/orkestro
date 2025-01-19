@@ -12,11 +12,11 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from api.models import User, Member, EventAttendee, FileAllowedMember, Event
+from api.models import User, Member, EventAttendee, FileAllowedMember
 from api.serializers import UserSerializer
 from api.permissions.user_permissions import UserPermission
 
-from .google_views import create_calendar_orkestro_event
+from .google_views import sync_events
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -71,7 +71,7 @@ class UserViewSet(viewsets.ModelViewSet):
         # temporary endpoint for easier development
 
         user: User = request.user
-        event = Event.objects.get(event_id=12)
-        data = create_calendar_orkestro_event(user, event)
+
+        data = sync_events(user)
 
         return Response(data)
