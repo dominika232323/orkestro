@@ -32,6 +32,7 @@ IP=localhost
 # Other
 BACKEND_HOSTS="192.168.0.100:8000"
 REACT_APP_GOOGLE_CLIENT_ID=[Google API client ID]
+GOOGLE_CLIENT_SECRET=[Google API client secret]
 EMAIL_HOST="smtp.gmail.com"
 EMAIL_PORT=587
 EMAIL_USER=[SMTP user]
@@ -40,6 +41,7 @@ USE_HTTPS=false
 BROWSER=none
 
 # The deployment script can overwrite IP values below
+
 
 ```
 

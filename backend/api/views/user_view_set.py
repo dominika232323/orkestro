@@ -6,6 +6,7 @@ Handles API requests regarding user data:
 - getting the ID of the user with given e-mail address (allows sending invitations without leaking everyone's full data)
 Staff members can do all of the above + list all users or a specific one.
 """
+
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
@@ -22,20 +23,11 @@ class UserViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated, UserPermission]
     http_method_names = ["get", "put", "head"]
 
-    @staticmethod
-    def update_google_calendar_id(user):
-        if not user.google_calendar_id:
-            # TODO: unlink google calendar
-            return
-        # TODO: link google calendar
-        return
-
     def update(self, request, pk=None, *args, **kwargs):
         serializer = self.get_serializer(instance=self.get_object(), data=request.data)
         if not serializer.is_valid():
             return Response({"error": "Data validation failed"}, status=status.HTTP_400_BAD_REQUEST)
         user = serializer.save()
-        self.update_google_calendar_id(user)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     @action(detail=False, methods=["get"])

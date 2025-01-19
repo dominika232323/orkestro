@@ -20,9 +20,11 @@ class UserModelTests(TestCase):
         self.assertFalse(self.user.is_staff)
         self.assertFalse(self.user.is_superuser)
 
-        self.assertEqual(self.user.google_user_id, None)
-        self.assertEqual(self.user.google_calendar_id, None)
-        self.assertEqual(self.user.profile_picture_url, None)
+        self.assertIsNone(self.user.google_user_id)
+        self.assertIsNone(self.user.profile_picture_url)
+        self.assertFalse(self.user.gcalendar_is_linked)
+        self.assertIsNone(self.user.gcalendar_refresh_token)
+        self.assertIsNone(self.user.gcalendar_access_token)
 
         self.assertTrue(self.user.check_password("securepassword"))
 
@@ -41,9 +43,11 @@ class UserModelTests(TestCase):
         self.assertTrue(self.superuser.is_staff)
         self.assertTrue(self.superuser.is_superuser)
 
-        self.assertEqual(self.superuser.google_user_id, None)
-        self.assertEqual(self.superuser.google_calendar_id, None)
-        self.assertEqual(self.superuser.profile_picture_url, None)
+        self.assertIsNone(self.superuser.google_user_id)
+        self.assertIsNone(self.superuser.profile_picture_url)
+        self.assertFalse(self.user.gcalendar_is_linked)
+        self.assertIsNone(self.user.gcalendar_refresh_token)
+        self.assertIsNone(self.user.gcalendar_access_token)
 
         self.assertTrue(self.superuser.check_password("securepassword"))
 

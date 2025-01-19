@@ -28,7 +28,7 @@ class UserAdmin(BaseUserAdmin):
     fieldsets = (
         (None, {"fields": ("email", "password")}),
         ("Personal info", {"fields": ("name", "surname")}),
-        ("Google", {"fields": ("profile_picture_url", "google_user_id", "google_calendar_id")}),
+        ("Google", {"fields": ("google_user_id", "profile_picture_url", "gcalendar_is_linked", "gcalendar_refresh_token", "gcalendar_access_token", "gcalendar_token_expiry")}),
         ("Permissions", {"fields": ("is_active", "is_staff", "is_superuser")}),
         ("Important dates", {"fields": ("last_login", "date_joined")}),
     )

@@ -1,3 +1,4 @@
+import { useGoogleLogin } from "@react-oauth/google";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useLanguage } from "../LanguageContext";
 import {
@@ -25,6 +26,7 @@ export default function SettingsPage() {
     OrkestroUserInstrument[]
   >([]);
   const [newInstrument, setNewInstrument] = useState<string>("");
+  const [justLinkedGcalendar, setJustLinkedGcalendar] = useState<boolean>(false);
 
   // Get instruments name in correct language
   const instrumentName = (instrument: OrkestroInstrument, language: string) => {
@@ -38,7 +40,7 @@ export default function SettingsPage() {
   // Fetch user
   useEffect(() => {
     fetchUserOrRedirect(navigate, setUser);
-  }, [navigate]);
+  }, [navigate, justLinkedGcalendar]);
 
   // Fetch instruments
   useEffect(() => {
@@ -105,6 +107,25 @@ export default function SettingsPage() {
       );
   };
 
+  const linkGoogleCalendar = useGoogleLogin({
+    flow: "auth-code", // use "auth-code" for backend exchange
+    onSuccess: async (codeResponse) => {
+      console.log("Google Calendar consent successful:", codeResponse);
+
+      // Send the authorization code to the backend
+      await axios.post("/api/google-calendar/", {
+        authorization_code: codeResponse.code,
+      })
+      .then((backendResponse) => {
+        console.log("Backend Google Calendar link successful:", backendResponse.data);
+        setJustLinkedGcalendar(true);
+      })
+      .catch((error) => console.error("Backend Google Calendar link failed:", error));
+    },
+    onError: () => console.log("Google Calendar login failed"),
+    scope: "https://www.googleapis.com/auth/calendar",
+  });
+
   return (
     <div className="bg-gray-200 p-6 rounded-lg max-w-4xl mx-auto mt-8">
       {/* Header */}
@@ -147,14 +168,17 @@ export default function SettingsPage() {
             <span className="text-gray-700">
               {t("settings.google-calendar")}:{" "}
             </span>
-            {user && user.google_calendar_id ? (
+            {user && user.gcalendar_is_linked ? (
               <span className="text-green-700">{t("settings.connected")}</span>
             ) : (
               <>
                 <span className="text-red-700">
                   {t("settings.unconnected")}
                 </span>
-                <button className="px-2 py-0.5 bg-green-500 text-white rounded-lg hover:bg-green-600 ml-2">
+                <button
+                    className="px-2 py-0.5 bg-green-500 text-white rounded-lg hover:bg-green-600 ml-2"
+                    onClick={linkGoogleCalendar}
+                  >
                   {t("settings.connect")}
                 </button>
               </>

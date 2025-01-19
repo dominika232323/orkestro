@@ -1,15 +1,21 @@
 """
 Handles API requests regarding Google authentication.
 """
+
+from datetime import timedelta
+
 from django.conf import settings
 from django.utils import timezone
-from google.auth.transport import requests
+from google.auth.transport.requests import Request
 from google.oauth2 import id_token
+import requests
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 
+from api.google_calendar import sync_calendar_events
 from api.models import User
 
 
@@ -27,7 +33,7 @@ class GoogleLoginView(APIView):
 
             info = id_token.verify_oauth2_token(
                 credential,
-                requests.Request(),
+                Request(),
                 settings.GOOGLE_CLIENT_ID
             )
 
@@ -97,3 +103,54 @@ class GoogleLoginView(APIView):
                 {"error": "Bad request", "details": str(e)},
                 status=status.HTTP_400_BAD_REQUEST
             )
+
+
+class GoogleCalendarView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        """Link user's Google Calendar"""
+
+        try:
+            authorization_code = request.data.get("authorization_code")
+            if not authorization_code:
+                return Response({"error": "Authorization code required"}, status=400)
+
+            # Exchange auth code for access token and refresh token
+            token_url = "https://oauth2.googleapis.com/token"
+            payload = {
+                "client_id": settings.GOOGLE_CLIENT_ID,
+                "client_secret": settings.GOOGLE_CLIENT_SECRET,
+                "code": authorization_code,
+                "grant_type": "authorization_code",
+                "redirect_uri": request.META["HTTP_ORIGIN"],  # must match frontend
+            }
+
+            response = requests.post(token_url, data=payload)
+            token_data = response.json()
+
+            if "error" in token_data:
+                return Response({"error": token_data["error_description"]}, status=400)
+
+            info = id_token.verify_oauth2_token(
+                token_data["id_token"],
+                Request(),
+                settings.GOOGLE_CLIENT_ID
+            )
+            email = info["email"]
+
+            if not email == request.user.email:
+                return Response({"error": "Email does not match"}, status=400)
+
+            user = User.objects.get(email=request.user.email)
+            user.gcalendar_is_linked = True
+            user.gcalendar_refresh_token = token_data["refresh_token"]
+            user.gcalendar_access_token = token_data["access_token"]
+            user.gcalendar_token_expiry = timezone.now() + timedelta(seconds=token_data["expires_in"])
+            user.save()
+
+            sync_calendar_events(user)
+
+            return Response({"message": "Google Calendar linked successfully"})
+        except Exception as e:
+            return Response({"error": str(e)}, status=400)
