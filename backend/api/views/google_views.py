@@ -2,7 +2,7 @@
 Handles API requests regarding Google authentication.
 """
 
-from datetime import timedelta
+from datetime import datetime, timedelta
 from django.conf import settings
 from django.utils import timezone
 from google.auth.transport.requests import Request
@@ -14,7 +14,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from api.models import User
+from api.models import Event, User
 
 
 class GoogleLoginView(APIView):
@@ -249,3 +249,41 @@ def get_calendar_events(user: User):
 
     response = requests.get(url, headers=headers)
     return response.json()
+
+
+def create_calendar_event(access_token, calendar_id, summary, description, start: datetime, end: datetime):
+    """Creates a new event in the specified Google Calendar."""
+
+    event_data = {
+        "summary": summary,
+        "description": description,
+        "start": {
+            "dateTime": start.isoformat(),
+            "timeZone": settings.TIME_ZONE,
+        },
+        "end": {
+            "dateTime": end.isoformat(),
+            "timeZone": settings.TIME_ZONE,
+        }
+    }
+
+    url = f"https://www.googleapis.com/calendar/v3/calendars/{calendar_id}/events"
+    headers = {
+        "Authorization": f"Bearer {access_token}",
+        "Content-Type": "application/json"
+    }
+
+    response = requests.post(url, json=event_data, headers=headers)
+    return response.json()
+
+
+def create_calendar_orkestro_event(user: User, event: Event):
+    access_token = get_valid_gcalendar_token(user)
+    calendar_id = get_orkestro_calendar_id(user)
+
+    summary = f"{event.name} ({event.event_id})"
+    description = event.description
+    start = event.date
+    end = start + timedelta(hours=1)
+
+    return create_calendar_event(access_token, calendar_id, summary, description, start, end)
