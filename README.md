@@ -32,6 +32,10 @@ IP=localhost
 # Other
 BACKEND_HOSTS="192.168.0.100:8000"
 REACT_APP_GOOGLE_CLIENT_ID=[Google API client ID]
+EMAIL_HOST="smtp.gmail.com"
+EMAIL_PORT=587
+EMAIL_USER=[SMTP user]
+EMAIL_PASSWORD=[SMTP password]
 USE_HTTPS=false
 BROWSER=none
 

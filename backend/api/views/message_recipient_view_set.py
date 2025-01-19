@@ -6,6 +6,8 @@ Handles API requests regarding message recipient data:
 - searching messages sent to the calling user
 Staff users can do all of the above + list all message recipients or a specific one.
 """
+
+from django.conf import settings
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.core.mail import send_mail
@@ -18,8 +20,6 @@ from rest_framework.response import Response
 from api.models import MessageRecipient, Message, User
 from api.serializers import MessageRecipientSerializer
 from api.permissions.message_recipient_permissions import MessageRecipientPermission
-
-from orkestro.settings import EMAIL_HOST_USER
 
 
 class MessageRecipientViewSet(viewsets.ModelViewSet):
@@ -44,7 +44,7 @@ class MessageRecipientViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=["post"])
     def send_email(self, request, pk=None):
         mr = self.get_object()
-        send_mail(subject=mr.message.title, message=mr.message.content, from_email=EMAIL_HOST_USER, recipient_list=[mr.user.email])
+        send_mail(subject=mr.message.title, message=mr.message.content, from_email=settings.EMAIL_USER, recipient_list=[mr.user.email])
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(detail=True, methods=["post"])
