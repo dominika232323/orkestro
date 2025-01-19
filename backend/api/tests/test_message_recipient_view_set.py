@@ -1,10 +1,13 @@
 from django.test import TestCase
 from django.utils import timezone
+from django.core import mail
+from django.conf import settings
 from rest_framework.test import APIRequestFactory, force_authenticate
 
 from api.models import Message, MessageRecipient
 from api.tests.common_setups import basic_setup, basic_setup_teardown
 from api.views.message_recipient_view_set import MessageRecipientViewSet
+
 
 
 class MessageRecipientViewSetTestCase(TestCase):
@@ -112,6 +115,23 @@ class MessageRecipientViewSetTestCase(TestCase):
         # Assertions
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.data["error"], "Data validation failed")
+
+    def test_send_email(self):
+        url = f"/api/message-recipients/{self.message_recipient_1.message_recipient_id}/send_email/"
+        request = self.factory.post(url, format="json")
+        force_authenticate(request, user=self.moderator)
+
+        view = MessageRecipientViewSet.as_view({"post": "send_email"})
+        response = view(request, pk=self.message_recipient_1.message_recipient_id)
+
+        # Assertions
+        self.assertEqual(response.status_code, 204)
+        self.assertEqual(len(mail.outbox), 1)
+        sent_email = mail.outbox[0]
+        self.assertEqual(sent_email.subject, self.message_1.title)
+        self.assertEqual(sent_email.body, self.message_1.content)
+        self.assertEqual(sent_email.from_email, settings.EMAIL_HOST_USER)
+        self.assertEqual(sent_email.to, [self.message_recipient_1.user.email])
 
     def test_mark_as_read(self):
         # Define test cases with expected outcomes
