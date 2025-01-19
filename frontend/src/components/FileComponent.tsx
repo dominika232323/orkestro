@@ -11,34 +11,14 @@ interface FileComponentProps {
   file: OrkestroFile;
 }
 
+// Element of file list in track details
 export default function FileComponent({ file }: FileComponentProps) {
   const { t, currentLanguage } = useLanguage();
   const instrumentName = currentLanguage === "en" ? "name_en" : "name_pl";
 
   const [instruments, setInstruments] = useState<OrkestroInstrument[]>([]);
 
-  const handleDownload = async (file_id: number, file_name: string) => {
-    try {
-      const response = await axios.get(`/api/files/${file_id}/download/`, {
-        responseType: "blob",
-      });
-
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-
-      const link = document.createElement("a");
-      link.href = url;
-      link.setAttribute("download", file_name); // Set the file name
-      document.body.appendChild(link);
-      link.click();
-
-      // Clean up
-      link.remove();
-      window.URL.revokeObjectURL(url);
-    } catch (error) {
-      console.error("Error downloading the file:", error);
-    }
-  };
-
+  // Fetching instruments assigned to file
   const fetchInstruments = useCallback(async () => {
     await axios
       .get<OrkestroFileInstrument[]>(
@@ -62,6 +42,29 @@ export default function FileComponent({ file }: FileComponentProps) {
   useEffect(() => {
     fetchInstruments();
   }, [fetchInstruments]);
+
+  // Download a file
+  const handleDownload = async (file_id: number, file_name: string) => {
+    try {
+      const response = await axios.get(`/api/files/${file_id}/download/`, {
+        responseType: "blob",
+      });
+
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", file_name); // Set the file name
+      document.body.appendChild(link);
+      link.click();
+
+      // Clean up
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Error downloading the file:", error);
+    }
+  };
 
   return (
     <li

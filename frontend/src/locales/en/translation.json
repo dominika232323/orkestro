@@ -142,6 +142,7 @@
     "description": "To delete group, type it's name:",
     "placeholder": "Group's name...",
     "delete": "Delete",
+    "deleting": "Deleting...",
     "name-mismatch": "Group name does not match",
     "fail": "Group deletion failed"
   },
@@ -243,6 +244,9 @@
     "title": "Leave group",
     "description": "Are you sure you want to leave the group?",
     "leave": "Leave",
-    "back": "Go back"
+    "leaving": "Leaving",
+    "back": "Go back",
+    "last-manager": "You can't leave as you are last manager.",
+    "error": "Leaving group failed"
   }
 }

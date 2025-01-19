@@ -135,6 +135,7 @@
     "description": "Aby usunąć grupę, potwierdź jej nazwę:",
     "placeholder": "Nazwa grupy...",
     "delete": "Usuń",
+    "deleting": "Usuwanie...",
     "name-mismatch": "Nazwa grupy się nie zgadza",
     "fail": "Usunięcie grupy nieudane"
   },
@@ -245,6 +246,9 @@
     "title": "Opuść grupę",
     "description": "Jesteś pewny, że chcesz opuścić grupę?",
     "leave": "Opuść",
-    "back": "Powrót"
+    "leaving": "Opuszczanie...",
+    "back": "Powrót",
+    "last-manager": "Nie możesz opuścić grupy, w której jesteś ostatnim kierownikiem.",
+    "error": "Opuszczanie grupy nieudane"
   }
 }
