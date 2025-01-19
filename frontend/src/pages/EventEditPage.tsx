@@ -60,9 +60,14 @@ export default function EventEditPage() {
 
   const handleRemoveTrack = async (event_track_id: number) => {
     setRemoving(true);
-    await axios.delete(`/api/event-tracks/${event_track_id}/`);
-    setRemoving(false);
-    fetchTracks();
+    try {
+      await axios.delete(`/api/event-tracks/${event_track_id}/`);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setRemoving(false);
+      fetchTracks();
+    }
   };
 
   // Editing event fields

@@ -15,7 +15,7 @@ export default function GroupNewPage() {
   const [loading, setLoading] = useState(false);
 
   const parsedUserId = parseId(userId);
-  const parsedSupergroupId = parseId(superGroupId);
+  const parsedSupergroupId = superGroupId ? parseId(superGroupId) : undefined; // SuperGroup not mandatory
 
   const handleTextChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>

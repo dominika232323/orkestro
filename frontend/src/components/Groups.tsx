@@ -66,13 +66,15 @@ export default function Groups() {
         {t("groups.title")}
       </h1>
 
-      <button
-        className="w-full py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 font-medium flex items-center justify-center my-3"
-        onClick={() => navigate(`/new-group/${user?.user_id}`)}
-      >
-        <FontAwesomeIcon icon={faPlus} className="mr-2" />
-        {t("groups.add-group")}
-      </button>
+      {user?.user_id && (
+        <button
+          className="w-full py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 font-medium flex items-center justify-center my-3"
+          onClick={() => navigate(`/new-group/${user.user_id}`)}
+        >
+          <FontAwesomeIcon icon={faPlus} className="mr-2" />
+          {t("groups.add-group")}
+        </button>
+      )}
 
       {groups && groups.length > 0 ? (
         <ul className="bg-white p-4 pt-2 rounded-lg space-y-6">

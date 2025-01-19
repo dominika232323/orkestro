@@ -167,6 +167,7 @@
     "select-tracks": "Select tracks to add",
     "cancel": "Cancel",
     "confirm": "Confirm",
+    "confirming": "Confirming...",
     "submit-tracks": "Add tracks",
     "tracks": "Tracks",
     "no-tracks": "No tracks",
