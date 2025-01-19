@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { axiosInstance as axios, fetchUserOrRedirect } from "../auth";
 import Select, { MultiValue } from "react-select";
+import { parseId } from "../util";
 
 export default function MessageNewPage() {
   const navigate = useNavigate();
@@ -20,11 +21,7 @@ export default function MessageNewPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<boolean>(false);
 
-  const parsedGroupId = groupId ? parseInt(groupId, 10) : undefined;
-
-  if (!parsedGroupId) {
-    throw new Error("Group ID is required and must be a valid number");
-  }
+  const parsedGroupId = parseId(groupId);
 
   useEffect(() => {
     fetchUserOrRedirect(navigate, setUser);

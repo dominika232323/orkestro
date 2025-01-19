@@ -1,10 +1,6 @@
 import axios, { AxiosResponse } from "axios";
-import { useEffect, useState } from "react";
-import {
-  OrkestroFile,
-  OrkestroInstrument,
-  OrkestroMember,
-} from "../interfaces";
+import { useCallback, useEffect, useState } from "react";
+import { OrkestroInstrument, OrkestroMember } from "../interfaces";
 import Select, { MultiValue } from "react-select";
 import { useLanguage } from "../LanguageContext";
 
@@ -32,14 +28,10 @@ export default function AddFiles({
   const [selectedInstruments, setSelectedInstruments] = useState<number[]>([]);
 
   useEffect(() => {
-    fetchMembers();
-  }, [parsedGroupId]);
-
-  useEffect(() => {
     fetchInstruments();
   }, []);
 
-  const fetchMembers = async () => {
+  const fetchMembers = useCallback(async () => {
     await axios
       .get(`/api/members/by_group/?group_id=${parsedGroupId}`)
       .then((response) => {
@@ -51,7 +43,11 @@ export default function AddFiles({
         );
       })
       .catch((error) => console.error("Error fetching members:", error));
-  };
+  }, [parsedGroupId]);
+
+  useEffect(() => {
+    fetchMembers();
+  }, [fetchMembers]);
 
   const handleSubmit = async () => {
     setError("");

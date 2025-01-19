@@ -58,7 +58,7 @@ export default function Groups() {
 
   useEffect(() => {
     fetchUserOrRedirect(navigate, setUser);
-  }, []);
+  }, [navigate]);
 
   return (
     <div className="bg-gray-200 p-6 rounded-lg max-w-4xl mx-auto mt-8">

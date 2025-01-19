@@ -1,5 +1,5 @@
 import { useLanguage } from "../LanguageContext";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import MemberComponent from "../components/MemberComponent";
 import { useNavigate, useParams } from "react-router-dom";
 import Pagination from "../components/Pagination";
@@ -10,13 +10,14 @@ import {
   OrkestroUser,
   Paged,
 } from "../interfaces";
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import { axiosInstance, fetchUserOrRedirect } from "../auth";
+import { fetchUserOrRedirect } from "../auth";
 import NewInvitation from "../components/NewInvitation";
 import DeleteGroup from "../components/DeleteGroup";
 import LeaveGroup from "../components/LeaveGroup";
+import { getRole, parseId } from "../util";
 
 export default function ManageGroupPage() {
   const { t } = useLanguage();
@@ -38,13 +39,25 @@ export default function ManageGroupPage() {
   const [user, setUser] = useState<OrkestroUser>();
   const [role, setRole] = useState<OrkestroRole>();
 
-  const parsedGroupId = groupId ? parseInt(groupId, 10) : undefined;
-
-  if (!parsedGroupId) throw new Error("Group ID invalid");
-
+  const parsedGroupId = parseId(groupId);
   const isManager = role ? role.is_manager : false;
 
-  const fetchMembers = async () => {
+  // Group fetching
+
+  const fetchGroup = useCallback(async () => {
+    await axios
+      .get<OrkestroGroup>(`/api/groups/${groupId}`)
+      .then((response) => setGroup(response.data))
+      .catch((error) => console.error(error));
+  }, [groupId]);
+
+  useEffect(() => {
+    fetchGroup();
+  }, [fetchGroup]);
+
+  // Member fetching
+
+  const fetchMembers = useCallback(async () => {
     setLoading(true);
 
     try {
@@ -60,36 +73,25 @@ export default function ManageGroupPage() {
     } finally {
       setLoading(false);
     }
-  };
-
-  const fetchGroup = async () => {
-    await axios
-      .get<OrkestroGroup>(`/api/groups/${groupId}`)
-      .then((response) => setGroup(response.data));
-  };
-
-  useEffect(() => {
-    fetchGroup();
-  }, []);
+  }, [groupId, currentPage, roleFilter, searchQuery]);
 
   useEffect(() => {
     fetchMembers();
-  }, [currentPage, roleFilter]);
+  }, [fetchMembers]);
+
+  // Fetching role
+
+  const fetchRole = useCallback(() => getRole(setRole, groupId), [groupId]);
+
+  useEffect(() => {
+    fetchRole();
+  }, [fetchRole]);
+
+  // Fetch authenticated user
 
   useEffect(() => {
     fetchUserOrRedirect(navigate, setUser);
-  }, []);
-
-  useEffect(() => {
-    const fetchRole = async () => {
-      await axios
-        .get<OrkestroRole>(`/api/groups/${groupId}/role/`)
-        .then((response) => setRole(response.data))
-        .catch((error) => console.error("Error fetching role:", error));
-    };
-
-    fetchRole();
-  }, []);
+  }, [navigate]);
 
   const toggleRoleFilter = (newFilter: string) => {
     setRoleFilter((prevFilter) => (prevFilter === newFilter ? "" : newFilter));
@@ -98,6 +100,7 @@ export default function ManageGroupPage() {
 
   const handleSearch = () => {
     setCurrentPage(1);
+    fetchMembers();
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -317,10 +320,7 @@ export default function ManageGroupPage() {
         )}
 
         {showLeaveGroup && groupId && user && (
-          <LeaveGroup
-            groupId={groupId}
-            setShowLeaveGroup={setShowLeaveGroup}
-          />
+          <LeaveGroup groupId={groupId} setShowLeaveGroup={setShowLeaveGroup} />
         )}
       </div>
     );

@@ -14,6 +14,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { axiosInstance as axios, fetchUserOrRedirect } from "../auth";
 import { OrkestroRole, OrkestroEvent, Paged } from "../interfaces";
 import Pagination from "../components/Pagination";
+import { getRole } from "../util";
 
 export default function EventsPage() {
   const { t, currentLanguage } = useLanguage();
@@ -30,16 +31,11 @@ export default function EventsPage() {
     fetchUserOrRedirect(navigate);
   }, [navigate]);
 
-  useEffect(() => {
-    const fetchRole = async () => {
-      await axios
-        .get<OrkestroRole>(`/api/groups/${groupId}/role/`)
-        .then((response) => setRole(response.data))
-        .catch((error) => console.error("Error fetching role:", error));
-    };
+  const fetchRole = useCallback(() => getRole(setRole, groupId), [groupId]);
 
+  useEffect(() => {
     fetchRole();
-  }, [groupId]);
+  }, [fetchRole]);
 
   const fetchEvents = useCallback(async () => {
     setLoading(true);

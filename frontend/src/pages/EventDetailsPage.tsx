@@ -1,13 +1,8 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useLanguage } from "../LanguageContext";
-import {
-  OrkestroEvent,
-  OrkestroRole,
-  OrkestroTrackEvent,
-  OrkestroUser,
-} from "../interfaces";
+import { OrkestroEvent, OrkestroRole, OrkestroTrackEvent } from "../interfaces";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCalendarAlt,
@@ -15,7 +10,7 @@ import {
   faLocationDot,
   faPen,
 } from "@fortawesome/free-solid-svg-icons";
-import { fetchUserOrRedirect } from "../auth";
+import { getRole } from "../util";
 
 export default function EventDetailsPage() {
   const { t, currentLanguage } = useLanguage();
@@ -24,31 +19,15 @@ export default function EventDetailsPage() {
 
   const [event, setEvent] = useState<OrkestroEvent | null>(null);
   const [tracks, setTracks] = useState<OrkestroTrackEvent[]>([]);
-
-  const [user, setUser] = useState<OrkestroUser>();
   const [role, setRole] = useState<OrkestroRole>();
 
-  useEffect(() => {
-    fetchEvent();
-    fetchTracks();
-  }, []);
+  const fetchRole = useCallback(() => getRole(setRole, event?.group), [event]);
 
   useEffect(() => {
-    fetchUserOrRedirect(navigate, setUser);
-  }, [navigate]);
-
-  useEffect(() => {
-    const fetchRole = async () => {
-      await axios
-        .get<OrkestroRole>(`/api/groups/${event?.group}/role/`)
-        .then((response) => setRole(response.data))
-        .catch((error) => console.error("Error fetching role:", error));
-    };
-
     fetchRole();
-  }, [event?.group]);
+  }, [fetchRole]);
 
-  const fetchEvent = async () => {
+  const fetchEvent = useCallback(async () => {
     await axios
       .get<OrkestroEvent>(`/api/events/${eventId}/`)
       .then((response) => {
@@ -58,9 +37,9 @@ export default function EventDetailsPage() {
         setEvent(event);
       })
       .catch((error) => console.error("Error fetching event:", error));
-  };
+  }, [eventId]);
 
-  const fetchTracks = async () => {
+  const fetchTracks = useCallback(async () => {
     await axios
       .get(`/api/event-tracks/by_event/?event_id=${eventId}`)
       .then((response) => {
@@ -69,7 +48,12 @@ export default function EventDetailsPage() {
       .catch((error) =>
         console.error("Fetching tracks for event failed: ", error)
       );
-  };
+  }, [eventId]);
+
+  useEffect(() => {
+    fetchEvent();
+    fetchTracks();
+  }, [fetchEvent, fetchTracks]);
 
   if (event) {
     return (

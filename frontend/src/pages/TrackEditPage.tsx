@@ -1,17 +1,12 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useLanguage } from "../LanguageContext";
-import { useEffect, useState } from "react";
-import {
-  OrkestroFile,
-  Paged,
-  OrkestroTrack,
-  OrkestroMember,
-} from "../interfaces";
+import { useCallback, useEffect, useState } from "react";
+import { OrkestroFile, Paged, OrkestroTrack } from "../interfaces";
 import { fetchUserOrRedirect } from "../auth";
 import axios from "axios";
 import Pagination from "../components/Pagination";
-import Select, { MultiValue } from "react-select";
 import AddFiles from "../components/AddFiles";
+import { parseId } from "../util";
 
 export default function TrackEditPage() {
   const navigate = useNavigate();
@@ -25,39 +20,19 @@ export default function TrackEditPage() {
 
   const [showAddFiles, setShowAddFiles] = useState(false);
 
-  const parsedTrackId = trackId ? parseInt(trackId, 10) : undefined;
-  const parsedGroupId = groupId ? parseInt(groupId, 10) : undefined;
+  const parsedTrackId = parseId(trackId);
+  const parsedGroupId = parseId(groupId);
 
-  if (!parsedTrackId || !parsedGroupId) {
-    throw new Error(
-      "Track ID and Group ID is required and must be a valid number"
-    );
-  }
-
-  useEffect(() => {
-    fetchFiles();
-  }, [currentPage]);
-
-  useEffect(() => {
-    fetchUserOrRedirect(navigate);
-    reloadPage();
-  }, []);
-
-  const reloadPage = () => {
-    fetchTrack();
-    fetchFiles();
-  };
-
-  const fetchTrack = async () => {
+  const fetchTrack = useCallback(async () => {
     await axios
       .get<OrkestroTrack>(`/api/tracks/${trackId}/`)
       .then((response) => {
         setTrack(response.data);
       })
       .catch((error) => console.error("Error fetching track:", error));
-  };
+  }, [trackId]);
 
-  const fetchFiles = async () => {
+  const fetchFiles = useCallback(async () => {
     await axios
       .get<Paged<OrkestroFile>>(
         `/api/files/search/?track_id=${trackId}&page=${currentPage}`
@@ -68,7 +43,21 @@ export default function TrackEditPage() {
         setTotalPages(response.data.total_pages);
       })
       .catch((error) => console.error("Error fetching files: ", error));
-  };
+  }, [trackId, currentPage]);
+
+  const reloadPage = useCallback(() => {
+    fetchTrack();
+    fetchFiles();
+  }, [fetchTrack, fetchFiles]);
+
+  useEffect(() => {
+    fetchUserOrRedirect(navigate);
+    reloadPage();
+  }, [navigate, reloadPage]);
+
+  useEffect(() => {
+    fetchFiles();
+  }, [fetchFiles]);
 
   const handleSubmit = async () => {
     if (!track.name || !track.artist) {
@@ -97,11 +86,11 @@ export default function TrackEditPage() {
   };
 
   const handleRemoveFile = async (file_id: number) => {
-    await axios.delete(`/api/files/${file_id}/`);
+    await axios
+      .delete(`/api/files/${file_id}/`)
+      .catch((error) => console.error("Remove file failed"));
     fetchFiles();
   };
-
-  console.log(files);
 
   if (track) {
     return (

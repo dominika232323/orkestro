@@ -1,12 +1,10 @@
 import { useEffect, useState, useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useLanguage } from "../LanguageContext";
-import { axiosInstance as axios, fetchUserOrRedirect } from "../auth";
-import {
-  OrkestroEvent,
-  OrkestroTrack,
-  OrkestroTrackEvent,
-} from "../interfaces";
+import { axiosInstance as axios } from "../auth";
+import { OrkestroEvent, OrkestroTrackEvent } from "../interfaces";
+import AddTracksToEvent from "../components/AddTracksToEvent";
+import { parseId } from "../util";
 
 export default function EventEditPage() {
   const navigate = useNavigate();
@@ -18,24 +16,9 @@ export default function EventEditPage() {
   const [removing, setRemoving] = useState(false);
   const [error, setError] = useState<boolean>(false);
   const [tracks, setTracks] = useState<OrkestroTrackEvent[]>([]);
-  const [tracksToAdd, setTracksToAdd] = useState<OrkestroTrack[]>([]);
-  const [availableTracks, setAvailableTracks] = useState<OrkestroTrack[]>([]);
 
-  const parsedEventId = eventId ? parseInt(eventId, 10) : undefined;
-
-  if (!parsedEventId) {
-    throw new Error("Event ID is required and must be a valid number");
-  }
-
-  useEffect(() => {
-    fetchUserOrRedirect(navigate);
-    reloadPage();
-  }, []);
-
-  const reloadPage = () => {
-    fetchEvent();
-    fetchTracks();
-  };
+  const parsedEventId = parseId(eventId);
+  if (!event.group) throw new Error("No event group");
 
   const fetchEvent = useCallback(async () => {
     setLoading(true);
@@ -53,7 +36,7 @@ export default function EventEditPage() {
   }, [eventId]);
 
   // Fetch tracks that are in event
-  const fetchTracks = async () => {
+  const fetchTracks = useCallback(async () => {
     await axios
       .get(`/api/event-tracks/by_event/?event_id=${eventId}`)
       .then((response) => {
@@ -62,57 +45,18 @@ export default function EventEditPage() {
       .catch((error) =>
         console.error("Fetching tracks for event failed: ", error)
       );
-  };
+  }, [eventId]);
 
-  // Fetch availableTracks (tracks that can be added)
-  const fetchAvailableTracks = async () => {
-    await axios
-      .get(`/api/tracks/leftover/?event_id=${eventId}&group_id=${event.group}`)
-      .then((response) => {
-        console.log(response);
-        setAvailableTracks(response.data);
-      })
-      .catch((error) => console.error(error));
-  };
-
-  const [showAddTracksModal, setShowAddTracksModal] = useState(false);
+  const reloadPage = useCallback(() => {
+    fetchEvent();
+    fetchTracks();
+  }, [fetchEvent, fetchTracks]);
 
   useEffect(() => {
-    if (showAddTracksModal) fetchAvailableTracks();
-  }, [showAddTracksModal]);
+    reloadPage();
+  }, [reloadPage]);
 
-  const toggleTrackSelection = (track: OrkestroTrack) => {
-    // Adding or removing availableTracks from toAdd list
-    if (tracksToAdd.some((t) => t.track_id === track.track_id)) {
-      setTracksToAdd((prev) =>
-        prev.filter((t) => t.track_id !== track.track_id)
-      );
-    } else {
-      setTracksToAdd((prev) => [...prev, track]);
-    }
-  };
-
-  const handleAddTracks = async () => {
-    // API call to add event_track object for every track in tracksToAdd
-
-    const promises = tracksToAdd.map((track) =>
-      axios.post("/api/event-tracks/", {
-        event: eventId,
-        track: track.track_id,
-      })
-    );
-
-    Promise.all(promises)
-      .then((responses) => {
-        console.log("All tracks added successfully:", responses);
-        setTracksToAdd([]);
-        setShowAddTracksModal(false);
-        reloadPage();
-      })
-      .catch((error) => {
-        console.error("Error adding some tracks:", error);
-      });
-  };
+  const [showAddTracksModal, setShowAddTracksModal] = useState(false);
 
   const handleRemoveTrack = async (event_track_id: number) => {
     setRemoving(true);
@@ -272,6 +216,7 @@ export default function EventEditPage() {
               <button
                 onClick={() => handleRemoveTrack(event_track.event_track_id)}
                 className="text-red-500 hover:underline"
+                disabled={removing}
               >
                 {t("edit-event.remove-track")}
               </button>
@@ -292,49 +237,12 @@ export default function EventEditPage() {
 
       {/* Okienko (modal) do dodawania utworów */}
       {showAddTracksModal && (
-        <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white p-6 rounded-lg max-w-lg w-full">
-            <h2 className="text-lg font-bold mb-4">
-              {t("edit-event.select-tracks")}
-            </h2>
-            <ul className="list-disc pl-5">
-              {availableTracks.length > 0 ? (
-                availableTracks.map((track) => (
-                  <li key={track.track_id} className="flex items-center mb-2">
-                    <input
-                      type="checkbox"
-                      id={`track-${track.track_id}`}
-                      checked={tracksToAdd.some(
-                        (t) => t.track_id === track.track_id
-                      )}
-                      onChange={() => toggleTrackSelection(track)}
-                      className="mr-2"
-                    />
-                    <label htmlFor={`track-${track.track_id}`}>
-                      {track.name} - {track.artist}
-                    </label>
-                  </li>
-                ))
-              ) : (
-                <p>{t("edit-event.no-tracks")}</p>
-              )}
-            </ul>
-            <div className="flex justify-end space-x-2 mt-4">
-              <button
-                onClick={() => setShowAddTracksModal(false)}
-                className="bg-gray-500 text-white p-2 rounded-lg hover:bg-gray-600"
-              >
-                {t("edit-event.cancel")}
-              </button>
-              <button
-                onClick={handleAddTracks}
-                className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600"
-              >
-                {t("edit-event.confirm")}
-              </button>
-            </div>
-          </div>
-        </div>
+        <AddTracksToEvent
+          eventId={parsedEventId}
+          groupId={event.group}
+          reloadPage={reloadPage}
+          setShowAddTracksModal={setShowAddTracksModal}
+        />
       )}
     </div>
   );

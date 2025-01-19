@@ -4,18 +4,16 @@ import {
   OrkestroFile,
   Paged,
   OrkestroTrack,
-  OrkestroEvent,
   OrkestroTrackEvent,
-  OrkestroUser,
   OrkestroRole,
 } from "../interfaces";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import axios from "axios";
 import Pagination from "../components/Pagination";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import FileComponent from "../components/FileComponent";
-import { fetchUserOrRedirect } from "../auth";
+import { getRole } from "../util";
 
 export default function TrackDetailsPage() {
   const { t, currentLanguage } = useLanguage();
@@ -32,50 +30,31 @@ export default function TrackDetailsPage() {
 
   const [searchQuery, setSearchQuery] = useState("");
 
-  useEffect(() => {
-    const fetchRole = async () => {
-      await axios
-        .get<OrkestroRole>(`/api/groups/${groupId}/role/`)
-        .then((response) => setRole(response.data))
-        .catch((error) => console.error("Error fetching role:", error));
-    };
+  const fetchRole = useCallback(() => getRole(setRole, groupId), [groupId]);
 
-    fetchRole();
-  }, [groupId]);
-
-  useEffect(() => {
-    fetchTrack();
-    fetchEvents();
-  }, []);
-
-  useEffect(() => {
-    fetchFiles();
-  }, [currentPage]);
-
-  const fetchTrack = async () => {
+  const fetchTrack = useCallback(async () => {
     await axios
       .get<OrkestroTrack>(`/api/tracks/${trackId}/`)
       .then((response) => {
         setTrack(response.data);
       })
       .catch((error) => console.error("Error fetching track:", error));
-  };
+  }, [trackId]);
 
-  const fetchFiles = async () => {
+  const fetchFiles = useCallback(async () => {
     await axios
       .get<Paged<OrkestroFile>>(
         `/api/files/search/?track_id=${trackId}&page=${currentPage}${searchQuery ? `&search=${searchQuery}&search_language=${currentLanguage}` : ""}`
       )
       .then((response) => {
-        console.log(response);
         setFiles(response.data.items);
         setCurrentPage(response.data.page_number);
         setTotalPages(response.data.total_pages);
       })
       .catch((error) => console.error("Error fetching files: ", error));
-  };
+  }, [trackId, currentPage, searchQuery, currentLanguage]);
 
-  const fetchEvents = async () => {
+  const fetchEvents = useCallback(async () => {
     await axios
       .get<OrkestroTrackEvent[]>(
         `/api/event-tracks/by_track/?track_id=${trackId}`
@@ -84,7 +63,20 @@ export default function TrackDetailsPage() {
         setEvents(response.data);
       })
       .catch((error) => console.error(error));
-  };
+  }, [trackId]);
+
+  useEffect(() => {
+    fetchRole();
+  }, [fetchRole]);
+
+  useEffect(() => {
+    fetchTrack();
+    fetchEvents();
+  }, [fetchTrack, fetchEvents]);
+
+  useEffect(() => {
+    fetchFiles();
+  }, [fetchFiles]);
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {

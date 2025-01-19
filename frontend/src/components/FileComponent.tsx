@@ -5,7 +5,7 @@ import {
   OrkestroInstrument,
 } from "../interfaces";
 import { useLanguage } from "../LanguageContext";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 interface FileComponentProps {
   file: OrkestroFile;
@@ -13,12 +13,9 @@ interface FileComponentProps {
 
 export default function FileComponent({ file }: FileComponentProps) {
   const { t, currentLanguage } = useLanguage();
+  const instrumentName = currentLanguage === "en" ? "name_en" : "name_pl";
 
   const [instruments, setInstruments] = useState<OrkestroInstrument[]>([]);
-
-  useEffect(() => {
-    fetchInstruments();
-  }, [file]);
 
   const handleDownload = async (file_id: number, file_name: string) => {
     try {
@@ -42,7 +39,7 @@ export default function FileComponent({ file }: FileComponentProps) {
     }
   };
 
-  const fetchInstruments = async () => {
+  const fetchInstruments = useCallback(async () => {
     await axios
       .get<OrkestroFileInstrument[]>(
         `/api/file-instruments/by_file/?file_id=${file.file_id}`
@@ -60,9 +57,11 @@ export default function FileComponent({ file }: FileComponentProps) {
           console.error(err);
         }
       });
-  };
+  }, [file.file_id]);
 
-  const instrumentName = currentLanguage === "en" ? "name_en" : "name_pl";
+  useEffect(() => {
+    fetchInstruments();
+  }, [fetchInstruments]);
 
   return (
     <li

@@ -1,5 +1,5 @@
 import { useLanguage } from "../LanguageContext";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faTimes,
@@ -12,6 +12,7 @@ import { OrkestroRole, OrkestroTrack, Paged } from "../interfaces";
 import Pagination from "../components/Pagination";
 import axios from "axios";
 import { fetchUserOrRedirect } from "../auth";
+import { getRole } from "../util";
 
 export default function TracksPage() {
   const { t } = useLanguage();
@@ -25,7 +26,7 @@ export default function TracksPage() {
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
 
-  const fetchTracks = async () => {
+  const fetchTracks = useCallback(async () => {
     setLoading(true);
 
     await axios
@@ -39,26 +40,21 @@ export default function TracksPage() {
       .catch((error) => console.error(error));
 
     setLoading(false);
-  };
+  }, [groupId, currentPage, searchQuery]);
 
   useEffect(() => {
     fetchTracks();
-  }, [currentPage]);
+  }, [fetchTracks]);
 
   useEffect(() => {
     fetchUserOrRedirect(navigate);
-  }, []);
+  }, [navigate]);
+
+  const fetchRole = useCallback(() => getRole(setRole, groupId), [groupId]);
 
   useEffect(() => {
-    const fetchRole = async () => {
-      await axios
-        .get<OrkestroRole>(`/api/groups/${groupId}/role/`)
-        .then((response) => setRole(response.data))
-        .catch((error) => console.error("Error fetching role:", error));
-    };
-
     fetchRole();
-  }, []);
+  }, [fetchRole]);
 
   const handleSearch = () => {
     setCurrentPage(1);

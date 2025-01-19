@@ -2,8 +2,8 @@ import { useState } from "react";
 import { useLanguage } from "../LanguageContext";
 import { useNavigate, useParams } from "react-router-dom";
 import { OrkestroGroup } from "../interfaces";
-import { parse } from "path";
 import axios from "axios";
+import { parseId } from "../util";
 
 export default function GroupNewPage() {
   const { t } = useLanguage();
@@ -14,12 +14,8 @@ export default function GroupNewPage() {
   const [group, setGroup] = useState<Partial<OrkestroGroup>>({});
   const [loading, setLoading] = useState(false);
 
-  const parsedUserId = userId ? parseInt(userId, 10) : undefined;
-  const parsedSupergroupId = superGroupId
-    ? parseInt(superGroupId, 10)
-    : undefined;
-
-  if (!parsedUserId) throw new Error("User ID invalid");
+  const parsedUserId = parseId(userId);
+  const parsedSupergroupId = parseId(superGroupId);
 
   const handleTextChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>

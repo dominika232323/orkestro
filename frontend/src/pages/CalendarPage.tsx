@@ -16,6 +16,8 @@ export default function CalendarPage() {
   const [events, setEvents] = useState<OrkestroEvent[]>([]);
   const [selectedDay, setSelectedDay] = useState<number | null>(null);
 
+  // Getting days of the week labels
+
   let daysOfWeek: string[] = [];
 
   if (currentLanguage === "pl") {
@@ -23,6 +25,8 @@ export default function CalendarPage() {
   } else if (currentLanguage === "en") {
     daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
   }
+
+  // Fetching Events
 
   const fetchEvents = useCallback(async () => {
     console.log(year, month);
@@ -38,8 +42,10 @@ export default function CalendarPage() {
     setSelectedDay(null);
   }, [fetchEvents]);
 
+  // Getting days in selected month and setting Monday as the first day of the week
+
   const daysInMonth = new Date(year, month + 1, 0).getDate();
-  const firstDayOfWeek = (new Date(year, month, 1).getDay() + 6) % 7; // adjust for Monday as the first day of the week
+  const firstDayOfWeek = (new Date(year, month, 1).getDay() + 6) % 7;
 
   const eventsForDay = (day: number) => {
     return events.filter(
@@ -55,6 +61,7 @@ export default function CalendarPage() {
       setMonth((prevMonth) => prevMonth + 1);
     }
   };
+  
   const prevMonth = () => {
     if (month === 0) {
       setMonth(11);

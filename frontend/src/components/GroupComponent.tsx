@@ -1,9 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import { useLanguage } from "../LanguageContext";
 import { OrkestroGroupWithSubgroups, OrkestroRole } from "../interfaces";
-import { useEffect, useState } from "react";
-import { fetchUserOrRedirect } from "../auth";
-import axios from "axios";
+import { useCallback, useEffect, useState } from "react";
+import { getRole } from "../util";
 
 interface Params {
   group: OrkestroGroupWithSubgroups;
@@ -15,16 +14,14 @@ export default function GroupComponent({ group }: Params) {
 
   const [role, setRole] = useState<OrkestroRole>();
 
-  useEffect(() => {
-    const fetchRole = async () => {
-      await axios
-        .get<OrkestroRole>(`/api/groups/${group.group_id}/role/`)
-        .then((response) => setRole(response.data))
-        .catch((error) => console.error("Error fetching role:", error));
-    };
+  const fetchRole = useCallback(
+    () => getRole(setRole, group.group_id),
+    [group.group_id]
+  );
 
+  useEffect(() => {
     fetchRole();
-  }, [group.group_id]);
+  }, [fetchRole]);
 
   return (
     <li className="mt-3">
