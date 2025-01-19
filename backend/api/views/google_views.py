@@ -280,7 +280,7 @@ def create_calendar_event(access_token, calendar_id, summary, description, start
 
 
 def create_calendar_orkestro_event(user: User, event: Event):
-    """TODO doc"""
+    """Creates a new event in the user's Orkestro Google Calendar."""
 
     access_token = get_valid_gcalendar_token(user)
     calendar_id = get_orkestro_calendar_id(user)
@@ -313,7 +313,7 @@ def delete_calendar_event(access_token, calendar_id, calendar_event_id):
 
 
 def sync_events(user: User):
-    """TODO doc"""
+    """Synchronizes user's Orkestro events with their Google Calendar."""
 
     access_token = get_valid_gcalendar_token(user)
     calendar_id = get_orkestro_calendar_id(user)
