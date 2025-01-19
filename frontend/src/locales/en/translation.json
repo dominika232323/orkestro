@@ -185,7 +185,8 @@
     "content": "Content",
     "submit": "Send",
     "submiting": "Sending...",
-    "back": "Go back"
+    "back": "Go back",
+    "send-by-email": "Send email"
   },
   "event-details": {
     "fetching": "Fetching...",

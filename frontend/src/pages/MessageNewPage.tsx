@@ -21,6 +21,7 @@ export default function MessageNewPage() {
   const [members, setMembers] = useState<OrkestroMember[]>([]);
   const [selectedUserIds, setSelectedUserIds] = useState<number[]>([]);
   const [error, setError] = useState<boolean>(false);
+  const [sendByEmail, setSendByEmail] = useState<boolean>(false);
 
   const parsedGroupId = parseId(groupId);
 
@@ -75,11 +76,22 @@ export default function MessageNewPage() {
     setSelectedUserIds(selectedOptions.map((option) => option.value));
   };
 
+  // Handle sending email
+  const handleSend = async () => {
+    // TODO: implement actual email-sending logic here
+    console.log("Sending email...");
+  };
+
   // Send message
   const handleSubmit = async () => {
+    setError(false);
     if (!message.title || !message.content) {
       setError(true);
       return;
+    }
+
+    if (sendByEmail) {
+      await handleSend();
     }
 
     const encodedMessage = {
@@ -156,6 +168,17 @@ export default function MessageNewPage() {
             required
           />
         </label>
+
+        <div className="mb-4">
+          <label className="flex items-center space-x-2">
+            <input
+              type="checkbox"
+              checked={sendByEmail}
+              onChange={(e) => setSendByEmail(e.target.checked)}
+            />
+            <span>{t("new-message.send-by-email")}</span>
+          </label>
+        </div>
       </div>
 
       {/* Buttons */}
