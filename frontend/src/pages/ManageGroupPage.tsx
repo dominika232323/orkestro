@@ -94,11 +94,13 @@ export default function ManageGroupPage() {
     fetchUserOrRedirect(navigate, setUser);
   }, [navigate]);
 
+  // Toggling member search filter
   const toggleRoleFilter = (newFilter: string) => {
     setRoleFilter((prevFilter) => (prevFilter === newFilter ? "" : newFilter));
     setCurrentPage(1);
   };
 
+  // Submit editing group's data
   const submitTextChanges = async () => {
     setLoading(true);
     setError("");
@@ -120,6 +122,7 @@ export default function ManageGroupPage() {
     }
   };
 
+  // Change form's text fields
   const handleTextChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -135,48 +138,55 @@ export default function ManageGroupPage() {
   if (group) {
     return (
       <div className="bg-gray-200 p-6 rounded-lg max-w-4xl mx-auto mt-8">
+        {/* Header */}
         <h1 className="text-2xl font-bold text-center mb-6">
           {t("manage-group.title")}
         </h1>
 
+        {/* Group's info */}
         <h2 className="text-xl font-bold text-center mb-6">
           {t("manage-group.manage-basics")}
         </h2>
 
+        {/* Error and success messages */}
         {error && <p className="text-red-500 text-center mb-4">{error}</p>}
         {success && (
           <p className="text-green-500 text-center mb-4">{success}</p>
         )}
 
-        <label>
-          {t("new-event.name")}
-          <input
-            type="text"
-            name="name"
-            value={group.name}
-            onChange={handleTextChange}
-            className="block w-full p-2 border mb-2"
-            disabled={!isManager}
-            required
-          />
-        </label>
+        {/* Groups info form */}
+        <form>
+          <label>
+            {t("new-event.name")}
+            <input
+              type="text"
+              name="name"
+              value={group.name}
+              onChange={handleTextChange}
+              className="block w-full p-2 border mb-2"
+              disabled={!isManager}
+              required
+            />
+          </label>
 
-        <label>
-          {t("new-event.description")}
-          <input
-            type="text"
-            name="description"
-            value={group.description}
-            onChange={handleTextChange}
-            className="block w-full p-2 border mb-2"
-            disabled={!isManager}
-            required
-          />
-        </label>
+          <label>
+            {t("new-event.description")}
+            <input
+              type="text"
+              name="description"
+              value={group.description}
+              onChange={handleTextChange}
+              className="block w-full p-2 border mb-2"
+              disabled={!isManager}
+              required
+            />
+          </label>
+        </form>
 
         <div className="flex justify-between">
           {isManager && (
             <>
+              {/* Submit group info edit */}
               <button
                 onClick={submitTextChanges}
                 className="px-4 py-2 bg-blue-500 text-white font-medium rounded-lg hover:bg-blue-600 transition-colors"
@@ -184,6 +194,8 @@ export default function ManageGroupPage() {
               >
                 {t("manage-group.edit")}
               </button>
+
+              {/* New subgroup */}
               <button
                 onClick={() =>
                   navigate(`/new-group/${user?.user_id}/${group.group_id}`)
@@ -194,6 +206,8 @@ export default function ManageGroupPage() {
                 <FontAwesomeIcon className="mr-1" icon={faPlus} />
                 {t("manage-group.new-subgroup")}
               </button>
+
+              {/* Delete group */}
               <button
                 onClick={() => setShowDeleteGroup(true)}
                 className="ml-1 bg-red-500 text-white p-2 rounded-lg hover:bg-red-600"
@@ -204,6 +218,7 @@ export default function ManageGroupPage() {
             </>
           )}
 
+          {/* Leave group */}
           <button
             onClick={() => setShowLeaveGroup(true)}
             className="ml-1 bg-red-500 text-white p-2 rounded-lg hover:bg-red-600"
@@ -213,6 +228,7 @@ export default function ManageGroupPage() {
           </button>
         </div>
 
+        {/* Member management */}
         <h2 className="text-xl font-bold text-center mb-6">
           {t("manage-group.manage-members")}
         </h2>
@@ -283,6 +299,7 @@ export default function ManageGroupPage() {
           onPageChange={(page) => setCurrentPage(page)}
         />
 
+        {/* Invite window */}
         {showInvite && (
           <NewInvitation
             parsedGroupId={parsedGroupId}
@@ -290,6 +307,7 @@ export default function ManageGroupPage() {
           />
         )}
 
+        {/* Delete group window */}
         {showDeleteGroup && (
           <DeleteGroup
             groupName={group.name}
@@ -298,6 +316,7 @@ export default function ManageGroupPage() {
           />
         )}
 
+        {/* Leave group window */}
         {showLeaveGroup && groupId && user && (
           <LeaveGroup groupId={groupId} setShowLeaveGroup={setShowLeaveGroup} />
         )}

@@ -268,5 +268,15 @@
     "deleting": "Usuwanie...",
     "back": "Powrót",
     "name-mismatch": "Nazwa wydarzenia się nie zgadza"
+  },
+  "delete-track": {
+    "title": "Usuń utwór",
+    "description": "Aby usunąć utwór, potwierdź jego nazwę:",
+    "error": "Usunięcie utworu nieudane",
+    "placeholder": "Nazwa utworu...",
+    "delete": "Usuń",
+    "deleting": "Usuwanie...",
+    "back": "Powrót",
+    "name-mismatch": "Nazwa utworu się nie zgadza"
   }
 }

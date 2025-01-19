@@ -257,5 +257,25 @@
     "back": "Go back",
     "last-manager": "You can't leave as you are last manager.",
     "error": "Leaving group failed"
+  },
+  "delete-event": {
+    "title": "Delete event",
+    "description": "To delete event, type it's name:",
+    "error": "Deleting event failed",
+    "placeholder": "Event name...",
+    "delete": "Delete",
+    "deleting": "Deleting...",
+    "back": "Return",
+    "name-mismatch": "Event name does not match"
+  },
+  "delete-track": {
+    "title": "Delete track",
+    "description": "To delete track, type it's name:",
+    "error": "Deleting track failed",
+    "placeholder": "Track name...",
+    "delete": "Delete",
+    "deleting": "Deleting...",
+    "back": "Return",
+    "name-mismatch": "Track name does not match"
   }
 }
