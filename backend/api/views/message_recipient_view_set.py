@@ -44,7 +44,7 @@ class MessageRecipientViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=["post"])
     def send_email(self, request, pk=None):
         mr = self.get_object()
-        send_mail(subject=mr.message.title, message=mr.message.content, from_email=settings.EMAIL_USER, recipient_list=[mr.user.email])
+        send_mail(subject=mr.message.title, message=mr.message.content, from_email=settings.EMAIL_HOST_USER, recipient_list=[mr.user.email])
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(detail=True, methods=["post"])
