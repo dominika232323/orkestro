@@ -4,6 +4,11 @@ Handles API requests regarding message data:
 - getting all messages of a group sent to the calling user
 Staff users can do all of the above + list all messages or a specific one.
 """
+
+from django.conf import settings
+from django.core.mail import send_mail
+from django.core.validators import validate_email
+from django.core.exceptions import ValidationError
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
@@ -12,6 +17,14 @@ from rest_framework.response import Response
 from api.models import Message, MessageRecipient, Member, User
 from api.serializers import MessageSerializer
 from api.permissions.message_permissions import MessagePermission
+
+
+def is_valid_email(email):
+    try:
+        validate_email(email)
+        return True
+    except ValidationError:
+        return False
 
 
 class MessageViewSet(viewsets.ModelViewSet):
@@ -43,6 +56,9 @@ class MessageViewSet(viewsets.ModelViewSet):
                     is_read=False,
                 )
                 recipient.save()
+
+            emails = [user.email for user in recipients if is_valid_email(user.email)]
+            send_mail(subject=message.title, message=message.content, from_email=settings.EMAIL_USER, recipient_list=emails)
 
             return Response(data=serializer.data, status=status.HTTP_201_CREATED)
 
