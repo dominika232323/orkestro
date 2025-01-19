@@ -18,6 +18,7 @@ import NewInvitation from "../components/NewInvitation";
 import DeleteGroup from "../components/DeleteGroup";
 import LeaveGroup from "../components/LeaveGroup";
 import { getRole, parseId } from "../util";
+import SearchBar from "../components/SearchBar";
 
 export default function ManageGroupPage() {
   const { t } = useLanguage();
@@ -98,15 +99,13 @@ export default function ManageGroupPage() {
     setCurrentPage(1);
   };
 
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery])
+
   const handleSearch = () => {
     setCurrentPage(1);
     fetchMembers();
-  };
-
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === "Enter") {
-      handleSearch();
-    }
   };
 
   const submitTextChanges = async () => {
@@ -228,24 +227,12 @@ export default function ManageGroupPage() {
         </h2>
 
         {/* Search Bar */}
-        <div className="mb-6 flex items-center justify-between space-x-4">
-          <div className="flex flex-1 items-center bg-white rounded-lg shadow-md overflow-hidden">
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder={t("manage-group.search-placeholder")}
-              className="flex-1 px-4 py-2 text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-            <button
-              onClick={fetchMembers}
-              className="px-4 py-2 bg-blue-500 text-white font-medium hover:bg-blue-600 transition-colors"
-            >
-              {t("manage-group.search")}
-            </button>
-          </div>
-        </div>
+        <SearchBar
+          query={searchQuery}
+          onQueryChange={(value) => setSearchQuery(value)}
+          onSearch={handleSearch}
+          placeholder={t("manage-group.search-placeholder")}
+        />
 
         {/* Invite member */}
         {isManager && (

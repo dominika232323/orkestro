@@ -5,6 +5,7 @@ import { axiosInstance as axios } from "../auth";
 import { OrkestroMessageRecipient, Paged } from "../interfaces";
 import MessageComponent from "../components/MessageComponent";
 import Pagination from "../components/Pagination";
+import SearchBar from "../components/SearchBar";
 
 export default function MessagesPage() {
   const { t } = useLanguage();
@@ -41,6 +42,10 @@ export default function MessagesPage() {
     fetchMessages();
   }, [fetchMessages]);
 
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery]);
+
   const handleSearch = () => {
     setCurrentPage(1);
     fetchMessages();
@@ -51,23 +56,12 @@ export default function MessagesPage() {
       <h1 className="text-2xl font-bold text-center mb-4">
         {t("messages.title")}
       </h1>
-      <div className="flex items-center mb-6 bg-white shadow-md rounded-lg overflow-hidden">
-        <input
-          type="text"
-          value={searchQuery}
-          onChange={(e) => {
-            setSearchQuery(e.target.value);
-          }}
-          className="flex-1 px-4 py-2 text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder={t("messages.placeholder")}
-        />
-        <button
-          onClick={handleSearch}
-          className="px-4 py-2 bg-blue-500 text-white font-medium hover:bg-blue-600 transition-colors"
-        >
-          {t("messages.search")}
-        </button>
-      </div>
+      <SearchBar
+        query={searchQuery}
+        onQueryChange={(value) => setSearchQuery(value)}
+        onSearch={handleSearch}
+        placeholder={t("messages.placeholder")}
+      />
       {messages.length > 0 ? (
         <ul className="space-y-4">
           {messages.map((msg) => (

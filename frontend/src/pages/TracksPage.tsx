@@ -13,6 +13,7 @@ import Pagination from "../components/Pagination";
 import axios from "axios";
 import { fetchUserOrRedirect } from "../auth";
 import { getRole } from "../util";
+import SearchBar from "../components/SearchBar";
 
 export default function TracksPage() {
   const { t } = useLanguage();
@@ -61,11 +62,9 @@ export default function TracksPage() {
     fetchTracks();
   };
 
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === "Enter") {
-      handleSearch();
-    }
-  };
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery]);
 
   const handleDelete = async (track_id: number) => {
     await axios.delete(`/api/tracks/${track_id}/`);
@@ -90,22 +89,12 @@ export default function TracksPage() {
       )}
 
       {/* Search Bar */}
-      <div className="flex items-center mb-6 bg-white shadow-md rounded-lg overflow-hidden">
-        <input
-          type="text"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          onKeyDown={handleKeyDown}
-          placeholder={t("tracks.placeholder")}
-          className="flex-1 px-4 py-2 text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-        <button
-          onClick={handleSearch}
-          className="px-6 py-2 bg-blue-500 text-white font-medium hover:bg-blue-600 transition-colors"
-        >
-          {t("tracks.search")}
-        </button>
-      </div>
+      <SearchBar
+        query={searchQuery}
+        onQueryChange={(value) => setSearchQuery(value)}
+        onSearch={handleSearch}
+        placeholder={t("tracks.placeholder")}
+      />
 
       {/* Track List or Loading/Empty State */}
       {tracks && tracks.length > 0 ? (

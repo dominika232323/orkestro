@@ -18,7 +18,7 @@ export default function EventEditPage() {
   const [tracks, setTracks] = useState<OrkestroTrackEvent[]>([]);
 
   const parsedEventId = parseId(eventId);
-  if (!event.group) throw new Error("No event group");
+  const parsedGroupId = event.group ? parseId(event.group) : undefined;
 
   const fetchEvent = useCallback(async () => {
     setLoading(true);
@@ -235,10 +235,10 @@ export default function EventEditPage() {
       </button>
 
       {/* Okienko (modal) do dodawania utworów */}
-      {showAddTracksModal && (
+      {showAddTracksModal && parsedEventId && parsedGroupId && (
         <AddTracksToEvent
           eventId={parsedEventId}
-          groupId={event.group}
+          groupId={parsedGroupId}
           reloadPage={reloadPage}
           setShowAddTracksModal={setShowAddTracksModal}
         />

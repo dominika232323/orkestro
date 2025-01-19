@@ -1,11 +1,17 @@
 import axios from "axios";
 import { OrkestroRole } from "./interfaces";
 
-export const parseId = (id: string | undefined) => {
+export const parseId = (id: string | number | undefined) => {
   if (!id) {
     throw new Error("Id missing");
   }
+
+  if (typeof id === "number") {
+    return id;
+  }
+
   const parsedId = parseInt(id, 10);
+
   if (!parsedId) {
     throw new Error("Id provided invalid");
   }

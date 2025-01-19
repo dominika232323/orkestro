@@ -15,6 +15,7 @@ import { axiosInstance as axios, fetchUserOrRedirect } from "../auth";
 import { OrkestroRole, OrkestroEvent, Paged } from "../interfaces";
 import Pagination from "../components/Pagination";
 import { getRole } from "../util";
+import SearchBar from "../components/SearchBar";
 
 export default function EventsPage() {
   const { t, currentLanguage } = useLanguage();
@@ -67,6 +68,10 @@ export default function EventsPage() {
     fetchEvents();
   };
 
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery]);
+
   const handleDelete = async (event_id: number) => {
     await axios
       .delete(`/api/events/${event_id}/`)
@@ -96,21 +101,12 @@ export default function EventsPage() {
       )}
 
       {/* Search Bar */}
-      <div className="flex items-center mb-6 bg-white shadow-md rounded-lg overflow-hidden">
-        <input
-          type="text"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder={t("events.placeholder")}
-          className="flex-1 px-4 py-2 text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-        <button
-          onClick={handleSearch}
-          className="px-4 py-2 bg-blue-500 text-white font-medium hover:bg-blue-600 transition-colors"
-        >
-          {t("events.search")}
-        </button>
-      </div>
+      <SearchBar
+        query={searchQuery}
+        onQueryChange={(value) => setSearchQuery(value)}
+        onSearch={handleSearch}
+        placeholder={t("events.placeholder")}
+      />
 
       {/* Event List */}
       {events.length > 0 ? (

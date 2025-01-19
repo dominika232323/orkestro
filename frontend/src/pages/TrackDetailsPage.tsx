@@ -14,6 +14,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import FileComponent from "../components/FileComponent";
 import { getRole } from "../util";
+import SearchBar from "../components/SearchBar";
 
 export default function TrackDetailsPage() {
   const { t, currentLanguage } = useLanguage();
@@ -78,16 +79,14 @@ export default function TrackDetailsPage() {
     fetchFiles();
   }, [fetchFiles]);
 
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === "Enter") {
-      handleSearch();
-    }
-  };
-
   const handleSearch = async () => {
     fetchFiles();
     setCurrentPage(1);
   };
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery]);
 
   if (track) {
     return (
@@ -120,22 +119,12 @@ export default function TrackDetailsPage() {
         <h2 className="text-xl font-bold mt-4">{t("track-details.files")}</h2>
 
         {/* Search Bar */}
-        <div className="flex items-center mb-6 bg-white shadow-md rounded-lg overflow-hidden">
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder={t("track-details.placeholder")}
-            className="flex-1 px-4 py-2 text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-          <button
-            onClick={handleSearch}
-            className="px-6 py-2 bg-blue-500 text-white font-medium hover:bg-blue-600 transition-colors"
-          >
-            {t("tracks.search")}
-          </button>
-        </div>
+        <SearchBar
+          query={searchQuery}
+          onQueryChange={(value) => setSearchQuery(value)}
+          onSearch={handleSearch}
+          placeholder={t("track-details.placeholder")}
+        />
 
         <ul className="list-disc pl-5">
           {files.length > 0 ? (
