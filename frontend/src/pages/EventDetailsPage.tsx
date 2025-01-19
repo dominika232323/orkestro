@@ -34,7 +34,7 @@ export default function EventDetailsPage() {
   }, []);
 
   useEffect(() => {
-    fetchUserOrRedirect(setUser);
+    fetchUserOrRedirect(navigate, setUser);
   }, [navigate]);
 
   useEffect(() => {

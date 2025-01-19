@@ -130,6 +130,7 @@ export const fetchUserLogin = async (navigate: Function) => {
 };
 
 export const fetchUserOrRedirect = async (
+  navigate: Function,
   setUser: Function = (_: any) => {}
 ) => {
   const access_token = getAccessToken();
@@ -142,10 +143,10 @@ export const fetchUserOrRedirect = async (
       })
       .catch((error) => {
         console.error("Error fetching user data, redirecting to login:", error);
-        window.location.href = LOGIN_PAGE;
+        navigate(LOGIN_PAGE);
       });
   } else {
     console.error("No tokens, redirecting to login");
-    window.location.href = LOGIN_PAGE;
+    navigate(LOGIN_PAGE);
   }
 };

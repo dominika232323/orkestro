@@ -57,7 +57,7 @@ export default function Groups() {
   }, []);
 
   useEffect(() => {
-    fetchUserOrRedirect(setUser);
+    fetchUserOrRedirect(navigate, setUser);
   }, []);
 
   return (

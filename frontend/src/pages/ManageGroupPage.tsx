@@ -77,7 +77,7 @@ export default function ManageGroupPage() {
   }, [currentPage, roleFilter]);
 
   useEffect(() => {
-    fetchUserOrRedirect(setUser);
+    fetchUserOrRedirect(navigate, setUser);
   }, []);
 
   useEffect(() => {
