@@ -5,7 +5,9 @@ import { axiosInstance as axios } from "../auth";
 import { OrkestroMessageRecipient, Paged } from "../interfaces";
 import MessageComponent from "../components/MessageComponent";
 import Pagination from "../components/Pagination";
+import SearchBar from "../components/SearchBar";
 
+// User's messages page
 export default function MessagesPage() {
   const { t } = useLanguage();
   const [loading, setLoading] = useState(true);
@@ -14,6 +16,7 @@ export default function MessagesPage() {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
 
+  // Fetch users messages
   const fetchMessages = useCallback(async () => {
     setLoading(true);
 
@@ -41,35 +44,23 @@ export default function MessagesPage() {
     fetchMessages();
   }, [fetchMessages]);
 
-  const handleSearch = () => {
-    setCurrentPage(1);
-    fetchMessages();
-  };
-
-  console.log(messages);
-
   return (
     <div className="bg-gray-200 p-6 rounded-lg max-w-4xl mx-auto mt-8">
+      {/* Header */}
       <h1 className="text-2xl font-bold text-center mb-4">
         {t("messages.title")}
       </h1>
-      <div className="flex items-center mb-6 bg-white shadow-md rounded-lg overflow-hidden">
-        <input
-          type="text"
-          value={searchQuery}
-          onChange={(e) => {
-            setSearchQuery(e.target.value);
-          }}
-          className="flex-1 px-4 py-2 text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder={t("messages.placeholder")}
-        />
-        <button
-          onClick={handleSearch}
-          className="px-4 py-2 bg-blue-500 text-white font-medium hover:bg-blue-600 transition-colors"
-        >
-          {t("messages.search")}
-        </button>
-      </div>
+
+      {/* Search bar */}
+      <SearchBar
+        query={searchQuery}
+        onQueryChange={(value) => setSearchQuery(value)}
+        onSearch={fetchMessages}
+        placeholder={t("messages.placeholder")}
+        setCurrentPage={setCurrentPage}
+      />
+
+      {/* Message list */}
       {messages.length > 0 ? (
         <ul className="space-y-4">
           {messages.map((msg) => (
@@ -84,6 +75,8 @@ export default function MessagesPage() {
       ) : (
         <p>{t("messages.no-messages")}</p>
       )}
+
+      {/* Pagination */}
       <Pagination
         currentPage={currentPage}
         totalPages={totalPages}

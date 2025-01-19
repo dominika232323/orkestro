@@ -1,5 +1,5 @@
 import { useLanguage } from "../LanguageContext";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faTimes,
@@ -12,7 +12,11 @@ import { OrkestroRole, OrkestroTrack, Paged } from "../interfaces";
 import Pagination from "../components/Pagination";
 import axios from "axios";
 import { fetchUserOrRedirect } from "../auth";
+import { getRole } from "../util";
+import SearchBar from "../components/SearchBar";
+import DeleteTrack from "../components/DeleteTrack";
 
+// Page to show users tracks
 export default function TracksPage() {
   const { t } = useLanguage();
   const { groupId } = useParams();
@@ -24,8 +28,13 @@ export default function TracksPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [showDeleteTrack, setShowDeleteTrack] = useState(false);
 
-  const fetchTracks = async () => {
+  const [selectedTrackId, setSelectedTrackId] = useState<number>(0);
+  const [selectedTrackName, setSelectedTrackName] = useState("");
+
+  // Fetch user's tracks
+  const fetchTracks = useCallback(async () => {
     setLoading(true);
 
     await axios
@@ -39,45 +48,26 @@ export default function TracksPage() {
       .catch((error) => console.error(error));
 
     setLoading(false);
-  };
+  }, [groupId, currentPage, searchQuery]);
 
   useEffect(() => {
     fetchTracks();
-  }, [currentPage]);
+  }, [fetchTracks]);
 
   useEffect(() => {
     fetchUserOrRedirect(navigate);
-  }, []);
+  }, [navigate]);
+
+  // FetchRole
+  const fetchRole = useCallback(() => getRole(setRole, groupId), [groupId]);
 
   useEffect(() => {
-    const fetchRole = async () => {
-      await axios
-        .get<OrkestroRole>(`/api/groups/${groupId}/role/`)
-        .then((response) => setRole(response.data))
-        .catch((error) => console.error("Error fetching role:", error));
-    };
-
     fetchRole();
-  }, []);
-
-  const handleSearch = () => {
-    setCurrentPage(1);
-    fetchTracks();
-  };
-
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === "Enter") {
-      handleSearch();
-    }
-  };
-
-  const handleDelete = async (track_id: number) => {
-    await axios.delete(`/api/tracks/${track_id}/`);
-    fetchTracks();
-  };
+  }, [fetchRole]);
 
   return (
     <div className="bg-gray-200 p-6 rounded-lg max-w-4xl mx-auto mt-8">
+      {/* Header */}
       <h1 className="text-2xl font-bold text-center mb-6">
         {t("tracks.title")}
       </h1>
@@ -94,22 +84,13 @@ export default function TracksPage() {
       )}
 
       {/* Search Bar */}
-      <div className="flex items-center mb-6 bg-white shadow-md rounded-lg overflow-hidden">
-        <input
-          type="text"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          onKeyDown={handleKeyDown}
-          placeholder={t("tracks.placeholder")}
-          className="flex-1 px-4 py-2 text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-        <button
-          onClick={handleSearch}
-          className="px-6 py-2 bg-blue-500 text-white font-medium hover:bg-blue-600 transition-colors"
-        >
-          {t("tracks.search")}
-        </button>
-      </div>
+      <SearchBar
+        query={searchQuery}
+        onQueryChange={(value) => setSearchQuery(value)}
+        onSearch={fetchTracks}
+        placeholder={t("tracks.placeholder")}
+        setCurrentPage={setCurrentPage}
+      />
 
       {/* Track List or Loading/Empty State */}
       {tracks && tracks.length > 0 ? (
@@ -146,7 +127,11 @@ export default function TracksPage() {
                     </button>
                     <button
                       className="px-3 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 font-medium transition-colors"
-                      onClick={() => handleDelete(track.track_id)}
+                      onClick={() => {
+                        setSelectedTrackId(track.track_id);
+                        setSelectedTrackName(track.name);
+                        setShowDeleteTrack(true);
+                      }}
                     >
                       <FontAwesomeIcon className="mr-2" icon={faTimes} />
                       <span>{t("tracks.delete")}</span>
@@ -169,6 +154,16 @@ export default function TracksPage() {
         totalPages={totalPages}
         onPageChange={(page) => setCurrentPage(page)}
       />
+
+      {/* Delete Track window */}
+      {showDeleteTrack && selectedTrackId && (
+        <DeleteTrack
+          trackId={selectedTrackId}
+          trackName={selectedTrackName}
+          fetchTracks={fetchTracks}
+          setShowDeleteTrack={setShowDeleteTrack}
+        />
+      )}
     </div>
   );
 }

@@ -1,18 +1,15 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useLanguage } from "../LanguageContext";
-import { useEffect, useState } from "react";
-import {
-  OrkestroFile,
-  Paged,
-  OrkestroTrack,
-  OrkestroMember,
-} from "../interfaces";
+import { useCallback, useEffect, useState } from "react";
+import { OrkestroFile, Paged, OrkestroTrack } from "../interfaces";
 import { fetchUserOrRedirect } from "../auth";
 import axios from "axios";
 import Pagination from "../components/Pagination";
-import Select, { MultiValue } from "react-select";
 import AddFiles from "../components/AddFiles";
+import { parseId } from "../util";
+import SubmitOrBack from "../components/SubmitOrBack";
 
+// Editing chosen track
 export default function TrackEditPage() {
   const navigate = useNavigate();
   const { t } = useLanguage();
@@ -22,42 +19,23 @@ export default function TrackEditPage() {
   const [files, setFiles] = useState<OrkestroFile[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-
   const [showAddFiles, setShowAddFiles] = useState(false);
 
-  const parsedTrackId = trackId ? parseInt(trackId, 10) : undefined;
-  const parsedGroupId = groupId ? parseInt(groupId, 10) : undefined;
+  const parsedTrackId = parseId(trackId);
+  const parsedGroupId = parseId(groupId);
 
-  if (!parsedTrackId || !parsedGroupId) {
-    throw new Error(
-      "Track ID and Group ID is required and must be a valid number"
-    );
-  }
-
-  useEffect(() => {
-    fetchFiles();
-  }, [currentPage]);
-
-  useEffect(() => {
-    fetchUserOrRedirect(navigate);
-    reloadPage();
-  }, []);
-
-  const reloadPage = () => {
-    fetchTrack();
-    fetchFiles();
-  };
-
-  const fetchTrack = async () => {
+  // Fetch selected track
+  const fetchTrack = useCallback(async () => {
     await axios
       .get<OrkestroTrack>(`/api/tracks/${trackId}/`)
       .then((response) => {
         setTrack(response.data);
       })
       .catch((error) => console.error("Error fetching track:", error));
-  };
+  }, [trackId]);
 
-  const fetchFiles = async () => {
+  // Fetch track's files
+  const fetchFiles = useCallback(async () => {
     await axios
       .get<Paged<OrkestroFile>>(
         `/api/files/search/?track_id=${trackId}&page=${currentPage}`
@@ -68,8 +46,24 @@ export default function TrackEditPage() {
         setTotalPages(response.data.total_pages);
       })
       .catch((error) => console.error("Error fetching files: ", error));
-  };
+  }, [trackId, currentPage]);
 
+  // Reloading track's info and files
+  const reloadPage = useCallback(() => {
+    fetchTrack();
+    fetchFiles();
+  }, [fetchTrack, fetchFiles]);
+
+  useEffect(() => {
+    fetchUserOrRedirect(navigate);
+    reloadPage();
+  }, [navigate, reloadPage]);
+
+  useEffect(() => {
+    fetchFiles();
+  }, [fetchFiles]);
+
+  // Submit track changes
   const handleSubmit = async () => {
     if (!track.name || !track.artist) {
       return;
@@ -80,12 +74,12 @@ export default function TrackEditPage() {
     await axios
       .put(`/api/tracks/${trackId}/`, track)
       .then(() => {
-        console.log("Successfully edited event");
         navigate(-1);
       })
       .catch((error) => console.error("Error adding event:", error));
   };
 
+  // Change track's text fields
   const handleTextChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -96,55 +90,58 @@ export default function TrackEditPage() {
     }));
   };
 
+  // Handle removing file
   const handleRemoveFile = async (file_id: number) => {
-    await axios.delete(`/api/files/${file_id}/`);
+    await axios
+      .delete(`/api/files/${file_id}/`)
+      .catch((error) => console.error("Remove file failed"));
     fetchFiles();
   };
-
-  console.log(files);
 
   if (track) {
     return (
       <div className="bg-gray-200 p-6 rounded-lg max-w-4xl mx-auto mt-8">
+        {/* Header */}
         <h1 className="text-2xl font-bold text-center mb-6">
           {t("edit-track.title")}
         </h1>
-        <label>
-          {t("edit-track.name")}
-          <input
-            type="text"
-            name="name"
-            value={track.name}
-            onChange={handleTextChange}
-            className="block w-full p-2 border mb-2"
-            required
-          />
-        </label>
-        <label>
-          {t("edit-track.artist")}
-          <input
-            type="text"
-            name="artist"
-            value={track.artist}
-            onChange={handleTextChange}
-            className="block w-full p-2 border mb-2"
-            required
-          />
-        </label>
-        <button
-          onClick={handleSubmit}
-          className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600"
-        >
-          {t("edit-track.submit")}
-        </button>
-        <button
-          onClick={() => navigate(-1)}
-          className="ml-1 bg-red-500 text-white p-2 rounded-lg hover:bg-red-600"
-        >
-          {t("edit-track.back")}
-        </button>
 
-        {/* Lista plików */}
+        {/* Form */}
+        <div>
+          <label>
+            {t("edit-track.name")}
+            <input
+              type="text"
+              name="name"
+              value={track.name}
+              onChange={handleTextChange}
+              className="block w-full p-2 border mb-2"
+              required
+            />
+          </label>
+          <label>
+            {t("edit-track.artist")}
+            <input
+              type="text"
+              name="artist"
+              value={track.artist}
+              onChange={handleTextChange}
+              className="block w-full p-2 border mb-2"
+              required
+            />
+          </label>
+        </div>
+
+        {/* Buttons */}
+        <SubmitOrBack
+          submitMethod={handleSubmit}
+          textSubmit={t("edit-track.submit")}
+          textSubmiting={t("edit-track.submiting")}
+          onCancel={() => navigate(-1)}
+          textCancel={t("edit-track.back")}
+        />
+
+        {/* File list */}
         <h2 className="text-xl font-bold mt-4">{t("edit-track.files")}</h2>
         <ul className="list-disc pl-5">
           {files.length > 0 ? (
@@ -167,13 +164,15 @@ export default function TrackEditPage() {
           )}
         </ul>
 
-        {/* Przycisk do dodawania utworów */}
-        <button
-          onClick={() => setShowAddFiles(true)}
-          className="mt-4 bg-green-500 text-white p-2 rounded-lg hover:bg-green-600"
-        >
-          {t("edit-track.add-file")}
-        </button>
+        {/* Adding files button */}
+        <div className="flex justify-end">
+          <button
+            onClick={() => setShowAddFiles(true)}
+            className="mt-4 bg-green-500 text-white p-2 rounded-lg hover:bg-green-600"
+          >
+            {t("edit-track.add-file")}
+          </button>
+        </div>
 
         {/*Pagination*/}
         <Pagination
@@ -182,6 +181,7 @@ export default function TrackEditPage() {
           onPageChange={(page) => setCurrentPage(page)}
         />
 
+        {/* Add files window */}
         {showAddFiles && (
           <AddFiles
             parsedTrackId={parsedTrackId}

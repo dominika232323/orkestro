@@ -1,44 +1,29 @@
 import { useEffect, useState, useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useLanguage } from "../LanguageContext";
-import { axiosInstance as axios, fetchUserOrRedirect } from "../auth";
-import {
-  OrkestroEvent,
-  OrkestroTrack,
-  OrkestroTrackEvent,
-} from "../interfaces";
+import { axiosInstance as axios } from "../auth";
+import { OrkestroEvent, OrkestroTrackEvent } from "../interfaces";
+import AddTracksToEvent from "../components/AddTracksToEvent";
+import { parseId } from "../util";
+import SubmitOrBack from "../components/SubmitOrBack";
 
+// Editing chosen page
 export default function EventEditPage() {
   const navigate = useNavigate();
   const { t } = useLanguage();
   const { eventId } = useParams<{ eventId: string }>();
 
   const [event, setEvent] = useState<Partial<OrkestroEvent>>({});
-  const [loading, setLoading] = useState(false);
   const [removing, setRemoving] = useState(false);
   const [error, setError] = useState<boolean>(false);
   const [tracks, setTracks] = useState<OrkestroTrackEvent[]>([]);
-  const [tracksToAdd, setTracksToAdd] = useState<OrkestroTrack[]>([]);
-  const [availableTracks, setAvailableTracks] = useState<OrkestroTrack[]>([]);
+  const [showAddTracksModal, setShowAddTracksModal] = useState(false);
 
-  const parsedEventId = eventId ? parseInt(eventId, 10) : undefined;
+  const parsedEventId = parseId(eventId);
+  const parsedGroupId = event.group ? parseId(event.group) : undefined;
 
-  if (!parsedEventId) {
-    throw new Error("Event ID is required and must be a valid number");
-  }
-
-  useEffect(() => {
-    fetchUserOrRedirect(navigate);
-    reloadPage();
-  }, []);
-
-  const reloadPage = () => {
-    fetchEvent();
-    fetchTracks();
-  };
-
+  // Fetch selected event
   const fetchEvent = useCallback(async () => {
-    setLoading(true);
     await axios
       .get<OrkestroEvent>(`/api/events/${eventId}/`)
       .then((response) => {
@@ -49,11 +34,10 @@ export default function EventEditPage() {
         setEvent(parsedEvent);
       })
       .catch((error) => console.error("Error fetching event:", error));
-    setLoading(false);
   }, [eventId]);
 
   // Fetch tracks that are in event
-  const fetchTracks = async () => {
+  const fetchTracks = useCallback(async () => {
     await axios
       .get(`/api/event-tracks/by_event/?event_id=${eventId}`)
       .then((response) => {
@@ -62,67 +46,32 @@ export default function EventEditPage() {
       .catch((error) =>
         console.error("Fetching tracks for event failed: ", error)
       );
-  };
+  }, [eventId]);
 
-  // Fetch availableTracks (tracks that can be added)
-  const fetchAvailableTracks = async () => {
-    await axios
-      .get(`/api/tracks/leftover/?event_id=${eventId}&group_id=${event.group}`)
-      .then((response) => {
-        console.log(response);
-        setAvailableTracks(response.data);
-      })
-      .catch((error) => console.error(error));
-  };
-
-  const [showAddTracksModal, setShowAddTracksModal] = useState(false);
+  // Reload event details and track list
+  const reloadPage = useCallback(() => {
+    fetchEvent();
+    fetchTracks();
+  }, [fetchEvent, fetchTracks]);
 
   useEffect(() => {
-    if (showAddTracksModal) fetchAvailableTracks();
-  }, [showAddTracksModal]);
+    reloadPage();
+  }, [reloadPage]);
 
-  const toggleTrackSelection = (track: OrkestroTrack) => {
-    // Adding or removing availableTracks from toAdd list
-    if (tracksToAdd.some((t) => t.track_id === track.track_id)) {
-      setTracksToAdd((prev) =>
-        prev.filter((t) => t.track_id !== track.track_id)
-      );
-    } else {
-      setTracksToAdd((prev) => [...prev, track]);
+  // Remove track from event
+  const submitRemoveTrack = async (event_track_id: number) => {
+    setRemoving(true);
+    try {
+      await axios.delete(`/api/event-tracks/${event_track_id}/`);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setRemoving(false);
+      fetchTracks();
     }
   };
 
-  const handleAddTracks = async () => {
-    // API call to add event_track object for every track in tracksToAdd
-
-    const promises = tracksToAdd.map((track) =>
-      axios.post("/api/event-tracks/", {
-        event: eventId,
-        track: track.track_id,
-      })
-    );
-
-    Promise.all(promises)
-      .then((responses) => {
-        console.log("All tracks added successfully:", responses);
-        setTracksToAdd([]);
-        setShowAddTracksModal(false);
-        reloadPage();
-      })
-      .catch((error) => {
-        console.error("Error adding some tracks:", error);
-      });
-  };
-
-  const handleRemoveTrack = async (event_track_id: number) => {
-    setRemoving(true);
-    await axios.delete(`/api/event-tracks/${event_track_id}/`);
-    setRemoving(false);
-    fetchTracks();
-  };
-
-  // Editing event fields
-
+  // Edit event date field
   const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target; // The value from the "date" input (YYYY-MM-DD)
     setEvent((prevData) => {
@@ -133,6 +82,7 @@ export default function EventEditPage() {
     });
   };
 
+  // Edit event time field
   const handleTimeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target; // The value from the "time" input (HH:MM)
     setEvent((prevData) => {
@@ -143,6 +93,7 @@ export default function EventEditPage() {
     });
   };
 
+  // Edit event text fields
   const handleTextChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -153,13 +104,13 @@ export default function EventEditPage() {
     }));
   };
 
+  // Submit changing event's details
   const handleSubmit = async () => {
     if (!event.name || !event.description || !event.place || !event.date) {
       setError(true);
       return;
     }
 
-    setLoading(true);
     setError(false);
 
     const encodedEvent = {
@@ -170,23 +121,26 @@ export default function EventEditPage() {
     await axios
       .put(`/api/events/${eventId}/`, encodedEvent)
       .then(() => {
-        console.log("Successfully edited event");
         navigate(-1);
       })
       .catch((error) => console.error("Error adding event:", error));
-    setLoading(false);
   };
 
   return (
     <div className="bg-gray-200 p-6 rounded-lg max-w-4xl mx-auto mt-8">
+      {/* Header */}
       <h1 className="text-2xl font-bold text-center mb-4">
         {t("edit-event.title")}
       </h1>
+
+      {/* Error message */}
       {error && (
         <p className="text-red-500 text-center mb-4">
           {t("new-event.form-error")}
         </p>
       )}
+
+      {/* Edit event details form */}
       <label>
         {t("new-event.name")}
         <input
@@ -245,21 +199,17 @@ export default function EventEditPage() {
           required
         />
       </label>
-      <button
-        onClick={handleSubmit}
-        disabled={loading}
-        className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600"
-      >
-        {t("edit-event.submit")}
-      </button>
-      <button
-        onClick={() => navigate(-1)}
-        className="ml-1 bg-red-500 text-white p-2 rounded-lg hover:bg-red-600"
-      >
-        {t("edit-event.back")}
-      </button>
 
-      {/* Lista utworów */}
+      {/* Buttons */}
+      <SubmitOrBack
+        submitMethod={handleSubmit}
+        textSubmit={t("edit-event.submit")}
+        textSubmiting={t("edit-event.submiting")}
+        onCancel={() => navigate(-1)}
+        textCancel={t("edit-event.back")}
+      />
+
+      {/* Track list */}
       <h2 className="text-xl font-bold mt-4">{t("edit-event.tracks")}</h2>
       <ul className="list-disc pl-5">
         {tracks.length > 0 ? (
@@ -270,8 +220,9 @@ export default function EventEditPage() {
             >
               <span>{event_track.track_details.name}</span>
               <button
-                onClick={() => handleRemoveTrack(event_track.event_track_id)}
+                onClick={() => submitRemoveTrack(event_track.event_track_id)}
                 className="text-red-500 hover:underline"
+                disabled={removing}
               >
                 {t("edit-event.remove-track")}
               </button>
@@ -282,59 +233,24 @@ export default function EventEditPage() {
         )}
       </ul>
 
-      {/* Przycisk do dodawania utworów */}
-      <button
-        onClick={() => setShowAddTracksModal(true)}
-        className="mt-4 bg-green-500 text-white p-2 rounded-lg hover:bg-green-600"
-      >
-        {t("edit-event.add-tracks")}
-      </button>
+      {/* Add tracks to event button */}
+      <div className="flex justify-center">
+        <button
+          onClick={() => setShowAddTracksModal(true)}
+          className="mt-4 bg-green-500 text-white p-2 rounded-lg hover:bg-green-600"
+        >
+          {t("edit-event.add-tracks")}
+        </button>
+      </div>
 
-      {/* Okienko (modal) do dodawania utworów */}
-      {showAddTracksModal && (
-        <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white p-6 rounded-lg max-w-lg w-full">
-            <h2 className="text-lg font-bold mb-4">
-              {t("edit-event.select-tracks")}
-            </h2>
-            <ul className="list-disc pl-5">
-              {availableTracks.length > 0 ? (
-                availableTracks.map((track) => (
-                  <li key={track.track_id} className="flex items-center mb-2">
-                    <input
-                      type="checkbox"
-                      id={`track-${track.track_id}`}
-                      checked={tracksToAdd.some(
-                        (t) => t.track_id === track.track_id
-                      )}
-                      onChange={() => toggleTrackSelection(track)}
-                      className="mr-2"
-                    />
-                    <label htmlFor={`track-${track.track_id}`}>
-                      {track.name} - {track.artist}
-                    </label>
-                  </li>
-                ))
-              ) : (
-                <p>{t("edit-event.no-tracks")}</p>
-              )}
-            </ul>
-            <div className="flex justify-end space-x-2 mt-4">
-              <button
-                onClick={() => setShowAddTracksModal(false)}
-                className="bg-gray-500 text-white p-2 rounded-lg hover:bg-gray-600"
-              >
-                {t("edit-event.cancel")}
-              </button>
-              <button
-                onClick={handleAddTracks}
-                className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600"
-              >
-                {t("edit-event.confirm")}
-              </button>
-            </div>
-          </div>
-        </div>
+      {/* Add tracks to event window */}
+      {showAddTracksModal && parsedEventId && parsedGroupId && (
+        <AddTracksToEvent
+          eventId={parsedEventId}
+          groupId={parsedGroupId}
+          reloadPage={reloadPage}
+          setShowAddTracksModal={setShowAddTracksModal}
+        />
       )}
     </div>
   );

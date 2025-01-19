@@ -13,15 +13,18 @@ import TopBarIcon from "./TopBarIcon";
 import { removeTokens, fetchUserOrRedirect } from "../auth";
 import { OrkestroUser } from "../interfaces";
 
+// Top bar over the page
 export default function TopBar() {
   const navigate = useNavigate();
   const { t } = useLanguage();
   const [user, setUser] = useState<OrkestroUser>();
 
+  // Fetch authenticated user
   useEffect(() => {
     fetchUserOrRedirect(navigate, setUser);
   }, [navigate]);
 
+  // Handle logging out
   const handleLogOut = () => {
     removeTokens();
     navigate("/login/");

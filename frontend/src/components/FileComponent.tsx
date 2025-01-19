@@ -5,21 +5,45 @@ import {
   OrkestroInstrument,
 } from "../interfaces";
 import { useLanguage } from "../LanguageContext";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 interface FileComponentProps {
   file: OrkestroFile;
 }
 
+// Element of file list in track details
 export default function FileComponent({ file }: FileComponentProps) {
   const { t, currentLanguage } = useLanguage();
+  const instrumentName = currentLanguage === "en" ? "name_en" : "name_pl";
 
   const [instruments, setInstruments] = useState<OrkestroInstrument[]>([]);
 
+  // Fetching instruments assigned to file
+  const fetchInstruments = useCallback(async () => {
+    await axios
+      .get<OrkestroFileInstrument[]>(
+        `/api/file-instruments/by_file/?file_id=${file.file_id}`
+      )
+      .then((response) => {
+        const instruments = response.data.map(
+          (fileInstrument) => fileInstrument.instrument_details
+        );
+        setInstruments(instruments);
+      })
+      .catch((err) => {
+        if (axios.isAxiosError(err) && err.response?.status === 404) {
+          setInstruments([]);
+        } else {
+          console.error(err);
+        }
+      });
+  }, [file.file_id]);
+
   useEffect(() => {
     fetchInstruments();
-  }, [file]);
+  }, [fetchInstruments]);
 
+  // Download a file
   const handleDownload = async (file_id: number, file_name: string) => {
     try {
       const response = await axios.get(`/api/files/${file_id}/download/`, {
@@ -41,28 +65,6 @@ export default function FileComponent({ file }: FileComponentProps) {
       console.error("Error downloading the file:", error);
     }
   };
-
-  const fetchInstruments = async () => {
-    await axios
-      .get<OrkestroFileInstrument[]>(
-        `/api/file-instruments/by_file/?file_id=${file.file_id}`
-      )
-      .then((response) => {
-        const instruments = response.data.map(
-          (fileInstrument) => fileInstrument.instrument_details
-        );
-        setInstruments(instruments);
-      })
-      .catch((err) => {
-        if (axios.isAxiosError(err) && err.response?.status === 404) {
-          setInstruments([]);
-        } else {
-          console.error(err);
-        }
-      });
-  };
-
-  const instrumentName = currentLanguage === "en" ? "name_en" : "name_pl";
 
   return (
     <li

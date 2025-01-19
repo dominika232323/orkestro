@@ -11,12 +11,14 @@ import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
+// Groups section in main page
 export default function Groups() {
   const { t } = useLanguage();
   const navigate = useNavigate();
   const [user, setUser] = useState<OrkestroUser>();
   const [groups, setGroups] = useState<OrkestroGroupWithSubgroups[]>([]);
 
+  // Fetch groups
   useEffect(() => {
     async function fetchGroups() {
       await axios
@@ -56,24 +58,30 @@ export default function Groups() {
     fetchGroups();
   }, []);
 
+  // Fetch user
   useEffect(() => {
     fetchUserOrRedirect(navigate, setUser);
-  }, []);
+  }, [navigate]);
 
   return (
     <div className="bg-gray-200 p-6 rounded-lg max-w-4xl mx-auto mt-8">
+      {/* Header */}
       <h1 className="text-2xl font-bold text-center mb-4">
         {t("groups.title")}
       </h1>
 
-      <button
-        className="w-full py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 font-medium flex items-center justify-center my-3"
-        onClick={() => navigate(`/new-group/${user?.user_id}`)}
-      >
-        <FontAwesomeIcon icon={faPlus} className="mr-2" />
-        {t("groups.add-group")}
-      </button>
+      {/* Add group button */}
+      {user?.user_id && (
+        <button
+          className="w-full py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 font-medium flex items-center justify-center my-3"
+          onClick={() => navigate(`/new-group/${user.user_id}`)}
+        >
+          <FontAwesomeIcon icon={faPlus} className="mr-2" />
+          {t("groups.add-group")}
+        </button>
+      )}
 
+      {/* List of groups */}
       {groups && groups.length > 0 ? (
         <ul className="bg-white p-4 pt-2 rounded-lg space-y-6">
           {groups.map((group) => (

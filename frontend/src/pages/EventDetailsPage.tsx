@@ -1,13 +1,8 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useLanguage } from "../LanguageContext";
-import {
-  OrkestroEvent,
-  OrkestroRole,
-  OrkestroTrackEvent,
-  OrkestroUser,
-} from "../interfaces";
+import { OrkestroEvent, OrkestroRole, OrkestroTrackEvent } from "../interfaces";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCalendarAlt,
@@ -15,8 +10,10 @@ import {
   faLocationDot,
   faPen,
 } from "@fortawesome/free-solid-svg-icons";
-import { fetchUserOrRedirect } from "../auth";
+import { getRole } from "../util";
+import SubmitOrBack from "../components/SubmitOrBack";
 
+// Showing details of selected event
 export default function EventDetailsPage() {
   const { t, currentLanguage } = useLanguage();
   const navigate = useNavigate();
@@ -24,43 +21,31 @@ export default function EventDetailsPage() {
 
   const [event, setEvent] = useState<OrkestroEvent | null>(null);
   const [tracks, setTracks] = useState<OrkestroTrackEvent[]>([]);
-
-  const [user, setUser] = useState<OrkestroUser>();
   const [role, setRole] = useState<OrkestroRole>();
 
-  useEffect(() => {
-    fetchEvent();
-    fetchTracks();
-  }, []);
+  // Fetch user's role
+  const fetchRole = useCallback(() => {
+    event && getRole(setRole, event.group);
+  }, [event]);
 
   useEffect(() => {
-    fetchUserOrRedirect(navigate, setUser);
-  }, [navigate]);
-
-  useEffect(() => {
-    const fetchRole = async () => {
-      await axios
-        .get<OrkestroRole>(`/api/groups/${event?.group}/role/`)
-        .then((response) => setRole(response.data))
-        .catch((error) => console.error("Error fetching role:", error));
-    };
-
     fetchRole();
-  }, [event?.group]);
+  }, [fetchRole]);
 
-  const fetchEvent = async () => {
+  // Fetch selected event
+  const fetchEvent = useCallback(async () => {
     await axios
       .get<OrkestroEvent>(`/api/events/${eventId}/`)
       .then((response) => {
-        console.log(response.data);
         let event = response.data;
         event.date = new Date(response.data.date);
         setEvent(event);
       })
       .catch((error) => console.error("Error fetching event:", error));
-  };
+  }, [eventId]);
 
-  const fetchTracks = async () => {
+  // Fetch tracks for selected event
+  const fetchTracks = useCallback(async () => {
     await axios
       .get(`/api/event-tracks/by_event/?event_id=${eventId}`)
       .then((response) => {
@@ -69,26 +54,20 @@ export default function EventDetailsPage() {
       .catch((error) =>
         console.error("Fetching tracks for event failed: ", error)
       );
-  };
+  }, [eventId]);
+
+  useEffect(() => {
+    fetchEvent();
+    fetchTracks();
+  }, [fetchEvent, fetchTracks]);
 
   if (event) {
     return (
       <div className="bg-gray-200 p-6 rounded-lg max-w-4xl mx-auto mt-8">
+        {/* Header */}
         <h1 className="text-2xl font-bold text-center mb-6">{event.name}</h1>
-        {role?.is_manager && (
-          <button
-            className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600"
-            onClick={() => navigate(`/edit-event/${event.event_id}`)}
-          >
-            {t("event-details.edit")}
-          </button>
-        )}
-        <button
-          onClick={() => navigate(-1)}
-          className="ml-1 bg-red-500 text-white p-2 rounded-lg hover:bg-red-600"
-        >
-          {t("event-details.back")}
-        </button>
+
+        {/* Event details */}
         <p>
           <strong>
             <FontAwesomeIcon
@@ -131,7 +110,19 @@ export default function EventDetailsPage() {
           {event.description}
         </p>
 
-        {/* Lista utworów */}
+        {/* Buttons */}
+        {role && (
+          <SubmitOrBack
+            submitMethod={() => navigate(`/edit-event/${event.event_id}`)}
+            textSubmit={t("event-details.edit")}
+            textSubmiting=""
+            showSubmit={role.is_manager}
+            onCancel={() => navigate(-1)}
+            textCancel={t("event-details.back")}
+          />
+        )}
+
+        {/* Tracks list */}
         <h2 className="text-xl font-bold mt-4">{t("edit-event.tracks")}</h2>
         <ul className="list-disc pl-5">
           {tracks.length > 0 ? (

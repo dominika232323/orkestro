@@ -134,7 +134,8 @@
     "no-user": "No user with such email",
     "error": "User not invitable",
     "success": "User invited",
-    "invite": "Invite"
+    "invite": "Invite",
+    "inviting": "Inviting..."
   },
   "delete-group": {
     "title": "Delete group",
@@ -142,6 +143,7 @@
     "description": "To delete group, type it's name:",
     "placeholder": "Group's name...",
     "delete": "Delete",
+    "deleting": "Deleting...",
     "name-mismatch": "Group name does not match",
     "fail": "Group deletion failed"
   },
@@ -156,17 +158,21 @@
     "date": "Date",
     "time": "Time",
     "submit": "Create",
+    "submitting": "Creating...",
     "form-error": "All fields are mandatory",
-    "back": "Go back"
+    "back": "Go back",
+    "attendies": "Attendiees"
   },
   "edit-event": {
     "title": "Edit event",
     "submit": "Edit",
+    "submiting": "Editing...",
     "remove-track": "Remove Track",
     "add-tracks": "Add Tracks",
     "select-tracks": "Select tracks to add",
     "cancel": "Cancel",
     "confirm": "Confirm",
+    "confirming": "Confirming...",
     "submit-tracks": "Add tracks",
     "tracks": "Tracks",
     "no-tracks": "No tracks",
@@ -178,6 +184,7 @@
     "message-title": "Title",
     "content": "Content",
     "submit": "Send",
+    "submiting": "Sending...",
     "back": "Go back"
   },
   "event-details": {
@@ -206,6 +213,7 @@
     "files": "Files",
     "no-files": "No files",
     "submit": "Edit",
+    "submiting": "Editing...",
     "remove-file": "Remove file",
     "add-file": "Add files",
     "back": "Go back"
@@ -215,13 +223,16 @@
     "form-error": "All fields are required",
     "name": "Name",
     "artist": "Artist",
-    "back": "Go back"
+    "back": "Go back",
+    "submit": "Create",
+    "submiting": "Creating..."
   },
   "new-group": {
     "title": "New group",
     "name": "Name",
     "description": "Description",
     "submit": "Create",
+    "submitting": "Creating...",
     "back": "Back",
     "missing": "All fields are required"
   },
@@ -242,6 +253,29 @@
     "title": "Leave group",
     "description": "Are you sure you want to leave the group?",
     "leave": "Leave",
-    "back": "Go back"
+    "leaving": "Leaving",
+    "back": "Go back",
+    "last-manager": "You can't leave as you are last manager.",
+    "error": "Leaving group failed"
+  },
+  "delete-event": {
+    "title": "Delete event",
+    "description": "To delete event, type it's name:",
+    "error": "Deleting event failed",
+    "placeholder": "Event name...",
+    "delete": "Delete",
+    "deleting": "Deleting...",
+    "back": "Return",
+    "name-mismatch": "Event name does not match"
+  },
+  "delete-track": {
+    "title": "Delete track",
+    "description": "To delete track, type it's name:",
+    "error": "Deleting track failed",
+    "placeholder": "Track name...",
+    "delete": "Delete",
+    "deleting": "Deleting...",
+    "back": "Return",
+    "name-mismatch": "Track name does not match"
   }
 }

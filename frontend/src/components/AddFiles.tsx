@@ -1,12 +1,9 @@
 import axios, { AxiosResponse } from "axios";
-import { useEffect, useState } from "react";
-import {
-  OrkestroFile,
-  OrkestroInstrument,
-  OrkestroMember,
-} from "../interfaces";
+import { useCallback, useEffect, useState } from "react";
+import { OrkestroInstrument, OrkestroMember } from "../interfaces";
 import Select, { MultiValue } from "react-select";
 import { useLanguage } from "../LanguageContext";
+import SubmitOrBack from "./SubmitOrBack";
 
 interface AddFilesProps {
   parsedTrackId: number;
@@ -15,6 +12,7 @@ interface AddFilesProps {
   fetchFiles: () => void;
 }
 
+// Window to add new file to track
 export default function AddFiles({
   parsedTrackId,
   parsedGroupId,
@@ -22,24 +20,17 @@ export default function AddFiles({
   fetchFiles,
 }: AddFilesProps) {
   const { t, currentLanguage } = useLanguage();
+  const instrumentName = currentLanguage === "en" ? "name_en" : "name_pl";
 
   const [file, setFile] = useState<File | null>(null);
   const [selectedUserIds, setSelectedUserIds] = useState<number[]>([]);
   const [members, setMembers] = useState<OrkestroMember[]>([]);
   const [error, setError] = useState("");
-  const [sending, setSending] = useState(false);
   const [instruments, setInstruments] = useState<OrkestroInstrument[]>([]);
   const [selectedInstruments, setSelectedInstruments] = useState<number[]>([]);
 
-  useEffect(() => {
-    fetchMembers();
-  }, [parsedGroupId]);
-
-  useEffect(() => {
-    fetchInstruments();
-  }, []);
-
-  const fetchMembers = async () => {
+  // Fetch group members to choose from when assigning to a file
+  const fetchMembers = useCallback(async () => {
     await axios
       .get(`/api/members/by_group/?group_id=${parsedGroupId}`)
       .then((response) => {
@@ -51,11 +42,15 @@ export default function AddFiles({
         );
       })
       .catch((error) => console.error("Error fetching members:", error));
-  };
+  }, [parsedGroupId]);
 
+  useEffect(() => {
+    fetchMembers();
+  }, [fetchMembers]);
+
+  // Submit new file
   const handleSubmit = async () => {
     setError("");
-    setSending(true);
     if (!(file && parsedTrackId)) {
       setError(t("add-file.no-file"));
       return;
@@ -75,7 +70,6 @@ export default function AddFiles({
           },
         });
       } catch (err) {
-        setSending(false);
         if (axios.isAxiosError(err)) {
           if (err.response?.status === 413) {
             setError(t("add-file.file-too-big"));
@@ -117,28 +111,34 @@ export default function AddFiles({
       fetchFiles();
     } catch (error) {
       console.error("Error in file upload or user assignment:", error);
-    } finally {
-      setSending(false);
     }
   };
 
+  // Handle file input field change
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       setFile(e.target.files[0]);
     }
   };
 
+  // Handle selecting user to assign to file
   const handleUserSelectionChange = (
     selectedOptions: MultiValue<{ label: string; value: number }>
   ) => {
     setSelectedUserIds(selectedOptions.map((option) => option.value));
   };
 
+  // Handle selecting instrument to assign to file
   const handleInstrumentSelectionChange = (
     selectedOptions: MultiValue<{ label: string; value: number }>
   ) => {
     setSelectedInstruments(selectedOptions.map((option) => option.value));
   };
+
+  // Fetch list of instruments to choose from when assigning to file
+  useEffect(() => {
+    fetchInstruments();
+  }, []);
 
   const fetchInstruments = async () => {
     await axios
@@ -147,18 +147,23 @@ export default function AddFiles({
       .catch((error) => console.error("Error fetching instruments:", error));
   };
 
-  const instrumentName = currentLanguage === "en" ? "name_en" : "name_pl";
-
   return (
     <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center">
       <div className="bg-white p-6 rounded-lg max-w-lg w-full">
+        {/* Header */}
         <h2 className="text-lg font-bold mb-4">{t("add-file.title")}</h2>
+
+        {/* Display error message */}
         {error && <p className="text-red-500 text-center mb-4">{error}</p>}
+
+        {/* File input field */}
         <input
           type="file"
           onChange={handleFileChange}
           className="block w-full text-sm text-gray-500 border border-gray-300 rounded-lg p-2 cursor-pointer hover:border-blue-500 focus:outline-none focus:ring focus:ring-blue-300"
         />
+
+        {/* Assign users */}
         <label className="block mb-4">
           {t("add-file.users-allowed")}
           <Select
@@ -181,6 +186,8 @@ export default function AddFiles({
             classNamePrefix="react-select"
           />
         </label>
+
+        {/* Assign instruments */}
         <label className="block mb-4">
           {t("add-file.instruments")}
           <Select
@@ -203,20 +210,15 @@ export default function AddFiles({
             classNamePrefix="react-select"
           />
         </label>
-        <button
-          onClick={handleSubmit}
-          className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600"
-          disabled={sending}
-        >
-          {sending ? t("add-file.sending") : t("add-file.send")}
-        </button>
-        <button
-          onClick={() => setShowAddFiles(false)}
-          className="ml-1 bg-red-500 text-white p-2 rounded-lg hover:bg-red-600"
-          disabled={sending}
-        >
-          {t("add-file.back")}
-        </button>
+
+        {/* Buttons */}
+        <SubmitOrBack
+          submitMethod={handleSubmit}
+          textSubmit={t("add-file.send")}
+          textSubmiting={t("add-file.sending")}
+          onCancel={() => setShowAddFiles(false)}
+          textCancel={t("add-file.back")}
+        />
       </div>
     </div>
   );

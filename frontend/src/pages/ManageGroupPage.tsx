@@ -1,5 +1,5 @@
 import { useLanguage } from "../LanguageContext";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import MemberComponent from "../components/MemberComponent";
 import { useNavigate, useParams } from "react-router-dom";
 import Pagination from "../components/Pagination";
@@ -10,13 +10,15 @@ import {
   OrkestroUser,
   Paged,
 } from "../interfaces";
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import { axiosInstance, fetchUserOrRedirect } from "../auth";
+import { fetchUserOrRedirect } from "../auth";
 import NewInvitation from "../components/NewInvitation";
 import DeleteGroup from "../components/DeleteGroup";
 import LeaveGroup from "../components/LeaveGroup";
+import { getRole, parseId } from "../util";
+import SearchBar from "../components/SearchBar";
 
 export default function ManageGroupPage() {
   const { t } = useLanguage();
@@ -38,13 +40,25 @@ export default function ManageGroupPage() {
   const [user, setUser] = useState<OrkestroUser>();
   const [role, setRole] = useState<OrkestroRole>();
 
-  const parsedGroupId = groupId ? parseInt(groupId, 10) : undefined;
-
-  if (!parsedGroupId) throw new Error("Group ID invalid");
-
+  const parsedGroupId = parseId(groupId);
   const isManager = role ? role.is_manager : false;
 
-  const fetchMembers = async () => {
+  // Group fetching
+
+  const fetchGroup = useCallback(async () => {
+    await axios
+      .get<OrkestroGroup>(`/api/groups/${groupId}`)
+      .then((response) => setGroup(response.data))
+      .catch((error) => console.error(error));
+  }, [groupId]);
+
+  useEffect(() => {
+    fetchGroup();
+  }, [fetchGroup]);
+
+  // Member fetching
+
+  const fetchMembers = useCallback(async () => {
     setLoading(true);
 
     try {
@@ -60,52 +74,33 @@ export default function ManageGroupPage() {
     } finally {
       setLoading(false);
     }
-  };
-
-  const fetchGroup = async () => {
-    await axios
-      .get<OrkestroGroup>(`/api/groups/${groupId}`)
-      .then((response) => setGroup(response.data));
-  };
-
-  useEffect(() => {
-    fetchGroup();
-  }, []);
+  }, [groupId, currentPage, roleFilter, searchQuery]);
 
   useEffect(() => {
     fetchMembers();
-  }, [currentPage, roleFilter]);
+  }, [fetchMembers]);
+
+  // Fetching role
+
+  const fetchRole = useCallback(() => getRole(setRole, groupId), [groupId]);
+
+  useEffect(() => {
+    fetchRole();
+  }, [fetchRole]);
+
+  // Fetch authenticated user
 
   useEffect(() => {
     fetchUserOrRedirect(navigate, setUser);
-  }, []);
+  }, [navigate]);
 
-  useEffect(() => {
-    const fetchRole = async () => {
-      await axios
-        .get<OrkestroRole>(`/api/groups/${groupId}/role/`)
-        .then((response) => setRole(response.data))
-        .catch((error) => console.error("Error fetching role:", error));
-    };
-
-    fetchRole();
-  }, []);
-
+  // Toggling member search filter
   const toggleRoleFilter = (newFilter: string) => {
     setRoleFilter((prevFilter) => (prevFilter === newFilter ? "" : newFilter));
     setCurrentPage(1);
   };
 
-  const handleSearch = () => {
-    setCurrentPage(1);
-  };
-
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === "Enter") {
-      handleSearch();
-    }
-  };
-
+  // Submit editing group's data
   const submitTextChanges = async () => {
     setLoading(true);
     setError("");
@@ -127,6 +122,7 @@ export default function ManageGroupPage() {
     }
   };
 
+  // Change form's text fields
   const handleTextChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -142,48 +138,55 @@ export default function ManageGroupPage() {
   if (group) {
     return (
       <div className="bg-gray-200 p-6 rounded-lg max-w-4xl mx-auto mt-8">
+        {/* Header */}
         <h1 className="text-2xl font-bold text-center mb-6">
           {t("manage-group.title")}
         </h1>
 
+        {/* Group's info */}
         <h2 className="text-xl font-bold text-center mb-6">
           {t("manage-group.manage-basics")}
         </h2>
 
+        {/* Error and success messages */}
         {error && <p className="text-red-500 text-center mb-4">{error}</p>}
         {success && (
           <p className="text-green-500 text-center mb-4">{success}</p>
         )}
 
-        <label>
-          {t("new-event.name")}
-          <input
-            type="text"
-            name="name"
-            value={group.name}
-            onChange={handleTextChange}
-            className="block w-full p-2 border mb-2"
-            disabled={!isManager}
-            required
-          />
-        </label>
+        {/* Groups info form */}
+        <form>
+          <label>
+            {t("new-event.name")}
+            <input
+              type="text"
+              name="name"
+              value={group.name}
+              onChange={handleTextChange}
+              className="block w-full p-2 border mb-2"
+              disabled={!isManager}
+              required
+            />
+          </label>
 
-        <label>
-          {t("new-event.description")}
-          <input
-            type="text"
-            name="description"
-            value={group.description}
-            onChange={handleTextChange}
-            className="block w-full p-2 border mb-2"
-            disabled={!isManager}
-            required
-          />
-        </label>
+          <label>
+            {t("new-event.description")}
+            <input
+              type="text"
+              name="description"
+              value={group.description}
+              onChange={handleTextChange}
+              className="block w-full p-2 border mb-2"
+              disabled={!isManager}
+              required
+            />
+          </label>
+        </form>
 
         <div className="flex justify-between">
           {isManager && (
             <>
+              {/* Submit group info edit */}
               <button
                 onClick={submitTextChanges}
                 className="px-4 py-2 bg-blue-500 text-white font-medium rounded-lg hover:bg-blue-600 transition-colors"
@@ -191,6 +194,8 @@ export default function ManageGroupPage() {
               >
                 {t("manage-group.edit")}
               </button>
+
+              {/* New subgroup */}
               <button
                 onClick={() =>
                   navigate(`/new-group/${user?.user_id}/${group.group_id}`)
@@ -201,6 +206,8 @@ export default function ManageGroupPage() {
                 <FontAwesomeIcon className="mr-1" icon={faPlus} />
                 {t("manage-group.new-subgroup")}
               </button>
+
+              {/* Delete group */}
               <button
                 onClick={() => setShowDeleteGroup(true)}
                 className="ml-1 bg-red-500 text-white p-2 rounded-lg hover:bg-red-600"
@@ -211,6 +218,7 @@ export default function ManageGroupPage() {
             </>
           )}
 
+          {/* Leave group */}
           <button
             onClick={() => setShowLeaveGroup(true)}
             className="ml-1 bg-red-500 text-white p-2 rounded-lg hover:bg-red-600"
@@ -220,29 +228,19 @@ export default function ManageGroupPage() {
           </button>
         </div>
 
+        {/* Member management */}
         <h2 className="text-xl font-bold text-center mb-6">
           {t("manage-group.manage-members")}
         </h2>
 
         {/* Search Bar */}
-        <div className="mb-6 flex items-center justify-between space-x-4">
-          <div className="flex flex-1 items-center bg-white rounded-lg shadow-md overflow-hidden">
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder={t("manage-group.search-placeholder")}
-              className="flex-1 px-4 py-2 text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-            <button
-              onClick={fetchMembers}
-              className="px-4 py-2 bg-blue-500 text-white font-medium hover:bg-blue-600 transition-colors"
-            >
-              {t("manage-group.search")}
-            </button>
-          </div>
-        </div>
+        <SearchBar
+          query={searchQuery}
+          onQueryChange={(value) => setSearchQuery(value)}
+          onSearch={fetchMembers}
+          placeholder={t("manage-group.search-placeholder")}
+          setCurrentPage={setCurrentPage}
+        />
 
         {/* Invite member */}
         {isManager && (
@@ -301,6 +299,7 @@ export default function ManageGroupPage() {
           onPageChange={(page) => setCurrentPage(page)}
         />
 
+        {/* Invite window */}
         {showInvite && (
           <NewInvitation
             parsedGroupId={parsedGroupId}
@@ -308,6 +307,7 @@ export default function ManageGroupPage() {
           />
         )}
 
+        {/* Delete group window */}
         {showDeleteGroup && (
           <DeleteGroup
             groupName={group.name}
@@ -316,11 +316,9 @@ export default function ManageGroupPage() {
           />
         )}
 
+        {/* Leave group window */}
         {showLeaveGroup && groupId && user && (
-          <LeaveGroup
-            groupId={groupId}
-            setShowLeaveGroup={setShowLeaveGroup}
-          />
+          <LeaveGroup groupId={groupId} setShowLeaveGroup={setShowLeaveGroup} />
         )}
       </div>
     );

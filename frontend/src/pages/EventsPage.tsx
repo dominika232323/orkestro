@@ -14,7 +14,11 @@ import { useNavigate, useParams } from "react-router-dom";
 import { axiosInstance as axios, fetchUserOrRedirect } from "../auth";
 import { OrkestroRole, OrkestroEvent, Paged } from "../interfaces";
 import Pagination from "../components/Pagination";
+import { getRole } from "../util";
+import SearchBar from "../components/SearchBar";
+import DeleteEvent from "../components/DeleteEvent";
 
+// Page to show users events
 export default function EventsPage() {
   const { t, currentLanguage } = useLanguage();
   const navigate = useNavigate();
@@ -25,22 +29,24 @@ export default function EventsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [showDeleteEvent, setShowDeleteEvent] = useState(false);
 
+  const [selectedEventId, setSelectedEventId] = useState<number>(0);
+  const [selectedEventName, setSelectedEventName] = useState("");
+
+  // Fetch user
   useEffect(() => {
     fetchUserOrRedirect(navigate);
   }, [navigate]);
 
+  // Fetch user role
+  const fetchRole = useCallback(() => getRole(setRole, groupId), [groupId]);
+
   useEffect(() => {
-    const fetchRole = async () => {
-      await axios
-        .get<OrkestroRole>(`/api/groups/${groupId}/role/`)
-        .then((response) => setRole(response.data))
-        .catch((error) => console.error("Error fetching role:", error));
-    };
-
     fetchRole();
-  }, [groupId]);
+  }, [fetchRole]);
 
+  // Fetch users events
   const fetchEvents = useCallback(async () => {
     setLoading(true);
 
@@ -66,23 +72,6 @@ export default function EventsPage() {
     fetchEvents();
   }, [fetchEvents]);
 
-  const handleSearch = () => {
-    setCurrentPage(1);
-    fetchEvents();
-  };
-
-  const handleDelete = async (event_id: number) => {
-    await axios
-      .delete(`/api/events/${event_id}/`)
-      .then(() => {
-        console.log(`Successfully deleted event ${event_id}`);
-        fetchEvents();
-      })
-      .catch((error) =>
-        console.error(`Error deleting event ${event_id}:`, error)
-      );
-  };
-
   return (
     <div className="bg-gray-200 p-6 rounded-lg max-w-4xl mx-auto mt-8">
       <h1 className="text-2xl font-bold text-center mb-6">
@@ -101,21 +90,13 @@ export default function EventsPage() {
       )}
 
       {/* Search Bar */}
-      <div className="flex items-center mb-6 bg-white shadow-md rounded-lg overflow-hidden">
-        <input
-          type="text"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder={t("events.placeholder")}
-          className="flex-1 px-4 py-2 text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-        <button
-          onClick={handleSearch}
-          className="px-4 py-2 bg-blue-500 text-white font-medium hover:bg-blue-600 transition-colors"
-        >
-          {t("events.search")}
-        </button>
-      </div>
+      <SearchBar
+        query={searchQuery}
+        onQueryChange={(value) => setSearchQuery(value)}
+        onSearch={fetchEvents}
+        placeholder={t("events.placeholder")}
+        setCurrentPage={setCurrentPage}
+      />
 
       {/* Event List */}
       {events.length > 0 ? (
@@ -184,7 +165,11 @@ export default function EventsPage() {
                     </button>
                     <button
                       className="px-3 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 font-medium transition-colors"
-                      onClick={() => handleDelete(event.event_id)}
+                      onClick={() => {
+                        setSelectedEventId(event.event_id);
+                        setSelectedEventName(event.name);
+                        setShowDeleteEvent(true);
+                      }}
                     >
                       <FontAwesomeIcon className="mr-2" icon={faTimes} />
                       <span>{t("events.delete")}</span>
@@ -207,6 +192,16 @@ export default function EventsPage() {
         totalPages={totalPages}
         onPageChange={(page) => setCurrentPage(page)}
       />
+
+      {/* Delete event window */}
+      {showDeleteEvent && selectedEventId && (
+        <DeleteEvent
+          eventId={selectedEventId}
+          eventName={selectedEventName}
+          fetchEvents={fetchEvents}
+          setShowDeleteEvent={setShowDeleteEvent}
+        />
+      )}
     </div>
   );
 }

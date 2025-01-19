@@ -4,19 +4,20 @@ import {
   OrkestroFile,
   Paged,
   OrkestroTrack,
-  OrkestroEvent,
   OrkestroTrackEvent,
-  OrkestroUser,
   OrkestroRole,
 } from "../interfaces";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import axios from "axios";
 import Pagination from "../components/Pagination";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import FileComponent from "../components/FileComponent";
-import { fetchUserOrRedirect } from "../auth";
+import { getRole } from "../util";
+import SearchBar from "../components/SearchBar";
+import SubmitOrBack from "../components/SubmitOrBack";
 
+// Showing details of selected track
 export default function TrackDetailsPage() {
   const { t, currentLanguage } = useLanguage();
   const navigate = useNavigate();
@@ -26,56 +27,39 @@ export default function TrackDetailsPage() {
   const [files, setFiles] = useState<OrkestroFile[]>([]);
   const [events, setEvents] = useState<OrkestroTrackEvent[]>([]);
   const [role, setRole] = useState<OrkestroRole>();
-
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-
   const [searchQuery, setSearchQuery] = useState("");
 
-  useEffect(() => {
-    const fetchRole = async () => {
-      await axios
-        .get<OrkestroRole>(`/api/groups/${groupId}/role/`)
-        .then((response) => setRole(response.data))
-        .catch((error) => console.error("Error fetching role:", error));
-    };
+  // Fetch role
+  const fetchRole = useCallback(() => getRole(setRole, groupId), [groupId]);
 
-    fetchRole();
-  }, [groupId]);
-
-  useEffect(() => {
-    fetchTrack();
-    fetchEvents();
-  }, []);
-
-  useEffect(() => {
-    fetchFiles();
-  }, [currentPage]);
-
-  const fetchTrack = async () => {
+  // Fetch selected track
+  const fetchTrack = useCallback(async () => {
     await axios
       .get<OrkestroTrack>(`/api/tracks/${trackId}/`)
       .then((response) => {
         setTrack(response.data);
       })
       .catch((error) => console.error("Error fetching track:", error));
-  };
+  }, [trackId]);
 
-  const fetchFiles = async () => {
+  // Fetch track's files
+  const fetchFiles = useCallback(async () => {
     await axios
       .get<Paged<OrkestroFile>>(
         `/api/files/search/?track_id=${trackId}&page=${currentPage}${searchQuery ? `&search=${searchQuery}&search_language=${currentLanguage}` : ""}`
       )
       .then((response) => {
-        console.log(response);
         setFiles(response.data.items);
         setCurrentPage(response.data.page_number);
         setTotalPages(response.data.total_pages);
       })
       .catch((error) => console.error("Error fetching files: ", error));
-  };
+  }, [trackId, currentPage, searchQuery, currentLanguage]);
 
-  const fetchEvents = async () => {
+  // Fetch track's events
+  const fetchEvents = useCallback(async () => {
     await axios
       .get<OrkestroTrackEvent[]>(
         `/api/event-tracks/by_track/?track_id=${trackId}`
@@ -84,38 +68,28 @@ export default function TrackDetailsPage() {
         setEvents(response.data);
       })
       .catch((error) => console.error(error));
-  };
+  }, [trackId]);
 
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === "Enter") {
-      handleSearch();
-    }
-  };
+  useEffect(() => {
+    fetchRole();
+  }, [fetchRole]);
 
-  const handleSearch = async () => {
+  useEffect(() => {
+    fetchTrack();
+    fetchEvents();
+  }, [fetchTrack, fetchEvents]);
+
+  useEffect(() => {
     fetchFiles();
-    setCurrentPage(1);
-  };
+  }, [fetchFiles]);
 
   if (track) {
     return (
       <div className="bg-gray-200 p-6 rounded-lg max-w-4xl mx-auto mt-8">
+        {/* Header */}
         <h1 className="text-2xl font-bold text-center mb-6">{track.name}</h1>
-        {role?.is_manager && (
-          <button
-            className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600"
-            onClick={() => navigate(`/edit-track/${track.track_id}/${groupId}`)}
-          >
-            {t("track-details.edit")}
-          </button>
-        )}
 
-        <button
-          onClick={() => navigate(-1)}
-          className="ml-1 bg-red-500 text-white p-2 rounded-lg hover:bg-red-600"
-        >
-          {t("track-details.back")}
-        </button>
+        {/* Track info */}
         <p>
           <strong>
             <FontAwesomeIcon icon={faUser} className="mr-2 text-gray-500" />
@@ -124,27 +98,33 @@ export default function TrackDetailsPage() {
           {track.artist}
         </p>
 
+        {/* Buttons */}
+        {role && (
+          <SubmitOrBack
+            submitMethod={() =>
+              navigate(`/edit-track/${track.track_id}/${groupId}`)
+            }
+            textSubmit={t("track-details.edit")}
+            textSubmiting=""
+            showSubmit={role.is_manager}
+            onCancel={() => navigate(-1)}
+            textCancel={t("track-details.back")}
+          />
+        )}
+
         {/* Lista plików */}
         <h2 className="text-xl font-bold mt-4">{t("track-details.files")}</h2>
 
         {/* Search Bar */}
-        <div className="flex items-center mb-6 bg-white shadow-md rounded-lg overflow-hidden">
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder={t("track-details.placeholder")}
-            className="flex-1 px-4 py-2 text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-          <button
-            onClick={handleSearch}
-            className="px-6 py-2 bg-blue-500 text-white font-medium hover:bg-blue-600 transition-colors"
-          >
-            {t("tracks.search")}
-          </button>
-        </div>
+        <SearchBar
+          query={searchQuery}
+          onQueryChange={(value) => setSearchQuery(value)}
+          onSearch={fetchFiles}
+          placeholder={t("track-details.placeholder")}
+          setCurrentPage={setCurrentPage}
+        />
 
+        {/* List of files */}
         <ul className="list-disc pl-5">
           {files.length > 0 ? (
             files.map((file) => <FileComponent file={file} />)
@@ -160,7 +140,7 @@ export default function TrackDetailsPage() {
           onPageChange={(page) => setCurrentPage(page)}
         />
 
-        {/* Lista wydarzeń */}
+        {/* Event list */}
         <h2 className="text-xl font-bold mt-4">
           {t("track-details.upcoming-events")}
         </h2>
