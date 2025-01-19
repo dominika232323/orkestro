@@ -79,15 +79,6 @@ export default function TrackDetailsPage() {
     fetchFiles();
   }, [fetchFiles]);
 
-  const handleSearch = async () => {
-    fetchFiles();
-    setCurrentPage(1);
-  };
-
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [searchQuery]);
-
   if (track) {
     return (
       <div className="bg-gray-200 p-6 rounded-lg max-w-4xl mx-auto mt-8">
@@ -122,8 +113,9 @@ export default function TrackDetailsPage() {
         <SearchBar
           query={searchQuery}
           onQueryChange={(value) => setSearchQuery(value)}
-          onSearch={handleSearch}
+          onSearch={fetchFiles}
           placeholder={t("track-details.placeholder")}
+          setCurrentPage={setCurrentPage}
         />
 
         <ul className="list-disc pl-5">

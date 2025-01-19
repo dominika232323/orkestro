@@ -63,15 +63,6 @@ export default function EventsPage() {
     fetchEvents();
   }, [fetchEvents]);
 
-  const handleSearch = () => {
-    setCurrentPage(1);
-    fetchEvents();
-  };
-
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [searchQuery]);
-
   const handleDelete = async (event_id: number) => {
     await axios
       .delete(`/api/events/${event_id}/`)
@@ -104,8 +95,9 @@ export default function EventsPage() {
       <SearchBar
         query={searchQuery}
         onQueryChange={(value) => setSearchQuery(value)}
-        onSearch={handleSearch}
+        onSearch={fetchEvents}
         placeholder={t("events.placeholder")}
+        setCurrentPage={setCurrentPage}
       />
 
       {/* Event List */}

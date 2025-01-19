@@ -57,15 +57,6 @@ export default function TracksPage() {
     fetchRole();
   }, [fetchRole]);
 
-  const handleSearch = () => {
-    setCurrentPage(1);
-    fetchTracks();
-  };
-
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [searchQuery]);
-
   const handleDelete = async (track_id: number) => {
     await axios.delete(`/api/tracks/${track_id}/`);
     fetchTracks();
@@ -92,8 +83,9 @@ export default function TracksPage() {
       <SearchBar
         query={searchQuery}
         onQueryChange={(value) => setSearchQuery(value)}
-        onSearch={handleSearch}
+        onSearch={fetchTracks}
         placeholder={t("tracks.placeholder")}
+        setCurrentPage={setCurrentPage}
       />
 
       {/* Track List or Loading/Empty State */}

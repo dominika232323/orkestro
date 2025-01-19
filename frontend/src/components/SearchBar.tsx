@@ -1,8 +1,11 @@
+import { useEffect, useState } from "react";
+
 interface SearchBarProps {
   query: string;
   onQueryChange: (query: string) => void;
   onSearch: () => void;
-  placeholder: string; // Optional placeholder text
+  placeholder: string;
+  setCurrentPage: (page: number) => void;
 }
 
 export default function SearchBar({
@@ -10,29 +13,33 @@ export default function SearchBar({
   onQueryChange,
   onSearch,
   placeholder,
+  setCurrentPage,
 }: SearchBarProps) {
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === "Enter") {
-      onSearch();
-    }
+  const [localQuery, setLocalQuery] = useState(query);
+
+  useEffect(() => {
+    setLocalQuery(query);
+  }, [query]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [localQuery, setCurrentPage]);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setLocalQuery(value);
+    onQueryChange(value); // Inform the parent component of the query change
   };
 
   return (
     <div className="flex items-center mb-6 bg-white shadow-md rounded-lg overflow-hidden">
       <input
         type="text"
-        value={query}
-        onChange={(e) => onQueryChange(e.target.value)}
-        onKeyDown={handleKeyDown}
+        value={localQuery}
+        onChange={handleInputChange}
         placeholder={placeholder}
         className="flex-1 px-4 py-2 text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
-      <button
-        onClick={onSearch}
-        className="px-4 py-2 bg-blue-500 text-white font-medium hover:bg-blue-600 transition-colors"
-      >
-        Search
-      </button>
     </div>
   );
 }

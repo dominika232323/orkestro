@@ -42,15 +42,6 @@ export default function MessagesPage() {
     fetchMessages();
   }, [fetchMessages]);
 
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [searchQuery]);
-
-  const handleSearch = () => {
-    setCurrentPage(1);
-    fetchMessages();
-  };
-
   return (
     <div className="bg-gray-200 p-6 rounded-lg max-w-4xl mx-auto mt-8">
       <h1 className="text-2xl font-bold text-center mb-4">
@@ -59,8 +50,9 @@ export default function MessagesPage() {
       <SearchBar
         query={searchQuery}
         onQueryChange={(value) => setSearchQuery(value)}
-        onSearch={handleSearch}
+        onSearch={fetchMessages}
         placeholder={t("messages.placeholder")}
+        setCurrentPage={setCurrentPage}
       />
       {messages.length > 0 ? (
         <ul className="space-y-4">

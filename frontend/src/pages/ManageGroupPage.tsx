@@ -99,15 +99,6 @@ export default function ManageGroupPage() {
     setCurrentPage(1);
   };
 
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [searchQuery])
-
-  const handleSearch = () => {
-    setCurrentPage(1);
-    fetchMembers();
-  };
-
   const submitTextChanges = async () => {
     setLoading(true);
     setError("");
@@ -230,8 +221,9 @@ export default function ManageGroupPage() {
         <SearchBar
           query={searchQuery}
           onQueryChange={(value) => setSearchQuery(value)}
-          onSearch={handleSearch}
+          onSearch={fetchMembers}
           placeholder={t("manage-group.search-placeholder")}
+          setCurrentPage={setCurrentPage}
         />
 
         {/* Invite member */}
