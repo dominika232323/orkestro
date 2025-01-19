@@ -70,9 +70,9 @@ class EventTrackViewSetTestCase(TestCase):
         self.assertEqual(response.data["error"], "Data validation failed")
 
     def test_by_track(self):
-        event_1 = Event.objects.create(group=self.group, name="e 1", description="d 1", date=timezone.now(), place="p 1")
-        event_2 = Event.objects.create(group=self.group, name="e 2", description="d 2", date=timezone.now(), place="p 2")
-        event_3 = Event.objects.create(group=self.group, name="e 3", description="d 3", date=timezone.now(), place="p 3")
+        event_1 = Event.objects.create(group=self.group, name="e 1", description="d 1", date="2025-10-21T13:00:00Z", place="p 1")
+        event_2 = Event.objects.create(group=self.group, name="e 2", description="d 2", date="2025-10-21T13:00:00Z", place="p 2")
+        event_3 = Event.objects.create(group=self.group, name="e 3", description="d 3", date="2025-10-21T13:00:00Z", place="p 3")
 
         track_1 = Track.objects.create(group=self.group, name="t 1", artist="a 1")
         track_2 = Track.objects.create(group=self.group, name="t 2", artist="a 2")
