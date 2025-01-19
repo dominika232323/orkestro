@@ -204,259 +204,202 @@ class FileViewSetTestCase(TestCase):
                 self.assertEqual(response.data["total_pages"], case["expected_total_pages"])
 
     def test_search_by_instrument(self):
-        ins_1_id_list = str(self.instrument_1.instrument_id)
-        ins_2_id_list = str(self.instrument_2.instrument_id)
-        ins_1_2_id_list = ins_1_id_list + " " + ins_2_id_list
+        ins_1_name_list = self.instrument_1.name_en
+        ins_2_name_list = self.instrument_2.name_en
 
         test_cases = [
             {
                 "user": self.staff,
                 "track": self.track_1,
-                "instrument_ids": ins_1_id_list,
+                "instrument_names": ins_1_name_list,
                 "expected_count": 0,
+                "expected_items": [],
                 "expected_page_number": 1,
                 "expected_total_pages": 1
             },
             {
                 "user": self.manager,
                 "track": self.track_1,
-                "instrument_ids": ins_1_id_list,
+                "instrument_names": ins_1_name_list,
                 "expected_count": 0,
+                "expected_items": [],
                 "expected_page_number": 1,
                 "expected_total_pages": 1
             },
             {
                 "user": self.moderator,
                 "track": self.track_1,
-                "instrument_ids": ins_1_id_list,
+                "instrument_names": ins_1_name_list,
                 "expected_count": 2,
+                "expected_items": [self.file_1.file_id, self.file_2.file_id],
                 "expected_page_number": 1,
                 "expected_total_pages": 1
             },
             {
                 "user": self.musician,
                 "track": self.track_1,
-                "instrument_ids": ins_1_id_list,
+                "instrument_names": ins_1_name_list,
                 "expected_count": 1,
+                "expected_items": [self.file_1.file_id],
                 "expected_page_number": 1,
                 "expected_total_pages": 1
             },
             {
                 "user": self.outsider,
                 "track": self.track_1,
-                "instrument_ids": ins_1_id_list,
+                "instrument_names": ins_1_name_list,
                 "expected_count": 0,
+                "expected_items": [],
                 "expected_page_number": 1,
                 "expected_total_pages": 1
             },
             {
                 "user": self.staff,
                 "track": self.track_2,
-                "instrument_ids": ins_1_id_list,
+                "instrument_names": ins_1_name_list,
                 "expected_count": 0,
+                "expected_items": [],
                 "expected_page_number": 1,
                 "expected_total_pages": 1
             },
             {
                 "user": self.manager,
                 "track": self.track_2,
-                "instrument_ids": ins_1_id_list,
+                "instrument_names": ins_1_name_list,
                 "expected_count": 0,
+                "expected_items": [],
                 "expected_page_number": 1,
                 "expected_total_pages": 1
             },
             {
                 "user": self.moderator,
                 "track": self.track_2,
-                "instrument_ids": ins_1_id_list,
+                "instrument_names": ins_1_name_list,
                 "expected_count": 0,
+                "expected_items": [],
                 "expected_page_number": 1,
                 "expected_total_pages": 1
             },
             {
                 "user": self.musician,
                 "track": self.track_2,
-                "instrument_ids": ins_1_id_list,
+                "instrument_names": ins_1_name_list,
                 "expected_count": 0,
+                "expected_items": [],
                 "expected_page_number": 1,
                 "expected_total_pages": 1
             },
             {
                 "user": self.outsider,
                 "track": self.track_2,
-                "instrument_ids": ins_1_id_list,
+                "instrument_names": ins_1_name_list,
                 "expected_count": 0,
+                "expected_items": [],
                 "expected_page_number": 1,
                 "expected_total_pages": 1
             },
             {
                 "user": self.staff,
                 "track": self.track_1,
-                "instrument_ids": ins_2_id_list,
+                "instrument_names": ins_2_name_list,
                 "expected_count": 0,
+                "expected_items": [],
                 "expected_page_number": 1,
                 "expected_total_pages": 1
             },
             {
                 "user": self.manager,
                 "track": self.track_1,
-                "instrument_ids": ins_2_id_list,
+                "instrument_names": ins_2_name_list,
                 "expected_count": 0,
+                "expected_items": [],
                 "expected_page_number": 1,
                 "expected_total_pages": 1
             },
             {
                 "user": self.moderator,
                 "track": self.track_1,
-                "instrument_ids": ins_2_id_list,
+                "instrument_names": ins_2_name_list,
                 "expected_count": 0,
+                "expected_items": [],
                 "expected_page_number": 1,
                 "expected_total_pages": 1
             },
             {
                 "user": self.musician,
                 "track": self.track_1,
-                "instrument_ids": ins_2_id_list,
+                "instrument_names": ins_2_name_list,
                 "expected_count": 0,
+                "expected_items": [],
                 "expected_page_number": 1,
                 "expected_total_pages": 1
             },
             {
                 "user": self.outsider,
                 "track": self.track_1,
-                "instrument_ids": ins_2_id_list,
+                "instrument_names": ins_2_name_list,
                 "expected_count": 0,
+                "expected_items": [],
                 "expected_page_number": 1,
                 "expected_total_pages": 1
             },
             {
                 "user": self.staff,
                 "track": self.track_2,
-                "instrument_ids": ins_2_id_list,
+                "instrument_names": ins_2_name_list,
                 "expected_count": 0,
+                "expected_items": [],
                 "expected_page_number": 1,
                 "expected_total_pages": 1
             },
             {
                 "user": self.manager,
                 "track": self.track_2,
-                "instrument_ids": ins_2_id_list,
+                "instrument_names": ins_2_name_list,
                 "expected_count": 0,
+                "expected_items": [],
                 "expected_page_number": 1,
                 "expected_total_pages": 1
             },
             {
                 "user": self.moderator,
                 "track": self.track_2,
-                "instrument_ids": ins_2_id_list,
+                "instrument_names": ins_2_name_list,
                 "expected_count": 0,
+                "expected_items": [],
                 "expected_page_number": 1,
                 "expected_total_pages": 1
             },
             {
                 "user": self.musician,
                 "track": self.track_2,
-                "instrument_ids": ins_2_id_list,
+                "instrument_names": ins_2_name_list,
                 "expected_count": 2,
+                "expected_items": [self.file_3.file_id, self.file_4.file_id],
                 "expected_page_number": 1,
                 "expected_total_pages": 1
             },
             {
                 "user": self.outsider,
                 "track": self.track_2,
-                "instrument_ids": ins_2_id_list,
+                "instrument_names": ins_2_name_list,
                 "expected_count": 0,
-                "expected_page_number": 1,
-                "expected_total_pages": 1
-            },
-            {
-                "user": self.staff,
-                "track": self.track_1,
-                "instrument_ids": ins_1_2_id_list,
-                "expected_count": 0,
-                "expected_page_number": 1,
-                "expected_total_pages": 1
-            },
-            {
-                "user": self.manager,
-                "track": self.track_1,
-                "instrument_ids": ins_1_2_id_list,
-                "expected_count": 0,
-                "expected_page_number": 1,
-                "expected_total_pages": 1
-            },
-            {
-                "user": self.moderator,
-                "track": self.track_1,
-                "instrument_ids": ins_1_2_id_list,
-                "expected_count": 2,
-                "expected_page_number": 1,
-                "expected_total_pages": 1
-            },
-            {
-                "user": self.musician,
-                "track": self.track_1,
-                "instrument_ids": ins_1_2_id_list,
-                "expected_count": 1,
-                "expected_page_number": 1,
-                "expected_total_pages": 1
-            },
-            {
-                "user": self.outsider,
-                "track": self.track_1,
-                "instrument_ids": ins_1_2_id_list,
-                "expected_count": 0,
-                "expected_page_number": 1,
-                "expected_total_pages": 1
-            },
-            {
-                "user": self.staff,
-                "track": self.track_2,
-                "instrument_ids": ins_1_2_id_list,
-                "expected_count": 0,
-                "expected_page_number": 1,
-                "expected_total_pages": 1
-            },
-            {
-                "user": self.manager,
-                "track": self.track_2,
-                "instrument_ids": ins_1_2_id_list,
-                "expected_count": 0,
-                "expected_page_number": 1,
-                "expected_total_pages": 1
-            },
-            {
-                "user": self.moderator,
-                "track": self.track_2,
-                "instrument_ids": ins_1_2_id_list,
-                "expected_count": 0,
-                "expected_page_number": 1,
-                "expected_total_pages": 1
-            },
-            {
-                "user": self.musician,
-                "track": self.track_2,
-                "instrument_ids": ins_1_2_id_list,
-                "expected_count": 2,
-                "expected_page_number": 1,
-                "expected_total_pages": 1
-            },
-            {
-                "user": self.outsider,
-                "track": self.track_2,
-                "instrument_ids": ins_1_2_id_list,
-                "expected_count": 0,
+                "expected_items": [],
                 "expected_page_number": 1,
                 "expected_total_pages": 1
             },
         ]
 
         for case in test_cases:
-            with self.subTest(user=case["user"], track=case["track"], instrument_ids=case["instrument_ids"]):
+            with self.subTest(user=case["user"], track=case["track"], instrument_names=case["instrument_names"]):
                 # Simulate a search by instrument
                 request = self.factory.get(
                     "/api/files/search/",
-                    {"track_id": case["track"].track_id, "instrument_id": case["instrument_ids"], "name": "File"},
+                    {
+                        "track_id": case["track"].track_id,
+                        "search": case["instrument_names"],
+                        "search_language": "en"
+                    },
                 )
                 force_authenticate(request, user=case["user"])
 
@@ -467,6 +410,8 @@ class FileViewSetTestCase(TestCase):
                 # Assertions
                 self.assertEqual(response.status_code, 200)
                 self.assertEqual(len(response.data["items"]), case["expected_count"])
+                response_items = [item["file_id"] for item in response.data["items"]]
+                self.assertEqual(response_items, case["expected_items"])
                 self.assertEqual(response.data["page_number"], case["expected_page_number"])
                 self.assertEqual(response.data["total_pages"], case["expected_total_pages"])
 
