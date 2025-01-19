@@ -16,8 +16,6 @@ from api.models import User, Member, EventAttendee, FileAllowedMember
 from api.serializers import UserSerializer
 from api.permissions.user_permissions import UserPermission
 
-from .google_views import sync_calendar_events
-
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
@@ -65,13 +63,3 @@ class UserViewSet(viewsets.ModelViewSet):
         users = [m.user for m in members]
         serialized_users = UserSerializer(users, many=True)
         return Response(serialized_users.data)
-
-    @action(detail=False, methods=["get"])
-    def gcalendar(self, request):
-        # temporary endpoint for easier development
-
-        user: User = request.user
-
-        data = sync_calendar_events(user)
-
-        return Response(data)
