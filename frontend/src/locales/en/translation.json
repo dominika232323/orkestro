@@ -184,6 +184,7 @@
     "message-title": "Title",
     "content": "Content",
     "submit": "Send",
+    "submiting": "Sending...",
     "back": "Go back"
   },
   "event-details": {
@@ -228,6 +229,7 @@
     "name": "Name",
     "description": "Description",
     "submit": "Create",
+    "submitting": "Creating...",
     "back": "Back",
     "missing": "All fields are required"
   },

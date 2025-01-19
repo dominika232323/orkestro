@@ -6,7 +6,9 @@ import { useNavigate } from "react-router-dom";
 import { axiosInstance as axios, fetchUserOrRedirect } from "../auth";
 import Select, { MultiValue } from "react-select";
 import { parseId } from "../util";
+import SubmitOrBack from "../components/SubmitOrBack";
 
+// Create new message
 export default function MessageNewPage() {
   const navigate = useNavigate();
   const { t } = useLanguage();
@@ -18,11 +20,11 @@ export default function MessageNewPage() {
   });
   const [members, setMembers] = useState<OrkestroMember[]>([]);
   const [selectedUserIds, setSelectedUserIds] = useState<number[]>([]);
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<boolean>(false);
 
   const parsedGroupId = parseId(groupId);
 
+  // Fetch user
   useEffect(() => {
     fetchUserOrRedirect(navigate, setUser);
   }, [navigate]);
@@ -36,6 +38,7 @@ export default function MessageNewPage() {
     });
   }, [parsedGroupId, user]);
 
+  // Fetch members to send message to
   useEffect(() => {
     const fetchMembers = async () => {
       await axios
@@ -54,6 +57,7 @@ export default function MessageNewPage() {
     fetchMembers();
   }, [parsedGroupId]);
 
+  // Change message text fields
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -64,12 +68,14 @@ export default function MessageNewPage() {
     }));
   };
 
+  // Handle selecting users as recipients
   const handleUserSelectionChange = (
     selectedOptions: MultiValue<{ label: string; value: number }>
   ) => {
     setSelectedUserIds(selectedOptions.map((option) => option.value));
   };
 
+  // Send message
   const handleSubmit = async () => {
     if (!message.title || !message.content) {
       setError(true);
@@ -88,83 +94,78 @@ export default function MessageNewPage() {
       .post(url, encodedMessage)
       .then(() => navigate("/messages/"))
       .catch((error) => console.error("Error sending message:", error));
-
-    setLoading(false);
   };
 
   return (
     <div className="bg-gray-200 p-6 rounded-lg max-w-4xl mx-auto mt-8">
+      {/* Header */}
       <h1 className="text-2xl font-bold text-center mb-4">
         {t("new-message.title")}
       </h1>
 
+      {/* Error message */}
       {error && (
         <p className="text-red-500 text-center mb-4">
           {t("new-event.form-error")}
         </p>
       )}
 
-      <label className="block mb-4">
-        {t("new-message.recipients")}
-        <Select
-          options={members.map((member) => ({
-            label: `${member.user_details.name} ${member.user_details.surname}`,
-            value: member.user_details.user_id,
-          }))}
-          value={selectedUserIds.map((id) => ({
-            label:
-              members.find((member) => member.user_details.user_id === id)
-                ?.user_details.name +
-                " " +
+      {/* Message form */}
+      <div>
+        <label className="block mb-4">
+          {t("new-message.recipients")}
+          <Select
+            options={members.map((member) => ({
+              label: `${member.user_details.name} ${member.user_details.surname}`,
+              value: member.user_details.user_id,
+            }))}
+            value={selectedUserIds.map((id) => ({
+              label:
                 members.find((member) => member.user_details.user_id === id)
-                  ?.user_details.surname || "",
-            value: id,
-          }))}
-          onChange={handleUserSelectionChange}
-          isMulti
-          className="react-select-container"
-          classNamePrefix="react-select"
-        />
-      </label>
+                  ?.user_details.name +
+                  " " +
+                  members.find((member) => member.user_details.user_id === id)
+                    ?.user_details.surname || "",
+              value: id,
+            }))}
+            onChange={handleUserSelectionChange}
+            isMulti
+            className="react-select-container"
+            classNamePrefix="react-select"
+          />
+        </label>
+        <label>
+          {t("new-message.message-title")}
+          <input
+            type="text"
+            name="title"
+            value={message.title}
+            onChange={handleChange}
+            className="block w-full p-2 border mb-2"
+            required
+          />
+        </label>
+        <label>
+          {t("new-message.content")}
+          <textarea
+            name="content"
+            value={message.content}
+            onChange={handleChange}
+            className="block w-full p-2 border mb-2"
+            rows={4}
+            required
+          />
+        </label>
+      </div>
 
-      <label>
-        {t("new-message.message-title")}
-        <input
-          type="text"
-          name="title"
-          value={message.title}
-          onChange={handleChange}
-          className="block w-full p-2 border mb-2"
-          required
-        />
-      </label>
-
-      <label>
-        {t("new-message.content")}
-        <textarea
-          name="content"
-          value={message.content}
-          onChange={handleChange}
-          className="block w-full p-2 border mb-2"
-          rows={4}
-          required
-        />
-      </label>
-
-      <button
-        onClick={handleSubmit}
-        disabled={loading}
-        className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600"
-      >
-        {t("new-message.submit")}
-      </button>
-
-      <button
-        onClick={() => navigate(-1)}
-        className="ml-1 bg-red-500 text-white p-2 rounded-lg hover:bg-red-600"
-      >
-        {t("new-message.back")}
-      </button>
+      {/* Buttons */}
+      <SubmitOrBack
+        submitMethod={handleSubmit}
+        textSubmit={t("new-message.submit")}
+        textSubmiting={t("new-message.submiting")}
+        onCancel={() => navigate(-1)}
+        textCancel={t("new-message.back")}
+      />
     </div>
   );
 }

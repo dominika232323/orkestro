@@ -184,6 +184,7 @@
     "message-title": "Tytuł",
     "content": "Treść",
     "submit": "Wyślij",
+    "submiting": "Wysyłanie...",
     "back": "Powrót"
   },
   "event-details": {
@@ -229,6 +230,7 @@
     "name": "Nazwa",
     "description": "Opis",
     "submit": "Utwórz",
+    "submiting": "Tworzenie...",
     "back": "Powrót",
     "missing": "Wszystkie pola są obowiązkowe"
   },

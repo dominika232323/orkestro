@@ -15,7 +15,9 @@ import { faUser } from "@fortawesome/free-solid-svg-icons";
 import FileComponent from "../components/FileComponent";
 import { getRole } from "../util";
 import SearchBar from "../components/SearchBar";
+import SubmitOrBack from "../components/SubmitOrBack";
 
+// Showing details of selected track
 export default function TrackDetailsPage() {
   const { t, currentLanguage } = useLanguage();
   const navigate = useNavigate();
@@ -25,14 +27,14 @@ export default function TrackDetailsPage() {
   const [files, setFiles] = useState<OrkestroFile[]>([]);
   const [events, setEvents] = useState<OrkestroTrackEvent[]>([]);
   const [role, setRole] = useState<OrkestroRole>();
-
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-
   const [searchQuery, setSearchQuery] = useState("");
 
+  // Fetch role
   const fetchRole = useCallback(() => getRole(setRole, groupId), [groupId]);
 
+  // Fetch selected track
   const fetchTrack = useCallback(async () => {
     await axios
       .get<OrkestroTrack>(`/api/tracks/${trackId}/`)
@@ -42,6 +44,7 @@ export default function TrackDetailsPage() {
       .catch((error) => console.error("Error fetching track:", error));
   }, [trackId]);
 
+  // Fetch track's files
   const fetchFiles = useCallback(async () => {
     await axios
       .get<Paged<OrkestroFile>>(
@@ -55,6 +58,7 @@ export default function TrackDetailsPage() {
       .catch((error) => console.error("Error fetching files: ", error));
   }, [trackId, currentPage, searchQuery, currentLanguage]);
 
+  // Fetch track's events
   const fetchEvents = useCallback(async () => {
     await axios
       .get<OrkestroTrackEvent[]>(
@@ -82,22 +86,10 @@ export default function TrackDetailsPage() {
   if (track) {
     return (
       <div className="bg-gray-200 p-6 rounded-lg max-w-4xl mx-auto mt-8">
+        {/* Header */}
         <h1 className="text-2xl font-bold text-center mb-6">{track.name}</h1>
-        {role?.is_manager && (
-          <button
-            className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600"
-            onClick={() => navigate(`/edit-track/${track.track_id}/${groupId}`)}
-          >
-            {t("track-details.edit")}
-          </button>
-        )}
 
-        <button
-          onClick={() => navigate(-1)}
-          className="ml-1 bg-red-500 text-white p-2 rounded-lg hover:bg-red-600"
-        >
-          {t("track-details.back")}
-        </button>
+        {/* Track info */}
         <p>
           <strong>
             <FontAwesomeIcon icon={faUser} className="mr-2 text-gray-500" />
@@ -105,6 +97,20 @@ export default function TrackDetailsPage() {
           </strong>{" "}
           {track.artist}
         </p>
+
+        {/* Buttons */}
+        {role && (
+          <SubmitOrBack
+            submitMethod={() =>
+              navigate(`/edit-track/${track.track_id}/${groupId}`)
+            }
+            textSubmit={t("track-details.edit")}
+            textSubmiting=""
+            showSubmit={role.is_manager}
+            onCancel={() => navigate(-1)}
+            textCancel={t("track-details.back")}
+          />
+        )}
 
         {/* Lista plików */}
         <h2 className="text-xl font-bold mt-4">{t("track-details.files")}</h2>
@@ -118,6 +124,7 @@ export default function TrackDetailsPage() {
           setCurrentPage={setCurrentPage}
         />
 
+        {/* List of files */}
         <ul className="list-disc pl-5">
           {files.length > 0 ? (
             files.map((file) => <FileComponent file={file} />)
@@ -133,7 +140,7 @@ export default function TrackDetailsPage() {
           onPageChange={(page) => setCurrentPage(page)}
         />
 
-        {/* Lista wydarzeń */}
+        {/* Event list */}
         <h2 className="text-xl font-bold mt-4">
           {t("track-details.upcoming-events")}
         </h2>

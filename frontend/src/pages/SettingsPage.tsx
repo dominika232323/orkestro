@@ -15,6 +15,7 @@ import {
   OrkestroUserInstrument,
 } from "../interfaces";
 
+// Settings page
 export default function SettingsPage() {
   const navigate = useNavigate();
   const { t, currentLanguage } = useLanguage();
@@ -25,6 +26,7 @@ export default function SettingsPage() {
   >([]);
   const [newInstrument, setNewInstrument] = useState<string>("");
 
+  // Get instruments name in correct language
   const instrumentName = (instrument: OrkestroInstrument, language: string) => {
     if (language === "pl") {
       return instrument.name_pl;
@@ -33,10 +35,12 @@ export default function SettingsPage() {
     }
   };
 
+  // Fetch user
   useEffect(() => {
     fetchUserOrRedirect(navigate, setUser);
   }, [navigate]);
 
+  // Fetch instruments
   useEffect(() => {
     const fetchInstruments = async () => {
       await axios
@@ -62,6 +66,7 @@ export default function SettingsPage() {
     }
   }, [user]);
 
+  // Add new instrument to user
   const handleAddInstrument = async () => {
     if (newInstrument.trim() !== "") {
       await axios
@@ -80,6 +85,7 @@ export default function SettingsPage() {
     }
   };
 
+  // Remove instrument from user
   const handleRemoveInstrument = async (user_instrument_id: number) => {
     await axios
       .delete(`/api/user-instruments/${user_instrument_id}/`)
@@ -101,11 +107,13 @@ export default function SettingsPage() {
 
   return (
     <div className="bg-gray-200 p-6 rounded-lg max-w-4xl mx-auto mt-8">
+      {/* Header */}
       <h1 className="text-2xl font-bold text-center mb-4">
         {t("settings.title")}
       </h1>
 
       <div className="flex items-center gap-8 mb-6">
+        {/* User's profile picture */}
         <div className="h-32 w-32">
           {user && user.profile_picture_url ? (
             <img
@@ -120,6 +128,8 @@ export default function SettingsPage() {
             />
           )}
         </div>
+
+        {/* User's info */}
         <div className="leading-relaxed">
           <p>
             <span className="text-gray-700">{t("settings.name")}: </span>
@@ -153,6 +163,7 @@ export default function SettingsPage() {
         </div>
       </div>
 
+      {/* Instruments */}
       <h2 className="text-lg text-gray-700 mb-1">
         {t("settings.user-instruments")}
       </h2>
@@ -180,6 +191,7 @@ export default function SettingsPage() {
         ))}
       </ul>
 
+      {/* Add instrument */}
       <div className="mb-4">
         <label className="block font-medium text-gray-700">
           {t("settings.add-instrument")}

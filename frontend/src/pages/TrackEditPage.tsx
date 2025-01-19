@@ -8,6 +8,7 @@ import Pagination from "../components/Pagination";
 import AddFiles from "../components/AddFiles";
 import { parseId } from "../util";
 
+// Editing chosen track
 export default function TrackEditPage() {
   const navigate = useNavigate();
   const { t } = useLanguage();
@@ -17,12 +18,12 @@ export default function TrackEditPage() {
   const [files, setFiles] = useState<OrkestroFile[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-
   const [showAddFiles, setShowAddFiles] = useState(false);
 
   const parsedTrackId = parseId(trackId);
   const parsedGroupId = parseId(groupId);
 
+  // Fetch selected track
   const fetchTrack = useCallback(async () => {
     await axios
       .get<OrkestroTrack>(`/api/tracks/${trackId}/`)
@@ -32,6 +33,7 @@ export default function TrackEditPage() {
       .catch((error) => console.error("Error fetching track:", error));
   }, [trackId]);
 
+  // Fetch track's files
   const fetchFiles = useCallback(async () => {
     await axios
       .get<Paged<OrkestroFile>>(
