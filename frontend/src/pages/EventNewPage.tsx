@@ -4,17 +4,19 @@ import { useLanguage } from "../LanguageContext";
 import { axiosInstance as axios, fetchUserOrRedirect } from "../auth";
 import { OrkestroEvent, OrkestroMember } from "../interfaces";
 import Select, { MultiValue } from "react-select";
+import { parseId } from "../util";
+import SubmitOrBack from "../components/SubmitOrBack";
 
+// Creating new event
 export default function EventNewPage() {
   const navigate = useNavigate();
   const { t } = useLanguage();
   const { groupId } = useParams<{ groupId: string }>();
   const [members, setMembers] = useState<OrkestroMember[]>([]);
   const [selectedUserIds, setSelectedUserIds] = useState<number[]>([]);
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<boolean>(false);
 
-  const parsedGroupId = groupId ? parseInt(groupId, 10) : undefined;
+  const parsedGroupId = parseId(groupId);
 
   const [event, setEvent] = useState<Partial<OrkestroEvent>>({
     group: parsedGroupId,
@@ -24,14 +26,12 @@ export default function EventNewPage() {
     place: "",
   });
 
-  if (!parsedGroupId) {
-    throw new Error("Group ID is required and must be a valid number");
-  }
-
+  // Fetch user
   useEffect(() => {
     fetchUserOrRedirect(navigate);
   }, [navigate]);
 
+  // Fetch members to add do event
   useEffect(() => {
     const fetchMembers = async () => {
       await axios
@@ -50,6 +50,7 @@ export default function EventNewPage() {
     fetchMembers();
   }, [parsedGroupId]);
 
+  // Handle events date change
   const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target; // The value from the "date" input (YYYY-MM-DD)
     setEvent((prevData) => {
@@ -60,6 +61,7 @@ export default function EventNewPage() {
     });
   };
 
+  // Handle events time change
   const handleTimeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target; // The value from the "time" input (HH:MM)
     setEvent((prevData) => {
@@ -70,6 +72,7 @@ export default function EventNewPage() {
     });
   };
 
+  // Handle events text fields change
   const handleTextChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -80,19 +83,20 @@ export default function EventNewPage() {
     }));
   };
 
+  // Handle selecting users to assing to event
   const handleUserSelectionChange = (
     selectedOptions: MultiValue<{ label: string; value: number }>
   ) => {
     setSelectedUserIds(selectedOptions.map((option) => option.value));
   };
 
+  // Create new event
   const handleSubmit = async () => {
     if (!event.name || !event.description || !event.place || !event.date) {
       setError(true);
       return;
     }
 
-    setLoading(true);
     setError(false);
 
     const encodedEvent = {
@@ -107,121 +111,114 @@ export default function EventNewPage() {
       .post(url, encodedEvent)
       .then(() => navigate(`/events/${groupId}`))
       .catch((error) => console.error("Error adding event:", error));
-    setLoading(false);
   };
 
   return (
     <div className="bg-gray-200 p-6 rounded-lg max-w-4xl mx-auto mt-8">
+      {/* Header */}
       <h1 className="text-2xl font-bold text-center mb-4">
         {t("new-event.title")}
       </h1>
 
+      {/* Error message */}
       {error && (
         <p className="text-red-500 text-center mb-4">
           {t("new-event.form-error")}
         </p>
       )}
 
-      <label className="block mb-4">
-        {t("new-message.recipients")}
-        <Select
-          options={members.map((member) => ({
-            label: `${member.user_details.name} ${member.user_details.surname}`,
-            value: member.user_details.user_id,
-          }))}
-          value={selectedUserIds.map((id) => ({
-            label:
-              members.find((member) => member.user_details.user_id === id)
-                ?.user_details.name +
-                " " +
+      {/* Form */}
+      <div>
+        <label className="block mb-4">
+          {t("new-event.attendies")}
+          <Select
+            options={members.map((member) => ({
+              label: `${member.user_details.name} ${member.user_details.surname}`,
+              value: member.user_details.user_id,
+            }))}
+            value={selectedUserIds.map((id) => ({
+              label:
                 members.find((member) => member.user_details.user_id === id)
-                  ?.user_details.surname || "",
-            value: id,
-          }))}
-          onChange={handleUserSelectionChange}
-          isMulti
-          className="react-select-container"
-          classNamePrefix="react-select"
-        />
-      </label>
+                  ?.user_details.name +
+                  " " +
+                  members.find((member) => member.user_details.user_id === id)
+                    ?.user_details.surname || "",
+              value: id,
+            }))}
+            onChange={handleUserSelectionChange}
+            isMulti
+            className="react-select-container"
+            classNamePrefix="react-select"
+          />
+        </label>
+        <label>
+          {t("new-event.name")}
+          <input
+            type="text"
+            name="name"
+            value={event.name}
+            onChange={handleTextChange}
+            className="block w-full p-2 border mb-2"
+            required
+          />
+        </label>
+        <label>
+          {t("new-event.description")}
+          <textarea
+            name="description"
+            value={event.description}
+            onChange={handleTextChange}
+            className="block w-full p-2 border mb-2"
+            required
+          />
+        </label>
+        <label>
+          {t("new-event.place")}
+          <input
+            type="text"
+            name="place"
+            value={event.place}
+            onChange={handleTextChange}
+            className="block w-full p-2 border mb-2"
+            required
+          />
+        </label>
+        <label>
+          {t("new-event.date")}
+          <input
+            type="date"
+            name="date"
+            value={event.date?.toISOString().split("T")[0] || ""}
+            onChange={handleDateChange}
+            className="block w-full p-2 border mb-2"
+            required
+          />
+        </label>
+        <label>
+          {t("new-event.time")}
+          <input
+            type="time"
+            name="time"
+            value={
+              event.date
+                ? event.date.toTimeString().split(":").slice(0, 2).join(":")
+                : ""
+            }
+            onChange={handleTimeChange}
+            className="block w-full p-2 border mb-2"
+            required
+          />
+        </label>
+      </div>
 
-      <label>
-        {t("new-event.name")}
-        <input
-          type="text"
-          name="name"
-          value={event.name}
-          onChange={handleTextChange}
-          className="block w-full p-2 border mb-2"
-          required
-        />
-      </label>
-
-      <label>
-        {t("new-event.description")}
-        <textarea
-          name="description"
-          value={event.description}
-          onChange={handleTextChange}
-          className="block w-full p-2 border mb-2"
-          required
-        />
-      </label>
-
-      <label>
-        {t("new-event.place")}
-        <input
-          type="text"
-          name="place"
-          value={event.place}
-          onChange={handleTextChange}
-          className="block w-full p-2 border mb-2"
-          required
-        />
-      </label>
-
-      <label>
-        {t("new-event.date")}
-        <input
-          type="date"
-          name="date"
-          value={event.date?.toISOString().split("T")[0] || ""}
-          onChange={handleDateChange}
-          className="block w-full p-2 border mb-2"
-          required
-        />
-      </label>
-
-      <label>
-        {t("new-event.time")}
-        <input
-          type="time"
-          name="time"
-          value={
-            event.date
-              ? event.date.toTimeString().split(":").slice(0, 2).join(":")
-              : ""
-          }
-          onChange={handleTimeChange}
-          className="block w-full p-2 border mb-2"
-          required
-        />
-      </label>
-
-      <button
-        onClick={handleSubmit}
-        disabled={loading}
-        className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600"
-      >
-        {t("new-event.submit")}
-      </button>
-
-      <button
-        onClick={() => navigate(-1)}
-        className="ml-1 bg-red-500 text-white p-2 rounded-lg hover:bg-red-600"
-      >
-        {t("new-event.back")}
-      </button>
+      {/* Buttons */}
+      <SubmitOrBack
+        submitMethod={handleSubmit}
+        textSubmit={t("new-event.submit")}
+        textSubmiting={t("new-event.submiting")}
+        onCancel={() => navigate(-1)}
+        textCancel={t("new-event.back")}
+      />
     </div>
   );
 }

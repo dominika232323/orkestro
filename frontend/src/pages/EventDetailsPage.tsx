@@ -11,6 +11,7 @@ import {
   faPen,
 } from "@fortawesome/free-solid-svg-icons";
 import { getRole } from "../util";
+import SubmitOrBack from "../components/SubmitOrBack";
 
 // Showing details of selected event
 export default function EventDetailsPage() {
@@ -23,7 +24,9 @@ export default function EventDetailsPage() {
   const [role, setRole] = useState<OrkestroRole>();
 
   // Fetch user's role
-  const fetchRole = useCallback(() => getRole(setRole, event?.group), [event]);
+  const fetchRole = useCallback(() => {
+    event && getRole(setRole, event.group);
+  }, [event]);
 
   useEffect(() => {
     fetchRole();
@@ -41,6 +44,7 @@ export default function EventDetailsPage() {
       .catch((error) => console.error("Error fetching event:", error));
   }, [eventId]);
 
+  // Fetch tracks for selected event
   const fetchTracks = useCallback(async () => {
     await axios
       .get(`/api/event-tracks/by_event/?event_id=${eventId}`)
@@ -60,21 +64,10 @@ export default function EventDetailsPage() {
   if (event) {
     return (
       <div className="bg-gray-200 p-6 rounded-lg max-w-4xl mx-auto mt-8">
+        {/* Header */}
         <h1 className="text-2xl font-bold text-center mb-6">{event.name}</h1>
-        {role?.is_manager && (
-          <button
-            className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600"
-            onClick={() => navigate(`/edit-event/${event.event_id}`)}
-          >
-            {t("event-details.edit")}
-          </button>
-        )}
-        <button
-          onClick={() => navigate(-1)}
-          className="ml-1 bg-red-500 text-white p-2 rounded-lg hover:bg-red-600"
-        >
-          {t("event-details.back")}
-        </button>
+
+        {/* Event details */}
         <p>
           <strong>
             <FontAwesomeIcon
@@ -117,7 +110,19 @@ export default function EventDetailsPage() {
           {event.description}
         </p>
 
-        {/* Lista utworów */}
+        {/* Buttons */}
+        {role && (
+          <SubmitOrBack
+            submitMethod={() => navigate(`/edit-event/${event.event_id}`)}
+            textSubmit={t("event-details.edit")}
+            textSubmiting=""
+            showSubmit={role.is_manager}
+            onCancel={() => navigate(-1)}
+            textCancel={t("event-details.back")}
+          />
+        )}
+
+        {/* Tracks list */}
         <h2 className="text-xl font-bold mt-4">{t("edit-event.tracks")}</h2>
         <ul className="list-disc pl-5">
           {tracks.length > 0 ? (

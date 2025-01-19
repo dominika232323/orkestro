@@ -16,7 +16,9 @@ import { OrkestroRole, OrkestroEvent, Paged } from "../interfaces";
 import Pagination from "../components/Pagination";
 import { getRole } from "../util";
 import SearchBar from "../components/SearchBar";
+import DeleteEvent from "../components/DeleteEvent";
 
+// Page to show users events
 export default function EventsPage() {
   const { t, currentLanguage } = useLanguage();
   const navigate = useNavigate();
@@ -27,17 +29,24 @@ export default function EventsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [showDeleteEvent, setShowDeleteEvent] = useState(false);
 
+  const [selectedEventId, setSelectedEventId] = useState<number>(0);
+  const [selectedEventName, setSelectedEventName] = useState("");
+
+  // Fetch user
   useEffect(() => {
     fetchUserOrRedirect(navigate);
   }, [navigate]);
 
+  // Fetch user role
   const fetchRole = useCallback(() => getRole(setRole, groupId), [groupId]);
 
   useEffect(() => {
     fetchRole();
   }, [fetchRole]);
 
+  // Fetch users events
   const fetchEvents = useCallback(async () => {
     setLoading(true);
 
@@ -62,17 +71,6 @@ export default function EventsPage() {
   useEffect(() => {
     fetchEvents();
   }, [fetchEvents]);
-
-  const handleDelete = async (event_id: number) => {
-    await axios
-      .delete(`/api/events/${event_id}/`)
-      .then(() => {
-        fetchEvents();
-      })
-      .catch((error) =>
-        console.error(`Error deleting event ${event_id}:`, error)
-      );
-  };
 
   return (
     <div className="bg-gray-200 p-6 rounded-lg max-w-4xl mx-auto mt-8">
@@ -167,7 +165,11 @@ export default function EventsPage() {
                     </button>
                     <button
                       className="px-3 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 font-medium transition-colors"
-                      onClick={() => handleDelete(event.event_id)}
+                      onClick={() => {
+                        setSelectedEventId(event.event_id);
+                        setSelectedEventName(event.name);
+                        setShowDeleteEvent(true);
+                      }}
                     >
                       <FontAwesomeIcon className="mr-2" icon={faTimes} />
                       <span>{t("events.delete")}</span>
@@ -190,6 +192,16 @@ export default function EventsPage() {
         totalPages={totalPages}
         onPageChange={(page) => setCurrentPage(page)}
       />
+
+      {/* Delete event window */}
+      {showDeleteEvent && selectedEventId && (
+        <DeleteEvent
+          eventId={selectedEventId}
+          eventName={selectedEventName}
+          fetchEvents={fetchEvents}
+          setShowDeleteEvent={setShowDeleteEvent}
+        />
+      )}
     </div>
   );
 }

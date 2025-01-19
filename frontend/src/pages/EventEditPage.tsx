@@ -5,23 +5,25 @@ import { axiosInstance as axios } from "../auth";
 import { OrkestroEvent, OrkestroTrackEvent } from "../interfaces";
 import AddTracksToEvent from "../components/AddTracksToEvent";
 import { parseId } from "../util";
+import SubmitOrBack from "../components/SubmitOrBack";
 
+// Editing chosen page
 export default function EventEditPage() {
   const navigate = useNavigate();
   const { t } = useLanguage();
   const { eventId } = useParams<{ eventId: string }>();
 
   const [event, setEvent] = useState<Partial<OrkestroEvent>>({});
-  const [loading, setLoading] = useState(false);
   const [removing, setRemoving] = useState(false);
   const [error, setError] = useState<boolean>(false);
   const [tracks, setTracks] = useState<OrkestroTrackEvent[]>([]);
+  const [showAddTracksModal, setShowAddTracksModal] = useState(false);
 
   const parsedEventId = parseId(eventId);
   const parsedGroupId = event.group ? parseId(event.group) : undefined;
 
+  // Fetch selected event
   const fetchEvent = useCallback(async () => {
-    setLoading(true);
     await axios
       .get<OrkestroEvent>(`/api/events/${eventId}/`)
       .then((response) => {
@@ -32,7 +34,6 @@ export default function EventEditPage() {
         setEvent(parsedEvent);
       })
       .catch((error) => console.error("Error fetching event:", error));
-    setLoading(false);
   }, [eventId]);
 
   // Fetch tracks that are in event
@@ -47,6 +48,7 @@ export default function EventEditPage() {
       );
   }, [eventId]);
 
+  // Reload event details and track list
   const reloadPage = useCallback(() => {
     fetchEvent();
     fetchTracks();
@@ -56,9 +58,8 @@ export default function EventEditPage() {
     reloadPage();
   }, [reloadPage]);
 
-  const [showAddTracksModal, setShowAddTracksModal] = useState(false);
-
-  const handleRemoveTrack = async (event_track_id: number) => {
+  // Remove track from event
+  const submitRemoveTrack = async (event_track_id: number) => {
     setRemoving(true);
     try {
       await axios.delete(`/api/event-tracks/${event_track_id}/`);
@@ -70,8 +71,7 @@ export default function EventEditPage() {
     }
   };
 
-  // Editing event fields
-
+  // Edit event date field
   const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target; // The value from the "date" input (YYYY-MM-DD)
     setEvent((prevData) => {
@@ -82,6 +82,7 @@ export default function EventEditPage() {
     });
   };
 
+  // Edit event time field
   const handleTimeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target; // The value from the "time" input (HH:MM)
     setEvent((prevData) => {
@@ -92,6 +93,7 @@ export default function EventEditPage() {
     });
   };
 
+  // Edit event text fields
   const handleTextChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -102,13 +104,13 @@ export default function EventEditPage() {
     }));
   };
 
+  // Submit changing event's details
   const handleSubmit = async () => {
     if (!event.name || !event.description || !event.place || !event.date) {
       setError(true);
       return;
     }
 
-    setLoading(true);
     setError(false);
 
     const encodedEvent = {
@@ -122,19 +124,23 @@ export default function EventEditPage() {
         navigate(-1);
       })
       .catch((error) => console.error("Error adding event:", error));
-    setLoading(false);
   };
 
   return (
     <div className="bg-gray-200 p-6 rounded-lg max-w-4xl mx-auto mt-8">
+      {/* Header */}
       <h1 className="text-2xl font-bold text-center mb-4">
         {t("edit-event.title")}
       </h1>
+
+      {/* Error message */}
       {error && (
         <p className="text-red-500 text-center mb-4">
           {t("new-event.form-error")}
         </p>
       )}
+
+      {/* Edit event details form */}
       <label>
         {t("new-event.name")}
         <input
@@ -193,21 +199,17 @@ export default function EventEditPage() {
           required
         />
       </label>
-      <button
-        onClick={handleSubmit}
-        disabled={loading}
-        className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600"
-      >
-        {t("edit-event.submit")}
-      </button>
-      <button
-        onClick={() => navigate(-1)}
-        className="ml-1 bg-red-500 text-white p-2 rounded-lg hover:bg-red-600"
-      >
-        {t("edit-event.back")}
-      </button>
 
-      {/* Lista utworów */}
+      {/* Buttons */}
+      <SubmitOrBack
+        submitMethod={handleSubmit}
+        textSubmit={t("edit-event.submit")}
+        textSubmiting={t("edit-event.submiting")}
+        onCancel={() => navigate(-1)}
+        textCancel={t("edit-event.back")}
+      />
+
+      {/* Track list */}
       <h2 className="text-xl font-bold mt-4">{t("edit-event.tracks")}</h2>
       <ul className="list-disc pl-5">
         {tracks.length > 0 ? (
@@ -218,7 +220,7 @@ export default function EventEditPage() {
             >
               <span>{event_track.track_details.name}</span>
               <button
-                onClick={() => handleRemoveTrack(event_track.event_track_id)}
+                onClick={() => submitRemoveTrack(event_track.event_track_id)}
                 className="text-red-500 hover:underline"
                 disabled={removing}
               >
@@ -231,15 +233,17 @@ export default function EventEditPage() {
         )}
       </ul>
 
-      {/* Przycisk do dodawania utworów */}
-      <button
-        onClick={() => setShowAddTracksModal(true)}
-        className="mt-4 bg-green-500 text-white p-2 rounded-lg hover:bg-green-600"
-      >
-        {t("edit-event.add-tracks")}
-      </button>
+      {/* Add tracks to event button */}
+      <div className="flex justify-center">
+        <button
+          onClick={() => setShowAddTracksModal(true)}
+          className="mt-4 bg-green-500 text-white p-2 rounded-lg hover:bg-green-600"
+        >
+          {t("edit-event.add-tracks")}
+        </button>
+      </div>
 
-      {/* Okienko (modal) do dodawania utworów */}
+      {/* Add tracks to event window */}
       {showAddTracksModal && parsedEventId && parsedGroupId && (
         <AddTracksToEvent
           eventId={parsedEventId}

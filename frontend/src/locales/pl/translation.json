@@ -159,8 +159,10 @@
     "date": "Data",
     "time": "Godzina",
     "submit": "Utwórz",
+    "submiting": "Tworzenie...",
     "form-error": "Wszystkie pola są obowiązkowe",
-    "back": "Powrót"
+    "back": "Powrót",
+    "attendies": "Uczestnicy"
   },
   "edit-event": {
     "title": "Edytuj wydarzenie",
@@ -251,5 +253,15 @@
     "back": "Powrót",
     "last-manager": "Nie możesz opuścić grupy, w której jesteś ostatnim kierownikiem.",
     "error": "Opuszczanie grupy nieudane"
+  },
+  "delete-event": {
+    "title": "Usuń wydarzenie",
+    "description": "Aby usunąć wydarzenie, potwierdź jego nazwę:",
+    "error": "Usunięcie wydarzenia nieudane",
+    "placeholder": "Nazwa wydarzenia...",
+    "delete": "Usuń",
+    "deleting": "Usuwanie...",
+    "back": "Powrót",
+    "name-mismatch": "Nazwa wydarzenia się nie zgadza"
   }
 }

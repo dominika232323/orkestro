@@ -158,12 +158,15 @@
     "date": "Date",
     "time": "Time",
     "submit": "Create",
+    "submitting": "Creating...",
     "form-error": "All fields are mandatory",
-    "back": "Go back"
+    "back": "Go back",
+    "attendies": "Attendiees"
   },
   "edit-event": {
     "title": "Edit event",
     "submit": "Edit",
+    "submiting": "Editing...",
     "remove-track": "Remove Track",
     "add-tracks": "Add Tracks",
     "select-tracks": "Select tracks to add",
