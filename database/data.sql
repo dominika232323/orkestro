@@ -1,13 +1,13 @@
 INSERT INTO users (name, surname, email, date_joined, is_superuser, is_staff, is_active) VALUES ('Kacper', 'Kowalczyk', 'k.kowalczyk3575@gmail.com', '2024-12-13 14:00:00', false, false, true);
-INSERT INTO users (name, surname, email, date_joined, is_superuser, is_staff, is_active) VALUES ('Michał', 'Machnikowski', '1@gmail.com', '2024-12-13 14:00:00', false, false, true);
-INSERT INTO users (name, surname, email, date_joined, is_superuser, is_staff, is_active) VALUES ('Dominika', 'Boguszewska', '2@gmail.com', '2024-12-13 14:00:00', false, false, true);
-INSERT INTO users (name, surname, email, date_joined, is_superuser, is_staff, is_active) VALUES ('Andrzej', 'Pultyn', '3@gmail.com', '2024-12-13 14:00:00', false, false, true);
-INSERT INTO users (name, surname, email) VALUES ('Tymon', 'Chlebowski', 'k.kowalczyk3575+orkestro@gmail.com');
-INSERT INTO users (name, surname, email) VALUES ('Zdzisława', 'Kazimierczuk', 'k.kowalczyk3575+orkestro2@gmail.com');
-INSERT INTO users (name, surname, email) VALUES ('Tobiasz', 'Śniegowski', '+orkestro@gmail.com');
-INSERT INTO users (name, surname, email) VALUES ('Jolanta', 'Tucka', '+orkestro2@gmail.com');
-INSERT INTO users (name, surname, email) VALUES ('Mieczysława', 'Winiarczyk', '+orkestro3@gmail.com');
-INSERT INTO users (name, surname, email) VALUES ('Sebastian', 'Lewandowski', '+orkestro4@gmail.com');
+INSERT INTO users (name, surname, email, date_joined, is_superuser, is_staff, is_active) VALUES ('Michał', 'Machnikowski', 'mm@gmail.com', '2024-12-13 14:00:00', false, false, true);
+INSERT INTO users (name, surname, email, date_joined, is_superuser, is_staff, is_active) VALUES ('Dominika', 'Boguszewska', 'db@gmail.com', '2024-12-13 14:00:00', false, false, true);
+INSERT INTO users (name, surname, email, date_joined, is_superuser, is_staff, is_active) VALUES ('Andrzej', 'Pultyn', 'ap@gmail.com', '2024-12-13 14:00:00', false, false, true);
+INSERT INTO users (name, surname, email) VALUES ('Tymon', 'Chlebowski', 'tc@gmail.com');
+INSERT INTO users (name, surname, email) VALUES ('Zdzisława', 'Kazimierczuk', 'zk@gmail.com');
+INSERT INTO users (name, surname, email) VALUES ('Tobiasz', 'Śniegowski', 'ts@gmail.com');
+INSERT INTO users (name, surname, email) VALUES ('Jolanta', 'Tucka', 'jt@gmail.com');
+INSERT INTO users (name, surname, email) VALUES ('Mieczysława', 'Winiarczyk', 'mw@gmail.com');
+INSERT INTO users (name, surname, email) VALUES ('Sebastian', 'Lewandowski', 'sl@gmail.com');
 -- id 10/Sebastian Lewandowski is not in any group and can be invited to one
 
 INSERT INTO groups (name, description, supergroup_id) VALUES ('Pusta grupa', 'Grupa do dodawania treści', NULL);
