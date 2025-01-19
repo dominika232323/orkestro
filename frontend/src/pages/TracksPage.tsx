@@ -14,7 +14,9 @@ import axios from "axios";
 import { fetchUserOrRedirect } from "../auth";
 import { getRole } from "../util";
 import SearchBar from "../components/SearchBar";
+import DeleteTrack from "../components/DeleteTrack";
 
+// Page to show users tracks
 export default function TracksPage() {
   const { t } = useLanguage();
   const { groupId } = useParams();
@@ -26,7 +28,12 @@ export default function TracksPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [showDeleteTrack, setShowDeleteTrack] = useState(false);
 
+  const [selectedTrackId, setSelectedTrackId] = useState<number>(0);
+  const [selectedTrackName, setSelectedTrackName] = useState("");
+
+  // Fetch user's tracks
   const fetchTracks = useCallback(async () => {
     setLoading(true);
 
@@ -51,19 +58,16 @@ export default function TracksPage() {
     fetchUserOrRedirect(navigate);
   }, [navigate]);
 
+  // FetchRole
   const fetchRole = useCallback(() => getRole(setRole, groupId), [groupId]);
 
   useEffect(() => {
     fetchRole();
   }, [fetchRole]);
 
-  const handleDelete = async (track_id: number) => {
-    await axios.delete(`/api/tracks/${track_id}/`);
-    fetchTracks();
-  };
-
   return (
     <div className="bg-gray-200 p-6 rounded-lg max-w-4xl mx-auto mt-8">
+      {/* Header */}
       <h1 className="text-2xl font-bold text-center mb-6">
         {t("tracks.title")}
       </h1>
@@ -123,7 +127,11 @@ export default function TracksPage() {
                     </button>
                     <button
                       className="px-3 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 font-medium transition-colors"
-                      onClick={() => handleDelete(track.track_id)}
+                      onClick={() => {
+                        setSelectedTrackId(track.track_id);
+                        setSelectedTrackName(track.name);
+                        setShowDeleteTrack(true);
+                      }}
                     >
                       <FontAwesomeIcon className="mr-2" icon={faTimes} />
                       <span>{t("tracks.delete")}</span>
@@ -146,6 +154,16 @@ export default function TracksPage() {
         totalPages={totalPages}
         onPageChange={(page) => setCurrentPage(page)}
       />
+
+      {/* Delete Track window */}
+      {showDeleteTrack && selectedTrackId && (
+        <DeleteTrack
+          trackId={selectedTrackId}
+          trackName={selectedTrackName}
+          fetchTracks={fetchTracks}
+          setShowDeleteTrack={setShowDeleteTrack}
+        />
+      )}
     </div>
   );
 }

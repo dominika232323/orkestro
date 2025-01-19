@@ -213,6 +213,7 @@
     "files": "Files",
     "no-files": "No files",
     "submit": "Edit",
+    "submiting": "Editing...",
     "remove-file": "Remove file",
     "add-file": "Add files",
     "back": "Go back"
@@ -222,7 +223,9 @@
     "form-error": "All fields are required",
     "name": "Name",
     "artist": "Artist",
-    "back": "Go back"
+    "back": "Go back",
+    "submit": "Create",
+    "submiting": "Creating..."
   },
   "new-group": {
     "title": "New group",

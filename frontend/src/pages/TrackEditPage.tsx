@@ -7,6 +7,7 @@ import axios from "axios";
 import Pagination from "../components/Pagination";
 import AddFiles from "../components/AddFiles";
 import { parseId } from "../util";
+import SubmitOrBack from "../components/SubmitOrBack";
 
 // Editing chosen track
 export default function TrackEditPage() {
@@ -47,6 +48,7 @@ export default function TrackEditPage() {
       .catch((error) => console.error("Error fetching files: ", error));
   }, [trackId, currentPage]);
 
+  // Reloading track's info and files
   const reloadPage = useCallback(() => {
     fetchTrack();
     fetchFiles();
@@ -61,6 +63,7 @@ export default function TrackEditPage() {
     fetchFiles();
   }, [fetchFiles]);
 
+  // Submit track changes
   const handleSubmit = async () => {
     if (!track.name || !track.artist) {
       return;
@@ -76,6 +79,7 @@ export default function TrackEditPage() {
       .catch((error) => console.error("Error adding event:", error));
   };
 
+  // Change track's text fields
   const handleTextChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -86,6 +90,7 @@ export default function TrackEditPage() {
     }));
   };
 
+  // Handle removing file
   const handleRemoveFile = async (file_id: number) => {
     await axios
       .delete(`/api/files/${file_id}/`)
@@ -96,45 +101,47 @@ export default function TrackEditPage() {
   if (track) {
     return (
       <div className="bg-gray-200 p-6 rounded-lg max-w-4xl mx-auto mt-8">
+        {/* Header */}
         <h1 className="text-2xl font-bold text-center mb-6">
           {t("edit-track.title")}
         </h1>
-        <label>
-          {t("edit-track.name")}
-          <input
-            type="text"
-            name="name"
-            value={track.name}
-            onChange={handleTextChange}
-            className="block w-full p-2 border mb-2"
-            required
-          />
-        </label>
-        <label>
-          {t("edit-track.artist")}
-          <input
-            type="text"
-            name="artist"
-            value={track.artist}
-            onChange={handleTextChange}
-            className="block w-full p-2 border mb-2"
-            required
-          />
-        </label>
-        <button
-          onClick={handleSubmit}
-          className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600"
-        >
-          {t("edit-track.submit")}
-        </button>
-        <button
-          onClick={() => navigate(-1)}
-          className="ml-1 bg-red-500 text-white p-2 rounded-lg hover:bg-red-600"
-        >
-          {t("edit-track.back")}
-        </button>
 
-        {/* Lista plików */}
+        {/* Form */}
+        <div>
+          <label>
+            {t("edit-track.name")}
+            <input
+              type="text"
+              name="name"
+              value={track.name}
+              onChange={handleTextChange}
+              className="block w-full p-2 border mb-2"
+              required
+            />
+          </label>
+          <label>
+            {t("edit-track.artist")}
+            <input
+              type="text"
+              name="artist"
+              value={track.artist}
+              onChange={handleTextChange}
+              className="block w-full p-2 border mb-2"
+              required
+            />
+          </label>
+        </div>
+
+        {/* Buttons */}
+        <SubmitOrBack
+          submitMethod={handleSubmit}
+          textSubmit={t("edit-track.submit")}
+          textSubmiting={t("edit-track.submiting")}
+          onCancel={() => navigate(-1)}
+          textCancel={t("edit-track.back")}
+        />
+
+        {/* File list */}
         <h2 className="text-xl font-bold mt-4">{t("edit-track.files")}</h2>
         <ul className="list-disc pl-5">
           {files.length > 0 ? (
@@ -157,13 +164,15 @@ export default function TrackEditPage() {
           )}
         </ul>
 
-        {/* Przycisk do dodawania utworów */}
-        <button
-          onClick={() => setShowAddFiles(true)}
-          className="mt-4 bg-green-500 text-white p-2 rounded-lg hover:bg-green-600"
-        >
-          {t("edit-track.add-file")}
-        </button>
+        {/* Adding files button */}
+        <div className="flex justify-end">
+          <button
+            onClick={() => setShowAddFiles(true)}
+            className="mt-4 bg-green-500 text-white p-2 rounded-lg hover:bg-green-600"
+          >
+            {t("edit-track.add-file")}
+          </button>
+        </div>
 
         {/*Pagination*/}
         <Pagination
@@ -172,6 +181,7 @@ export default function TrackEditPage() {
           onPageChange={(page) => setCurrentPage(page)}
         />
 
+        {/* Add files window */}
         {showAddFiles && (
           <AddFiles
             parsedTrackId={parsedTrackId}

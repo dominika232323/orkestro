@@ -167,6 +167,7 @@
   "edit-event": {
     "title": "Edytuj wydarzenie",
     "submit": "Zapisz",
+    "submiting": "Zapisywanie",
     "remove-track": "Usuń utwór",
     "add-tracks": "Dodaj utwory",
     "select-tracks": "Wybierz utwory do dodania",
@@ -213,6 +214,7 @@
     "files": "Pliki",
     "no-files": "Brak plików",
     "submit": "Zapisz",
+    "submiting": "Zapisywanie...",
     "remove-file": "Usuń plik",
     "add-file": "Dodaj pliki",
     "back": "Powrót"
@@ -223,6 +225,7 @@
     "name": "Tytuł",
     "artist": "Autor",
     "submit": "Utwórz",
+    "submiting": "Tworzenie...",
     "back": "Powrót"
   },
   "new-group": {
