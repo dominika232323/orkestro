@@ -147,6 +147,8 @@ class GoogleCalendarView(APIView):
             user.gcalendar_token_expiry = timezone.now() + timedelta(seconds=token_data["expires_in"])
             user.save()
 
+            get_orkestro_calendar_id(user)  # create Orkestro calendar
+
             return Response({"message": "Google Calendar linked successfully"})
         except Exception as e:
             return Response({"error": str(e)}, status=400)
