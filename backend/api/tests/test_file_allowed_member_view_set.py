@@ -31,7 +31,7 @@ class FileAllowedMemberViewSetTestCase(TestCase):
         self.assertEqual(response.data["error"], "Can't remove the last manager's access to the file")
 
     def test_destroy_non_last_manager(self):
-        self.manager2 = User.objects.create(email="manager@a.com", name="Manage", surname="R", date_joined=timezone.now())
+        self.manager2 = User.objects.create(email="manager2@a.com", name="Manage", surname="R", date_joined=timezone.now())
         Member.objects.create(group=self.group, user=self.manager2, permission_level="A")
         self.file_allowed_manager2 = FileAllowedMember.objects.create(file=self.file, user=self.manager2)
 

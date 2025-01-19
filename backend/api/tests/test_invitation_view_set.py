@@ -23,7 +23,7 @@ class InvitationViewSetTestCase(TestCase):
 
         for case in test_cases:
             with self.subTest(user=case["user"]):
-                user_to_invite = User.objects.create(email="outsider@a.com", name="Outside", surname="R", date_joined=timezone.now())
+                user_to_invite = User.objects.create(email=f"outsider{case["user"].name}@a.com", name="Outside", surname="R", date_joined=timezone.now())
 
                 # Prepare valid data
                 invitation_data = {
@@ -74,9 +74,9 @@ class InvitationViewSetTestCase(TestCase):
         test_cases = [
             {"user": self.staff, "expected_status": 400},
             {"user": self.manager, "expected_status": 400},
-            {"user": self.moderator, "expected_status": 400},
-            {"user": self.musician, "expected_status": 400},
-            {"user": self.outsider, "expected_status": 400},
+            {"user": self.moderator, "expected_status": 403},
+            {"user": self.musician, "expected_status": 403},
+            {"user": self.outsider, "expected_status": 403},
         ]
 
         for case in test_cases:
@@ -84,13 +84,13 @@ class InvitationViewSetTestCase(TestCase):
                 # Prepare valid data
                 invitation_data = {
                     "group": self.group.group_id,
-                    "user": self.outsider.user_id,
+                    "user": self.musician.user_id,
                     "permission_level": "C"
                 }
 
                 # Create a request
                 request = self.factory.post("/api/invitations/", invitation_data, format="json")
-                force_authenticate(request, user=self.staff)
+                force_authenticate(request, user=case["user"])
 
                 # Instantiate the view and call the create method
                 view = InvitationViewSet.as_view({"post": "create"})
@@ -98,7 +98,9 @@ class InvitationViewSetTestCase(TestCase):
 
                 # Assertions
                 self.assertEqual(response.status_code, case["expected_status"])
-                self.assertEqual(response.data["error"], "Data validation failed")
+
+                if response.status_code == 400:
+                    self.assertEqual(response.data["error"], "User not invitable")
 
     def test_accept_invitation(self):
         invitation = Invitation.objects.create(group=self.group, user=self.outsider, permission_level="C")

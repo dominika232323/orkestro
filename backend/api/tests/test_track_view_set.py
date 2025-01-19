@@ -177,7 +177,7 @@ class TrackViewSetTestCase(TestCase):
 
                 # Assertions
                 self.assertEqual(response.status_code, 200)
-                returned_tracks = [track["track_id"] for track in response.data]
+                returned_tracks = [track["track_id"] for track in response.data["items"]]
                 expected_track_ids = [track.track_id for track in case["expected_tracks"]]
                 self.assertCountEqual(returned_tracks, expected_track_ids)
 

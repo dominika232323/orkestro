@@ -196,6 +196,58 @@ class MemberViewSetTestCase(TestCase):
                 if response.status_code == 400:
                     self.assertEqual(response.data["error"], case["expected_error"])
 
+    def test_leave(self):
+        test_cases = [
+            {
+                "user": self.staff,
+                "expected_status": 404,
+                "expected_error": "Membership not found"
+            },
+            {
+                "user": self.manager,
+                "expected_status": 400,
+                "expected_error": "Can't remove the last manager"
+            },
+            {
+                "user": self.moderator,
+                "expected_status": 204
+            },
+            {
+                "user": self.musician,
+                "expected_status": 204
+            },
+            {
+                "user": self.outsider,
+                "expected_status": 404,
+                "expected_error": "Membership not found"
+            },
+        ]
+
+        for case in test_cases:
+            with self.subTest(user=case["user"]):
+                # Create and authenticate the request
+                request = self.factory.post(
+                    "/api/members/leave/",
+                    {"group": self.group.group_id}
+                )
+                force_authenticate(request, user=case["user"])
+                response = MemberViewSet.as_view({'post': 'leave'})(request)
+
+                self.assertEqual(response.status_code, case["expected_status"])
+
+                if response.status_code == 400 or response.status_code == 404:
+                    self.assertEqual(response.data["error"], case["expected_error"])
+
+    def test_leave_no_group_id(self):
+        # Create and authenticate the request
+        request = self.factory.post("/api/members/leave/")
+        force_authenticate(request, user=self.staff)
+        response = MemberViewSet.as_view({'post': 'leave'})(request)
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.data["error"], "Group ID is required")
+
+
     def test_search(self):
         # Define test cases with expected outcomes
         test_cases = [
