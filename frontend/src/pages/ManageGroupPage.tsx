@@ -183,9 +183,10 @@ export default function ManageGroupPage() {
           </label>
         </form>
 
-        <div className="flex justify-between">
+        <div className="flex flex-col space-y-2">
+          {/* Row 1: Manager-only buttons */}
           {isManager && (
-            <>
+            <div className="flex space-x-2">
               {/* Submit group info edit */}
               <button
                 onClick={submitTextChanges}
@@ -210,116 +211,142 @@ export default function ManageGroupPage() {
               {/* Delete group */}
               <button
                 onClick={() => setShowDeleteGroup(true)}
-                className="ml-1 bg-red-500 text-white p-2 rounded-lg hover:bg-red-600"
+                className="bg-red-500 text-white p-2 rounded-lg hover:bg-red-600"
                 disabled={loading}
               >
                 {t("manage-group.delete-group")}
               </button>
-            </>
+            </div>
           )}
 
-          {/* Leave group */}
-          <button
-            onClick={() => setShowLeaveGroup(true)}
-            className="ml-1 bg-red-500 text-white p-2 rounded-lg hover:bg-red-600"
-            disabled={loading}
-          >
-            {t("manage-group.leave-group")}
-          </button>
-        </div>
-
-        {/* Member management */}
-        <h2 className="text-xl font-bold text-center mb-6">
-          {t("manage-group.manage-members")}
-        </h2>
-
-        {/* Search Bar */}
-        <SearchBar
-          query={searchQuery}
-          onQueryChange={(value) => setSearchQuery(value)}
-          onSearch={fetchMembers}
-          placeholder={t("manage-group.search-placeholder")}
-          setCurrentPage={setCurrentPage}
-        />
-
-        {/* Invite member */}
-        {isManager && (
-          <button
-            className="w-full py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 font-medium flex items-center justify-center my-3"
-            onClick={() => setShowInvite(true)}
-          >
-            <FontAwesomeIcon icon={faPlus} className="mr-2" />
-            {t("manage-group.invite")}
-          </button>
-        )}
-
-        {/* Role Filter Buttons */}
-        <div className="flex justify-center space-x-4 mb-6">
-          {["A", "C", "B"].map((role) => (
+          {/* Row 2: Common buttons */}
+          <div className="flex space-x-2">
+            {isManager && (
+              <button
+                onClick={() => navigate(`/new-message/${group.group_id}`)}
+                className="px-4 py-2 bg-blue-500 text-white font-medium rounded-lg hover:bg-blue-600 transition-colors"
+              >
+                {t("group.new-message")}
+              </button>
+            )}
             <button
-              key={role}
-              className={`py-2 px-6 rounded-lg font-medium transition-colors ${
-                roleFilter === role
-                  ? "bg-red-500 text-white"
-                  : "bg-gray-300 text-gray-800 hover:bg-gray-400"
-              }`}
-              onClick={() => toggleRoleFilter(role)}
+              onClick={() => navigate(`/events/${group.group_id}`)}
+              className="px-4 py-2 bg-blue-500 text-white font-medium rounded-lg hover:bg-blue-600 transition-colors"
             >
-              {roleFilter === role
-                ? t("manage-group.cancel-filter")
-                : t(`manage-group.roles.${role}`)}
+              {t("group.events")}
             </button>
-          ))}
-        </div>
+            <button
+              onClick={() => navigate(`/tracks/${group.group_id}`)}
+              className="px-4 py-2 bg-blue-500 text-white font-medium rounded-lg hover:bg-blue-600 transition-colors"
+            >
+              {t("group.tracks")}
+            </button>
+            {/* Leave group */}
+            <button
+              onClick={() => setShowLeaveGroup(true)}
+              className="ml-1 bg-red-500 text-white p-2 rounded-lg hover:bg-red-600"
+              disabled={loading}
+            >
+              {t("manage-group.leave-group")}
+            </button>
+          </div>
 
-        {/* Members List or Loading State */}
-        {members && members.length > 0 ? (
-          members.map((member) => (
-            <MemberComponent
-              key={member.user}
-              member={member}
-              reload={fetchMembers}
-              isManager={isManager}
+          {/* Member management */}
+          <h2 className="text-xl font-bold text-center mb-6">
+            {t("manage-group.manage-members")}
+          </h2>
+
+          {/* Search Bar */}
+          <SearchBar
+            query={searchQuery}
+            onQueryChange={(value) => setSearchQuery(value)}
+            onSearch={fetchMembers}
+            placeholder={t("manage-group.search-placeholder")}
+            setCurrentPage={setCurrentPage}
+          />
+
+          {/* Invite member */}
+          {isManager && (
+            <button
+              className="w-full py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 font-medium flex items-center justify-center my-3"
+              onClick={() => setShowInvite(true)}
+            >
+              <FontAwesomeIcon icon={faPlus} className="mr-2" />
+              {t("manage-group.invite")}
+            </button>
+          )}
+
+          {/* Role Filter Buttons */}
+          <div className="flex justify-center space-x-4 mb-6">
+            {["A", "C", "B"].map((role) => (
+              <button
+                key={role}
+                className={`py-2 px-6 rounded-lg font-medium transition-colors ${
+                  roleFilter === role
+                    ? "bg-red-500 text-white"
+                    : "bg-gray-300 text-gray-800 hover:bg-gray-400"
+                }`}
+                onClick={() => toggleRoleFilter(role)}
+              >
+                {roleFilter === role
+                  ? t("manage-group.cancel-filter")
+                  : t(`manage-group.roles.${role}`)}
+              </button>
+            ))}
+          </div>
+
+          {/* Members List or Loading State */}
+          {members && members.length > 0 ? (
+            members.map((member) => (
+              <MemberComponent
+                key={member.user}
+                member={member}
+                reload={fetchMembers}
+                isManager={isManager}
+              />
+            ))
+          ) : loading ? (
+            <p className="text-gray-600 text-center">
+              {t("manage-group.loading")}
+            </p>
+          ) : (
+            <p className="text-gray-600 text-center">
+              {t("manage-group.no-members")}
+            </p>
+          )}
+
+          {/* Pagination */}
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={(page) => setCurrentPage(page)}
+          />
+
+          {/* Invite window */}
+          {showInvite && (
+            <NewInvitation
+              parsedGroupId={parsedGroupId}
+              setShowInvite={setShowInvite}
             />
-          ))
-        ) : loading ? (
-          <p className="text-gray-600 text-center">
-            {t("manage-group.loading")}
-          </p>
-        ) : (
-          <p className="text-gray-600 text-center">
-            {t("manage-group.no-members")}
-          </p>
-        )}
+          )}
 
-        {/* Pagination */}
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={(page) => setCurrentPage(page)}
-        />
+          {/* Delete group window */}
+          {showDeleteGroup && (
+            <DeleteGroup
+              groupName={group.name}
+              groupId={group.group_id}
+              setShowDeleteGroup={setShowDeleteGroup}
+            />
+          )}
 
-        {/* Invite window */}
-        {showInvite && (
-          <NewInvitation
-            parsedGroupId={parsedGroupId}
-            setShowInvite={setShowInvite}
-          />
-        )}
-
-        {/* Delete group window */}
-        {showDeleteGroup && (
-          <DeleteGroup
-            groupName={group.name}
-            groupId={group.group_id}
-            setShowDeleteGroup={setShowDeleteGroup}
-          />
-        )}
-
-        {/* Leave group window */}
-        {showLeaveGroup && groupId && user && (
-          <LeaveGroup groupId={groupId} setShowLeaveGroup={setShowLeaveGroup} />
-        )}
+          {/* Leave group window */}
+          {showLeaveGroup && groupId && user && (
+            <LeaveGroup
+              groupId={groupId}
+              setShowLeaveGroup={setShowLeaveGroup}
+            />
+          )}
+        </div>
       </div>
     );
   } else {
