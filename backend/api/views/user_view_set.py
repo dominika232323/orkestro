@@ -16,7 +16,7 @@ from api.models import User, Member, EventAttendee, FileAllowedMember
 from api.serializers import UserSerializer
 from api.permissions.user_permissions import UserPermission
 
-from .google_views import get_or_create_orkestro_calendar
+from .google_views import get_calendar_events
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -72,6 +72,6 @@ class UserViewSet(viewsets.ModelViewSet):
 
         user: User = request.user
 
-        data = get_or_create_orkestro_calendar(user)
+        data = get_calendar_events(user)
 
         return Response(data)

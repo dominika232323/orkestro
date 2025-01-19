@@ -220,15 +220,30 @@ def create_orkestro_calendar(user: User):
     return response.json()
 
 
-def get_or_create_orkestro_calendar(user: User):
-    """TODO"""
+def get_orkestro_calendar_id(user: User):
+    """Retrieves ID of the Orkestro calendar for the user, creating it if it doesn't exist."""
 
     calendar_list = get_calendar_list(user)
-    orkestro_calendars = [cal for cal in calendar_list["items"] if cal["summary"] == "Orkestro"]
 
-    if orkestro_calendars:
-        orkestro_calendar = orkestro_calendars[0]
-    else:
+    orkestro_calendar = next(
+        (cal for cal in calendar_list["items"] if cal["summary"] == "Orkestro"),
+        None
+    )
+
+    if orkestro_calendar is None:
         orkestro_calendar = create_orkestro_calendar(user)
 
-    return orkestro_calendar
+    return orkestro_calendar["id"]
+
+
+def get_calendar_events(user: User):
+    """Fetches events from the user's Orkestro calendar."""
+
+    access_token = get_valid_gcalendar_token(user)
+    calendar_id = get_orkestro_calendar_id(user)
+
+    url = f"https://www.googleapis.com/calendar/v3/calendars/{calendar_id}/events"
+    headers = {"Authorization": f"Bearer {access_token}"}
+
+    response = requests.get(url, headers=headers)
+    return response.json()
