@@ -23,7 +23,7 @@ class InvitationViewSetTestCase(TestCase):
 
         for case in test_cases:
             with self.subTest(user=case["user"]):
-                user_to_invite = User.objects.create(email="outsider@a.com", name="Outside", surname="R", date_joined=timezone.now())
+                user_to_invite = User.objects.create(email=f"outsider{case["user"].name}@a.com", name="Outside", surname="R", date_joined=timezone.now())
 
                 # Prepare valid data
                 invitation_data = {
