@@ -13,7 +13,9 @@ from rest_framework.response import Response
 from api.models import Track, FileInstrument, EventTrack
 from api.serializers import TrackSerializer, TrackCreateSerializer
 from api.permissions.track_permissions import TrackPermission
+
 from django.core.paginator import Paginator
+from django.db.models import Q
 
 
 class TrackViewSet(viewsets.ModelViewSet):
@@ -43,14 +45,27 @@ class TrackViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=["get"])
     def search(self, request):
-        event_tracks = (EventTrack.objects.select_related("event", "track").filter(track__group_id=request.GET.get("group_id"),
-            event__name__icontains=request.GET.get("event", ""), track__name__icontains=request.GET.get("name", "")))
-        tracks = set([et.track for et in event_tracks])
+        group_id = request.GET.get("group_id")
+        terms = request.GET.get("search", "").split()
+        search_language = request.GET.get("search_language", "en")
 
-        if len(request.GET.getlist("instrument_id")) != 0:
-            file_instruments = (FileInstrument.objects.select_related("file", "file__track").defer('file__content')
-                .filter(file__track__in=tracks, instrument_id__in=request.GET.getlist("instrument_id")))
-            tracks = set([fi.file.track for fi in file_instruments])
+        query = Q()
+        for term in terms:
+            query |= Q(name__icontains=term)
+        tracks = Track.objects.filter(query, group_id=group_id)
+        tracks = set([t for t in tracks])
+
+        query = Q()
+        for term in terms:
+            query |= Q(event__name__icontains=term)
+        event_tracks = EventTrack.objects.filter(query, track__group_id=group_id).select_related("event", "track")
+        tracks = tracks.union(set([et.track for et in event_tracks]))
+
+        query = Q()
+        for term in terms:
+            query |= Q(**{f"instrument__name_{search_language}__icontains": term})
+        file_instruments = FileInstrument.objects.filter(query, file__track__group_id=group_id).select_related("file__track").defer('file__content')
+        tracks = tracks.union(set([fi.file.track for fi in file_instruments]))
 
         tracks = sorted(tracks, key=lambda track: track.name)
 

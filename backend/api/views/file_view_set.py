@@ -63,13 +63,11 @@ class FileViewSet(viewsets.ModelViewSet):
                 file__name__icontains=search_query
             ).values_list("file_id", flat=True)
 
-            instrument_field = ("instrument__name_en__icontains" if search_language == "en" else "instrument__name_pl__icontains")
-
             file_ids_matching_instrument = (
                 FileInstrument.objects.filter(
                     file__in=[ffm.file for ffm in files_for_me],
                 )
-                .filter(**{instrument_field: search_query})  # Dynamic field
+                .filter(**{f"instrument__name_{search_language}__icontains": search_query})
                 .values_list("file_id", flat=True)
             )
 
