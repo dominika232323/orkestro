@@ -55,6 +55,7 @@
     "connect": "Połącz",
     "connected": "Połączony",
     "unconnected": "Niepołączony",
+    "force-sync": "Synchronizuj",
     "user-instruments": "Instrumenty",
     "add-instrument": "Dodaj instrument",
     "select-instrument": "Wybierz instrument"

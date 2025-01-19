@@ -115,7 +115,7 @@ export default function SettingsPage() {
       setLoadingGcalendar(true);
 
       // Send the authorization code to the backend
-      await axios.post("/api/google-calendar/", {
+      await axios.post("/api/google-calendar-link/", {
         authorization_code: codeResponse.code,
       })
       .then((backendResponse) => {
@@ -131,6 +131,14 @@ export default function SettingsPage() {
     onError: () => console.log("Google Calendar login failed"),
     scope: "https://www.googleapis.com/auth/calendar",
   });
+
+  const forceSyncGoogleCalendar = async () => {
+    setLoadingGcalendar(true);
+    await axios
+    .get("/api/google-calendar-sync/")
+    .catch((error) => console.error("Google Calendar force sync failed:", error))
+    .finally(() => setLoadingGcalendar(false));
+  };
 
   return (
     <div className="bg-gray-200 p-6 rounded-lg max-w-4xl mx-auto mt-8">
@@ -175,7 +183,15 @@ export default function SettingsPage() {
               {t("settings.google-calendar")}:{" "}
             </span>
             {user && user.gcalendar_is_linked ? (
-              <span className="text-green-700">{t("settings.connected")}</span>
+              <>
+                <span className="text-green-700">{t("settings.connected")}</span>
+                <button
+                  className="px-2 py-0.5 bg-blue-500 text-white rounded-lg hover:bg-blue-600 ml-2 disabled:opacity-50"
+                  onClick={forceSyncGoogleCalendar}
+                >
+                  {t("settings.force-sync")}
+                </button>
+              </>
             ) : (
               <>
                 <span className="text-red-700">
@@ -187,9 +203,9 @@ export default function SettingsPage() {
                   >
                   {t("settings.connect")}
                 </button>
-                {loadingGcalendar && <span className="ml-2 text-gray-600">{t("general.loading")}</span>}
               </>
             )}
+            {loadingGcalendar && <span className="ml-2 text-gray-600">{t("general.loading")}</span>}
           </p>
         </div>
       </div>

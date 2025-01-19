@@ -105,7 +105,7 @@ class GoogleLoginView(APIView):
             )
 
 
-class GoogleCalendarView(APIView):
+class GoogleCalendarLinkView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
@@ -142,7 +142,7 @@ class GoogleCalendarView(APIView):
             if not email == request.user.email:
                 return Response({"error": "Email does not match"}, status=400)
 
-            user = User.objects.get(email=request.user.email)
+            user: User = request.user
             user.gcalendar_is_linked = True
             user.gcalendar_refresh_token = token_data["refresh_token"]
             user.gcalendar_access_token = token_data["access_token"]
@@ -154,3 +154,15 @@ class GoogleCalendarView(APIView):
             return Response({"message": "Google Calendar linked successfully"})
         except Exception as e:
             return Response({"error": str(e)}, status=400)
+
+
+class GoogleCalendarSyncView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        """Force sync of Orkestro calendar and Google Calendar"""
+
+        user: User = request.user
+        data = sync_calendar_events(user)
+
+        return Response(data)

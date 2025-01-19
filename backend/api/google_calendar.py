@@ -200,8 +200,8 @@ def sync_calendar_events(user: User):
         delete_calendar_event(access_token, calendar_id, calendar_event_id)
 
     return {
-        "cal": calendar_event_ids,
         "user": user_event_ids,
+        "google": calendar_event_ids,
         "not_added": not_added,
         "added_redundant": added_redundant
     }
