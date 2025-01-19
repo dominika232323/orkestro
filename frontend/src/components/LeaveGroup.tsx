@@ -1,22 +1,31 @@
 import { useState } from "react";
 import { useLanguage } from "../LanguageContext";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 interface LeaveGroupProps {
   groupId: string;
-  userId: number;
   setShowLeaveGroup: (arg0: boolean) => void;
 }
 
 export default function LeaveGroup({
   groupId,
-  userId,
   setShowLeaveGroup,
 }: LeaveGroupProps) {
   const { t } = useLanguage();
+  const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
 
-  const handleLeave = async () => {};
+  const handleLeave = async () => {
+    setLoading(true);
+    console.log(groupId);
+    await axios
+      .post(`/api/members/leave/`, { group: groupId })
+      .then(() => navigate("/"))
+      .catch((error) => console.error(error));
+    setLoading(false);
+  };
 
   return (
     <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center">

@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import { axiosInstance as axios } from "../auth";
 import { OrkestroInvitation } from "../interfaces";
+import { useNavigate } from "react-router-dom";
 
 interface Params {
   invitation: OrkestroInvitation;
@@ -13,6 +14,7 @@ export default function InvitationComponent({
   invitation,
   onActionComplete,
 }: Params) {
+  const navigate = useNavigate();
   const handleAccept = async () => {
     await axios
       .post(`/api/invitations/${invitation.invitation_id}/accept/`)
@@ -20,7 +22,7 @@ export default function InvitationComponent({
         console.log(
           `Successfully accepted invitation ${invitation.invitation_id}`
         );
-        onActionComplete();
+        navigate(`/manage-group/${invitation.group}`);
       })
       .catch((error) =>
         console.error(
