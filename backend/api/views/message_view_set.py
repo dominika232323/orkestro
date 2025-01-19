@@ -58,7 +58,7 @@ class MessageViewSet(viewsets.ModelViewSet):
                 recipient.save()
 
             emails = [user.email for user in recipients if is_valid_email(user.email)]
-            send_mail(subject=message.title, message=message.content, from_email=settings.EMAIL_USER, recipient_list=emails)
+            send_mail(subject=message.title, message=message.content, from_email=settings.EMAIL_HOST_USER, recipient_list=emails)
 
             return Response(data=serializer.data, status=status.HTTP_201_CREATED)
 
