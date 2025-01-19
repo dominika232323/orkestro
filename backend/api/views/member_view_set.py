@@ -50,8 +50,6 @@ class MemberViewSet(viewsets.ModelViewSet):
 
     def destroy(self, request, pk=None, *args, **kwargs):
         member = self.get_object()
-        print(member.user.user_id)
-        print(request.user.user_id)
         if member.user.user_id == request.user.user_id:
             return Response({"error": "You can't remove yourself from the group"}, status=status.HTTP_400_BAD_REQUEST)
         if self.is_last_manager(member):
