@@ -13,6 +13,7 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
+from api.google_calendar import create_calendar_orkestro_event
 from api.models import Event, EventAttendee, Member, User
 from api.serializers import EventSerializer, EventCreateSerializer
 from api.permissions.event_permissions import EventPermission
@@ -41,11 +42,14 @@ class EventViewSet(viewsets.ModelViewSet):
                 Member.objects.get(group=event.group, user=user)
 
             for user in attendees:
-                attendee = EventAttendee.objects.create(
+                event_attendee = EventAttendee.objects.create(
                     event=event,
                     user=user,
                 )
-                attendee.save()
+                event_attendee.save()
+
+                if user.gcalendar_is_linked:
+                    create_calendar_orkestro_event(user, event)
 
             return Response(data=serializer.data, status=status.HTTP_201_CREATED)
 
