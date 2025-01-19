@@ -11,6 +11,7 @@ interface ManageMemberProps {
   isManager: boolean;
 }
 
+// Element of Member list in Manage Group
 export default function MemberComponent({
   member,
   reload,
@@ -20,6 +21,7 @@ export default function MemberComponent({
 
   const [deleting, setDeleting] = useState(false);
 
+  // Handle user's role changing
   const handleRoleChange = async (
     event: React.ChangeEvent<HTMLSelectElement>
   ) => {
@@ -35,6 +37,7 @@ export default function MemberComponent({
     }
   };
 
+  // Handle delete member
   const handleDelete = async () => {
     try {
       setDeleting(true);
@@ -52,8 +55,11 @@ export default function MemberComponent({
       key={member.user}
       className="flex items-center justify-between bg-white p-4 rounded-lg shadow border border-gray-200 mb-2"
     >
+      {/* Name and surname */}
       <p>{member.user_details.name + " " + member.user_details.surname}</p>
+
       <div className="flex items-center space-x-4">
+        {/* Role Select */}
         <select
           value={member.permission_level}
           onChange={handleRoleChange}
@@ -64,6 +70,8 @@ export default function MemberComponent({
           <option value="C">{t("manage-group.roles.C")}</option>
           <option value="B">{t("manage-group.roles.B")}</option>
         </select>
+
+        {/* Remove member button */}
         {isManager && (
           <button
             className="p-2 bg-red-500 text-white rounded-lg hover:bg-red-600"

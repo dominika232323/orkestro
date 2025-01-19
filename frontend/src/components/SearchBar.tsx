@@ -17,14 +17,17 @@ export default function SearchBar({
 }: SearchBarProps) {
   const [localQuery, setLocalQuery] = useState(query);
 
+  // Sync local and external query
   useEffect(() => {
     setLocalQuery(query);
   }, [query]);
 
+  // Reset page if query changed
   useEffect(() => {
     setCurrentPage(1);
   }, [localQuery, setCurrentPage]);
 
+  // Handle entering new value
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setLocalQuery(value);

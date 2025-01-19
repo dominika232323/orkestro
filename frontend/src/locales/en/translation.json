@@ -134,7 +134,8 @@
     "no-user": "No user with such email",
     "error": "User not invitable",
     "success": "User invited",
-    "invite": "Invite"
+    "invite": "Invite",
+    "inviting": "Inviting..."
   },
   "delete-group": {
     "title": "Delete group",

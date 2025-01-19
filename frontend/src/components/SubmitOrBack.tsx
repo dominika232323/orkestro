@@ -9,6 +9,7 @@ interface SubmitOrBackProps {
   textCancel: string;
 }
 
+// Two buttons to submit or go cance
 export default function SubmitOrBack({
   submitMethod,
   textSubmit,
@@ -19,6 +20,7 @@ export default function SubmitOrBack({
 }: SubmitOrBackProps) {
   const [submiting, setSubmiting] = useState<boolean>(false);
 
+  // Manage disabling buttons if submitting
   const onSubmit = async () => {
     setSubmiting(true);
     try {
@@ -27,8 +29,10 @@ export default function SubmitOrBack({
       setSubmiting(false);
     }
   };
+
   return (
     <div className="flex justify-end space-x-2 mt-4">
+      {/* Cancel button */}
       <button
         onClick={onCancel}
         className="bg-gray-500 text-white p-2 rounded-lg hover:bg-gray-600"
@@ -36,6 +40,8 @@ export default function SubmitOrBack({
       >
         {textCancel}
       </button>
+
+      {/* Submit button */}
       <button
         onClick={onSubmit}
         className={`bg-${colorSubmit}-500 text-white p-2 rounded-lg hover:bg-${colorSubmit}-600`}

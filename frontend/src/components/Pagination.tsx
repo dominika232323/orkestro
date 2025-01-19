@@ -8,6 +8,7 @@ interface PaginationProps {
   onPageChange: (page: number) => void;
 }
 
+// Component with page number and page navigation
 export default function Pagination({
   currentPage,
   totalPages,
@@ -29,6 +30,7 @@ export default function Pagination({
 
   return (
     <div className="flex justify-center mt-4 space-x-4">
+      {/* Previous page button */}
       <button
         className="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
         onClick={handlePrevPage}
@@ -36,9 +38,13 @@ export default function Pagination({
       >
         <FontAwesomeIcon icon={faArrowLeft} />
       </button>
+
+      {/* Page information */}
       <span className="self-center font-medium">
         {t("pagination.page")} {currentPage} / {totalPages}
       </span>
+
+      {/* Next page button */}
       <button
         className="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
         onClick={handleNextPage}

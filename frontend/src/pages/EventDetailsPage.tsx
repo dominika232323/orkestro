@@ -12,6 +12,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { getRole } from "../util";
 
+// Showing details of selected event
 export default function EventDetailsPage() {
   const { t, currentLanguage } = useLanguage();
   const navigate = useNavigate();
@@ -21,12 +22,14 @@ export default function EventDetailsPage() {
   const [tracks, setTracks] = useState<OrkestroTrackEvent[]>([]);
   const [role, setRole] = useState<OrkestroRole>();
 
+  // Fetch user's role
   const fetchRole = useCallback(() => getRole(setRole, event?.group), [event]);
 
   useEffect(() => {
     fetchRole();
   }, [fetchRole]);
 
+  // Fetch selected event
   const fetchEvent = useCallback(async () => {
     await axios
       .get<OrkestroEvent>(`/api/events/${eventId}/`)

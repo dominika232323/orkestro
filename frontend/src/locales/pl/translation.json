@@ -145,7 +145,8 @@
     "no-user": "Brak użytkownika o takim adresie email",
     "error": "Nie udało się zaprosić użytkownika",
     "success": "Użytkownik zaproszony",
-    "invite": "Zaproś"
+    "invite": "Zaproś",
+    "inviting": "Zapraszanie..."
   },
   "pagination": {
     "page": "Strona"

@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 
+// Showing calendar
 export default function CalendarPage() {
   const { t, currentLanguage } = useLanguage();
   const navigate = useNavigate();
@@ -17,9 +18,7 @@ export default function CalendarPage() {
   const [selectedDay, setSelectedDay] = useState<number | null>(null);
 
   // Getting days of the week labels
-
   let daysOfWeek: string[] = [];
-
   if (currentLanguage === "pl") {
     daysOfWeek = ["Pon", "Wt", "Śr", "Czw", "Pt", "Sob", "Nd"];
   } else if (currentLanguage === "en") {
@@ -27,7 +26,6 @@ export default function CalendarPage() {
   }
 
   // Fetching Events
-
   const fetchEvents = useCallback(async () => {
     await axios
       .get<OrkestroEvent[]>(`/api/events/me/?year=${year}&month=${month + 1}`)
@@ -42,16 +40,17 @@ export default function CalendarPage() {
   }, [fetchEvents]);
 
   // Getting days in selected month and setting Monday as the first day of the week
-
   const daysInMonth = new Date(year, month + 1, 0).getDate();
   const firstDayOfWeek = (new Date(year, month, 1).getDay() + 6) % 7;
 
+  // Filter events for selected day
   const eventsForDay = (day: number) => {
     return events.filter(
       (event: OrkestroEvent) => new Date(event.date).getDate() === day
     );
   };
 
+  // Change month to next
   const nextMonth = () => {
     if (month === 11) {
       setMonth(0);
@@ -61,6 +60,7 @@ export default function CalendarPage() {
     }
   };
 
+  // Change month to previous
   const prevMonth = () => {
     if (month === 0) {
       setMonth(11);
@@ -70,15 +70,16 @@ export default function CalendarPage() {
     }
   };
 
+  // Go back to current month
   const setCurrentMonth = () => {
     setYear(new Date().getFullYear());
     setMonth(new Date().getMonth());
     setSelectedDay(null);
   };
 
+  // Year selection range
   const startYear = 2020;
   const endYear = new Date().getFullYear() + 2;
-
   const yearOptions = Array.from(
     {
       length: endYear - startYear + 1,
@@ -88,9 +89,11 @@ export default function CalendarPage() {
 
   return (
     <div className="bg-gray-200 p-6 rounded-lg max-w-4xl mx-auto mt-8">
+      {/* Header */}
       <h1 className="text-2xl font-bold text-center mb-4">
         {t("calendar.title")}
       </h1>
+
       <div className="flex items-center justify-center space-x-4 mb-6">
         {/* Previous Month Button */}
         <button
@@ -171,6 +174,7 @@ export default function CalendarPage() {
                 dayEvents.length > 0 ? "bg-blue-50" : ""
               }`}
             >
+              {/* Day field */}
               <div className="text-lg font-bold">{day}</div>
               {dayEvents.length > 0 && (
                 <div className="text-sm text-green-600">
@@ -192,7 +196,7 @@ export default function CalendarPage() {
         })}
       </div>
 
-      {/* Events for Selected Day */}
+      {/* List of Events for Selected Day */}
       {selectedDay && (
         <div className="mt-6 bg-gray-100 p-4 rounded-md shadow-md">
           <h3 className="text-lg font-semibold">
