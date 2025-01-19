@@ -77,7 +77,7 @@ class MemberViewSetTestCase(TestCase):
 
         for case in test_cases:
             with self.subTest(user=case["user"]):
-                new_user = User.objects.create(email="user@a.com", name="User", surname="R", date_joined=timezone.now())
+                new_user = User.objects.create(email=f"user_{case["user"].name}@a.com", name="User", surname="R", date_joined=timezone.now())
                 member_to_update = Member.objects.create(group=self.group, user=new_user, permission_level="C")
 
                 updated_data = {
@@ -99,8 +99,8 @@ class MemberViewSetTestCase(TestCase):
 
     def test_update_demote_last_manager(self):
         test_cases = [
-            {"user": self.staff, "expected_status": 400},
-            {"user": self.manager, "expected_status": 400},
+            {"user": self.staff, "expected_status": 400, "expected_error": "Can't demote the last manager"},
+            {"user": self.manager, "expected_status": 400, "expected_error": "You can't change your own permission level"},
             {"user": self.moderator, "expected_status": 403},
             {"user": self.musician, "expected_status": 403},
             {"user": self.outsider, "expected_status": 403},
@@ -125,7 +125,7 @@ class MemberViewSetTestCase(TestCase):
                 self.assertEqual(response.status_code, case["expected_status"])
 
                 if response.status_code == 400:
-                    self.assertEqual(response.data["error"], "Can't demote the last manager")
+                    self.assertEqual(response.data["error"], case["expected_error"])
 
     def test_update_invalid_data(self):
         test_cases = [
@@ -140,7 +140,7 @@ class MemberViewSetTestCase(TestCase):
             with self.subTest(user=case["user"]):
                 updated_data = {"permission_level": "Invalid"}
 
-                new_user = User.objects.create(email="user@a.com", name="User", surname="R", date_joined=timezone.now())
+                new_user = User.objects.create(email=f"user_{case["user"].name}@a.com", name="User", surname="R", date_joined=timezone.now())
                 member_to_update = Member.objects.create(group=self.group, user=new_user, permission_level="C")
 
                 request = self.factory.put(
@@ -165,8 +165,8 @@ class MemberViewSetTestCase(TestCase):
 
         for case in test_cases:
             with self.subTest(user=case["user"]):
-                new_user = User.objects.create(email="user@a.com", name="User", surname="R", date_joined=timezone.now())
-                member_to_destroy = Member.objects.create(user=new_user, group=self.group)
+                new_user = User.objects.create(email=f"user_{case["user"].name}@a.com", name="User", surname="R", date_joined=timezone.now())
+                member_to_destroy = Member.objects.create(user=new_user, group=self.group, permission_level="C")
 
                 request = self.factory.delete(f"/api/members/{member_to_destroy.member_id}/")
                 force_authenticate(request, user=case["user"])
@@ -176,8 +176,8 @@ class MemberViewSetTestCase(TestCase):
 
     def test_destroy_last_manager(self):
         test_cases = [
-            {"user": self.staff, "expected_status": 400},
-            {"user": self.manager, "expected_status": 400},
+            {"user": self.staff, "expected_status": 400, "expected_error": "Can't remove the last manager"},
+            {"user": self.manager, "expected_status": 400, "expected_error": "You can't remove yourself from the group"},
             {"user": self.moderator, "expected_status": 403},
             {"user": self.musician, "expected_status": 403},
             {"user": self.outsider, "expected_status": 403},
@@ -194,7 +194,7 @@ class MemberViewSetTestCase(TestCase):
                 self.assertEqual(response.status_code, case["expected_status"])
 
                 if response.status_code == 400:
-                    self.assertEqual(response.data["error"], "Can't remove the last manager")
+                    self.assertEqual(response.data["error"], case["expected_error"])
 
     def test_search(self):
         # Define test cases with expected outcomes
