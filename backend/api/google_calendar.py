@@ -107,7 +107,7 @@ def get_calendar_events(user: User):
     return response.json()
 
 
-def create_calendar_event(access_token, calendar_id, summary, description, start: datetime, end: datetime):
+def create_calendar_event(access_token, calendar_id, summary, description, start: datetime, end: datetime, location):
     """Creates a new event in the specified Google Calendar."""
 
     event_data = {
@@ -120,7 +120,8 @@ def create_calendar_event(access_token, calendar_id, summary, description, start
         "end": {
             "dateTime": end.isoformat(),
             "timeZone": settings.TIME_ZONE,
-        }
+        },
+        "location": location,
     }
 
     url = f"https://www.googleapis.com/calendar/v3/calendars/{calendar_id}/events"
@@ -146,8 +147,9 @@ def create_calendar_orkestro_event(user: User, event: Event):
         description = f"(id: {event.event_id})"
     start = event.date
     end = start + timedelta(hours=1)
+    location = event.place
 
-    return create_calendar_event(access_token, calendar_id, summary, description, start, end)
+    return create_calendar_event(access_token, calendar_id, summary, description, start, end, location)
 
 
 def delete_calendar_event(access_token, calendar_id, calendar_event_id):
