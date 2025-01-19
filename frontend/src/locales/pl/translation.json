@@ -278,5 +278,9 @@
     "deleting": "Usuwanie...",
     "back": "Powrót",
     "name-mismatch": "Nazwa utworu się nie zgadza"
+  },
+  "general": {
+    "loading": "Ładowanie…"
   }
+
 }

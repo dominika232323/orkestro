@@ -277,5 +277,8 @@
     "deleting": "Deleting...",
     "back": "Return",
     "name-mismatch": "Track name does not match"
+  },
+  "general": {
+    "loading": "Loading…"
   }
 }

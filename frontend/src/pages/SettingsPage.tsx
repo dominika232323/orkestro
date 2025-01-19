@@ -26,6 +26,7 @@ export default function SettingsPage() {
     OrkestroUserInstrument[]
   >([]);
   const [newInstrument, setNewInstrument] = useState<string>("");
+  const [loadingGcalendar, setLoadingGcalendar] = useState<boolean>(false);
   const [justLinkedGcalendar, setJustLinkedGcalendar] = useState<boolean>(false);
 
   // Get instruments name in correct language
@@ -111,6 +112,7 @@ export default function SettingsPage() {
     flow: "auth-code", // use "auth-code" for backend exchange
     onSuccess: async (codeResponse) => {
       console.log("Google Calendar consent successful:", codeResponse);
+      setLoadingGcalendar(true);
 
       // Send the authorization code to the backend
       await axios.post("/api/google-calendar/", {
@@ -118,9 +120,13 @@ export default function SettingsPage() {
       })
       .then((backendResponse) => {
         console.log("Backend Google Calendar link successful:", backendResponse.data);
+        setLoadingGcalendar(false);
         setJustLinkedGcalendar(true);
       })
-      .catch((error) => console.error("Backend Google Calendar link failed:", error));
+      .catch((error) => {
+        console.error("Backend Google Calendar link failed:", error)
+        setLoadingGcalendar(false);
+      });
     },
     onError: () => console.log("Google Calendar login failed"),
     scope: "https://www.googleapis.com/auth/calendar",
@@ -181,6 +187,7 @@ export default function SettingsPage() {
                   >
                   {t("settings.connect")}
                 </button>
+                {loadingGcalendar && <span className="ml-2 text-gray-600">{t("general.loading")}</span>}
               </>
             )}
           </p>
