@@ -47,7 +47,7 @@ class TrackViewSet(viewsets.ModelViewSet):
     def search(self, request):
         group_id = request.GET.get("group_id")
         terms = request.GET.get("search", "").split()
-        search_language = request.GET.get("search_language", "en")
+        search_language = request.GET.get("lang", "en")
 
         query = Q()
         for term in terms:

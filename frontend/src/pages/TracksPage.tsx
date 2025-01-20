@@ -18,7 +18,7 @@ import DeleteTrack from "../components/DeleteTrack";
 
 // Page to show users tracks
 export default function TracksPage() {
-  const { t } = useLanguage();
+  const { t, currentLanguage } = useLanguage();
   const { groupId } = useParams();
   const navigate = useNavigate();
 
@@ -39,7 +39,7 @@ export default function TracksPage() {
 
     await axios
       .get<Paged<OrkestroTrack>>(
-        `/api/tracks/search/?group_id=${groupId}&page=${currentPage}${searchQuery ? `&name=${searchQuery}` : ""}`
+        `/api/tracks/search/?group_id=${groupId}&lang=${currentLanguage}&page=${currentPage}&search=${searchQuery}`
       )
       .then((response) => {
         setTracks(response.data.items);
