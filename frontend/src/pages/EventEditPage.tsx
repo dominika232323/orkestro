@@ -127,7 +127,7 @@ export default function EventEditPage() {
   };
 
   return (
-    <div className="bg-gray-200 p-6 rounded-lg max-w-4xl mx-auto mt-8">
+    <div className="bg-gray-200 py-6 px-2 sm:px-6 rounded-lg max-w-4xl mx-auto mt-8">
       {/* Header */}
       <h1 className="text-2xl font-bold text-center mb-4">
         {t("edit-event.title")}

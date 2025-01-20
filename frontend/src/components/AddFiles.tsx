@@ -149,7 +149,7 @@ export default function AddFiles({
 
   return (
     <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center">
-      <div className="bg-white p-6 rounded-lg max-w-lg w-full">
+      <div className="bg-white py-6 px-2 sm:px-6 rounded-lg max-w-lg w-full">
         {/* Header */}
         <h2 className="text-lg font-bold mb-4">{t("add-file.title")}</h2>
 
