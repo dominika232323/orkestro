@@ -73,7 +73,7 @@ export default function EventsPage() {
   }, [fetchEvents]);
 
   return (
-    <div className="bg-gray-200 p-6 rounded-lg max-w-4xl mx-auto mt-8">
+    <div className="bg-gray-200 py-6 px-2 sm:px-6 rounded-lg max-w-4xl mx-auto mt-8">
       <h1 className="text-2xl font-bold text-center mb-6">
         {t("events.title")}
       </h1>
@@ -104,7 +104,7 @@ export default function EventsPage() {
           {events.map((event) => (
             <li
               key={event.event_id}
-              className="flex justify-between bg-white p-6 rounded-lg shadow-md"
+              className="flex flex-col sm:flex-row justify-between bg-white p-4 sm:p-6 rounded-lg shadow-md"
             >
               <div>
                 <h2 className="text-lg font-bold mb-4">{event.name}</h2>
@@ -146,7 +146,7 @@ export default function EventsPage() {
                   {event.place}
                 </p>
               </div>
-              <div className="flex flex-col justify-evenly ml-2">
+              <div className="flex flex-row sm:flex-col justify-evenly gap-2 my-2">
                 <button
                   onClick={() => navigate(`/event-details/${event.event_id}`)}
                   className="px-2 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 font-medium transition-colors whitespace-nowrap"
@@ -154,15 +154,17 @@ export default function EventsPage() {
                   <FontAwesomeIcon className="mr-2" icon={faBars} />
                   <span>{t("events.details")}</span>
                 </button>
+
                 {role?.is_manager && (
                   <>
                     <button
                       onClick={() => navigate(`/edit-event/${event.event_id}`)}
-                      className="px-2 py-2 my-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600 font-medium transition-colors whitespace-nowrap"
+                      className="px-2 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 font-medium transition-colors whitespace-nowrap"
                     >
                       <FontAwesomeIcon className="mr-2" icon={faPen} />
                       <span>{t("events.edit")}</span>
                     </button>
+
                     <button
                       className="px-3 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 font-medium transition-colors"
                       onClick={() => {
