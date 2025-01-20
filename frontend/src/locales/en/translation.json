@@ -90,7 +90,7 @@
     "no-tracks": "No tracks",
     "download": "Download",
     "add-track": "New track",
-    "placeholder": "Search by name...",
+    "placeholder": "Search by name, instrument, event...",
     "search": "Search",
     "loading": "Tracks loading...",
     "delete": "Delete",
