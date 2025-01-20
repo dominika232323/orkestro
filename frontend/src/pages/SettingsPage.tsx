@@ -1,6 +1,6 @@
 import { useGoogleLogin } from "@react-oauth/google";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useLanguage } from "../LanguageContext";
+import { LanguageSelector, useLanguage } from "../LanguageContext";
 import {
   faPlus,
   faXmark,
@@ -141,13 +141,18 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="bg-gray-200 p-6 rounded-lg max-w-4xl mx-auto mt-8">
+    <div className="bg-gray-200 py-6 px-2 sm:px-6 rounded-lg max-w-4xl mx-auto mt-8">
+      {/* Language selector (only mobile devices) */}
+      <div className="fixed right-6 inline sm:hidden">
+          <LanguageSelector />
+      </div>
+
       {/* Header */}
       <h1 className="text-2xl font-bold text-center mb-4">
         {t("settings.title")}
       </h1>
 
-      <div className="flex items-center gap-8 mb-6">
+      <div className="flex flex-col sm:flex-row items-center gap-8 mb-6">
         {/* User's profile picture */}
         <div className="h-32 w-32">
           {user && user.profile_picture_url ? (
