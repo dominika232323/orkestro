@@ -27,7 +27,7 @@ export default function GroupComponent({ group }: Params) {
 
   return (
     <li className="mt-3">
-      <div className="flex justify-between items-center p-2 rounded-lg border-2 border-gray-300">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-3 rounded-lg border-2 border-gray-300 space-y-2 sm:space-y-0">
         {/* Group info */}
         <div>
           <p className="font-semibold text-lg">{group.name}</p>
@@ -35,11 +35,11 @@ export default function GroupComponent({ group }: Params) {
         </div>
 
         {/* Navigation buttons */}
-        <div className="flex space-x-4">
+        <div className="flex flex-wrap gap-2 md:gap-4">
           {/* New message */}
           {(role?.is_manager || role?.is_moderator) && (
             <button
-              className="text-sm text-blue-500 hover:text-blue-700 hidden sm:inline"
+              className="text-sm text-blue-500 hover:text-blue-700"
               onClick={() => {
                 navigate(`/new-message/${group.group_id}`);
               }}
@@ -50,7 +50,7 @@ export default function GroupComponent({ group }: Params) {
 
           {/* Events */}
           <button
-            className="text-sm text-blue-500 hover:text-blue-700 hidden sm:inline"
+            className="text-sm text-blue-500 hover:text-blue-700"
             onClick={() => {
               navigate(`/events/${group.group_id}`);
             }}
@@ -60,7 +60,7 @@ export default function GroupComponent({ group }: Params) {
 
           {/* Tracks */}
           <button
-            className="text-sm text-blue-500 hover:text-blue-700 hidden sm:inline"
+            className="text-sm text-blue-500 hover:text-blue-700"
             onClick={() => {
               navigate(`/tracks/${group.group_id}`);
             }}
