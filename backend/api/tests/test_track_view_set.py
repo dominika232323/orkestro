@@ -153,7 +153,7 @@ class TrackViewSetTestCase(TestCase):
                 "expected_tracks": [self.track1, self.track2, self.track3],
             },
             {
-                "query_params": {"group_id": self.group.group_id, "search": "Gitara", "search_language": "pl"},
+                "query_params": {"group_id": self.group.group_id, "search": "Gitara", "lang": "pl"},
                 "expected_tracks": [self.track1, self.track2, self.track3],
             },
             {
