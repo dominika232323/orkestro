@@ -40,6 +40,12 @@ export default function LoginPage() {
           </label>
           <LanguageSelector />
         </div>
+
+        <div className="mt-6 text-sm text-gray-600">
+          <a href="/privacy-policy/" className="text-blue-500 hover:underline">
+            {t("privacy-policy.title")}
+          </a>
+        </div>
       </div>
     </div>
   );

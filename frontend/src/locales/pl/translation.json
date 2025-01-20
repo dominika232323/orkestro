@@ -283,6 +283,8 @@
   },
   "general": {
     "loading": "Ładowanie…"
+  },
+  "privacy-policy": {
+    "title": "Polityka Prywatności"
   }
-
 }

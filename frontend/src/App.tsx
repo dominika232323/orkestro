@@ -5,6 +5,7 @@ import {
 } from "react-router-dom";
 
 import LoginPage from "./pages/LoginPage";
+import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
 import MainLayout from "./layouts/MainLayout";
 import MessagesPage from "./pages/MessagesPage";
 import CalendarPage from "./pages/CalendarPage";
@@ -27,6 +28,10 @@ export default function App() {
     {
       path: "/login/",
       element: <LoginPage />,
+    },
+    {
+      path: "/privacy-policy/",
+      element: <PrivacyPolicyPage />,
     },
     {
       path: "/",
