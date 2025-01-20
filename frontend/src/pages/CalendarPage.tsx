@@ -88,16 +88,16 @@ export default function CalendarPage() {
   );
 
   return (
-    <div className="bg-gray-200 p-6 rounded-lg max-w-4xl mx-auto mt-8">
+    <div className="bg-gray-200 py-6 px-2 sm:px-6 rounded-lg max-w-4xl mx-auto mt-8">
       {/* Header */}
       <h1 className="text-2xl font-bold text-center mb-4">
         {t("calendar.title")}
       </h1>
 
-      <div className="flex items-center justify-center space-x-4 mb-6">
+      <div className="flex items-center justify-center space-x-4 mb-4">
         {/* Previous Month Button */}
         <button
-          className="p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+          className="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
           onClick={prevMonth}
         >
           <FontAwesomeIcon icon={faArrowLeft} />
@@ -133,7 +133,7 @@ export default function CalendarPage() {
 
         {/* Next Month Button */}
         <button
-          className="p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+          className="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
           onClick={nextMonth}
         >
           <FontAwesomeIcon icon={faArrowRight} />
@@ -141,9 +141,9 @@ export default function CalendarPage() {
       </div>
 
       {/* Show Current Month Button */}
-      <div className="text-center">
+      <div className="text-center mb-4">
         <button
-          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+          className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
           onClick={setCurrentMonth}
         >
           {t("calendar.current-month")}
@@ -170,7 +170,7 @@ export default function CalendarPage() {
             <div
               key={day}
               onClick={() => setSelectedDay(day)}
-              className={`border rounded-md p-4 cursor-pointer hover:bg-blue-100 ${
+              className={`border rounded-md p-2 md:p-4 cursor-pointer hover:bg-blue-100 ${
                 dayEvents.length > 0 ? "bg-blue-50" : ""
               }`}
             >
@@ -178,17 +178,25 @@ export default function CalendarPage() {
               <div className="text-lg font-bold">{day}</div>
               {dayEvents.length > 0 && (
                 <div className="text-sm text-green-600">
-                  {dayEvents.length}{" "}
-                  {currentLanguage === "en"
-                    ? dayEvents.length === 1
-                      ? "Event"
-                      : "Events"
-                    : dayEvents.length === 1
-                      ? "Wydarzenie"
-                      : [2, 3, 4].includes(dayEvents.length % 10) &&
+                  <span className="inline sm:hidden bg-green-600 text-white font-bold p-1 rounded-lg">
+                    {dayEvents.length}
+                  </span>
+                  <span className="hidden sm:inline">
+                    {dayEvents.length}
+                  </span>
+                  <span className="hidden sm:inline">
+                    {" "}
+                    {currentLanguage === "en"
+                      ? dayEvents.length === 1
+                        ? "event"
+                        : "events"
+                      : dayEvents.length === 1
+                        ? "wydarzenie"
+                        : [2, 3, 4].includes(dayEvents.length % 10) &&
                           ![12, 13, 14].includes(dayEvents.length % 100)
-                        ? "Wydarzenia"
-                        : "Wydarzeń"}
+                          ? "wydarzenia"
+                          : "wydarzeń"}
+                  </span>
                 </div>
               )}
             </div>

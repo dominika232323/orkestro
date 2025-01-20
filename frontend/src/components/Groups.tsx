@@ -64,7 +64,7 @@ export default function Groups() {
   }, [navigate]);
 
   return (
-    <div className="bg-gray-200 p-6 rounded-lg max-w-4xl mx-auto mt-8">
+    <div className="bg-gray-200 py-6 px-2 sm:px-6 rounded-lg max-w-4xl mx-auto mt-8">
       {/* Header */}
       <h1 className="text-2xl font-bold text-center mb-4">
         {t("groups.title")}
@@ -83,7 +83,7 @@ export default function Groups() {
 
       {/* List of groups */}
       {groups && groups.length > 0 ? (
-        <ul className="bg-white p-4 pt-2 rounded-lg space-y-6">
+        <ul className="bg-white p-2 sm:p-4 pt-2 rounded-lg space-y-6">
           {groups.map((group) => (
             <GroupComponent key={group.group_id} group={group} />
           ))}
