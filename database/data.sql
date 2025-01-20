@@ -17,17 +17,20 @@ INSERT INTO groups (name, description, supergroup_id) VALUES ('Wypełniona podgr
 
 INSERT INTO members (group_id, user_id, permission_level) VALUES (1, 1, 'A');
 INSERT INTO members (group_id, user_id, permission_level) VALUES (1, 2, 'A');
-INSERT INTO members (group_id, user_id, permission_level) VALUES (2, 3, 'A');
-INSERT INTO members (group_id, user_id, permission_level) VALUES (2, 4, 'A');
-INSERT INTO members (group_id, user_id, permission_level) VALUES (3, 1, 'A');
-INSERT INTO members (group_id, user_id, permission_level) VALUES (3, 2, 'A');
-INSERT INTO members (group_id, user_id, permission_level) VALUES (4, 3, 'A');
-INSERT INTO members (group_id, user_id, permission_level) VALUES (4, 4, 'A');
-INSERT INTO members (group_id, user_id, permission_level) VALUES (4, 1, 'A');
-INSERT INTO members (group_id, user_id, permission_level) VALUES (4, 2, 'A');
+INSERT INTO members (group_id, user_id, permission_level) VALUES (1, 3, 'A');
+INSERT INTO members (group_id, user_id, permission_level) VALUES (1, 4, 'A');
+
+INSERT INTO members (group_id, user_id, permission_level) VALUES (3, 1, 'C');
+INSERT INTO members (group_id, user_id, permission_level) VALUES (3, 2, 'C');
 INSERT INTO members (group_id, user_id, permission_level) VALUES (3, 3, 'C');
 INSERT INTO members (group_id, user_id, permission_level) VALUES (3, 4, 'C');
-INSERT INTO members (group_id, user_id, permission_level) VALUES (3, 5, 'C');
+
+INSERT INTO members (group_id, user_id, permission_level) VALUES (4, 1, 'A');
+INSERT INTO members (group_id, user_id, permission_level) VALUES (4, 2, 'A');
+INSERT INTO members (group_id, user_id, permission_level) VALUES (4, 3, 'A');
+INSERT INTO members (group_id, user_id, permission_level) VALUES (4, 4, 'A');
+
+INSERT INTO members (group_id, user_id, permission_level) VALUES (3, 5, 'A');
 INSERT INTO members (group_id, user_id, permission_level) VALUES (3, 6, 'C');
 INSERT INTO members (group_id, user_id, permission_level) VALUES (3, 7, 'B');
 INSERT INTO members (group_id, user_id, permission_level) VALUES (3, 8, 'C');
@@ -40,8 +43,8 @@ INSERT INTO members (group_id, user_id, permission_level) VALUES (4, 9, 'C');
 
 INSERT INTO invitations (group_id, user_id, permission_level) VALUES (2, 1, 'B');
 INSERT INTO invitations (group_id, user_id, permission_level) VALUES (2, 2, 'B');
-INSERT INTO invitations (group_id, user_id, permission_level) VALUES (1, 3, 'B');
-INSERT INTO invitations (group_id, user_id, permission_level) VALUES (1, 4, 'B');
+INSERT INTO invitations (group_id, user_id, permission_level) VALUES (2, 3, 'B');
+INSERT INTO invitations (group_id, user_id, permission_level) VALUES (2, 4, 'B');
 
 INSERT INTO events (group_id, name, description, date, place) VALUES (3, 'Koncert w Progresji - próba 1', NULL, '2024-12-13 14:00:00', 'Warszawa, Fort Wola 22');
 INSERT INTO events (group_id, name, description, date, place) VALUES (3, 'Koncert w Progresji - próba generalna', NULL, '2024-12-17 12:00:00', 'Warszawa, Fort Wola 22');
