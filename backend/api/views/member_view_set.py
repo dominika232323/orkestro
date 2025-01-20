@@ -2,6 +2,7 @@
 Handles API requests regarding group membership data:
 - changing permissions, deletion (requires being the manager of the group, can't demote/remove the last manager)
 - searching members in a group (requires being a member of that group)
+- leaving the group
 Adding members is normally done by invitations (or group creation - adds the creator).
 Staff users can do all of the above + create members and list all/one.
 """

@@ -31,8 +31,6 @@ class EventAttendeeViewSet(viewsets.ModelViewSet):
         if not serializer.is_valid() or not self.is_member(request):
             return Response({"error": "Data validation failed"}, status=status.HTTP_400_BAD_REQUEST)
         serializer.save()
-        # TODO: when Google Calendar is implemented - handle event creation in this method
-        # TODO: handle event deletion in event_attendee, event, group destroy methods (need to overwrite defaults)
         return Response(data=serializer.data, status=status.HTTP_201_CREATED)
 
     @action(detail=False, methods=["get"])

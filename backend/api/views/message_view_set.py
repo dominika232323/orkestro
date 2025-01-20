@@ -1,6 +1,6 @@
 """
 Handles API requests regarding message data:
-- creating messages (requires being the manager or the moderator of the group)
+- creating messages with recipients and emails (requires being the manager or the moderator of the group)
 - getting all messages of a group sent to the calling user
 Staff users can do all of the above + list all messages or a specific one.
 """

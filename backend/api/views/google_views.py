@@ -1,5 +1,5 @@
 """
-Handles API requests regarding Google authentication.
+Handles API requests involving Google (authentication, calendar synchronization).
 """
 
 from datetime import timedelta
