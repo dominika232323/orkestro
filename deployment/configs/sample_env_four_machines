@@ -8,7 +8,8 @@ POSTGRES_MASTER_PASSWORD=[password]
 POSTGRES_MASTER_HOST=10.0.0.11
 POSTGRES_MASTER_PORT=5432
 
-# Slave database - if unused, leave the parameters the same as in master
+# Slave database
+USE_SLAVE=true
 POSTGRES_SLAVE_USER=myuser_slave
 POSTGRES_SLAVE_PASSWORD=[password_slave]
 POSTGRES_SLAVE_HOST=10.0.0.12
@@ -21,9 +22,16 @@ DJANGO_WORKERS=3
 DOMAIN=orkestro.ddns.net
 IP=localhost
 
+# Email sending
+EMAIL_HOST="smtp.gmail.com"
+EMAIL_PORT=587
+EMAIL_USER=[SMTP user]
+EMAIL_PASSWORD=[SMTP password]
+
 # Other
 BACKEND_HOSTS="10.0.0.20:8000"
 REACT_APP_GOOGLE_CLIENT_ID=[Google API client ID]
+GOOGLE_CLIENT_SECRET=[Google API client secret]
 USE_HTTPS=true
 BROWSER=none
 

@@ -16,7 +16,8 @@ POSTGRES_MASTER_PASSWORD=[password]
 POSTGRES_MASTER_HOST=192.168.0.100
 POSTGRES_MASTER_PORT=5432
 
-# Slave database - if unused, leave parameters the same as in master
+# Slave database
+USE_SLAVE=true
 POSTGRES_SLAVE_USER=myuser_slave
 POSTGRES_SLAVE_PASSWORD=[password]
 POSTGRES_SLAVE_HOST=192.168.0.100
@@ -82,7 +83,7 @@ python manage.py runserver 0.0.0.0:8000
 
 Serwer słucha na: <http://localhost:8000/>
 
-### Testy z pokryciem linii i gałęzi
+### Testy z pokryciem linii i gałęzi (należy ustawić `USE_SLAVE=false` w `.env`)
 ```sh
 coverage run manage.py test --keepdb
 coverage report -m

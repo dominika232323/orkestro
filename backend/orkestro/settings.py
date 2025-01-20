@@ -99,17 +99,8 @@ WSGI_APPLICATION = "orkestro.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-# ========================================================
-# Remove after development
-
-USE_SLAVE = os.getenv("USE_SLAVE", "false") == "true"
-
-if USE_SLAVE:  # if using only one database, uses "default"
+if os.getenv("USE_SLAVE", "false") == "true":  # if false, uses "default"
     DATABASE_ROUTERS = ["api.routers.ReplicationRouter"]
-
-# =============================================================
-
-# DATABASE_ROUTERS = ["api.routers.ReplicationRouter"]
 
 DATABASES = {
     "default": {
