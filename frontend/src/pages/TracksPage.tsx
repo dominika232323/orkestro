@@ -66,7 +66,7 @@ export default function TracksPage() {
   }, [fetchRole]);
 
   return (
-    <div className="bg-gray-200 p-6 rounded-lg max-w-4xl mx-auto mt-8">
+    <div className="bg-gray-200 py-6 px-2 sm:px-6 rounded-lg max-w-4xl mx-auto mt-8">
       {/* Header */}
       <h1 className="text-2xl font-bold text-center mb-6">
         {t("tracks.title")}
@@ -98,13 +98,13 @@ export default function TracksPage() {
           {tracks.map((track) => (
             <li
               key={track.track_id}
-              className="bg-white p-4 rounded-lg shadow-md flex justify-between items-center"
+              className="flex flex-col sm:flex-row justify-between bg-white p-4 sm:p-6 rounded-lg shadow-md"
             >
               <div className="flex flex-col">
                 <h2 className="text-lg font-bold">{track.name}</h2>
                 <p>{track.artist}</p>
               </div>
-              <div className="flex flex-col justify-evenly ml-2">
+              <div className="flex flex-row justify-evenly gap-2 my-2">
                 <button
                   onClick={() =>
                     navigate(`/track-details/${track.track_id}/${groupId}`)
@@ -114,17 +114,19 @@ export default function TracksPage() {
                   <FontAwesomeIcon className="mr-2" icon={faBars} />
                   <span>{t("events.details")}</span>
                 </button>
+
                 {role?.is_manager && (
                   <>
                     <button
                       onClick={() =>
                         navigate(`/edit-track/${track.track_id}/${groupId}`)
                       }
-                      className="px-2 py-2 my-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600 font-medium transition-colors whitespace-nowrap"
+                      className="px-2 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 font-medium transition-colors whitespace-nowrap"
                     >
                       <FontAwesomeIcon className="mr-2" icon={faPen} />
                       <span>{t("tracks.edit")}</span>
                     </button>
+
                     <button
                       className="px-3 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 font-medium transition-colors"
                       onClick={() => {
