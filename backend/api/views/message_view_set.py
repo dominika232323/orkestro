@@ -47,8 +47,9 @@ class MessageViewSet(viewsets.ModelViewSet):
                 )
                 recipient.save()
 
-            emails = [user.email for user in recipients]
-            send_mail(subject=message.title, message=message.content, from_email=settings.EMAIL_HOST_USER, recipient_list=emails)
+            if request.GET.get("email") == "1":
+                emails = [user.email for user in recipients]
+                send_mail(subject=message.title, message=message.content, from_email=settings.EMAIL_HOST_USER, recipient_list=emails)
 
             return Response(data=serializer.data, status=status.HTTP_201_CREATED)
 

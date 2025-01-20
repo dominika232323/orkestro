@@ -21,7 +21,7 @@ export default function MessageNewPage() {
   const [members, setMembers] = useState<OrkestroMember[]>([]);
   const [selectedUserIds, setSelectedUserIds] = useState<number[]>([]);
   const [error, setError] = useState<boolean>(false);
-  const [sendByEmail, setSendByEmail] = useState<boolean>(false);
+  const [sendByEmail, setSendByEmail] = useState<boolean>(true);
 
   const parsedGroupId = parseId(groupId);
 
@@ -76,12 +76,6 @@ export default function MessageNewPage() {
     setSelectedUserIds(selectedOptions.map((option) => option.value));
   };
 
-  // Handle sending email
-  const handleSend = async () => {
-    // TODO: implement actual email-sending logic here
-    console.log("Sending email...");
-  };
-
   // Send message
   const handleSubmit = async () => {
     setError(false);
@@ -90,9 +84,6 @@ export default function MessageNewPage() {
       return;
     }
 
-    if (sendByEmail) {
-      await handleSend();
-    }
 
     const encodedMessage = {
       ...message,
@@ -100,7 +91,7 @@ export default function MessageNewPage() {
     };
 
     const userIdsQuery = selectedUserIds.map((id) => `id=${id}`).join("&");
-    const url = `/api/messages/?${userIdsQuery}`;
+    const url = `/api/messages/?email=${sendByEmail ? "1" : "0"}&${userIdsQuery}`;
 
     await axios
       .post(url, encodedMessage)
