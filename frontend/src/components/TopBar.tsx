@@ -31,12 +31,13 @@ export default function TopBar() {
   };
 
   return (
-    <div className="relative bg-gray-100 py-4 px-2 sm:px-4 shadow-md flex items-center">
+    <div className="relative bg-gray-100 py-4 px-3 sm:px-4 shadow-md flex items-center">
       {/* Left Section - Icons */}
       <div className="flex items-center space-x-3 sm:space-x-4">
         <HoverText textToShow={t("top-bar.messages")}>
           <TopBarIcon location="/messages/" iconObject={faMessage} />
         </HoverText>
+
         <HoverText textToShow={t("top-bar.calendar")}>
           <TopBarIcon location="/calendar/" iconObject={faCalendarDays} />
         </HoverText>
@@ -56,9 +57,11 @@ export default function TopBar() {
 
       {/* Right Section - Controls */}
       <div className="flex items-center space-x-3 sm:space-x-4 ml-auto">
+        {/* Language selector (hidden on mobile devices) */}
         <div className="relative hidden sm:inline">
           <LanguageSelector />
         </div>
+
         {user && user.is_staff && (
           <HoverText textToShow={t("top-bar.admin-panel")}>
             <a href="/admin/">
@@ -66,9 +69,11 @@ export default function TopBar() {
             </a>
           </HoverText>
         )}
+
         <HoverText textToShow={t("top-bar.settings")}>
           <TopBarIcon location="/settings/" iconObject={faCog} />
         </HoverText>
+
         <HoverText textToShow={t("top-bar.logout")}>
           <div onClick={handleLogOut}>
             <TopBarIcon location={null} iconObject={faArrowRightFromBracket} />
