@@ -39,7 +39,7 @@ export default function GroupComponent({ group }: Params) {
           {/* New message */}
           {(role?.is_manager || role?.is_moderator) && (
             <button
-              className="text-sm text-blue-500 hover:text-blue-700"
+              className="text-sm text-blue-500 hover:text-blue-700 hidden sm:inline"
               onClick={() => {
                 navigate(`/new-message/${group.group_id}`);
               }}
@@ -48,19 +48,9 @@ export default function GroupComponent({ group }: Params) {
             </button>
           )}
 
-          {/* Manage group */}
-          <button
-            className="text-sm text-blue-500 hover:text-blue-700"
-            onClick={() => {
-              navigate(`/manage-group/${group.group_id}`);
-            }}
-          >
-            {t("group.manage")}
-          </button>
-
           {/* Events */}
           <button
-            className="text-sm text-blue-500 hover:text-blue-700"
+            className="text-sm text-blue-500 hover:text-blue-700 hidden sm:inline"
             onClick={() => {
               navigate(`/events/${group.group_id}`);
             }}
@@ -70,12 +60,22 @@ export default function GroupComponent({ group }: Params) {
 
           {/* Tracks */}
           <button
-            className="text-sm text-blue-500 hover:text-blue-700"
+            className="text-sm text-blue-500 hover:text-blue-700 hidden sm:inline"
             onClick={() => {
               navigate(`/tracks/${group.group_id}`);
             }}
           >
             {t("group.tracks")}
+          </button>
+
+          {/* Manage group */}
+          <button
+            className="text-sm text-blue-500 hover:text-blue-700"
+            onClick={() => {
+              navigate(`/manage-group/${group.group_id}`);
+            }}
+          >
+            {t("group.manage")}
           </button>
         </div>
       </div>
