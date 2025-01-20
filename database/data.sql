@@ -11,9 +11,9 @@ INSERT INTO users (name, surname, email) VALUES ('Sebastian', 'Lewandowski', 'sl
 -- id 10/Sebastian Lewandowski is not in any group and can be invited to one
 
 INSERT INTO groups (name, description, supergroup_id) VALUES ('Pusta grupa', 'Grupa do dodawania treści', NULL);
-INSERT INTO groups (name, description, supergroup_id) VALUES ('Pusta podgrupa', 'Zamiana moderatorów i kierowników', 1);
+INSERT INTO groups (name, description, supergroup_id) VALUES ('Pusta podgrupa', 'Podgrupa bez niczego', 1);
 INSERT INTO groups (name, description, supergroup_id) VALUES ('Wypełniona grupa', 'Grupa do przeglądania treści', NULL);
-INSERT INTO groups (name, description, supergroup_id) VALUES ('Wypełniona podgrupa', 'Zamiana muzyków i kierowników', 3);
+INSERT INTO groups (name, description, supergroup_id) VALUES ('Wypełniona podgrupa', 'Podgrupa z treściami', 3);
 
 INSERT INTO members (group_id, user_id, permission_level) VALUES (1, 1, 'A');
 INSERT INTO members (group_id, user_id, permission_level) VALUES (1, 2, 'A');
