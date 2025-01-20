@@ -27,7 +27,7 @@ export default function GroupComponent({ group }: Params) {
 
   return (
     <li className="mt-3">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-3 rounded-lg border-2 border-gray-300 space-y-2 sm:space-y-0">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center p-3 rounded-lg border-2 border-gray-300 space-y-2 md:space-y-0">
         {/* Group info */}
         <div>
           <p className="font-semibold text-lg">{group.name}</p>
