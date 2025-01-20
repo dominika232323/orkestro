@@ -137,14 +137,14 @@ export default function ManageGroupPage() {
 
   if (group) {
     return (
-      <div className="bg-gray-200 p-6 rounded-lg max-w-4xl mx-auto mt-8">
+      <div className="bg-gray-200 py-6 px-2 sm:px-6 rounded-lg max-w-4xl mx-auto mt-8">
         {/* Header */}
-        <h1 className="text-2xl font-bold text-center mb-6">
+        <h1 className="text-2xl font-bold text-center mb-2">
           {t("manage-group.title")}
         </h1>
 
         {/* Group's info */}
-        <h2 className="text-xl font-bold text-center mb-6">
+        <h2 className="text-xl font-bold text-center mb-2">
           {t("manage-group.manage-basics")}
         </h2>
 
@@ -186,7 +186,7 @@ export default function ManageGroupPage() {
         <div className="flex flex-col space-y-2">
           {/* Row 1: Manager-only buttons */}
           {isManager && (
-            <div className="flex space-x-2">
+            <div className="flex justify-between sm:justify-normal space-x-2">
               {/* Submit group info edit */}
               <button
                 onClick={submitTextChanges}
@@ -220,24 +220,24 @@ export default function ManageGroupPage() {
           )}
 
           {/* Row 2: Common buttons */}
-          <div className="flex space-x-2">
+          <div className="flex justify-between sm:justify-normal space-x-2">
             {isManager && (
               <button
                 onClick={() => navigate(`/new-message/${group.group_id}`)}
-                className="px-4 py-2 bg-blue-500 text-white font-medium rounded-lg hover:bg-blue-600 transition-colors"
+                className="p-2 bg-blue-500 text-white font-medium rounded-lg hover:bg-blue-600 transition-colors"
               >
                 {t("group.new-message")}
               </button>
             )}
             <button
               onClick={() => navigate(`/events/${group.group_id}`)}
-              className="px-4 py-2 bg-blue-500 text-white font-medium rounded-lg hover:bg-blue-600 transition-colors"
+              className="p-2 bg-blue-500 text-white font-medium rounded-lg hover:bg-blue-600 transition-colors"
             >
               {t("group.events")}
             </button>
             <button
               onClick={() => navigate(`/tracks/${group.group_id}`)}
-              className="px-4 py-2 bg-blue-500 text-white font-medium rounded-lg hover:bg-blue-600 transition-colors"
+              className="p-2 bg-blue-500 text-white font-medium rounded-lg hover:bg-blue-600 transition-colors"
             >
               {t("group.tracks")}
             </button>
@@ -250,11 +250,23 @@ export default function ManageGroupPage() {
               {t("manage-group.leave-group")}
             </button>
           </div>
+        </div>
 
           {/* Member management */}
-          <h2 className="text-xl font-bold text-center mb-6">
+          <h2 className="text-xl font-bold text-center mt-6 mb-2">
             {t("manage-group.manage-members")}
           </h2>
+
+          {/* Invite member */}
+          {isManager && (
+            <button
+              className="w-full py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 font-medium flex items-center justify-center my-2"
+              onClick={() => setShowInvite(true)}
+            >
+              <FontAwesomeIcon icon={faPlus} className="mr-2" />
+              {t("manage-group.invite")}
+            </button>
+          )}
 
           {/* Search Bar */}
           <SearchBar
@@ -265,23 +277,12 @@ export default function ManageGroupPage() {
             setCurrentPage={setCurrentPage}
           />
 
-          {/* Invite member */}
-          {isManager && (
-            <button
-              className="w-full py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 font-medium flex items-center justify-center my-3"
-              onClick={() => setShowInvite(true)}
-            >
-              <FontAwesomeIcon icon={faPlus} className="mr-2" />
-              {t("manage-group.invite")}
-            </button>
-          )}
-
           {/* Role Filter Buttons */}
           <div className="flex justify-center space-x-4 mb-6">
             {["A", "C", "B"].map((role) => (
               <button
                 key={role}
-                className={`py-2 px-6 rounded-lg font-medium transition-colors ${
+                className={`p-2 rounded-lg font-medium transition-colors ${
                   roleFilter === role
                     ? "bg-red-500 text-white"
                     : "bg-gray-300 text-gray-800 hover:bg-gray-400"
@@ -346,7 +347,6 @@ export default function ManageGroupPage() {
               setShowLeaveGroup={setShowLeaveGroup}
             />
           )}
-        </div>
       </div>
     );
   } else {
