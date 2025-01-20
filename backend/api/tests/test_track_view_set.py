@@ -145,22 +145,19 @@ class TrackViewSetTestCase(TestCase):
                 "expected_tracks": [self.track1, self.track2, self.track3],
             },
             {
-                "query_params": {"group_id": self.group.group_id, "event": "Event 1"},
+                "query_params": {"group_id": self.group.group_id, "search": "1"},
                 "expected_tracks": [self.track1, self.track2],
             },
             {
-                "query_params": {"group_id": self.group.group_id, "name": "Track"},
+                "query_params": {"group_id": self.group.group_id, "search": "Track"},
                 "expected_tracks": [self.track1, self.track2, self.track3],
             },
             {
-                "query_params": {
-                    "group_id": self.group.group_id,
-                    "instrument_id": [self.instrument1.instrument_id],
-                },
+                "query_params": {"group_id": self.group.group_id, "search": "Gitara", "search_language": "pl"},
                 "expected_tracks": [self.track1, self.track2, self.track3],
             },
             {
-                "query_params": {"group_id": self.group.group_id, "event": "Nonexistent"},
+                "query_params": {"group_id": self.group.group_id, "search": "Nonexistent"},
                 "expected_tracks": [],
             },
         ]

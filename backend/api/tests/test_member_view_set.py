@@ -77,7 +77,7 @@ class MemberViewSetTestCase(TestCase):
 
         for case in test_cases:
             with self.subTest(user=case["user"]):
-                new_user = User.objects.create(email=f"user_{case["user"].name}@a.com", name="User", surname="R", date_joined=timezone.now())
+                new_user = User.objects.create(email=f"user_{case['user'].name}@a.com", name="User", surname="R", date_joined=timezone.now())
                 member_to_update = Member.objects.create(group=self.group, user=new_user, permission_level="C")
 
                 updated_data = {
@@ -140,7 +140,7 @@ class MemberViewSetTestCase(TestCase):
             with self.subTest(user=case["user"]):
                 updated_data = {"permission_level": "Invalid"}
 
-                new_user = User.objects.create(email=f"user_{case["user"].name}@a.com", name="User", surname="R", date_joined=timezone.now())
+                new_user = User.objects.create(email=f"user_{case['user'].name}@a.com", name="User", surname="R", date_joined=timezone.now())
                 member_to_update = Member.objects.create(group=self.group, user=new_user, permission_level="C")
 
                 request = self.factory.put(
@@ -165,7 +165,7 @@ class MemberViewSetTestCase(TestCase):
 
         for case in test_cases:
             with self.subTest(user=case["user"]):
-                new_user = User.objects.create(email=f"user_{case["user"].name}@a.com", name="User", surname="R", date_joined=timezone.now())
+                new_user = User.objects.create(email=f"user_{case['user'].name}@a.com", name="User", surname="R", date_joined=timezone.now())
                 member_to_destroy = Member.objects.create(user=new_user, group=self.group, permission_level="C")
 
                 request = self.factory.delete(f"/api/members/{member_to_destroy.member_id}/")

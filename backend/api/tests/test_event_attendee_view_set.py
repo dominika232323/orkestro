@@ -61,7 +61,7 @@ class EventAttendeeViewSetTestCase(TestCase):
 
         for case in test_cases:
             with self.subTest(user=case["user"]):
-                new_user = User.objects.create(email=f"new_user{case["user"].name}@a.com", name="User", surname="R", date_joined=timezone.now())
+                new_user = User.objects.create(email=f"new_user{case['user'].name}@a.com", name="User", surname="R", date_joined=timezone.now())
                 Member.objects.create(group=self.group, user=new_user, permission_level="C")
 
                 # Prepare valid data
