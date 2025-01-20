@@ -787,9 +787,7 @@ Wybraliśmy relacyjną bazę danych PostgreSQL, z którą warstwa przetwarzania 
 
 Repozytorium projektu: \href{https://gitlab-stud.elka.pw.edu.pl/zgromadzeni/orkestro}{https://gitlab-stud.elka.pw.edu.pl/zgromadzeni/orkestro}
 
-Dokumentacja odnosi się do stanu projektu z commita 52e1804f092a61bd8cc77b68b93c34375927ccb8
-
-\textcolor{red} {TODO} 
+Dokumentacja odnosi się do stanu projektu z commita 565ee0035b840ee4d8d6211c42f322ccf828e0b8
 
 \subsection{Metody realizacji}
 
@@ -901,10 +899,8 @@ Statystyki dotyczące plików projektu:
 \begin{itemize}
     \item liczba plików: 167
     \item linie kodu: 47328 (bez pliku \texttt{package\_lock.json}: 29234, bez pliku \texttt{package\_lock.json} i folderu z dokumentacją: 14519)
-    \item liczba testów jednostkowych: 148
+    \item liczba testów jednostkowych: 151
 \end{itemize}
-
-\textcolor{red} {TODO} 
 
 \section{Projekt standardu interfejsu użytkownika}
 
@@ -968,13 +964,11 @@ Serwer weryfikuje spójność danych przesyłanych w zapytaniach z modelem danyc
 
 Do backendu zostały napisane testy jednostkowe. Sprawdzają one m.in. poprawność działania klas, reakcje na błędne dane czy brak uprawnień. Testy zostały napisane we frameworku \texttt{unittest}, a sprawdzanie stopnia pokrycia odbywa się poprzez \texttt{coverage.py}. Miary jakości testów:
 \begin{itemize}
-    \item liczba testów: 148
+    \item liczba testów: 151
     \item odsetek przechodzących testów: 100\%
-    \item pokrycie linii testami: 96\%
-    \item pokrycie gałęzi testami: 94\%
+    \item pokrycie linii testami: 92\%
+    \item pokrycie gałęzi testami: 89\%
 \end{itemize}
-
-\textcolor{red} {TODO} 
 
 \subsection{Testy systemowe}
 
@@ -1013,7 +1007,7 @@ W celu zapewnienia bezpieczeństwa (przed włamaniami, nieuprawnionym dostępem 
     \item Zaimplementowany jest system uprawnień - przed udzieleniem dostępu do zasobu sprawdzane jest, czy użytkownik ma prawo wykonać daną akcję.
     \item Dostęp do aplikacji odbywa się poprzez HTTPS/SSL.
     \item System umożliwia wykonanie zrzutu danych oraz odtworzenie systemu z zadaną kopią danych.
-    \item \textcolor{red}{TODO System funkcjonuje zgodnie z przepisami RODO.}
+    \item System funkcjonuje zgodnie z przepisami RODO.
 \end{itemize}
 
 \section{Podręcznik użytkownika}
@@ -1022,7 +1016,7 @@ Instrukcja będzie przedstawiana z perspektywy kierownika grupy - użytkownicy o
 
 \subsection{Logowanie i strona główna}
 
-Po wejściu na stronę ukaże się ekran logowania - można wykonać logowanie kontem Google i wybrać język aplikacji:
+Po wejściu na stronę ukaże się ekran logowania - można wykonać logowanie kontem Google, wybrać język aplikacji i przeczytać politykę prywatności:
 
 \begin{figure} [H]
     \centering
@@ -1038,7 +1032,7 @@ Po wybraniu konta Google i zalogowaniu się do niego ukaże się główny ekran 
     \caption{Główny ekran}
 \end{figure}
 
-Można stąd przeglądać wiadomości (1), kalendarz wydarzeń (2), zmienić język (4), zmieniać ustawienia konta (6), wylogować się (7), przeglądać zaproszenia do grup, jeżeli istnieją i odpowiadać na nie (8), stworzyć własną grupę (9) lub przeglądać istniejące: napisać wiadomość (10), przeglądać dane grupy (11), wydarzenia (12) i utwory z plikami (13). Użytkownicy z uprawnieniami administratora mogą ponadto przechodzić do panelu administratora Django (5). Do tego panelu można wracać, klikając logo w górnej części ekranu (3).
+Można stąd przeglądać wiadomości (1), kalendarz wydarzeń (2), zmienić język (4), zmieniać ustawienia konta (6), wylogować się (7), przeglądać zaproszenia do grup, jeżeli istnieją i odpowiadać na nie (8), stworzyć własną grupę (9) lub przeglądać istniejące: napisać wiadomość (10), przeglądać wydarzenia (1), utwory z plikami (12) i dane grupy (13). Użytkownicy z uprawnieniami administratora mogą ponadto przechodzić do panelu administratora Django (5). Do tego panelu można wracać, klikając logo w górnej części ekranu (3).
 
 \subsection{Panel ustawień}
 
@@ -1167,7 +1161,7 @@ Należy utworzyć w katalogu głównym projektu plik \texttt{.env} z zawartości
     \item POSTGRES\_DB - nazwa bazy danych
     \item \textcolor{purple}{INCLUDE\_TEST\_DATA} - czy dodawać przykładowe dane (najlepiej wyłączyć przy wdrożeniu)
     \item POSTGRES\_MASTER\_USER, \textcolor{orange}{POSTGRES\_MASTER\_PASSWORD}, \textcolor{orange}{POSTGRES\_MASTER\_HOST}, POSTGRES\_MASTER\_PORT - parametry do łączenia się z bazą danych master (użytkownik, hasło, adres IP, port); jeżeli adres to localhost, należy wpisać adres prywatny typu \texttt{192.168.x.x}
-    \item POSTGRES\_SLAVE\_USER, \textcolor{orange}{POSTGRES\_SLAVE\_PASSWORD}, \textcolor{orange}{POSTGRES\_SLAVE\_HOST}, POSTGRES\ \_SLAVE\_PORT - parametry do bazy danych slave; jeżeli używana jest jedna baza, należy podać tutaj takie same wartości, jak dla bazy master
+    \item \textcolor{orange}{USE\_SLAVE}, POSTGRES\_SLAVE\_USER, \textcolor{orange}{POSTGRES\_SLAVE\_PASSWORD}, \textcolor{orange}{POSTGRES\_SLAVE\_HOST}, POSTGRES\_SLAVE\_PORT - parametry do bazy danych slave; jeżeli używana jest jedna baza, to parametry poza \texttt{USE\_SLAVE} są nieistotne
     \item \textcolor{orange}{DJANGO\_KEY} - dowolnie wybrany, tajny klucz do Django
     \item \textcolor{purple}{DJANGO\_DEBUG} - czy włączać tryb Django udostępniający dodatkowe informacje do debugowania (wyłączyć przy wdrożeniu)
     \item DJANGO\_WORKERS - iloma wątkami powinno dysponować Django REST API
@@ -1250,7 +1244,7 @@ Dodanie nowego języka wymaga następujących kroków:
 \begin{itemize}
     \item w bazie danych: utworzyć nową kolumnę w tabeli \texttt{instruments} i wypełnić ją tłumaczeniami, zaktualizować plik SQL z definicją tabel i opcjonalnie z danymi testowymi
     \item we frontendzie: dodać nowy język do ogólnych plików frontendowych zajmujących się tłumaczeniem (\texttt{LanguageContext.tsx}, \texttt{i18n.js}), dodać same tłumaczenia w \texttt{locales}
-    \item we frontendzie: dodać obsługę nowego języka w plikach mających do czynienia z danymi instrumentów lub wymagających dostosowania pisowni (\texttt{interfaces.tsx}, \textcolor{red}{TODO})
+    \item we frontendzie: dodać obsługę nowego języka w plikach mających do czynienia z danymi instrumentów lub wymagających dostosowania pisowni
 \end{itemize}
 
 \subsection{Kopia zapasowa i odtwarzanie systemu}
@@ -1278,9 +1272,7 @@ Baza slave, jeżeli istnieje, samodzielnie pobierze odpowiednie dane.
 
 \section{Podsumowanie}
 
-Realizację projektu możemy uznać za udaną - zrealizowaliśmy na czas \textcolor{red}{TODO wszystko oprócz opracowania polityki prywatności i optymalizacji UI pod urządzenia mobilne}.
-
-Osiągnięcie celu ułatwiła kompozycja zespołu, która pozwoliła na efektywną współpracę, a umiejętności poszczególnych członków pokrywały dziedzinę projektu. W czasie pracy nad projektem dbaliśmy o jego jakość - pisaliśmy testy do kodu z analizą jego pokrycia, wzajemnie kontrolowaliśmy jakość dodawanego kodu i śledziliśmy spełnianie wymagań klienta. Przeprowadzaliśmy też refaktoring niektórych części projektu, gdy okazywało się, że można je napisać lepiej.
+Realizację projektu możemy uznać za udaną - zrealizowaliśmy na czas wszystkie wymagania klienta. Osiągnięcie celu ułatwiła kompozycja zespołu, która pozwoliła na efektywną współpracę, a umiejętności poszczególnych członków pokrywały dziedzinę projektu. W czasie pracy nad projektem dbaliśmy o jego jakość - pisaliśmy testy do kodu z analizą jego pokrycia, wzajemnie kontrolowaliśmy jakość dodawanego kodu i śledziliśmy spełnianie wymagań klienta. Przeprowadzaliśmy też refaktoring niektórych części projektu, gdy okazywało się, że można je napisać lepiej.
 
 Przeszkodą w osiągnięciu celu było stosunkowo późne rozpoczęcie prac nad implementacją systemu, co skutkowało brakami w zakresie na etapach pośrednich projektu - w tym semestrze oprócz kolokwiów było do zrealizowania ponadprzeciętnie dużo różnych projektów zespołowych, co zmniejszało motywację do zajmowania się kolejnym, a rozproszenie odpowiedzialności opóźniło dodanie pierwszych funkcji do aplikacji.
 
@@ -1300,6 +1292,7 @@ Wizytówka projektu:
 \begin{enumerate}
     \item Materiały dydaktyczne do przedmiotu PZSP2, Politechnika Warszawska, 2024, Dostępne w Internecie dla uczestników kursu: \url{https://leon.pw.edu.pl/course/view.php?id=82}
     \item Przewodnik po Scrumie, Scrum Guides, 2020 [dostęp listopad 2020], Dostępny w Internecie: \url{https://scrumguides.org/docs/scrumguide/v2020/2020-Scrum-Guide-Polish.pdf}
+    \item Django Documentation, Django Software Foundation, 2025 [dostęp 17 stycznia 2025], Dostępny w Internecie: \url{https://readthedocs.org/projects/django/downloads/pdf/5.0.x/}
 \end{enumerate}
 
 \section*{Zatwierdzam dokumentację}
