@@ -2423,12 +2423,6 @@ INSERT INTO event_tracks (event_id, track_id) VALUES (16, 21);
 INSERT INTO event_tracks (event_id, track_id) VALUES (16, 22);
 INSERT INTO event_tracks (event_id, track_id) VALUES (16, 23);
 INSERT INTO event_tracks (event_id, track_id) VALUES (16, 24);
-INSERT INTO event_tracks (event_id, track_id) VALUES (20, 13);
-INSERT INTO event_tracks (event_id, track_id) VALUES (20, 15);
-INSERT INTO event_tracks (event_id, track_id) VALUES (20, 17);
-INSERT INTO event_tracks (event_id, track_id) VALUES (20, 19);
-INSERT INTO event_tracks (event_id, track_id) VALUES (20, 21);
-INSERT INTO event_tracks (event_id, track_id) VALUES (20, 23);
 
 INSERT INTO files (track_id, name, content) VALUES (1, 'nagranie.mp3', decode('', 'hex'));
 INSERT INTO files (track_id, name, content) VALUES (1, 'info.txt', decode('7A61776172746F736320706C696B752070727A656B617A756A61636120646F6461746B6F776520696E666F726D61636A65206F207574776F727A65', 'hex'));
