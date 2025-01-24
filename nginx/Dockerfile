@@ -26,10 +26,8 @@ ARG BACKEND_HOSTS
 
 COPY --from=django_admin backend/static-django /usr/share/nginx/html/static-django
 COPY --from=frontend frontend/build/* /usr/share/nginx/html
-COPY nginx/chain.pem /etc/nginx/conf.d/chain.pem
-COPY nginx/privkey.pem /etc/nginx/conf.d/privkey.pem
-COPY nginx/fullchain.pem /etc/nginx/conf.d/fullchain.pem
 COPY nginx/nginx.conf /etc/nginx/conf.d/default.conf
+COPY nginx/*.pem /etc/nginx/conf.d/
 
 RUN for host in $BACKEND_HOSTS; do sed -i "2i server ${host};" /etc/nginx/conf.d/default.conf ; done
 RUN if [ "$USE_HTTPS" == "true" ] ; \
