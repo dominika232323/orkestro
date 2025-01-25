@@ -30,7 +30,7 @@ class InvitationViewSet(viewsets.ModelViewSet):
         is_associated = (invitee.group_memberships.filter(group=group).exists()
                          or invitee.invitations.filter(group=group).exists())
         has_group_hierarchy_gap = (group.supergroup is not None
-                                   and invitee.group_memberships.filter(group=group.supergroup).exists())
+                                   and not invitee.group_memberships.filter(group=group.supergroup).exists())
 
         return not is_associated and not has_group_hierarchy_gap
 
